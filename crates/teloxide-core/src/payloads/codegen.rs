@@ -64,6 +64,7 @@ fn codegen_payloads() {
                 "SendPaidMedia"
                     | "SendMediaGroup"
                     | "SetBusinessAccountProfilePhoto"
+                    | "SetMyProfilePhoto"
                     | "PostStory"
                     | "EditStory"
                     | "EditMessageMedia"

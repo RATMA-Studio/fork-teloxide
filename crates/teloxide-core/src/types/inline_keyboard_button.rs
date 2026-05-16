@@ -13,6 +13,20 @@ pub struct InlineKeyboardButton {
     /// Label text on the button.
     pub text: String,
 
+    /// Unique identifier of the custom emoji shown before the text of the
+    /// button.
+    ///
+    /// Can only be used by bots that purchased additional usernames on
+    /// Fragment or in the messages directly sent by the bot to private,
+    /// group and supergroup chats if the owner of the bot has a Telegram
+    /// Premium subscription.
+    pub icon_custom_emoji_id: Option<String>,
+
+    /// Style of the button. Must be one of `danger` (red), `success`
+    /// (green) or `primary` (blue). If omitted, then an app-specific style
+    /// is used.
+    pub style: Option<String>,
+
     #[serde(flatten)]
     pub kind: InlineKeyboardButtonKind,
 }
@@ -113,7 +127,17 @@ impl InlineKeyboardButton {
     where
         S: Into<String>,
     {
-        Self { text: text.into(), kind }
+        Self { text: text.into(), icon_custom_emoji_id: None, style: None, kind }
+    }
+
+    pub fn icon_custom_emoji_id<S: Into<String>>(mut self, id: S) -> Self {
+        self.icon_custom_emoji_id = Some(id.into());
+        self
+    }
+
+    pub fn style<S: Into<String>>(mut self, s: S) -> Self {
+        self.style = Some(s.into());
+        self
     }
 
     /// Constructor for `InlineKeyboardButton` with [`Url`] kind.

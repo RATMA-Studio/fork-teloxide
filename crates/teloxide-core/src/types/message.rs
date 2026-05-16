@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 use url::Url;
 
 use crate::types::{
-    Animation, Audio, BareChatId, BusinessConnectionId, Chat, ChatBackground, ChatBoostAdded,
+    Animation, Audio, BareChatId, BusinessConnectionId, Chat, ChatBackground, ChatBoostAdded, ChatOwnerChanged, ChatOwnerLeft,
     ChatId, ChatShared, Checklist, ChecklistTaskId, ChecklistTasksAdded, ChecklistTasksDone,
     Contact, Dice, DirectMessagePriceChanged, DirectMessagesTopic, Document, ExternalReplyInfo,
     ForumTopicClosed, ForumTopicCreated, ForumTopicEdited, ForumTopicReopened, Game,
@@ -113,6 +113,8 @@ pub enum MessageKind {
     Dice(MessageDice),
     ProximityAlertTriggered(MessageProximityAlertTriggered),
     ChatBoostAdded(MessageChatBoostAdded),
+    ChatOwnerLeft(MessageChatOwnerLeft),
+    ChatOwnerChanged(MessageChatOwnerChanged),
     ChatBackground(MessageChatBackground),
     ChecklistTasksDone(MessageChecklistTasksDone),
     ChecklistTasksAdded(MessageChecklistTasksAdded),
@@ -741,6 +743,22 @@ pub struct MessageProximityAlertTriggered {
 pub struct MessageChatBoostAdded {
     /// Service message. User boosted the chat.
     pub boost_added: ChatBoostAdded,
+}
+
+#[serde_with::skip_serializing_none]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(test, derive(schemars::JsonSchema))]
+pub struct MessageChatOwnerLeft {
+    /// Service message: chat owner has left.
+    pub chat_owner_left: ChatOwnerLeft,
+}
+
+#[serde_with::skip_serializing_none]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(test, derive(schemars::JsonSchema))]
+pub struct MessageChatOwnerChanged {
+    /// Service message: chat owner has changed.
+    pub chat_owner_changed: ChatOwnerChanged,
 }
 
 #[serde_with::skip_serializing_none]

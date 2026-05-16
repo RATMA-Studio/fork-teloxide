@@ -94,6 +94,7 @@ mod get_star_transactions;
 mod get_sticker_set;
 mod get_updates;
 mod get_user_chat_boosts;
+mod get_user_profile_audios;
 mod get_user_profile_photos;
 mod get_webhook_info;
 mod gift_premium_subscription;
@@ -108,6 +109,7 @@ mod read_business_message;
 mod refund_star_payment;
 mod remove_business_account_profile_photo;
 mod remove_chat_verification;
+mod remove_my_profile_photo;
 mod remove_user_verification;
 mod reopen_forum_topic;
 mod reopen_general_forum_topic;
@@ -157,6 +159,7 @@ mod set_my_commands;
 mod set_my_default_administrator_rights;
 mod set_my_description;
 mod set_my_name;
+mod set_my_profile_photo;
 mod set_my_short_description;
 mod set_passport_data_errors;
 mod set_sticker_emoji_list;
@@ -277,6 +280,7 @@ pub use get_star_transactions::{GetStarTransactions, GetStarTransactionsSetters}
 pub use get_sticker_set::{GetStickerSet, GetStickerSetSetters};
 pub use get_updates::{GetUpdates, GetUpdatesSetters};
 pub use get_user_chat_boosts::{GetUserChatBoosts, GetUserChatBoostsSetters};
+pub use get_user_profile_audios::{GetUserProfileAudios, GetUserProfileAudiosSetters};
 pub use get_user_profile_photos::{GetUserProfilePhotos, GetUserProfilePhotosSetters};
 pub use get_webhook_info::{GetWebhookInfo, GetWebhookInfoSetters};
 pub use gift_premium_subscription::{GiftPremiumSubscription, GiftPremiumSubscriptionSetters};
@@ -293,6 +297,7 @@ pub use remove_business_account_profile_photo::{
     RemoveBusinessAccountProfilePhoto, RemoveBusinessAccountProfilePhotoSetters,
 };
 pub use remove_chat_verification::{RemoveChatVerification, RemoveChatVerificationSetters};
+pub use remove_my_profile_photo::{RemoveMyProfilePhoto, RemoveMyProfilePhotoSetters};
 pub use remove_user_verification::{RemoveUserVerification, RemoveUserVerificationSetters};
 pub use reopen_forum_topic::{ReopenForumTopic, ReopenForumTopicSetters};
 pub use reopen_general_forum_topic::{ReopenGeneralForumTopic, ReopenGeneralForumTopicSetters};
@@ -356,6 +361,7 @@ pub use set_my_default_administrator_rights::{
 };
 pub use set_my_description::{SetMyDescription, SetMyDescriptionSetters};
 pub use set_my_name::{SetMyName, SetMyNameSetters};
+pub use set_my_profile_photo::{SetMyProfilePhoto, SetMyProfilePhotoSetters};
 pub use set_my_short_description::{SetMyShortDescription, SetMyShortDescriptionSetters};
 pub use set_passport_data_errors::{SetPassportDataErrors, SetPassportDataErrorsSetters};
 pub use set_sticker_emoji_list::{SetStickerEmojiList, SetStickerEmojiListSetters};
