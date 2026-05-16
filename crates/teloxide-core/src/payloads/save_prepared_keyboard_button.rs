@@ -2,16 +2,18 @@
 
 use serde::Serialize;
 
-use crate::types::{KeyboardButton, PreparedKeyboardButton};
+use crate::types::{KeyboardButton, PreparedKeyboardButton, UserId};
 
 impl_payload! {
-    /// Use this method to store a keyboard button that can be added by the bot to a reply keyboard of an opener of a Mini App. Returns a [`PreparedKeyboardButton`] object.
+    /// Stores a keyboard button that can be used by a user within a Mini App. Returns a [`PreparedKeyboardButton`] object.
     ///
     /// [`PreparedKeyboardButton`]: crate::types::PreparedKeyboardButton
     #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
     pub SavePreparedKeyboardButton (SavePreparedKeyboardButtonSetters) => PreparedKeyboardButton {
         required {
-            /// A JSON-serialized object describing the keyboard button to be added.
+            /// Unique identifier of the target user that can use the button.
+            pub user_id: UserId,
+            /// A JSON-serialized object describing the button to be saved. The button must be of the type `request_users`, `request_chat`, or `request_managed_bot`.
             pub button: KeyboardButton,
         }
     }

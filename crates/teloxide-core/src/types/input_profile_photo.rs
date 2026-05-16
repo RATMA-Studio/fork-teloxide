@@ -12,6 +12,28 @@ pub enum InputProfilePhoto {
     Animated(InputProfilePhotoAnimated),
 }
 
+impl InputProfilePhoto {
+    /// Iterator over the inner `InputFile` so multipart wiring can
+    /// extract attachments uniformly with `InputMedia` etc.
+    pub(crate) fn files(&self) -> impl Iterator<Item = &InputFile> {
+        let f = match self {
+            InputProfilePhoto::Static(s)   => &s.photo,
+            InputProfilePhoto::Animated(a) => &a.animation,
+        };
+        std::iter::once(f)
+    }
+
+    /// Mutable counterpart of [`files`] for in-place attachment fix-up
+    /// when the multipart body is being built.
+    pub(crate) fn files_mut(&mut self) -> impl Iterator<Item = &mut InputFile> {
+        let f = match self {
+            InputProfilePhoto::Static(s)   => &mut s.photo,
+            InputProfilePhoto::Animated(a) => &mut a.animation,
+        };
+        std::iter::once(f)
+    }
+}
+
 /// A static profile photo in the .JPG format.
 #[derive(Clone, Debug, Serialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]

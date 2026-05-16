@@ -2299,14 +2299,9 @@ Schema(
                     descr: Doc(md: "Pass `true`, if the poll results must be hidden until the poll is closed")
                 ),
                 Param(
-                    name: "correct_option_id",
-                    ty: Option(u8),
-                    descr: Doc(md: "0-based identifier of the correct answer option, required for polls in quiz mode")
-                ),
-                Param(
                     name: "correct_option_ids",
                     ty: Option(ArrayOf(u8)),
-                    descr: Doc(md: "A JSON-serialized list of 0-based identifiers of correct answer options, required for polls in quiz mode with multiple correct answers; pass `correct_option_id` or `correct_option_ids`, but not both")
+                    descr: Doc(md: "A JSON-serialized list of monotonically increasing 0-based identifiers of the correct answer options, required for polls in quiz mode.")
                 ),
                 Param(
                     name: "explanation",
@@ -4278,16 +4273,21 @@ Schema(
             names: ("savePreparedKeyboardButton", "SavePreparedKeyboardButton", "save_prepared_keyboard_button"),
             return_ty: RawTy("PreparedKeyboardButton"),
             doc: Doc(
-                md: "Use this method to store a keyboard button that can be added by the bot to a reply keyboard of an opener of a Mini App. Returns a [PreparedKeyboardButton] object.",
+                md: "Stores a keyboard button that can be used by a user within a Mini App. Returns a [PreparedKeyboardButton] object.",
                 md_links: {"PreparedKeyboardButton": "https://core.telegram.org/bots/api#preparedkeyboardbutton"}
             ),
             tg_doc: "https://core.telegram.org/bots/api#savepreparedkeyboardbutton",
             tg_category: "Available methods",
             params: [
                 Param(
+                    name: "user_id",
+                    ty: RawTy("UserId"),
+                    descr: Doc(md: "Unique identifier of the target user that can use the button.")
+                ),
+                Param(
                     name: "button",
                     ty: RawTy("KeyboardButton"),
-                    descr: Doc(md: "A JSON-serialized object describing the keyboard button to be added.")
+                    descr: Doc(md: "A JSON-serialized object describing the button to be saved. The button must be of the type `request_users`, `request_chat`, or `request_managed_bot`.")
                 ),
             ]
         ),

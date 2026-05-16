@@ -1040,6 +1040,7 @@ pub trait Requester {
     /// For Telegram documentation see [`SavePreparedKeyboardButton`].
     fn save_prepared_keyboard_button(
         &self,
+        user_id: UserId,
         button: KeyboardButton,
     ) -> Self::SavePreparedKeyboardButton;
 

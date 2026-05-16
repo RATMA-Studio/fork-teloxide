@@ -1306,9 +1306,9 @@ macro_rules! requester_forward {
     (@method save_prepared_keyboard_button $body:ident $ty:ident) => {
         type SavePreparedKeyboardButton = $ty![SavePreparedKeyboardButton];
 
-        fn save_prepared_keyboard_button(&self, button: KeyboardButton) -> Self::SavePreparedKeyboardButton {
+        fn save_prepared_keyboard_button(&self, user_id: UserId, button: KeyboardButton) -> Self::SavePreparedKeyboardButton {
             let this = self;
-            $body!(save_prepared_keyboard_button this (button: KeyboardButton))
+            $body!(save_prepared_keyboard_button this (user_id: UserId, button: KeyboardButton))
         }
     };
     (@method edit_message_text $body:ident $ty:ident) => {

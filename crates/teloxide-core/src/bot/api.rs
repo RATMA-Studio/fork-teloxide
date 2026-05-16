@@ -1053,7 +1053,7 @@ impl Requester for Bot {
         Self::GetMyShortDescription::new(self.clone(), payloads::GetMyShortDescription::new())
     }
 
-    type SetMyProfilePhoto = JsonRequest<payloads::SetMyProfilePhoto>;
+    type SetMyProfilePhoto = MultipartRequest<payloads::SetMyProfilePhoto>;
 
     fn set_my_profile_photo(&self, photo: InputProfilePhoto) -> Self::SetMyProfilePhoto {
         Self::SetMyProfilePhoto::new(self.clone(), payloads::SetMyProfilePhoto::new(photo))
@@ -1168,11 +1168,12 @@ impl Requester for Bot {
 
     fn save_prepared_keyboard_button(
         &self,
+        user_id: UserId,
         button: KeyboardButton,
     ) -> Self::SavePreparedKeyboardButton {
         Self::SavePreparedKeyboardButton::new(
             self.clone(),
-            payloads::SavePreparedKeyboardButton::new(button),
+            payloads::SavePreparedKeyboardButton::new(user_id, button),
         )
     }
 
