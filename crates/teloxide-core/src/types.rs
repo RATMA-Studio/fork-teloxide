@@ -28,6 +28,8 @@ pub use chat_administrator_rights::*;
 pub use chat_background::*;
 pub use chat_boost::*;
 pub use chat_boost_added::*;
+pub use chat_owner_changed::*;
+pub use chat_owner_left::*;
 pub use chat_boost_removed::*;
 pub use chat_boost_source::*;
 pub use chat_boost_updated::*;
@@ -378,6 +380,8 @@ mod webhook_info;
 mod write_access_allowed;
 
 mod chat_boost_added;
+mod chat_owner_changed;
+mod chat_owner_left;
 mod inline_query;
 mod inline_query_result;
 mod inline_query_result_article;
