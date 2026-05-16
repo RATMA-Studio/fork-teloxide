@@ -1874,13 +1874,16 @@ impl Requester for Bot {
 
     type RepostStory = JsonRequest<payloads::RepostStory>;
 
-    fn repost_story(
+    fn repost_story<F>(
         &self,
         business_connection_id: BusinessConnectionId,
-        from_chat_id: ChatId,
+        from_chat_id: F,
         from_story_id: StoryId,
         active_period: Seconds,
-    ) -> Self::RepostStory {
+    ) -> Self::RepostStory
+    where
+        F: Into<ChatId>,
+    {
         Self::RepostStory::new(
             self.clone(),
             payloads::RepostStory::new(

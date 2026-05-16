@@ -1754,9 +1754,9 @@ macro_rules! requester_forward {
     (@method repost_story $body:ident $ty:ident) => {
         type RepostStory = $ty![RepostStory];
 
-        fn repost_story(&self, business_connection_id: BusinessConnectionId, from_chat_id: ChatId, from_story_id: StoryId, active_period: Seconds) -> Self::RepostStory {
+        fn repost_story<F>(&self, business_connection_id: BusinessConnectionId, from_chat_id: F, from_story_id: StoryId, active_period: Seconds) -> Self::RepostStory where F: Into<ChatId> {
             let this = self;
-            $body!(repost_story this (business_connection_id: BusinessConnectionId, from_chat_id: ChatId, from_story_id: StoryId, active_period: Seconds))
+            $body!(repost_story this (business_connection_id: BusinessConnectionId, from_chat_id: F, from_story_id: StoryId, active_period: Seconds))
         }
     };
     (@method edit_story $body:ident $ty:ident) => {
