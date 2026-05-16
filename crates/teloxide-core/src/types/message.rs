@@ -85,6 +85,18 @@ pub struct Message {
     /// only.
     pub sender_tag: Option<String>,
 
+    /// For a message sent by a guest bot, this is the user whose original
+    /// message triggered the bot's response.
+    pub guest_bot_caller_user: Option<User>,
+
+    /// For a message sent by a guest bot, this is the chat whose original
+    /// message triggered the bot's response.
+    pub guest_bot_caller_chat: Option<Chat>,
+
+    /// The unique identifier for the guest query. Use this identifier with the
+    /// `answerGuestQuery` method to send a response message.
+    pub guest_query_id: Option<String>,
+
     #[serde(flatten)]
     pub kind: MessageKind,
 }
@@ -2468,6 +2480,9 @@ mod tests {
                 },
                 sender_business_bot: None,
                 sender_tag: None,
+                guest_bot_caller_user: None,
+                guest_bot_caller_chat: None,
+                guest_query_id: None,
                 kind: MessageKind::ChatShared(MessageChatShared {
                     chat_shared: ChatShared {
                         request_id: RequestId(348349),
@@ -3086,6 +3101,9 @@ mod tests {
                     via_bot: None,
                     sender_business_bot: None,
                     sender_tag: None,
+                    guest_bot_caller_user: None,
+                    guest_bot_caller_chat: None,
+                    guest_query_id: None,
                     suggested_post_info: None,
                     kind: MessageKind::Giveaway(MessageGiveaway {
                         giveaway: Giveaway {
@@ -3202,6 +3220,7 @@ mod tests {
                     added_to_attachment_menu: false,
                     can_manage_bots: false,
                     has_topics_enabled: false,
+                    supports_guest_queries: false,
                 }],
                 additional_chat_count: None,
                 premium_subscription_month_count: Some(6),
