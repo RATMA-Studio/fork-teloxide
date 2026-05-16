@@ -1064,6 +1064,24 @@ impl Requester for Bot {
         Self::RemoveMyProfilePhoto::new(self.clone(), payloads::RemoveMyProfilePhoto::new())
     }
 
+    type GetManagedBotToken = JsonRequest<payloads::GetManagedBotToken>;
+
+    fn get_managed_bot_token(&self, managed_bot_user_id: u64) -> Self::GetManagedBotToken {
+        Self::GetManagedBotToken::new(
+            self.clone(),
+            payloads::GetManagedBotToken::new(managed_bot_user_id),
+        )
+    }
+
+    type ReplaceManagedBotToken = JsonRequest<payloads::ReplaceManagedBotToken>;
+
+    fn replace_managed_bot_token(&self, managed_bot_user_id: u64) -> Self::ReplaceManagedBotToken {
+        Self::ReplaceManagedBotToken::new(
+            self.clone(),
+            payloads::ReplaceManagedBotToken::new(managed_bot_user_id),
+        )
+    }
+
     type SetChatMenuButton = JsonRequest<payloads::SetChatMenuButton>;
 
     fn set_chat_menu_button(&self) -> Self::SetChatMenuButton {

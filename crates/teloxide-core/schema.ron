@@ -4013,6 +4013,34 @@ Schema(
             params: []
         ),
         Method(
+            names: ("getManagedBotToken", "GetManagedBotToken", "get_managed_bot_token"),
+            return_ty: String,
+            doc: Doc(md: "Returns the token of a bot that is managed by the current bot. The current bot must have permissions to manage the bot, granted using the @BotFather Mini App. Returns the token of the requested bot as a String on success."),
+            tg_doc: "https://core.telegram.org/bots/api#getmanagedbottoken",
+            tg_category: "Available methods",
+            params: [
+                Param(
+                    name: "managed_bot_user_id",
+                    ty: u64,
+                    descr: Doc(md: "Unique identifier of the bot")
+                ),
+            ]
+        ),
+        Method(
+            names: ("replaceManagedBotToken", "ReplaceManagedBotToken", "replace_managed_bot_token"),
+            return_ty: String,
+            doc: Doc(md: "Replaces the token of a bot that is managed by the current bot. The current bot must have permissions to manage the bot, granted using the @BotFather Mini App. Returns the new token of the bot as a String on success."),
+            tg_doc: "https://core.telegram.org/bots/api#replacemanagedbottoken",
+            tg_category: "Available methods",
+            params: [
+                Param(
+                    name: "managed_bot_user_id",
+                    ty: u64,
+                    descr: Doc(md: "Unique identifier of the bot")
+                ),
+            ]
+        ),
+        Method(
             names: ("setChatMenuButton", "SetChatMenuButton", "set_chat_menu_button"),
             return_ty: True,
             doc: Doc(md: "Use this method to change the bot's menu button in a private chat, or the default menu button."),

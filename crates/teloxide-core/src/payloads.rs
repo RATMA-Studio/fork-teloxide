@@ -83,6 +83,7 @@ mod get_custom_emoji_stickers;
 mod get_file;
 mod get_forum_topic_icon_stickers;
 mod get_game_high_scores;
+mod get_managed_bot_token;
 mod get_me;
 mod get_my_commands;
 mod get_my_default_administrator_rights;
@@ -113,6 +114,7 @@ mod remove_my_profile_photo;
 mod remove_user_verification;
 mod reopen_forum_topic;
 mod reopen_general_forum_topic;
+mod replace_managed_bot_token;
 mod replace_sticker_in_set;
 mod restrict_chat_member;
 mod revoke_chat_invite_link;
@@ -269,6 +271,7 @@ pub use get_forum_topic_icon_stickers::{
     GetForumTopicIconStickers, GetForumTopicIconStickersSetters,
 };
 pub use get_game_high_scores::{GetGameHighScores, GetGameHighScoresSetters};
+pub use get_managed_bot_token::{GetManagedBotToken, GetManagedBotTokenSetters};
 pub use get_me::{GetMe, GetMeSetters};
 pub use get_my_commands::{GetMyCommands, GetMyCommandsSetters};
 pub use get_my_default_administrator_rights::{
@@ -303,6 +306,7 @@ pub use remove_my_profile_photo::{RemoveMyProfilePhoto, RemoveMyProfilePhotoSett
 pub use remove_user_verification::{RemoveUserVerification, RemoveUserVerificationSetters};
 pub use reopen_forum_topic::{ReopenForumTopic, ReopenForumTopicSetters};
 pub use reopen_general_forum_topic::{ReopenGeneralForumTopic, ReopenGeneralForumTopicSetters};
+pub use replace_managed_bot_token::{ReplaceManagedBotToken, ReplaceManagedBotTokenSetters};
 pub use replace_sticker_in_set::{ReplaceStickerInSet, ReplaceStickerInSetSetters};
 pub use restrict_chat_member::{RestrictChatMember, RestrictChatMemberSetters};
 pub use revoke_chat_invite_link::{RevokeChatInviteLink, RevokeChatInviteLinkSetters};
