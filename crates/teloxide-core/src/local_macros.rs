@@ -1303,6 +1303,14 @@ macro_rules! requester_forward {
             $body!(save_prepared_inline_message this (user_id: UserId, result: InlineQueryResult))
         }
     };
+    (@method save_prepared_keyboard_button $body:ident $ty:ident) => {
+        type SavePreparedKeyboardButton = $ty![SavePreparedKeyboardButton];
+
+        fn save_prepared_keyboard_button(&self, button: KeyboardButton) -> Self::SavePreparedKeyboardButton {
+            let this = self;
+            $body!(save_prepared_keyboard_button this (button: KeyboardButton))
+        }
+    };
     (@method edit_message_text $body:ident $ty:ident) => {
         type EditMessageText = $ty![EditMessageText];
 

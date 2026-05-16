@@ -192,6 +192,7 @@ where
         answer_inline_query,
         answer_web_app_query,
         save_prepared_inline_message,
+            save_prepared_keyboard_button,
         edit_message_text,
         edit_message_text_inline,
         edit_message_caption,

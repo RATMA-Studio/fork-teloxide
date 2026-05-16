@@ -8,7 +8,8 @@ use crate::{
         AcceptedGiftTypes, BotCommand, BusinessConnectionId, CallbackQueryId, ChatId,
         ChatPermissions, CustomEmojiId, FileId, GiftId, InlineQueryId, InlineQueryResult,
         InputChecklist, InputFile, InputMedia, InputPaidMedia, InputPollOption, InputProfilePhoto,
-        InputSticker, InputStoryContent, LabeledPrice, MessageId, OwnedGiftId, PreCheckoutQueryId,
+        InputSticker, InputStoryContent, KeyboardButton, LabeledPrice, MessageId, OwnedGiftId,
+        PreCheckoutQueryId,
         Recipient, Seconds, ShippingQueryId, StickerFormat, StoryId, TelegramTransactionId,
         ThreadId, UserId,
     },
@@ -1160,6 +1161,18 @@ impl Requester for Bot {
         Self::SavePreparedInlineMessage::new(
             self.clone(),
             payloads::SavePreparedInlineMessage::new(user_id, result),
+        )
+    }
+
+    type SavePreparedKeyboardButton = JsonRequest<payloads::SavePreparedKeyboardButton>;
+
+    fn save_prepared_keyboard_button(
+        &self,
+        button: KeyboardButton,
+    ) -> Self::SavePreparedKeyboardButton {
+        Self::SavePreparedKeyboardButton::new(
+            self.clone(),
+            payloads::SavePreparedKeyboardButton::new(button),
         )
     }
 
