@@ -17,6 +17,7 @@ pub enum InputMedia {
     Animation(InputMediaAnimation),
     Audio(InputMediaAudio),
     Document(InputMediaDocument),
+    LivePhoto(InputMediaLivePhoto),
 }
 
 /// Represents a photo to be sent.
@@ -581,6 +582,106 @@ impl InputMediaDocument {
     }
 }
 
+/// Represents a live photo to be sent.
+///
+/// [The official docs](https://core.telegram.org/bots/api#inputmedialivephoto).
+#[serde_with::skip_serializing_none]
+#[derive(Clone, Debug, Serialize)]
+#[cfg_attr(test, derive(schemars::JsonSchema))]
+pub struct InputMediaLivePhoto {
+    /// Video of the live photo to send. Pass a file_id to send a file that
+    /// exists on the Telegram servers (recommended) or pass
+    /// `attach://<file_attach_name>` to upload a new one using
+    /// multipart/form-data under `<file_attach_name>` name. Sending live photos
+    /// by a URL is currently unsupported.
+    pub media: InputFile,
+
+    /// The static photo to send. Pass a file_id to send a file that exists on
+    /// the Telegram servers (recommended) or pass
+    /// `attach://<file_attach_name>` to upload a new one using
+    /// multipart/form-data under `<file_attach_name>` name. Sending live photos
+    /// by a URL is currently unsupported.
+    pub photo: InputFile,
+
+    /// Caption of the live photo to be sent, 0-1024 characters after entities
+    /// parsing.
+    pub caption: Option<String>,
+
+    /// Mode for parsing entities in the live photo caption.
+    pub parse_mode: Option<ParseMode>,
+
+    /// List of special entities that appear in the caption, which can be
+    /// specified instead of `parse_mode`.
+    pub caption_entities: Option<Vec<MessageEntity>>,
+
+    /// Pass `true`, if the caption must be shown above the message media.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub show_caption_above_media: bool,
+
+    /// Pass `true` if the live photo needs to be covered with a spoiler
+    /// animation.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub has_spoiler: bool,
+}
+
+impl InputMediaLivePhoto {
+    pub const fn new(media: InputFile, photo: InputFile) -> Self {
+        Self {
+            media,
+            photo,
+            caption: None,
+            parse_mode: None,
+            caption_entities: None,
+            show_caption_above_media: false,
+            has_spoiler: false,
+        }
+    }
+
+    pub fn media(mut self, val: InputFile) -> Self {
+        self.media = val;
+        self
+    }
+
+    pub fn photo(mut self, val: InputFile) -> Self {
+        self.photo = val;
+        self
+    }
+
+    pub fn caption<S>(mut self, val: S) -> Self
+    where
+        S: Into<String>,
+    {
+        self.caption = Some(val.into());
+        self
+    }
+
+    pub const fn parse_mode(mut self, val: ParseMode) -> Self {
+        self.parse_mode = Some(val);
+        self
+    }
+
+    pub fn caption_entities<C>(mut self, val: C) -> Self
+    where
+        C: IntoIterator<Item = MessageEntity>,
+    {
+        self.caption_entities = Some(val.into_iter().collect());
+        self
+    }
+
+    pub fn show_caption_above_media(mut self, val: bool) -> Self {
+        self.show_caption_above_media = val;
+        self
+    }
+
+    /// Sets [`has_spoiler`] to `true`.
+    ///
+    /// [`has_spoiler`]: InputMediaLivePhoto::has_spoiler
+    pub fn spoiler(mut self) -> Self {
+        self.has_spoiler = true;
+        self
+    }
+}
+
 impl From<InputMedia> for InputFile {
     fn from(media: InputMedia) -> InputFile {
         match media {
@@ -588,7 +689,8 @@ impl From<InputMedia> for InputFile {
             | InputMedia::Document(InputMediaDocument { media, .. })
             | InputMedia::Audio(InputMediaAudio { media, .. })
             | InputMedia::Animation(InputMediaAnimation { media, .. })
-            | InputMedia::Video(InputMediaVideo { media, .. }) => media,
+            | InputMedia::Video(InputMediaVideo { media, .. })
+            | InputMedia::LivePhoto(InputMediaLivePhoto { media, .. }) => media,
         }
     }
 }
@@ -598,30 +700,32 @@ impl InputMedia {
     pub(crate) fn files(&self) -> impl Iterator<Item = &InputFile> {
         use InputMedia::*;
 
-        let (media, thumbnail) = match self {
+        let (media, extra) = match self {
             Photo(InputMediaPhoto { media, .. }) => (media, None),
             Document(InputMediaDocument { media, thumbnail, .. })
             | Audio(InputMediaAudio { media, thumbnail, .. })
             | Animation(InputMediaAnimation { media, thumbnail, .. })
             | Video(InputMediaVideo { media, thumbnail, .. }) => (media, thumbnail.as_ref()),
+            LivePhoto(InputMediaLivePhoto { media, photo, .. }) => (media, Some(photo)),
         };
 
-        iter::once(media).chain(thumbnail)
+        iter::once(media).chain(extra)
     }
 
     /// Returns an iterator of all files in this input media
     pub(crate) fn files_mut(&mut self) -> impl Iterator<Item = &mut InputFile> {
         use InputMedia::*;
 
-        let (media, thumbnail) = match self {
+        let (media, extra) = match self {
             Photo(InputMediaPhoto { media, .. }) => (media, None),
             Document(InputMediaDocument { media, thumbnail, .. })
             | Audio(InputMediaAudio { media, thumbnail, .. })
             | Animation(InputMediaAnimation { media, thumbnail, .. })
             | Video(InputMediaVideo { media, thumbnail, .. }) => (media, thumbnail.as_mut()),
+            LivePhoto(InputMediaLivePhoto { media, photo, .. }) => (media, Some(photo)),
         };
 
-        iter::once(media).chain(thumbnail)
+        iter::once(media).chain(extra)
     }
 }
 
