@@ -329,10 +329,7 @@ pub trait Requester {
     where
         C: Into<Recipient>;
 
-    type EditMessageLiveLocationInline: Request<
-        Payload = EditMessageLiveLocationInline,
-        Err = Self::Err,
-    >;
+    type EditMessageLiveLocationInline: Request<Payload = EditMessageLiveLocationInline, Err = Self::Err>;
 
     /// For Telegram documentation see [`EditMessageLiveLocationInline`].
     fn edit_message_live_location_inline<I>(
@@ -355,10 +352,7 @@ pub trait Requester {
     where
         C: Into<Recipient>;
 
-    type StopMessageLiveLocationInline: Request<
-        Payload = StopMessageLiveLocationInline,
-        Err = Self::Err,
-    >;
+    type StopMessageLiveLocationInline: Request<Payload = StopMessageLiveLocationInline, Err = Self::Err>;
 
     /// For Telegram documentation see [`StopMessageLiveLocationInline`].
     fn stop_message_live_location_inline<I>(
@@ -531,10 +525,7 @@ pub trait Requester {
     where
         C: Into<Recipient>;
 
-    type SetChatAdministratorCustomTitle: Request<
-        Payload = SetChatAdministratorCustomTitle,
-        Err = Self::Err,
-    >;
+    type SetChatAdministratorCustomTitle: Request<Payload = SetChatAdministratorCustomTitle, Err = Self::Err>;
 
     /// For Telegram documentation see [`SetChatAdministratorCustomTitle`].
     fn set_chat_administrator_custom_title<Ch, C>(
@@ -600,10 +591,7 @@ pub trait Requester {
         C: Into<Recipient>,
         I: Into<String>;
 
-    type CreateChatSubscriptionInviteLink: Request<
-        Payload = CreateChatSubscriptionInviteLink,
-        Err = Self::Err,
-    >;
+    type CreateChatSubscriptionInviteLink: Request<Payload = CreateChatSubscriptionInviteLink, Err = Self::Err>;
 
     /// For Telegram documentation see [`CreateChatSubscriptionInviteLink`].
     fn create_chat_subscription_invite_link<C>(
@@ -615,10 +603,7 @@ pub trait Requester {
     where
         C: Into<Recipient>;
 
-    type EditChatSubscriptionInviteLink: Request<
-        Payload = EditChatSubscriptionInviteLink,
-        Err = Self::Err,
-    >;
+    type EditChatSubscriptionInviteLink: Request<Payload = EditChatSubscriptionInviteLink, Err = Self::Err>;
 
     /// For Telegram documentation see [`EditChatSubscriptionInviteLink`].
     fn edit_chat_subscription_invite_link<C, I>(
@@ -875,10 +860,7 @@ pub trait Requester {
     where
         C: Into<Recipient>;
 
-    type UnpinAllGeneralForumTopicMessages: Request<
-        Payload = UnpinAllGeneralForumTopicMessages,
-        Err = Self::Err,
-    >;
+    type UnpinAllGeneralForumTopicMessages: Request<Payload = UnpinAllGeneralForumTopicMessages, Err = Self::Err>;
 
     /// For Telegram documentation see [`UnpinAllGeneralForumTopicMessages`].
     fn unpin_all_general_forum_topic_messages<C>(
@@ -983,18 +965,12 @@ pub trait Requester {
     /// For Telegram documentation see [`GetChatMenuButton`].
     fn get_chat_menu_button(&self) -> Self::GetChatMenuButton;
 
-    type SetMyDefaultAdministratorRights: Request<
-        Payload = SetMyDefaultAdministratorRights,
-        Err = Self::Err,
-    >;
+    type SetMyDefaultAdministratorRights: Request<Payload = SetMyDefaultAdministratorRights, Err = Self::Err>;
 
     /// For Telegram documentation see [`SetMyDefaultAdministratorRights`].
     fn set_my_default_administrator_rights(&self) -> Self::SetMyDefaultAdministratorRights;
 
-    type GetMyDefaultAdministratorRights: Request<
-        Payload = GetMyDefaultAdministratorRights,
-        Err = Self::Err,
-    >;
+    type GetMyDefaultAdministratorRights: Request<Payload = GetMyDefaultAdministratorRights, Err = Self::Err>;
 
     /// For Telegram documentation see [`GetMyDefaultAdministratorRights`].
     fn get_my_default_administrator_rights(&self) -> Self::GetMyDefaultAdministratorRights;
@@ -1124,10 +1100,7 @@ pub trait Requester {
     where
         C: Into<Recipient>;
 
-    type EditMessageReplyMarkupInline: Request<
-        Payload = EditMessageReplyMarkupInline,
-        Err = Self::Err,
-    >;
+    type EditMessageReplyMarkupInline: Request<Payload = EditMessageReplyMarkupInline, Err = Self::Err>;
 
     /// For Telegram documentation see [`EditMessageReplyMarkupInline`].
     fn edit_message_reply_markup_inline<I>(
@@ -1283,10 +1256,7 @@ pub trait Requester {
     where
         N: Into<String>;
 
-    type SetCustomEmojiStickerSetThumbnail: Request<
-        Payload = SetCustomEmojiStickerSetThumbnail,
-        Err = Self::Err,
-    >;
+    type SetCustomEmojiStickerSetThumbnail: Request<Payload = SetCustomEmojiStickerSetThumbnail, Err = Self::Err>;
 
     /// For Telegram documentation see [`SetCustomEmojiStickerSetThumbnail`].
     fn set_custom_emoji_sticker_set_thumbnail<N>(
@@ -1434,10 +1404,7 @@ pub trait Requester {
         business_connection_id: BusinessConnectionId,
     ) -> Self::SetBusinessAccountBio;
 
-    type SetBusinessAccountProfilePhoto: Request<
-        Payload = SetBusinessAccountProfilePhoto,
-        Err = Self::Err,
-    >;
+    type SetBusinessAccountProfilePhoto: Request<Payload = SetBusinessAccountProfilePhoto, Err = Self::Err>;
 
     /// For Telegram documentation see [`SetBusinessAccountProfilePhoto`].
     fn set_business_account_profile_photo(
@@ -1446,10 +1413,7 @@ pub trait Requester {
         photo: InputProfilePhoto,
     ) -> Self::SetBusinessAccountProfilePhoto;
 
-    type RemoveBusinessAccountProfilePhoto: Request<
-        Payload = RemoveBusinessAccountProfilePhoto,
-        Err = Self::Err,
-    >;
+    type RemoveBusinessAccountProfilePhoto: Request<Payload = RemoveBusinessAccountProfilePhoto, Err = Self::Err>;
 
     /// For Telegram documentation see [`RemoveBusinessAccountProfilePhoto`].
     fn remove_business_account_profile_photo(
@@ -1457,10 +1421,7 @@ pub trait Requester {
         business_connection_id: BusinessConnectionId,
     ) -> Self::RemoveBusinessAccountProfilePhoto;
 
-    type SetBusinessAccountGiftSettings: Request<
-        Payload = SetBusinessAccountGiftSettings,
-        Err = Self::Err,
-    >;
+    type SetBusinessAccountGiftSettings: Request<Payload = SetBusinessAccountGiftSettings, Err = Self::Err>;
 
     /// For Telegram documentation see [`SetBusinessAccountGiftSettings`].
     fn set_business_account_gift_settings(
@@ -1470,10 +1431,7 @@ pub trait Requester {
         accepted_gift_types: AcceptedGiftTypes,
     ) -> Self::SetBusinessAccountGiftSettings;
 
-    type GetBusinessAccountStarBalance: Request<
-        Payload = GetBusinessAccountStarBalance,
-        Err = Self::Err,
-    >;
+    type GetBusinessAccountStarBalance: Request<Payload = GetBusinessAccountStarBalance, Err = Self::Err>;
 
     /// For Telegram documentation see [`GetBusinessAccountStarBalance`].
     fn get_business_account_star_balance(
@@ -1481,10 +1439,7 @@ pub trait Requester {
         business_connection_id: BusinessConnectionId,
     ) -> Self::GetBusinessAccountStarBalance;
 
-    type TransferBusinessAccountStars: Request<
-        Payload = TransferBusinessAccountStars,
-        Err = Self::Err,
-    >;
+    type TransferBusinessAccountStars: Request<Payload = TransferBusinessAccountStars, Err = Self::Err>;
 
     /// For Telegram documentation see [`TransferBusinessAccountStars`].
     fn transfer_business_account_stars(
@@ -1999,7 +1954,7 @@ where
 fn codegen_requester_methods() {
     use crate::codegen::{
         add_hidden_preamble,
-        convert::{convert_for, Convert},
+        convert::{Convert, convert_for},
         ensure_file_contents, min_prefix, project_root, reformat, replace_block,
         schema::{self, Type},
         to_uppercase,
