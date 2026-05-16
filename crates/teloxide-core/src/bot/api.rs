@@ -353,6 +353,18 @@ impl Requester for Bot {
         Self::SendDice::new(self.clone(), payloads::SendDice::new(chat_id))
     }
 
+    type SendMessageDraft = JsonRequest<payloads::SendMessageDraft>;
+
+    fn send_message_draft<C>(&self, chat_id: C, draft_id: i32) -> Self::SendMessageDraft
+    where
+        C: Into<ChatId>,
+    {
+        Self::SendMessageDraft::new(
+            self.clone(),
+            payloads::SendMessageDraft::new(chat_id, draft_id),
+        )
+    }
+
     type SendChatAction = JsonRequest<payloads::SendChatAction>;
 
     fn send_chat_action<C>(
@@ -473,6 +485,18 @@ impl Requester for Bot {
         Self::SetChatAdministratorCustomTitle::new(
             self.clone(),
             payloads::SetChatAdministratorCustomTitle::new(chat_id, user_id, custom_title),
+        )
+    }
+
+    type SetChatMemberTag = JsonRequest<payloads::SetChatMemberTag>;
+
+    fn set_chat_member_tag<C>(&self, chat_id: C, user_id: UserId) -> Self::SetChatMemberTag
+    where
+        C: Into<Recipient>,
+    {
+        Self::SetChatMemberTag::new(
+            self.clone(),
+            payloads::SetChatMemberTag::new(chat_id, user_id),
         )
     }
 

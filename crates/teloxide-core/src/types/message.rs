@@ -80,6 +80,10 @@ pub struct Message {
     /// connected business account.
     pub sender_business_bot: Option<User>,
 
+    /// Tag or custom title of the sender of the message; for supergroups
+    /// only.
+    pub sender_tag: Option<String>,
+
     #[serde(flatten)]
     pub kind: MessageKind,
 }
@@ -2410,6 +2414,7 @@ mod tests {
                     }),
                 },
                 sender_business_bot: None,
+                sender_tag: None,
                 kind: MessageKind::ChatShared(MessageChatShared {
                     chat_shared: ChatShared {
                         request_id: RequestId(348349),
@@ -3027,6 +3032,7 @@ mod tests {
                     },
                     via_bot: None,
                     sender_business_bot: None,
+                sender_tag: None,
                     suggested_post_info: None,
                     kind: MessageKind::Giveaway(MessageGiveaway {
                         giveaway: Giveaway {

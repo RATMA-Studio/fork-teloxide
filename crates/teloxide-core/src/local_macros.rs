@@ -685,6 +685,14 @@ macro_rules! requester_forward {
             $body!(send_dice this (chat_id: C))
         }
     };
+    (@method send_message_draft $body:ident $ty:ident) => {
+        type SendMessageDraft = $ty![SendMessageDraft];
+
+        fn send_message_draft<C>(&self, chat_id: C, draft_id: i32) -> Self::SendMessageDraft where C: Into<ChatId> {
+            let this = self;
+            $body!(send_message_draft this (chat_id: C, draft_id: i32))
+        }
+    };
     (@method send_chat_action $body:ident $ty:ident) => {
         type SendChatAction = $ty![SendChatAction];
 
@@ -771,6 +779,14 @@ macro_rules! requester_forward {
         fn promote_chat_member<C>(&self, chat_id: C, user_id: UserId) -> Self::PromoteChatMember where C: Into<Recipient> {
             let this = self;
             $body!(promote_chat_member this (chat_id: C, user_id: UserId))
+        }
+    };
+    (@method set_chat_member_tag $body:ident $ty:ident) => {
+        type SetChatMemberTag = $ty![SetChatMemberTag];
+
+        fn set_chat_member_tag<C>(&self, chat_id: C, user_id: UserId) -> Self::SetChatMemberTag where C: Into<Recipient> {
+            let this = self;
+            $body!(set_chat_member_tag this (chat_id: C, user_id: UserId))
         }
     };
     (@method set_chat_administrator_custom_title $body:ident $ty:ident) => {

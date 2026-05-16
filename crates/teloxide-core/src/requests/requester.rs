@@ -439,6 +439,13 @@ pub trait Requester {
     where
         C: Into<Recipient>;
 
+    type SendMessageDraft: Request<Payload = SendMessageDraft, Err = Self::Err>;
+
+    /// For Telegram documentation see [`SendMessageDraft`].
+    fn send_message_draft<C>(&self, chat_id: C, draft_id: i32) -> Self::SendMessageDraft
+    where
+        C: Into<ChatId>;
+
     type SendChatAction: Request<Payload = SendChatAction, Err = Self::Err>;
 
     /// For Telegram documentation see [`SendChatAction`].
@@ -514,6 +521,13 @@ pub trait Requester {
 
     /// For Telegram documentation see [`PromoteChatMember`].
     fn promote_chat_member<C>(&self, chat_id: C, user_id: UserId) -> Self::PromoteChatMember
+    where
+        C: Into<Recipient>;
+
+    type SetChatMemberTag: Request<Payload = SetChatMemberTag, Err = Self::Err>;
+
+    /// For Telegram documentation see [`SetChatMemberTag`].
+    fn set_chat_member_tag<C>(&self, chat_id: C, user_id: UserId) -> Self::SetChatMemberTag
     where
         C: Into<Recipient>;
 
@@ -1710,7 +1724,8 @@ macro_rules! forward_all {
             send_poll,
             send_checklist,
             send_dice,
-            send_chat_action,
+            send_message_draft,
+        send_chat_action,
             set_message_reaction,
             get_user_profile_photos,
         get_user_profile_audios,
@@ -1722,6 +1737,7 @@ macro_rules! forward_all {
             restrict_chat_member,
             promote_chat_member,
             set_chat_administrator_custom_title,
+        set_chat_member_tag,
             ban_chat_sender_chat,
             unban_chat_sender_chat,
             set_chat_permissions,
