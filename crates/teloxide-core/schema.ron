@@ -4053,28 +4053,28 @@ Schema(
         Method(
             names: ("getManagedBotToken", "GetManagedBotToken", "get_managed_bot_token"),
             return_ty: String,
-            doc: Doc(md: "Returns the token of a bot that is managed by the current bot. The current bot must have permissions to manage the bot, granted using the @BotFather Mini App. Returns the token of the requested bot as a String on success."),
+            doc: Doc(md: "Returns the token of a managed bot. Returns the token as a String on success."),
             tg_doc: "https://core.telegram.org/bots/api#getmanagedbottoken",
             tg_category: "Available methods",
             params: [
                 Param(
                     name: "user_id",
-                    ty: u64,
-                    descr: Doc(md: "Unique identifier of the bot")
+                    ty: RawTy("UserId"),
+                    descr: Doc(md: "User identifier of the managed bot whose token will be returned")
                 ),
             ]
         ),
         Method(
             names: ("replaceManagedBotToken", "ReplaceManagedBotToken", "replace_managed_bot_token"),
             return_ty: String,
-            doc: Doc(md: "Replaces the token of a bot that is managed by the current bot. The current bot must have permissions to manage the bot, granted using the @BotFather Mini App. Returns the new token of the bot as a String on success."),
+            doc: Doc(md: "Revokes the current token of a managed bot and generates a new one. Returns the new token as a String on success."),
             tg_doc: "https://core.telegram.org/bots/api#replacemanagedbottoken",
             tg_category: "Available methods",
             params: [
                 Param(
                     name: "user_id",
-                    ty: u64,
-                    descr: Doc(md: "Unique identifier of the bot")
+                    ty: RawTy("UserId"),
+                    descr: Doc(md: "User identifier of the managed bot whose token will be revoked")
                 ),
             ]
         ),

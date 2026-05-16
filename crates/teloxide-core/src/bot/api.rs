@@ -1067,7 +1067,7 @@ impl Requester for Bot {
 
     type GetManagedBotToken = JsonRequest<payloads::GetManagedBotToken>;
 
-    fn get_managed_bot_token(&self, user_id: u64) -> Self::GetManagedBotToken {
+    fn get_managed_bot_token(&self, user_id: UserId) -> Self::GetManagedBotToken {
         Self::GetManagedBotToken::new(
             self.clone(),
             payloads::GetManagedBotToken::new(user_id),
@@ -1076,7 +1076,7 @@ impl Requester for Bot {
 
     type ReplaceManagedBotToken = JsonRequest<payloads::ReplaceManagedBotToken>;
 
-    fn replace_managed_bot_token(&self, user_id: u64) -> Self::ReplaceManagedBotToken {
+    fn replace_managed_bot_token(&self, user_id: UserId) -> Self::ReplaceManagedBotToken {
         Self::ReplaceManagedBotToken::new(
             self.clone(),
             payloads::ReplaceManagedBotToken::new(user_id),

@@ -2,13 +2,15 @@
 
 use serde::Serialize;
 
+use crate::types::UserId;
+
 impl_payload! {
-    /// Replaces the token of a bot that is managed by the current bot. The current bot must have permissions to manage the bot, granted using the @BotFather Mini App. Returns the new token of the bot as a String on success.
+    /// Revokes the current token of a managed bot and generates a new one. Returns the new token as a String on success.
     #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
     pub ReplaceManagedBotToken (ReplaceManagedBotTokenSetters) => String {
         required {
-            /// Unique identifier of the bot
-            pub user_id: u64,
+            /// User identifier of the managed bot whose token will be revoked
+            pub user_id: UserId,
         }
     }
 }
