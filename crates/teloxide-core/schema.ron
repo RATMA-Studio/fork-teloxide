@@ -4063,7 +4063,7 @@ Schema(
             tg_category: "Available methods",
             params: [
                 Param(
-                    name: "managed_bot_user_id",
+                    name: "user_id",
                     ty: u64,
                     descr: Doc(md: "Unique identifier of the bot")
                 ),
@@ -4077,7 +4077,7 @@ Schema(
             tg_category: "Available methods",
             params: [
                 Param(
-                    name: "managed_bot_user_id",
+                    name: "user_id",
                     ty: u64,
                     descr: Doc(md: "Unique identifier of the bot")
                 ),
