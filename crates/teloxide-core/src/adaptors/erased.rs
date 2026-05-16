@@ -220,9 +220,11 @@ where
         send_poll,
         send_checklist,
         send_dice,
+        send_message_draft,
         send_chat_action,
         set_message_reaction,
         get_user_profile_photos,
+        get_user_profile_audios,
         set_user_emoji_status,
         get_file,
         kick_chat_member,
@@ -230,6 +232,7 @@ where
         unban_chat_member,
         restrict_chat_member,
         promote_chat_member,
+        set_chat_member_tag,
         set_chat_administrator_custom_title,
         ban_chat_sender_chat,
         unban_chat_sender_chat,
@@ -279,6 +282,10 @@ where
         get_my_description,
         set_my_short_description,
         get_my_short_description,
+        set_my_profile_photo,
+        remove_my_profile_photo,
+        get_managed_bot_token,
+        replace_managed_bot_token,
         set_chat_menu_button,
         get_chat_menu_button,
         set_my_default_administrator_rights,
@@ -287,6 +294,7 @@ where
         answer_inline_query,
         answer_web_app_query,
         save_prepared_inline_message,
+        save_prepared_keyboard_button,
         edit_message_text,
         edit_message_text_inline,
         edit_message_caption,
@@ -544,6 +552,12 @@ trait ErasableRequester<'a> {
 
     fn send_dice(&self, chat_id: Recipient) -> ErasedRequest<'a, SendDice, Self::Err>;
 
+    fn send_message_draft(
+        &self,
+        chat_id: ChatId,
+        draft_id: i32,
+    ) -> ErasedRequest<'a, SendMessageDraft, Self::Err>;
+
     fn send_chat_action(
         &self,
         chat_id: Recipient,
@@ -560,6 +574,11 @@ trait ErasableRequester<'a> {
         &self,
         user_id: UserId,
     ) -> ErasedRequest<'a, GetUserProfilePhotos, Self::Err>;
+
+    fn get_user_profile_audios(
+        &self,
+        user_id: UserId,
+    ) -> ErasedRequest<'a, GetUserProfileAudios, Self::Err>;
 
     fn set_user_emoji_status(
         &self,
@@ -598,6 +617,12 @@ trait ErasableRequester<'a> {
         chat_id: Recipient,
         user_id: UserId,
     ) -> ErasedRequest<'a, PromoteChatMember, Self::Err>;
+
+    fn set_chat_member_tag(
+        &self,
+        chat_id: Recipient,
+        user_id: UserId,
+    ) -> ErasedRequest<'a, SetChatMemberTag, Self::Err>;
 
     fn set_chat_administrator_custom_title(
         &self,
@@ -853,6 +878,23 @@ trait ErasableRequester<'a> {
 
     fn get_my_short_description(&self) -> ErasedRequest<'a, GetMyShortDescription, Self::Err>;
 
+    fn set_my_profile_photo(
+        &self,
+        photo: InputProfilePhoto,
+    ) -> ErasedRequest<'a, SetMyProfilePhoto, Self::Err>;
+
+    fn remove_my_profile_photo(&self) -> ErasedRequest<'a, RemoveMyProfilePhoto, Self::Err>;
+
+    fn get_managed_bot_token(
+        &self,
+        user_id: UserId,
+    ) -> ErasedRequest<'a, GetManagedBotToken, Self::Err>;
+
+    fn replace_managed_bot_token(
+        &self,
+        user_id: UserId,
+    ) -> ErasedRequest<'a, ReplaceManagedBotToken, Self::Err>;
+
     fn set_chat_menu_button(&self) -> ErasedRequest<'a, SetChatMenuButton, Self::Err>;
 
     fn get_chat_menu_button(&self) -> ErasedRequest<'a, GetChatMenuButton, Self::Err>;
@@ -884,6 +926,12 @@ trait ErasableRequester<'a> {
         user_id: UserId,
         result: InlineQueryResult,
     ) -> ErasedRequest<'a, SavePreparedInlineMessage, Self::Err>;
+
+    fn save_prepared_keyboard_button(
+        &self,
+        user_id: UserId,
+        button: KeyboardButton,
+    ) -> ErasedRequest<'a, SavePreparedKeyboardButton, Self::Err>;
 
     fn edit_message_text(
         &self,
@@ -1536,6 +1584,14 @@ where
         Requester::send_dice(self, chat_id).erase()
     }
 
+    fn send_message_draft(
+        &self,
+        chat_id: ChatId,
+        draft_id: i32,
+    ) -> ErasedRequest<'a, SendMessageDraft, Self::Err> {
+        Requester::send_message_draft(self, chat_id, draft_id).erase()
+    }
+
     fn send_chat_action(
         &self,
         chat_id: Recipient,
@@ -1557,6 +1613,13 @@ where
         user_id: UserId,
     ) -> ErasedRequest<'a, GetUserProfilePhotos, Self::Err> {
         Requester::get_user_profile_photos(self, user_id).erase()
+    }
+
+    fn get_user_profile_audios(
+        &self,
+        user_id: UserId,
+    ) -> ErasedRequest<'a, GetUserProfileAudios, Self::Err> {
+        Requester::get_user_profile_audios(self, user_id).erase()
     }
 
     fn set_user_emoji_status(
@@ -1609,6 +1672,14 @@ where
         user_id: UserId,
     ) -> ErasedRequest<'a, PromoteChatMember, Self::Err> {
         Requester::promote_chat_member(self, chat_id, user_id).erase()
+    }
+
+    fn set_chat_member_tag(
+        &self,
+        chat_id: Recipient,
+        user_id: UserId,
+    ) -> ErasedRequest<'a, SetChatMemberTag, Self::Err> {
+        Requester::set_chat_member_tag(self, chat_id, user_id).erase()
     }
 
     fn set_chat_administrator_custom_title(
@@ -1973,6 +2044,31 @@ where
         Requester::get_my_short_description(self).erase()
     }
 
+    fn set_my_profile_photo(
+        &self,
+        photo: InputProfilePhoto,
+    ) -> ErasedRequest<'a, SetMyProfilePhoto, Self::Err> {
+        Requester::set_my_profile_photo(self, photo).erase()
+    }
+
+    fn remove_my_profile_photo(&self) -> ErasedRequest<'a, RemoveMyProfilePhoto, Self::Err> {
+        Requester::remove_my_profile_photo(self).erase()
+    }
+
+    fn get_managed_bot_token(
+        &self,
+        user_id: UserId,
+    ) -> ErasedRequest<'a, GetManagedBotToken, Self::Err> {
+        Requester::get_managed_bot_token(self, user_id).erase()
+    }
+
+    fn replace_managed_bot_token(
+        &self,
+        user_id: UserId,
+    ) -> ErasedRequest<'a, ReplaceManagedBotToken, Self::Err> {
+        Requester::replace_managed_bot_token(self, user_id).erase()
+    }
+
     fn set_chat_menu_button(&self) -> ErasedRequest<'a, SetChatMenuButton, Self::Err> {
         Requester::set_chat_menu_button(self).erase()
     }
@@ -2019,6 +2115,14 @@ where
         result: InlineQueryResult,
     ) -> ErasedRequest<'a, SavePreparedInlineMessage, Self::Err> {
         Requester::save_prepared_inline_message(self, user_id, result).erase()
+    }
+
+    fn save_prepared_keyboard_button(
+        &self,
+        user_id: UserId,
+        button: KeyboardButton,
+    ) -> ErasedRequest<'a, SavePreparedKeyboardButton, Self::Err> {
+        Requester::save_prepared_keyboard_button(self, user_id, button).erase()
     }
 
     fn edit_message_text(
