@@ -112,15 +112,35 @@ pub struct Poll {
 /// This object contains information about one answer option in a poll.
 ///
 /// [The official docs](https://core.telegram.org/bots/api#polloption).
+#[serde_with::skip_serializing_none]
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct PollOption {
+    /// Persistent identifier of the option. Available only for polls that
+    /// allow voters to add new options or that have such an option already
+    /// added.
+    pub persistent_id: Option<String>,
+
     /// Option text, 1-100 characters.
     pub text: String,
 
     /// Special entities that appear in the option text. Currently, only custom
     /// emoji entities are allowed in poll option texts
     pub text_entities: Option<Vec<MessageEntity>>,
+
+    /// User that added the option to the poll. Available only for options
+    /// added by users.
+    pub added_by_user: Option<User>,
+
+    /// Chat on behalf of which the option was added to the poll. Available
+    /// only for options added on behalf of a chat.
+    pub added_by_chat: Option<crate::types::Chat>,
+
+    /// Point in time when the option was added to the poll. Available only
+    /// for options added by users or chats.
+    #[serde(default, with = "crate::types::serde_opt_date_from_unix_timestamp")]
+    #[cfg_attr(test, schemars(with = "Option<i64>"))]
+    pub addition_date: Option<DateTime<Utc>>,
 
     /// Number of users that voted for this option.
     pub voter_count: u32,
