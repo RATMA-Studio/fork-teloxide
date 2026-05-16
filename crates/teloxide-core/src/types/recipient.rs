@@ -4,7 +4,10 @@ use serde::{Deserialize, Serialize};
 use crate::types::{ChatId, UserId};
 
 /// A unique identifier for the target chat or username of the target channel
-/// (in the format `@channelusername`).
+/// or bot (in the format `@username`).
+///
+/// Since Bot API 10.0 messages can also be sent to other bots via their
+/// `@bot_username` if both bots enabled bot-to-bot communication.
 #[derive(Clone, PartialEq, Eq, Hash)]
 #[derive(Debug, Display, From)]
 #[derive(Serialize, Deserialize)]
@@ -15,7 +18,9 @@ pub enum Recipient {
     #[display("{_0}")]
     Id(ChatId),
 
-    /// A channel username (in the format @channelusername).
+    /// A public username (in the format `@username`). Can be a channel,
+    /// supergroup or, since Bot API 10.0, a bot when bot-to-bot
+    /// communication is enabled on both sides.
     #[display("{_0}")]
     ChannelUsername(String),
 }
