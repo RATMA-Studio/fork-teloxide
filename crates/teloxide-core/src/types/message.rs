@@ -12,8 +12,9 @@ use crate::types::{
     ForumTopicClosed, ForumTopicCreated, ForumTopicEdited, ForumTopicReopened, Game,
     GeneralForumTopicHidden, GeneralForumTopicUnhidden, GiftInfo, Giveaway, GiveawayCompleted,
     GiveawayCreated, GiveawayWinners, InlineKeyboardMarkup, Invoice, LinkPreviewOptions, Location,
-    MaybeInaccessibleMessage, MessageAutoDeleteTimerChanged, MessageEntity, MessageEntityRef,
-    MessageId, MessageOrigin, PaidMediaInfo, PaidMessagePriceChanged, PassportData, PhotoSize,
+    ManagedBotCreated, MaybeInaccessibleMessage, MessageAutoDeleteTimerChanged, MessageEntity,
+    MessageEntityRef, MessageId, MessageOrigin, PaidMediaInfo, PaidMessagePriceChanged,
+    PassportData, PhotoSize,
     Poll, ProximityAlertTriggered, RefundedPayment, Sticker, Story, SuccessfulPayment,
     SuggestedPostApprovalFailed, SuggestedPostApproved, SuggestedPostDeclined, SuggestedPostInfo,
     SuggestedPostPaid, SuggestedPostRefunded, TextQuote, ThreadId, True, UniqueGiftInfo, User,
@@ -119,6 +120,7 @@ pub enum MessageKind {
     ChatBoostAdded(MessageChatBoostAdded),
     ChatOwnerLeft(MessageChatOwnerLeft),
     ChatOwnerChanged(MessageChatOwnerChanged),
+    ManagedBotCreated(MessageManagedBotCreated),
     ChatBackground(MessageChatBackground),
     ChecklistTasksDone(MessageChecklistTasksDone),
     ChecklistTasksAdded(MessageChecklistTasksAdded),
@@ -763,6 +765,14 @@ pub struct MessageChatOwnerLeft {
 pub struct MessageChatOwnerChanged {
     /// Service message: chat owner has changed.
     pub chat_owner_changed: ChatOwnerChanged,
+}
+
+#[serde_with::skip_serializing_none]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(test, derive(schemars::JsonSchema))]
+pub struct MessageManagedBotCreated {
+    /// Service message: a managed bot was created.
+    pub managed_bot_created: ManagedBotCreated,
 }
 
 #[serde_with::skip_serializing_none]

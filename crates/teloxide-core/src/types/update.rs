@@ -4,9 +4,9 @@ use serde_json::Value;
 
 use crate::types::{
     BusinessConnection, BusinessMessagesDeleted, CallbackQuery, Chat, ChatBoostRemoved,
-    ChatBoostUpdated, ChatJoinRequest, ChatMemberUpdated, ChosenInlineResult, InlineQuery, Message,
-    MessageReactionCountUpdated, MessageReactionUpdated, PaidMediaPurchased, Poll, PollAnswer,
-    PreCheckoutQuery, ShippingQuery, User,
+    ChatBoostUpdated, ChatJoinRequest, ChatMemberUpdated, ChosenInlineResult, InlineQuery,
+    ManagedBotUpdated, Message, MessageReactionCountUpdated, MessageReactionUpdated,
+    PaidMediaPurchased, Poll, PollAnswer, PreCheckoutQuery, ShippingQuery, User,
 };
 
 /// This [object] represents an incoming update.
@@ -153,6 +153,11 @@ pub enum UpdateKind {
     /// chat to receive these updates.
     RemovedChatBoost(ChatBoostRemoved),
 
+    /// Information about the creation, token update, or owner update of a bot
+    /// that is managed by the current bot. Available for bots that enabled
+    /// management of other bots in the `@BotFather` Mini App.
+    ManagedBot(ManagedBotUpdated),
+
     /// An error that happened during deserialization.
     ///
     /// This allows `teloxide` to continue working even if telegram adds a new
@@ -196,6 +201,8 @@ impl Update {
             ChatJoinRequest(r) => &r.from,
             ChatBoost(b) => return b.boost.source.user(),
             RemovedChatBoost(b) => return b.source.user(),
+
+            ManagedBot(m) => &m.user,
 
             MessageReactionCount(_) | DeletedBusinessMessages(_) | Poll(_) | Error(_) => {
                 return None
@@ -288,6 +295,8 @@ impl Update {
                 i5(empty())
             }
 
+            UpdateKind::ManagedBot(m) => i1(once(&m.user)),
+
             UpdateKind::ChatJoinRequest(_)
             | UpdateKind::MessageReactionCount(_)
             | UpdateKind::BusinessConnection(_)
@@ -326,6 +335,7 @@ impl Update {
             | PurchasedPaidMedia(_)
             | Poll(_)
             | PollAnswer(_)
+            | ManagedBot(_)
             | Error(_) => return None,
         };
 
@@ -452,6 +462,9 @@ impl<'de> Deserialize<'de> for UpdateKind {
                             .next_value::<ChatBoostRemoved>()
                             .ok()
                             .map(UpdateKind::RemovedChatBoost),
+                        "managed_bot" => {
+                            map.next_value::<ManagedBotUpdated>().ok().map(UpdateKind::ManagedBot)
+                        }
                         _ => Some(empty_error()),
                     })
                     .unwrap_or_else(empty_error);
@@ -526,6 +539,7 @@ impl Serialize for UpdateKind {
             UpdateKind::RemovedChatBoost(v) => {
                 s.serialize_newtype_variant(name, 22, "removed_chat_boost", v)
             }
+            UpdateKind::ManagedBot(v) => s.serialize_newtype_variant(name, 23, "managed_bot", v),
             UpdateKind::Error(v) => v.serialize(s),
         }
     }
