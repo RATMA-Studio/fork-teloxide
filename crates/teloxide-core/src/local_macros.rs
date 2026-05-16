@@ -1703,6 +1703,22 @@ macro_rules! requester_forward {
             $body!(get_business_account_gifts this (business_connection_id: BusinessConnectionId))
         }
     };
+    (@method get_user_gifts $body:ident $ty:ident) => {
+        type GetUserGifts = $ty![GetUserGifts];
+
+        fn get_user_gifts(&self, user_id: UserId) -> Self::GetUserGifts {
+            let this = self;
+            $body!(get_user_gifts this (user_id: UserId))
+        }
+    };
+    (@method get_chat_gifts $body:ident $ty:ident) => {
+        type GetChatGifts = $ty![GetChatGifts];
+
+        fn get_chat_gifts<C>(&self, chat_id: C) -> Self::GetChatGifts where C: Into<Recipient> {
+            let this = self;
+            $body!(get_chat_gifts this (chat_id: C))
+        }
+    };
     (@method convert_gift_to_stars $body:ident $ty:ident) => {
         type ConvertGiftToStars = $ty![ConvertGiftToStars];
 

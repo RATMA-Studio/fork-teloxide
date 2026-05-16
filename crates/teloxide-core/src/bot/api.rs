@@ -1800,6 +1800,21 @@ impl Requester for Bot {
         )
     }
 
+    type GetUserGifts = JsonRequest<payloads::GetUserGifts>;
+
+    fn get_user_gifts(&self, user_id: UserId) -> Self::GetUserGifts {
+        Self::GetUserGifts::new(self.clone(), payloads::GetUserGifts::new(user_id))
+    }
+
+    type GetChatGifts = JsonRequest<payloads::GetChatGifts>;
+
+    fn get_chat_gifts<C>(&self, chat_id: C) -> Self::GetChatGifts
+    where
+        C: Into<Recipient>,
+    {
+        Self::GetChatGifts::new(self.clone(), payloads::GetChatGifts::new(chat_id))
+    }
+
     type ConvertGiftToStars = JsonRequest<payloads::ConvertGiftToStars>;
 
     fn convert_gift_to_stars(
