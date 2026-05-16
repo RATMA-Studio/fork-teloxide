@@ -163,7 +163,7 @@ mod tests {
             is_premium: false,
             added_to_attachment_menu: false,
             can_manage_bots: false,
-                has_topics_enabled: false,
+            has_topics_enabled: false,
         };
         let actual = serde_json::from_str::<User>(json).unwrap();
         assert_eq!(actual, expected)
@@ -181,7 +181,7 @@ mod tests {
             is_premium: false,
             added_to_attachment_menu: false,
             can_manage_bots: false,
-                has_topics_enabled: false,
+            has_topics_enabled: false,
         };
 
         let user_b = User {
@@ -194,7 +194,7 @@ mod tests {
             is_premium: false,
             added_to_attachment_menu: false,
             can_manage_bots: false,
-                has_topics_enabled: false,
+            has_topics_enabled: false,
         };
 
         assert_eq!(user_a.full_name(), "First Last");

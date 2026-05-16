@@ -1,7 +1,7 @@
 use std::{future::Future, sync::Arc};
 
 use reqwest::Client;
-use serde::{de::DeserializeOwned, Serialize};
+use serde::{Serialize, de::DeserializeOwned};
 
 use crate::{
     net,
@@ -167,8 +167,8 @@ impl Bot {
     ///
     /// ```
     /// use teloxide_core::{
-    ///     requests::{Request, Requester},
     ///     Bot,
+    ///     requests::{Request, Requester},
     /// };
     ///
     /// # async {

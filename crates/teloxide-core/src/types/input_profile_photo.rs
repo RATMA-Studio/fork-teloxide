@@ -17,7 +17,7 @@ impl InputProfilePhoto {
     /// extract attachments uniformly with `InputMedia` etc.
     pub(crate) fn files(&self) -> impl Iterator<Item = &InputFile> {
         let f = match self {
-            InputProfilePhoto::Static(s)   => &s.photo,
+            InputProfilePhoto::Static(s) => &s.photo,
             InputProfilePhoto::Animated(a) => &a.animation,
         };
         std::iter::once(f)
@@ -27,7 +27,7 @@ impl InputProfilePhoto {
     /// when the multipart body is being built.
     pub(crate) fn files_mut(&mut self) -> impl Iterator<Item = &mut InputFile> {
         let f = match self {
-            InputProfilePhoto::Static(s)   => &mut s.photo,
+            InputProfilePhoto::Static(s) => &mut s.photo,
             InputProfilePhoto::Animated(a) => &mut a.animation,
         };
         std::iter::once(f)

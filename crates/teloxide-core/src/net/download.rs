@@ -2,9 +2,9 @@ use std::{future::Future, sync::Arc};
 
 use bytes::Bytes;
 use futures::{
-    future::{ready, Either},
-    stream::{once, unfold},
     FutureExt, Stream, StreamExt,
+    future::{Either, ready},
+    stream::{once, unfold},
 };
 use reqwest::{Client, Response, Url};
 use tokio::io::{AsyncWrite, AsyncWriteExt};
@@ -37,10 +37,10 @@ pub trait Download {
     ///
     /// ```no_run
     /// use teloxide_core::{
+    ///     Bot,
     ///     net::Download,
     ///     requests::{Request, Requester},
     ///     types::{File, FileId},
-    ///     Bot,
     /// };
     /// use tokio::fs;
     ///

@@ -1,6 +1,6 @@
 // Some concepts are from Serde.
 
-use crate::error::{compile_error, Result};
+use crate::error::{Result, compile_error};
 
 use heck::{
     ToKebabCase, ToLowerCamelCase, ToPascalCase, ToShoutyKebabCase, ToShoutySnakeCase, ToSnakeCase,
@@ -67,7 +67,7 @@ impl RenameRule {
                     "invalid rename rule `{invalid}` (supported rules: `lowercase`, `UPPERCASE`, \
                      `PascalCase`, `camelCase`, `snake_case`, `SCREAMING_SNAKE_CASE`, \
                      `kebab-case`, `SCREAMING-KEBAB-CASE` and `identity`)"
-                )))
+                )));
             }
         };
 

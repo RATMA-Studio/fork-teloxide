@@ -6,12 +6,12 @@ use std::{
 };
 
 use futures::future::BoxFuture;
-use serde::{de::DeserializeOwned, Serialize};
+use serde::{Serialize, de::DeserializeOwned};
 use sqlx::postgres::{PgPool, PgPoolOptions};
 use teloxide_core::types::ChatId;
 use thiserror::Error;
 
-use super::{serializer::Serializer, Storage};
+use super::{Storage, serializer::Serializer};
 
 /// An error returned from [`PostgresStorage`].
 #[derive(Debug, Error)]

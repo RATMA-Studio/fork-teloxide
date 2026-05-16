@@ -1,5 +1,5 @@
 #![allow(clippy::large_enum_variant)]
-use serde::{de::MapAccess, Deserialize, Serialize, Serializer};
+use serde::{Deserialize, Serialize, Serializer, de::MapAccess};
 use serde_json::Value;
 
 use crate::types::{
@@ -205,7 +205,7 @@ impl Update {
             ManagedBot(m) => &m.user,
 
             MessageReactionCount(_) | DeletedBusinessMessages(_) | Poll(_) | Error(_) => {
-                return None
+                return None;
             }
         };
 
@@ -607,8 +607,8 @@ mod test {
                     language_code: Some(String::from("en")),
                     is_premium: false,
                     added_to_attachment_menu: false,
-                can_manage_bots: false,
-                has_topics_enabled: false,
+                    can_manage_bots: false,
+                    has_topics_enabled: false,
                 }),
                 sender_chat: None,
                 is_topic_message: false,
@@ -970,8 +970,8 @@ mod test {
                     language_code: Some("en".to_owned()),
                     is_premium: true,
                     added_to_attachment_menu: false,
-                can_manage_bots: false,
-                has_topics_enabled: false,
+                    can_manage_bots: false,
+                    has_topics_enabled: false,
                 }),
                 date: DateTime::from_timestamp(1721306082, 0).unwrap(),
                 old_reaction: vec![],
@@ -1152,8 +1152,8 @@ mod test {
                             language_code: Some("en".to_owned()),
                             is_premium: true,
                             added_to_attachment_menu: false,
-                can_manage_bots: false,
-                has_topics_enabled: false,
+                            can_manage_bots: false,
+                            has_topics_enabled: false,
                         },
                     }),
                 },
@@ -1214,8 +1214,8 @@ mod test {
                         language_code: Some("en".to_owned()),
                         is_premium: true,
                         added_to_attachment_menu: false,
-                can_manage_bots: false,
-                has_topics_enabled: false,
+                        can_manage_bots: false,
+                        has_topics_enabled: false,
                     },
                 }),
             }),
