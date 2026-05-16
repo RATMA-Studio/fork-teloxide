@@ -966,12 +966,12 @@ pub trait Requester {
     type GetManagedBotToken: Request<Payload = GetManagedBotToken, Err = Self::Err>;
 
     /// For Telegram documentation see [`GetManagedBotToken`].
-    fn get_managed_bot_token(&self, user_id: u64) -> Self::GetManagedBotToken;
+    fn get_managed_bot_token(&self, user_id: UserId) -> Self::GetManagedBotToken;
 
     type ReplaceManagedBotToken: Request<Payload = ReplaceManagedBotToken, Err = Self::Err>;
 
     /// For Telegram documentation see [`ReplaceManagedBotToken`].
-    fn replace_managed_bot_token(&self, user_id: u64) -> Self::ReplaceManagedBotToken;
+    fn replace_managed_bot_token(&self, user_id: UserId) -> Self::ReplaceManagedBotToken;
 
     type SetChatMenuButton: Request<Payload = SetChatMenuButton, Err = Self::Err>;
 

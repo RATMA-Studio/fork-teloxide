@@ -2,13 +2,15 @@
 
 use serde::Serialize;
 
+use crate::types::UserId;
+
 impl_payload! {
-    /// Returns the token of a bot that is managed by the current bot. The current bot must have permissions to manage the bot, granted using the @BotFather Mini App. Returns the token of the requested bot as a String on success.
+    /// Returns the token of a managed bot. Returns the token as a String on success.
     #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
     pub GetManagedBotToken (GetManagedBotTokenSetters) => String {
         required {
-            /// Unique identifier of the bot
-            pub user_id: u64,
+            /// User identifier of the managed bot whose token will be returned
+            pub user_id: UserId,
         }
     }
 }

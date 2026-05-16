@@ -1226,17 +1226,17 @@ macro_rules! requester_forward {
     (@method get_managed_bot_token $body:ident $ty:ident) => {
         type GetManagedBotToken = $ty![GetManagedBotToken];
 
-        fn get_managed_bot_token(&self, user_id: u64) -> Self::GetManagedBotToken {
+        fn get_managed_bot_token(&self, user_id: UserId) -> Self::GetManagedBotToken {
             let this = self;
-            $body!(get_managed_bot_token this (user_id: u64))
+            $body!(get_managed_bot_token this (user_id: UserId))
         }
     };
     (@method replace_managed_bot_token $body:ident $ty:ident) => {
         type ReplaceManagedBotToken = $ty![ReplaceManagedBotToken];
 
-        fn replace_managed_bot_token(&self, user_id: u64) -> Self::ReplaceManagedBotToken {
+        fn replace_managed_bot_token(&self, user_id: UserId) -> Self::ReplaceManagedBotToken {
             let this = self;
-            $body!(replace_managed_bot_token this (user_id: u64))
+            $body!(replace_managed_bot_token this (user_id: UserId))
         }
     };
     (@method set_chat_menu_button $body:ident $ty:ident) => {
