@@ -2241,6 +2241,24 @@ Schema(
                     descr: Doc(md: "A JSON-serialized list of special entities that appear in the poll question. It can be specified instead of _question\\_parse\\_mode_"),
                 ),
                 Param(
+                    name: "description",
+                    ty: Option(String),
+                    descr: Doc(md: "Poll description, 0-300 characters")
+                ),
+                Param(
+                    name: "description_parse_mode",
+                    ty: Option(RawTy("ParseMode")),
+                    descr: Doc(
+                        md: "Mode for parsing entities in the description. See [formatting options] for more details. Currently, only custom emoji entities are allowed",
+                        md_links: {"formatting options": "https://core.telegram.org/bots/api#formatting-options"}
+                    )
+                ),
+                Param(
+                    name: "description_entities",
+                    ty: Option(ArrayOf(RawTy("MessageEntity"))),
+                    descr: Doc(md: "A JSON-serialized list of special entities that appear in the poll description. It can be specified instead of _description\\_parse\\_mode_"),
+                ),
+                Param(
                     name: "options",
                     ty: ArrayOf(RawTy("InputPollOption")),
                     descr: Doc(md: "A JSON-serialized list of 2-10 answer options"),
@@ -2261,9 +2279,34 @@ Schema(
                     descr: Doc(md: "True, if the poll allows multiple answers, ignored for polls in quiz mode, defaults to False")
                 ),
                 Param(
+                    name: "allows_revoting",
+                    ty: Option(bool),
+                    descr: Doc(md: "Pass `true`, if voters are allowed to change their vote in the poll")
+                ),
+                Param(
+                    name: "shuffle_options",
+                    ty: Option(bool),
+                    descr: Doc(md: "Pass `true`, if the order of options in the poll must be randomized")
+                ),
+                Param(
+                    name: "allow_adding_options",
+                    ty: Option(bool),
+                    descr: Doc(md: "Pass `true`, if poll voters are allowed to add new options to the poll")
+                ),
+                Param(
+                    name: "hide_results_until_closes",
+                    ty: Option(bool),
+                    descr: Doc(md: "Pass `true`, if the poll results must be hidden until the poll is closed")
+                ),
+                Param(
                     name: "correct_option_id",
                     ty: Option(u8),
                     descr: Doc(md: "0-based identifier of the correct answer option, required for polls in quiz mode")
+                ),
+                Param(
+                    name: "correct_option_ids",
+                    ty: Option(ArrayOf(u8)),
+                    descr: Doc(md: "A JSON-serialized list of 0-based identifiers of correct answer options, required for polls in quiz mode with multiple correct answers; pass `correct_option_id` or `correct_option_ids`, but not both")
                 ),
                 Param(
                     name: "explanation",
@@ -4013,6 +4056,34 @@ Schema(
             params: []
         ),
         Method(
+            names: ("getManagedBotToken", "GetManagedBotToken", "get_managed_bot_token"),
+            return_ty: String,
+            doc: Doc(md: "Returns the token of a bot that is managed by the current bot. The current bot must have permissions to manage the bot, granted using the @BotFather Mini App. Returns the token of the requested bot as a String on success."),
+            tg_doc: "https://core.telegram.org/bots/api#getmanagedbottoken",
+            tg_category: "Available methods",
+            params: [
+                Param(
+                    name: "managed_bot_user_id",
+                    ty: u64,
+                    descr: Doc(md: "Unique identifier of the bot")
+                ),
+            ]
+        ),
+        Method(
+            names: ("replaceManagedBotToken", "ReplaceManagedBotToken", "replace_managed_bot_token"),
+            return_ty: String,
+            doc: Doc(md: "Replaces the token of a bot that is managed by the current bot. The current bot must have permissions to manage the bot, granted using the @BotFather Mini App. Returns the new token of the bot as a String on success."),
+            tg_doc: "https://core.telegram.org/bots/api#replacemanagedbottoken",
+            tg_category: "Available methods",
+            params: [
+                Param(
+                    name: "managed_bot_user_id",
+                    ty: u64,
+                    descr: Doc(md: "Unique identifier of the bot")
+                ),
+            ]
+        ),
+        Method(
             names: ("setChatMenuButton", "SetChatMenuButton", "set_chat_menu_button"),
             return_ty: True,
             doc: Doc(md: "Use this method to change the bot's menu button in a private chat, or the default menu button."),
@@ -4200,6 +4271,23 @@ Schema(
                     name: "allow_channel_chats",
                     ty: Option(bool),
                     descr: Doc(md: "Pass `true`, if the message can be sent to channel chats"),
+                ),
+            ]
+        ),
+        Method(
+            names: ("savePreparedKeyboardButton", "SavePreparedKeyboardButton", "save_prepared_keyboard_button"),
+            return_ty: RawTy("PreparedKeyboardButton"),
+            doc: Doc(
+                md: "Use this method to store a keyboard button that can be added by the bot to a reply keyboard of an opener of a Mini App. Returns a [PreparedKeyboardButton] object.",
+                md_links: {"PreparedKeyboardButton": "https://core.telegram.org/bots/api#preparedkeyboardbutton"}
+            ),
+            tg_doc: "https://core.telegram.org/bots/api#savepreparedkeyboardbutton",
+            tg_category: "Available methods",
+            params: [
+                Param(
+                    name: "button",
+                    ty: RawTy("KeyboardButton"),
+                    descr: Doc(md: "A JSON-serialized object describing the keyboard button to be added.")
                 ),
             ]
         ),

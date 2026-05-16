@@ -39,6 +39,13 @@ pub struct Poll {
     /// emoji entities are allowed in poll questions
     pub question_entities: Option<Vec<MessageEntity>>,
 
+    /// Poll description, 0-300 characters.
+    pub description: Option<String>,
+
+    /// Special entities that appear in the description. Currently, only custom
+    /// emoji entities are allowed in poll descriptions.
+    pub description_entities: Option<Vec<MessageEntity>>,
+
     /// List of poll options.
     pub options: Vec<PollOption>,
 
@@ -58,10 +65,32 @@ pub struct Poll {
     /// True, if the poll allows multiple answers
     pub allows_multiple_answers: bool,
 
+    /// `true`, if the poll allows voters to change their vote.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub allows_revoting: bool,
+
+    /// `true`, if the order of options in the poll is randomized.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub shuffle_options: bool,
+
+    /// `true`, if poll voters are allowed to add new options to the poll.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub allow_adding_options: bool,
+
+    /// `true`, if poll results are hidden until the poll is closed.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub hide_results_until_closes: bool,
+
     /// 0-based identifier of the correct answer option. Available only for
     /// polls in the quiz mode, which are closed, or was sent (not
     /// forwarded) by the bot or to the private chat with the bot.
     pub correct_option_id: Option<u8>,
+
+    /// List of 0-based identifiers of the correct answer options. Available
+    /// only for polls in the quiz mode with multiple correct options, which
+    /// are closed, or were sent (not forwarded) by the bot or to the private
+    /// chat with the bot.
+    pub correct_option_ids: Option<Vec<u8>>,
 
     /// Text that is shown when a user chooses an incorrect answer or taps on
     /// the lamp icon in a quiz-style poll, 0-200 characters.
@@ -83,15 +112,35 @@ pub struct Poll {
 /// This object contains information about one answer option in a poll.
 ///
 /// [The official docs](https://core.telegram.org/bots/api#polloption).
+#[serde_with::skip_serializing_none]
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct PollOption {
+    /// Persistent identifier of the option. Available only for polls that
+    /// allow voters to add new options or that have such an option already
+    /// added.
+    pub persistent_id: Option<String>,
+
     /// Option text, 1-100 characters.
     pub text: String,
 
     /// Special entities that appear in the option text. Currently, only custom
     /// emoji entities are allowed in poll option texts
     pub text_entities: Option<Vec<MessageEntity>>,
+
+    /// User that added the option to the poll. Available only for options
+    /// added by users.
+    pub added_by_user: Option<User>,
+
+    /// Chat on behalf of which the option was added to the poll. Available
+    /// only for options added on behalf of a chat.
+    pub added_by_chat: Option<crate::types::Chat>,
+
+    /// Point in time when the option was added to the poll. Available only
+    /// for options added by users or chats.
+    #[serde(default, with = "crate::types::serde_opt_date_from_unix_timestamp")]
+    #[cfg_attr(test, schemars(with = "Option<i64>"))]
+    pub addition_date: Option<DateTime<Utc>>,
 
     /// Number of users that voted for this option.
     pub voter_count: u32,

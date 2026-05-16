@@ -12,9 +12,10 @@ use crate::types::{
     ForumTopicClosed, ForumTopicCreated, ForumTopicEdited, ForumTopicReopened, Game,
     GeneralForumTopicHidden, GeneralForumTopicUnhidden, GiftInfo, Giveaway, GiveawayCompleted,
     GiveawayCreated, GiveawayWinners, InlineKeyboardMarkup, Invoice, LinkPreviewOptions, Location,
-    MaybeInaccessibleMessage, MessageAutoDeleteTimerChanged, MessageEntity, MessageEntityRef,
-    MessageId, MessageOrigin, PaidMediaInfo, PaidMessagePriceChanged, PassportData, PhotoSize,
-    Poll, ProximityAlertTriggered, RefundedPayment, Sticker, Story, SuccessfulPayment,
+    ManagedBotCreated, MaybeInaccessibleMessage, MessageAutoDeleteTimerChanged, MessageEntity,
+    MessageEntityRef, MessageId, MessageOrigin, PaidMediaInfo, PaidMessagePriceChanged,
+    PassportData, PhotoSize,
+    Poll, PollOptionAdded, PollOptionDeleted, ProximityAlertTriggered, RefundedPayment, Sticker, Story, SuccessfulPayment,
     SuggestedPostApprovalFailed, SuggestedPostApproved, SuggestedPostDeclined, SuggestedPostInfo,
     SuggestedPostPaid, SuggestedPostRefunded, TextQuote, ThreadId, True, UniqueGiftInfo, User,
     UsersShared, Venue, Video, VideoChatEnded, VideoChatParticipantsInvited, VideoChatScheduled,
@@ -119,6 +120,9 @@ pub enum MessageKind {
     ChatBoostAdded(MessageChatBoostAdded),
     ChatOwnerLeft(MessageChatOwnerLeft),
     ChatOwnerChanged(MessageChatOwnerChanged),
+    ManagedBotCreated(MessageManagedBotCreated),
+    PollOptionAdded(MessagePollOptionAdded),
+    PollOptionDeleted(MessagePollOptionDeleted),
     ChatBackground(MessageChatBackground),
     ChecklistTasksDone(MessageChecklistTasksDone),
     ChecklistTasksAdded(MessageChecklistTasksAdded),
@@ -205,6 +209,10 @@ pub struct MessageCommon {
 
     /// Identifier of the specific checklist task that is being replied to
     pub reply_to_checklist_task_id: Option<ChecklistTaskId>,
+
+    /// Persistent identifier of the specific poll option that is being
+    /// replied to.
+    pub reply_to_poll_option_id: Option<String>,
 
     /// If the sender of the message boosted the chat, the number of boosts
     /// added by the user
@@ -763,6 +771,30 @@ pub struct MessageChatOwnerLeft {
 pub struct MessageChatOwnerChanged {
     /// Service message: chat owner has changed.
     pub chat_owner_changed: ChatOwnerChanged,
+}
+
+#[serde_with::skip_serializing_none]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(test, derive(schemars::JsonSchema))]
+pub struct MessageManagedBotCreated {
+    /// Service message: a managed bot was created.
+    pub managed_bot_created: ManagedBotCreated,
+}
+
+#[serde_with::skip_serializing_none]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(test, derive(schemars::JsonSchema))]
+pub struct MessagePollOptionAdded {
+    /// Service message: a new option was added to a poll.
+    pub poll_option_added: PollOptionAdded,
+}
+
+#[serde_with::skip_serializing_none]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(test, derive(schemars::JsonSchema))]
+pub struct MessagePollOptionDeleted {
+    /// Service message: an option was deleted from a poll.
+    pub poll_option_deleted: PollOptionDeleted,
 }
 
 #[serde_with::skip_serializing_none]
@@ -3146,7 +3178,8 @@ mod tests {
                     username: Some("shdwchn10".to_owned()),
                     language_code: None,
                     is_premium: false,
-                    added_to_attachment_menu: false
+                    added_to_attachment_menu: false,
+                    can_manage_bots: false,
                 }],
                 additional_chat_count: None,
                 premium_subscription_month_count: Some(6),
