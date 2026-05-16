@@ -219,6 +219,7 @@ where
         send_chat_action,
         set_message_reaction,
         get_user_profile_photos,
+        get_user_profile_audios,
         set_user_emoji_status,
         get_file,
         kick_chat_member,

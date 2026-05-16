@@ -384,6 +384,12 @@ impl Requester for Bot {
         Self::GetUserProfilePhotos::new(self.clone(), payloads::GetUserProfilePhotos::new(user_id))
     }
 
+    type GetUserProfileAudios = JsonRequest<payloads::GetUserProfileAudios>;
+
+    fn get_user_profile_audios(&self, user_id: UserId) -> Self::GetUserProfileAudios {
+        Self::GetUserProfileAudios::new(self.clone(), payloads::GetUserProfileAudios::new(user_id))
+    }
+
     type SetUserEmojiStatus = JsonRequest<payloads::SetUserEmojiStatus>;
 
     fn set_user_emoji_status(&self, user_id: UserId) -> Self::SetUserEmojiStatus {

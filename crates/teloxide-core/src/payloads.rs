@@ -94,6 +94,7 @@ mod get_star_transactions;
 mod get_sticker_set;
 mod get_updates;
 mod get_user_chat_boosts;
+mod get_user_profile_audios;
 mod get_user_profile_photos;
 mod get_webhook_info;
 mod gift_premium_subscription;
@@ -279,6 +280,7 @@ pub use get_star_transactions::{GetStarTransactions, GetStarTransactionsSetters}
 pub use get_sticker_set::{GetStickerSet, GetStickerSetSetters};
 pub use get_updates::{GetUpdates, GetUpdatesSetters};
 pub use get_user_chat_boosts::{GetUserChatBoosts, GetUserChatBoostsSetters};
+pub use get_user_profile_audios::{GetUserProfileAudios, GetUserProfileAudiosSetters};
 pub use get_user_profile_photos::{GetUserProfilePhotos, GetUserProfilePhotosSetters};
 pub use get_webhook_info::{GetWebhookInfo, GetWebhookInfoSetters};
 pub use gift_premium_subscription::{GiftPremiumSubscription, GiftPremiumSubscriptionSetters};
