@@ -955,6 +955,21 @@ pub trait Requester {
     /// For Telegram documentation see [`ReplaceManagedBotToken`].
     fn replace_managed_bot_token(&self, user_id: UserId) -> Self::ReplaceManagedBotToken;
 
+    type GetManagedBotAccessSettings: Request<Payload = GetManagedBotAccessSettings, Err = Self::Err>;
+
+    /// For Telegram documentation see [`GetManagedBotAccessSettings`].
+    fn get_managed_bot_access_settings(&self, user_id: UserId)
+    -> Self::GetManagedBotAccessSettings;
+
+    type SetManagedBotAccessSettings: Request<Payload = SetManagedBotAccessSettings, Err = Self::Err>;
+
+    /// For Telegram documentation see [`SetManagedBotAccessSettings`].
+    fn set_managed_bot_access_settings(
+        &self,
+        user_id: UserId,
+        is_access_restricted: bool,
+    ) -> Self::SetManagedBotAccessSettings;
+
     type SetChatMenuButton: Request<Payload = SetChatMenuButton, Err = Self::Err>;
 
     /// For Telegram documentation see [`SetChatMenuButton`].
@@ -1789,6 +1804,8 @@ macro_rules! forward_all {
             remove_my_profile_photo,
             get_managed_bot_token,
             replace_managed_bot_token,
+            get_managed_bot_access_settings,
+            set_managed_bot_access_settings,
             set_chat_menu_button,
             get_chat_menu_button,
             set_my_default_administrator_rights,

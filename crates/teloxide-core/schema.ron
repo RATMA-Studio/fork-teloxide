@@ -4089,6 +4089,47 @@ Schema(
             ]
         ),
         Method(
+            names: ("getManagedBotAccessSettings", "GetManagedBotAccessSettings", "get_managed_bot_access_settings"),
+            return_ty: RawTy("BotAccessSettings"),
+            doc: Doc(
+                md: "Use this method to get the access settings of a managed bot. Returns a [BotAccessSettings] object on success.",
+                md_links: {"BotAccessSettings": "https://core.telegram.org/bots/api#botaccesssettings"}
+            ),
+            tg_doc: "https://core.telegram.org/bots/api#getmanagedbotaccesssettings",
+            tg_category: "Available methods",
+            params: [
+                Param(
+                    name: "user_id",
+                    ty: RawTy("UserId"),
+                    descr: Doc(md: "User identifier of the managed bot whose access settings will be returned")
+                ),
+            ]
+        ),
+        Method(
+            names: ("setManagedBotAccessSettings", "SetManagedBotAccessSettings", "set_managed_bot_access_settings"),
+            return_ty: True,
+            doc: Doc(md: "Use this method to change the access settings of a managed bot. Returns _true_ on success."),
+            tg_doc: "https://core.telegram.org/bots/api#setmanagedbotaccesssettings",
+            tg_category: "Available methods",
+            params: [
+                Param(
+                    name: "user_id",
+                    ty: RawTy("UserId"),
+                    descr: Doc(md: "User identifier of the managed bot whose access settings will be changed")
+                ),
+                Param(
+                    name: "is_access_restricted",
+                    ty: bool,
+                    descr: Doc(md: "Pass _true_, if only selected users can access the bot. The bot's owner can always access it.")
+                ),
+                Param(
+                    name: "added_user_ids",
+                    ty: Option(ArrayOf(RawTy("UserId"))),
+                    descr: Doc(md: "A JSON-serialized list of up to 10 identifiers of users who will have access to the bot in addition to its owner. Ignored if _is_access_restricted_ is _false_.")
+                ),
+            ]
+        ),
+        Method(
             names: ("setChatMenuButton", "SetChatMenuButton", "set_chat_menu_button"),
             return_ty: True,
             doc: Doc(md: "Use this method to change the bot's menu button in a private chat, or the default menu button."),
