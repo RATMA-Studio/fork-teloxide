@@ -63,6 +63,12 @@ pub struct Poll {
     /// forwarded) by the bot or to the private chat with the bot.
     pub correct_option_id: Option<u8>,
 
+    /// List of 0-based identifiers of the correct answer options. Available
+    /// only for polls in the quiz mode with multiple correct options, which
+    /// are closed, or were sent (not forwarded) by the bot or to the private
+    /// chat with the bot.
+    pub correct_option_ids: Option<Vec<u8>>,
+
     /// Text that is shown when a user chooses an incorrect answer or taps on
     /// the lamp icon in a quiz-style poll, 0-200 characters.
     pub explanation: Option<String>,
