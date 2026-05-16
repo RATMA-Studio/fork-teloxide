@@ -447,11 +447,11 @@ where
                     None => break,
                 },
                 Either::Right(()) => {
-                    if self.state.is_shutting_down() {
-                        if let Some(token) = stop_token.take() {
-                            log::debug!("Start shutting down dispatching...");
-                            token.stop();
-                        }
+                    if self.state.is_shutting_down()
+                        && let Some(token) = stop_token.take()
+                    {
+                        log::debug!("Start shutting down dispatching...");
+                        token.stop();
                     }
                 }
             }

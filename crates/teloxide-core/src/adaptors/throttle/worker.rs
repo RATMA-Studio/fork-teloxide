@@ -203,10 +203,10 @@ pub(super) async fn worker<B>(
                     *count -= 1;
                 });
 
-                if let Entry::Occupied(entry) = entry {
-                    if *entry.get() == 0 {
-                        entry.remove_entry();
-                    }
+                if let Entry::Occupied(entry) = entry
+                    && *entry.get() == 0
+                {
+                    entry.remove_entry();
                 }
             }
         }
@@ -233,10 +233,10 @@ pub(super) async fn worker<B>(
 
             let slow_mode = slow_mode.as_mut().and_then(|sm| sm.get_mut(chat));
 
-            if let Some(&mut (delay, last)) = slow_mode {
-                if last + delay > Instant::now() {
-                    continue;
-                }
+            if let Some(&mut (delay, last)) = slow_mode
+                && last + delay > Instant::now()
+            {
+                continue;
             }
 
             let requests_sent_per_sec_count = requests_sent.per_sec.get(chat).copied().unwrap_or(0);

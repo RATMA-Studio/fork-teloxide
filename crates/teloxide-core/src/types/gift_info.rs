@@ -52,7 +52,7 @@ pub struct GiftInfo {
     pub is_private: bool,
 
     /// Unique number reserved for this gift when upgraded. See the
-    /// [`UniqueGift::number`] field.
+    /// [`UniqueGift::number`](crate::types::UniqueGift::number) field.
     pub unique_gift_number: Option<u32>,
 }
 
