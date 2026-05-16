@@ -158,6 +158,10 @@ pub enum UpdateKind {
     /// management of other bots in the `@BotFather` Mini App.
     ManagedBot(ManagedBotUpdated),
 
+    /// New guest message. The bot can use the field [`Message::guest_query_id`]
+    /// and the `answerGuestQuery` method to send a message in response.
+    GuestMessage(Message),
+
     /// An error that happened during deserialization.
     ///
     /// This allows `teloxide` to continue working even if telegram adds a new
@@ -184,7 +188,8 @@ impl Update {
             | ChannelPost(m)
             | EditedChannelPost(m)
             | BusinessMessage(m)
-            | EditedBusinessMessage(m) => m.from.as_ref()?,
+            | EditedBusinessMessage(m)
+            | GuestMessage(m) => m.from.as_ref()?,
 
             BusinessConnection(conn) => &conn.user,
 
@@ -254,7 +259,8 @@ impl Update {
             | UpdateKind::ChannelPost(message)
             | UpdateKind::EditedChannelPost(message)
             | UpdateKind::BusinessMessage(message)
-            | UpdateKind::EditedBusinessMessage(message) => i0(message.mentioned_users()),
+            | UpdateKind::EditedBusinessMessage(message)
+            | UpdateKind::GuestMessage(message) => i0(message.mentioned_users()),
 
             UpdateKind::MessageReaction(answer) => {
                 if let Some(user) = answer.user() {
@@ -316,7 +322,8 @@ impl Update {
             | ChannelPost(m)
             | EditedChannelPost(m)
             | BusinessMessage(m)
-            | EditedBusinessMessage(m) => &m.chat,
+            | EditedBusinessMessage(m)
+            | GuestMessage(m) => &m.chat,
             CallbackQuery(q) => q.message.as_ref()?.chat(),
             ChatMember(m) => &m.chat,
             MyChatMember(m) => &m.chat,
@@ -465,6 +472,9 @@ impl<'de> Deserialize<'de> for UpdateKind {
                         "managed_bot" => {
                             map.next_value::<ManagedBotUpdated>().ok().map(UpdateKind::ManagedBot)
                         }
+                        "guest_message" => {
+                            map.next_value::<Message>().ok().map(UpdateKind::GuestMessage)
+                        }
                         _ => Some(empty_error()),
                     })
                     .unwrap_or_else(empty_error);
@@ -540,6 +550,9 @@ impl Serialize for UpdateKind {
                 s.serialize_newtype_variant(name, 22, "removed_chat_boost", v)
             }
             UpdateKind::ManagedBot(v) => s.serialize_newtype_variant(name, 23, "managed_bot", v),
+            UpdateKind::GuestMessage(v) => {
+                s.serialize_newtype_variant(name, 24, "guest_message", v)
+            }
             UpdateKind::Error(v) => v.serialize(s),
         }
     }
@@ -609,6 +622,7 @@ mod test {
                     added_to_attachment_menu: false,
                     can_manage_bots: false,
                     has_topics_enabled: false,
+                    supports_guest_queries: false,
                 }),
                 sender_chat: None,
                 is_topic_message: false,
@@ -625,6 +639,9 @@ mod test {
                 },
                 sender_business_bot: None,
                 sender_tag: None,
+                guest_bot_caller_user: None,
+                guest_bot_caller_chat: None,
+                guest_query_id: None,
                 direct_messages_topic: None,
                 kind: MessageKind::Common(MessageCommon {
                     reply_to_message: None,
@@ -972,6 +989,7 @@ mod test {
                     added_to_attachment_menu: false,
                     can_manage_bots: false,
                     has_topics_enabled: false,
+                    supports_guest_queries: false,
                 }),
                 date: DateTime::from_timestamp(1721306082, 0).unwrap(),
                 old_reaction: vec![],
@@ -1154,6 +1172,7 @@ mod test {
                             added_to_attachment_menu: false,
                             can_manage_bots: false,
                             has_topics_enabled: false,
+                            supports_guest_queries: false,
                         },
                     }),
                 },
@@ -1216,6 +1235,7 @@ mod test {
                         added_to_attachment_menu: false,
                         can_manage_bots: false,
                         has_topics_enabled: false,
+                        supports_guest_queries: false,
                     },
                 }),
             }),
