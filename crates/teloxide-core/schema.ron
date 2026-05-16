@@ -363,6 +363,11 @@ Schema(
                     descr: Doc(md: "Protects the contents of sent messages from forwarding and saving"),
                 ),
                 Param(
+                    name: "message_effect_id",
+                    ty: Option(RawTy("EffectId")),
+                    descr: Doc(md: "Unique identifier of the message effect to be added to the message"),
+                ),
+                Param(
                     name: "message_id",
                     ty: RawTy("MessageId"),
                     descr: Doc(md: "Message identifier in the chat specified in _from\\_chat\\_id_")
@@ -508,6 +513,11 @@ Schema(
                     name: "allow_paid_broadcast",
                     ty: Option(bool),
                     descr: Doc(md: "Pass `true` to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance"),
+                ),
+                Param(
+                    name: "message_effect_id",
+                    ty: Option(RawTy("EffectId")),
+                    descr: Doc(md: "Unique identifier of the message effect to be added to the message"),
                 ),
                 Param(
                     name: "suggested_post_parameters",
@@ -5709,6 +5719,130 @@ Schema(
             ]
         ),
         Method(
+            names: ("getUserGifts", "GetUserGifts", "get_user_gifts"),
+            return_ty: RawTy("OwnedGifts"),
+            doc: Doc(
+                md: "Returns the gifts owned and hosted by a user. Returns [OwnedGifts] on success.",
+                md_links: {"OwnedGifts": "https://core.telegram.org/bots/api#ownedgifts"}
+            ),
+            tg_doc: "https://core.telegram.org/bots/api#getusergifts",
+            tg_category: "Updating messages",
+            params: [
+                Param(
+                    name: "user_id",
+                    ty: RawTy("UserId"),
+                    descr: Doc(md: "Unique identifier of the user"),
+                ),
+                Param(
+                    name: "exclude_unlimited",
+                    ty: Option(bool),
+                    descr: Doc(md: "Pass _true_ to exclude gifts that can be purchased an unlimited number of times")
+                ),
+                Param(
+                    name: "exclude_limited_upgradable",
+                    ty: Option(bool),
+                    descr: Doc(md: "Pass _true_ to exclude gifts that can be purchased a limited number of times and can be upgraded to unique")
+                ),
+                Param(
+                    name: "exclude_limited_non_upgradable",
+                    ty: Option(bool),
+                    descr: Doc(md: "Pass _true_ to exclude gifts that can be purchased a limited number of times and can't be upgraded to unique")
+                ),
+                Param(
+                    name: "exclude_from_blockchain",
+                    ty: Option(bool),
+                    descr: Doc(md: "Pass _true_ to exclude gifts that were assigned from the TON blockchain and can't be resold or transferred in Telegram")
+                ),
+                Param(
+                    name: "exclude_unique",
+                    ty: Option(bool),
+                    descr: Doc(md: "Pass _true_ to exclude unique gifts")
+                ),
+                Param(
+                    name: "sort_by_price",
+                    ty: Option(bool),
+                    descr: Doc(md: "Pass _true_ to sort results by gift price instead of send date. Sorting is applied before pagination")
+                ),
+                Param(
+                    name: "offset",
+                    ty: Option(String),
+                    descr: Doc(md: "Offset of the first entry to return as received from the previous request; use an empty string to get the first chunk of results")
+                ),
+                Param(
+                    name: "limit",
+                    ty: Option(u8),
+                    descr: Doc(md: "The maximum number of gifts to be returned; 1-100. Defaults to 100")
+                ),
+            ]
+        ),
+        Method(
+            names: ("getChatGifts", "GetChatGifts", "get_chat_gifts"),
+            return_ty: RawTy("OwnedGifts"),
+            doc: Doc(
+                md: "Returns the gifts owned by a chat. Returns [OwnedGifts] on success.",
+                md_links: {"OwnedGifts": "https://core.telegram.org/bots/api#ownedgifts"}
+            ),
+            tg_doc: "https://core.telegram.org/bots/api#getchatgifts",
+            tg_category: "Updating messages",
+            params: [
+                Param(
+                    name: "chat_id",
+                    ty: RawTy("Recipient"),
+                    descr: Doc(md: "Unique identifier for the target chat or username of the target channel in the format `@channelusername`"),
+                ),
+                Param(
+                    name: "exclude_unsaved",
+                    ty: Option(bool),
+                    descr: Doc(md: "Pass _true_ to exclude gifts that aren't saved to the chat's profile page. Always _true_, unless the bot has the _can_post_messages_ administrator right in the channel.")
+                ),
+                Param(
+                    name: "exclude_saved",
+                    ty: Option(bool),
+                    descr: Doc(md: "Pass _true_ to exclude gifts that are saved to the chat's profile page. Always _false_, unless the bot has the _can_post_messages_ administrator right in the channel.")
+                ),
+                Param(
+                    name: "exclude_unlimited",
+                    ty: Option(bool),
+                    descr: Doc(md: "Pass _true_ to exclude gifts that can be purchased an unlimited number of times")
+                ),
+                Param(
+                    name: "exclude_limited_upgradable",
+                    ty: Option(bool),
+                    descr: Doc(md: "Pass _true_ to exclude gifts that can be purchased a limited number of times and can be upgraded to unique")
+                ),
+                Param(
+                    name: "exclude_limited_non_upgradable",
+                    ty: Option(bool),
+                    descr: Doc(md: "Pass _true_ to exclude gifts that can be purchased a limited number of times and can't be upgraded to unique")
+                ),
+                Param(
+                    name: "exclude_from_blockchain",
+                    ty: Option(bool),
+                    descr: Doc(md: "Pass _true_ to exclude gifts that were assigned from the TON blockchain and can't be resold or transferred in Telegram")
+                ),
+                Param(
+                    name: "exclude_unique",
+                    ty: Option(bool),
+                    descr: Doc(md: "Pass _true_ to exclude unique gifts")
+                ),
+                Param(
+                    name: "sort_by_price",
+                    ty: Option(bool),
+                    descr: Doc(md: "Pass _true_ to sort results by gift price instead of send date. Sorting is applied before pagination")
+                ),
+                Param(
+                    name: "offset",
+                    ty: Option(String),
+                    descr: Doc(md: "Offset of the first entry to return as received from the previous request; use an empty string to get the first chunk of results")
+                ),
+                Param(
+                    name: "limit",
+                    ty: Option(u8),
+                    descr: Doc(md: "The maximum number of gifts to be returned; 1-100. Defaults to 100")
+                ),
+            ]
+        ),
+        Method(
             names: ("convertGiftToStars", "ConvertGiftToStars", "convert_gift_to_stars"),
             return_ty: True,
             doc: Doc(
@@ -5838,6 +5972,48 @@ Schema(
                     name: "areas",
                     ty: Option(ArrayOf(RawTy("StoryArea"))),
                     descr: Doc(md: "List of clickable areas to be shown on the story")
+                ),
+                Param(
+                    name: "post_to_chat_page",
+                    ty: Option(bool),
+                    descr: Doc(md: "Pass _true_ to keep the story accessible after it expires")
+                ),
+                Param(
+                    name: "protect_content",
+                    ty: Option(bool),
+                    descr: Doc(md: "Pass _true_ if the content of the story must be protected from forwarding and screenshotting")
+                ),
+            ]
+        ),
+        Method(
+            names: ("repostStory", "RepostStory", "repost_story"),
+            return_ty: RawTy("Story"),
+            doc: Doc(
+                md: "Reposts a story on behalf of a business account from another business account. Both business accounts must be managed by the same bot, and the story on the source account must have been posted (or reposted) by the bot. Requires the _can_manage_stories_ business bot right for both business accounts. Returns [Story] on success.",
+                md_links: {"Story": "https://core.telegram.org/bots/api#story"}
+            ),
+            tg_doc: "https://core.telegram.org/bots/api#repoststory",
+            tg_category: "Updating messages",
+            params: [
+                Param(
+                    name: "business_connection_id",
+                    ty: RawTy("BusinessConnectionId"),
+                    descr: Doc(md: "Unique identifier of the business connection"),
+                ),
+                Param(
+                    name: "from_chat_id",
+                    ty: RawTy("ChatId"),
+                    descr: Doc(md: "Unique identifier of the chat which posted the story that should be reposted")
+                ),
+                Param(
+                    name: "from_story_id",
+                    ty: RawTy("StoryId"),
+                    descr: Doc(md: "Unique identifier of the story that should be reposted")
+                ),
+                Param(
+                    name: "active_period",
+                    ty: RawTy("Seconds"),
+                    descr: Doc(md: "Period after which the story is moved to the archive, in seconds; must be one of `6 * 3600`, `12 * 3600`, `86400`, or `2 * 86400`")
                 ),
                 Param(
                     name: "post_to_chat_page",

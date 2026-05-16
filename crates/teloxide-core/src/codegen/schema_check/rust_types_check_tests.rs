@@ -13,6 +13,14 @@ fn test_rust_objects() {
     let exceptions = Exceptions::new(vec![
         Exception::ExpandTelegramReference { reference: "InputFile".to_owned() },
         Exception::IgnoreObjectField {
+            object: "UniqueGiftInfo".to_owned(),
+            field_name: "origin".to_owned(),
+        },
+        Exception::IgnoreObjectField {
+            object: "UniqueGiftInfo".to_owned(),
+            field_name: "last_resale_star_count".to_owned(),
+        },
+        Exception::IgnoreObjectField {
             object: "ChatMember".to_owned(),
             field_name: "status".to_owned(),
         },

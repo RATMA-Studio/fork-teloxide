@@ -1021,6 +1021,19 @@ mod tests {
                 object: "ChatMember".to_owned(),
                 field_name: "status".to_owned(),
             },
+            // Bot API 9.3: `last_resale_star_count` was replaced by
+            // `last_resale_currency` + `last_resale_amount`. The check schema
+            // (`custom_v2.json`) is still at 9.2 and expects the old field.
+            Exception::IgnoreObjectField {
+                object: "UniqueGiftInfo".to_owned(),
+                field_name: "last_resale_star_count".to_owned(),
+            },
+            // Bot API 9.3: `origin` enum gained `gifted_upgrade` and `offer`
+            // variants; the check schema still has the 9.2 set of three values.
+            Exception::IgnoreObjectField {
+                object: "UniqueGiftInfo".to_owned(),
+                field_name: "origin".to_owned(),
+            },
         ]);
 
         // Some TBA types exist, but don't actually do anything

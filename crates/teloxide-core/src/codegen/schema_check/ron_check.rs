@@ -467,6 +467,14 @@ mod tests {
                 method: "getGameHighScores".to_owned(),
                 param: "inline_message_id".to_owned(),
             },
+            // Bot API 9.3: `exclude_limited` was replaced by
+            // `exclude_limited_upgradable` and `exclude_limited_non_upgradable`.
+            // The check schema (`custom_v2.json`) is still at 9.2 and lists
+            // the old field.
+            Exception::MethodField {
+                method: "getBusinessAccountGifts".to_owned(),
+                param: "exclude_limited".to_owned(),
+            },
         ]);
 
         // Some types can be more narrow in teloxide, e.g. `Me` is a subset of `User`

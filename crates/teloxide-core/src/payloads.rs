@@ -108,7 +108,6 @@ mod log_out;
 mod pin_chat_message;
 mod post_story;
 mod promote_chat_member;
-mod repost_story;
 mod read_business_message;
 mod refund_star_payment;
 mod remove_business_account_profile_photo;
@@ -119,6 +118,7 @@ mod reopen_forum_topic;
 mod reopen_general_forum_topic;
 mod replace_managed_bot_token;
 mod replace_sticker_in_set;
+mod repost_story;
 mod restrict_chat_member;
 mod revoke_chat_invite_link;
 mod save_prepared_inline_message;
@@ -303,7 +303,6 @@ pub use pin_chat_message::{PinChatMessage, PinChatMessageSetters};
 pub use post_story::{PostStory, PostStorySetters};
 pub use promote_chat_member::{PromoteChatMember, PromoteChatMemberSetters};
 pub use read_business_message::{ReadBusinessMessage, ReadBusinessMessageSetters};
-pub use repost_story::{RepostStory, RepostStorySetters};
 pub use refund_star_payment::{RefundStarPayment, RefundStarPaymentSetters};
 pub use remove_business_account_profile_photo::{
     RemoveBusinessAccountProfilePhoto, RemoveBusinessAccountProfilePhotoSetters,
@@ -315,6 +314,7 @@ pub use reopen_forum_topic::{ReopenForumTopic, ReopenForumTopicSetters};
 pub use reopen_general_forum_topic::{ReopenGeneralForumTopic, ReopenGeneralForumTopicSetters};
 pub use replace_managed_bot_token::{ReplaceManagedBotToken, ReplaceManagedBotTokenSetters};
 pub use replace_sticker_in_set::{ReplaceStickerInSet, ReplaceStickerInSetSetters};
+pub use repost_story::{RepostStory, RepostStorySetters};
 pub use restrict_chat_member::{RestrictChatMember, RestrictChatMemberSetters};
 pub use revoke_chat_invite_link::{RevokeChatInviteLink, RevokeChatInviteLinkSetters};
 pub use save_prepared_inline_message::{

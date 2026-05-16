@@ -14,7 +14,7 @@ impl_payload! {
             /// Unique identifier of the business connection
             pub business_connection_id: BusinessConnectionId,
             /// Unique identifier of the chat which posted the story that should be reposted
-            pub from_chat_id: ChatId,
+            pub from_chat_id: ChatId [into],
             /// Unique identifier of the story that should be reposted
             pub from_story_id: StoryId,
             /// Period after which the story is moved to the archive, in seconds; must be one of `6 * 3600`, `12 * 3600`, `86400`, or `2 * 86400`

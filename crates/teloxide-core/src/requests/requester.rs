@@ -1556,13 +1556,15 @@ pub trait Requester {
     type RepostStory: Request<Payload = RepostStory, Err = Self::Err>;
 
     /// For Telegram documentation see [`RepostStory`].
-    fn repost_story(
+    fn repost_story<F>(
         &self,
         business_connection_id: BusinessConnectionId,
-        from_chat_id: ChatId,
+        from_chat_id: F,
         from_story_id: StoryId,
         active_period: Seconds,
-    ) -> Self::RepostStory;
+    ) -> Self::RepostStory
+    where
+        F: Into<ChatId>;
 
     type EditStory: Request<Payload = EditStory, Err = Self::Err>;
 
