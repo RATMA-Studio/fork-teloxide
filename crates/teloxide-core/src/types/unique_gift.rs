@@ -30,6 +30,11 @@ pub struct UniqueGift {
 
     /// Information about the chat that published the gift
     pub publisher_chat: Option<Chat>,
+
+    /// True, if the gift was used to craft another gift and isn't available
+    /// anymore.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub is_burned: bool,
 }
 
 /// This object describes the model of a unique gift.
@@ -48,6 +53,10 @@ pub struct UniqueGiftModel {
     /// The number of unique gifts that receive this model for every 1000 gifts
     /// upgraded
     pub rarity_per_mille: u32,
+
+    /// Rarity of the model if it is a crafted model. Currently, can be
+    /// `uncommon`, `rare`, `epic`, or `legendary`.
+    pub rarity: Option<String>,
 }
 
 /// This object describes the symbol shown on the pattern of a unique gift.
@@ -138,6 +147,7 @@ mod tests {
                 name: "name".to_owned(),
                 sticker: sticker.clone(),
                 rarity_per_mille: 123,
+                rarity: None,
             },
             symbol: UniqueGiftSymbol {
                 name: "name".to_owned(),
@@ -155,6 +165,7 @@ mod tests {
                 rarity_per_mille: 123,
             },
             publisher_chat: None,
+            is_burned: false,
         };
 
         let unique_gift_json = r#"{

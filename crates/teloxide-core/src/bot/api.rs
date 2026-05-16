@@ -8,7 +8,8 @@ use crate::{
         AcceptedGiftTypes, BotCommand, BusinessConnectionId, CallbackQueryId, ChatId,
         ChatPermissions, CustomEmojiId, FileId, GiftId, InlineQueryId, InlineQueryResult,
         InputChecklist, InputFile, InputMedia, InputPaidMedia, InputPollOption, InputProfilePhoto,
-        InputSticker, InputStoryContent, LabeledPrice, MessageId, OwnedGiftId, PreCheckoutQueryId,
+        InputSticker, InputStoryContent, KeyboardButton, LabeledPrice, MessageId, OwnedGiftId,
+        PreCheckoutQueryId,
         Recipient, Seconds, ShippingQueryId, StickerFormat, StoryId, TelegramTransactionId,
         ThreadId, UserId,
     },
@@ -353,6 +354,18 @@ impl Requester for Bot {
         Self::SendDice::new(self.clone(), payloads::SendDice::new(chat_id))
     }
 
+    type SendMessageDraft = JsonRequest<payloads::SendMessageDraft>;
+
+    fn send_message_draft<C>(&self, chat_id: C, draft_id: i32) -> Self::SendMessageDraft
+    where
+        C: Into<ChatId>,
+    {
+        Self::SendMessageDraft::new(
+            self.clone(),
+            payloads::SendMessageDraft::new(chat_id, draft_id),
+        )
+    }
+
     type SendChatAction = JsonRequest<payloads::SendChatAction>;
 
     fn send_chat_action<C>(
@@ -382,6 +395,12 @@ impl Requester for Bot {
 
     fn get_user_profile_photos(&self, user_id: UserId) -> Self::GetUserProfilePhotos {
         Self::GetUserProfilePhotos::new(self.clone(), payloads::GetUserProfilePhotos::new(user_id))
+    }
+
+    type GetUserProfileAudios = JsonRequest<payloads::GetUserProfileAudios>;
+
+    fn get_user_profile_audios(&self, user_id: UserId) -> Self::GetUserProfileAudios {
+        Self::GetUserProfileAudios::new(self.clone(), payloads::GetUserProfileAudios::new(user_id))
     }
 
     type SetUserEmojiStatus = JsonRequest<payloads::SetUserEmojiStatus>;
@@ -467,6 +486,18 @@ impl Requester for Bot {
         Self::SetChatAdministratorCustomTitle::new(
             self.clone(),
             payloads::SetChatAdministratorCustomTitle::new(chat_id, user_id, custom_title),
+        )
+    }
+
+    type SetChatMemberTag = JsonRequest<payloads::SetChatMemberTag>;
+
+    fn set_chat_member_tag<C>(&self, chat_id: C, user_id: UserId) -> Self::SetChatMemberTag
+    where
+        C: Into<Recipient>,
+    {
+        Self::SetChatMemberTag::new(
+            self.clone(),
+            payloads::SetChatMemberTag::new(chat_id, user_id),
         )
     }
 
@@ -1022,6 +1053,36 @@ impl Requester for Bot {
         Self::GetMyShortDescription::new(self.clone(), payloads::GetMyShortDescription::new())
     }
 
+    type SetMyProfilePhoto = JsonRequest<payloads::SetMyProfilePhoto>;
+
+    fn set_my_profile_photo(&self, photo: InputProfilePhoto) -> Self::SetMyProfilePhoto {
+        Self::SetMyProfilePhoto::new(self.clone(), payloads::SetMyProfilePhoto::new(photo))
+    }
+
+    type RemoveMyProfilePhoto = JsonRequest<payloads::RemoveMyProfilePhoto>;
+
+    fn remove_my_profile_photo(&self) -> Self::RemoveMyProfilePhoto {
+        Self::RemoveMyProfilePhoto::new(self.clone(), payloads::RemoveMyProfilePhoto::new())
+    }
+
+    type GetManagedBotToken = JsonRequest<payloads::GetManagedBotToken>;
+
+    fn get_managed_bot_token(&self, managed_bot_user_id: u64) -> Self::GetManagedBotToken {
+        Self::GetManagedBotToken::new(
+            self.clone(),
+            payloads::GetManagedBotToken::new(managed_bot_user_id),
+        )
+    }
+
+    type ReplaceManagedBotToken = JsonRequest<payloads::ReplaceManagedBotToken>;
+
+    fn replace_managed_bot_token(&self, managed_bot_user_id: u64) -> Self::ReplaceManagedBotToken {
+        Self::ReplaceManagedBotToken::new(
+            self.clone(),
+            payloads::ReplaceManagedBotToken::new(managed_bot_user_id),
+        )
+    }
+
     type SetChatMenuButton = JsonRequest<payloads::SetChatMenuButton>;
 
     fn set_chat_menu_button(&self) -> Self::SetChatMenuButton {
@@ -1100,6 +1161,18 @@ impl Requester for Bot {
         Self::SavePreparedInlineMessage::new(
             self.clone(),
             payloads::SavePreparedInlineMessage::new(user_id, result),
+        )
+    }
+
+    type SavePreparedKeyboardButton = JsonRequest<payloads::SavePreparedKeyboardButton>;
+
+    fn save_prepared_keyboard_button(
+        &self,
+        button: KeyboardButton,
+    ) -> Self::SavePreparedKeyboardButton {
+        Self::SavePreparedKeyboardButton::new(
+            self.clone(),
+            payloads::SavePreparedKeyboardButton::new(button),
         )
     }
 

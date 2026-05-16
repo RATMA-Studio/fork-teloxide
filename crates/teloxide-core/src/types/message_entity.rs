@@ -268,6 +268,19 @@ pub enum MessageEntityKind {
     TextLink { url: reqwest::Url },
     TextMention { user: User },
     CustomEmoji { custom_emoji_id: CustomEmojiId },
+    /// A formatted date and time entity. Allowed in message text and caption,
+    /// poll question and option entities, checklist title and task text,
+    /// `TextQuote`, `ReplyParameters.quote`, `sendGift.text` and
+    /// `giftPremiumSubscription.text` entities.
+    DateTime {
+        /// The Unix time associated with the entity.
+        unix_time: i64,
+        /// The string that defines the formatting of the date and time. See
+        /// the [date-time entity formatting] section in the Bot API docs.
+        ///
+        /// [date-time entity formatting]: https://core.telegram.org/bots/api#date-time-entity-formatting
+        date_time_format: Option<String>,
+    },
 }
 
 #[cfg(test)]

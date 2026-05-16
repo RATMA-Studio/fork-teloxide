@@ -439,6 +439,13 @@ pub trait Requester {
     where
         C: Into<Recipient>;
 
+    type SendMessageDraft: Request<Payload = SendMessageDraft, Err = Self::Err>;
+
+    /// For Telegram documentation see [`SendMessageDraft`].
+    fn send_message_draft<C>(&self, chat_id: C, draft_id: i32) -> Self::SendMessageDraft
+    where
+        C: Into<ChatId>;
+
     type SendChatAction: Request<Payload = SendChatAction, Err = Self::Err>;
 
     /// For Telegram documentation see [`SendChatAction`].
@@ -461,6 +468,11 @@ pub trait Requester {
 
     /// For Telegram documentation see [`GetUserProfilePhotos`].
     fn get_user_profile_photos(&self, user_id: UserId) -> Self::GetUserProfilePhotos;
+
+    type GetUserProfileAudios: Request<Payload = GetUserProfileAudios, Err = Self::Err>;
+
+    /// For Telegram documentation see [`GetUserProfileAudios`].
+    fn get_user_profile_audios(&self, user_id: UserId) -> Self::GetUserProfileAudios;
 
     type SetUserEmojiStatus: Request<Payload = SetUserEmojiStatus, Err = Self::Err>;
 
@@ -509,6 +521,13 @@ pub trait Requester {
 
     /// For Telegram documentation see [`PromoteChatMember`].
     fn promote_chat_member<C>(&self, chat_id: C, user_id: UserId) -> Self::PromoteChatMember
+    where
+        C: Into<Recipient>;
+
+    type SetChatMemberTag: Request<Payload = SetChatMemberTag, Err = Self::Err>;
+
+    /// For Telegram documentation see [`SetChatMemberTag`].
+    fn set_chat_member_tag<C>(&self, chat_id: C, user_id: UserId) -> Self::SetChatMemberTag
     where
         C: Into<Recipient>;
 
@@ -934,6 +953,26 @@ pub trait Requester {
     /// For Telegram documentation see [`GetMyShortDescription`].
     fn get_my_short_description(&self) -> Self::GetMyShortDescription;
 
+    type SetMyProfilePhoto: Request<Payload = SetMyProfilePhoto, Err = Self::Err>;
+
+    /// For Telegram documentation see [`SetMyProfilePhoto`].
+    fn set_my_profile_photo(&self, photo: InputProfilePhoto) -> Self::SetMyProfilePhoto;
+
+    type RemoveMyProfilePhoto: Request<Payload = RemoveMyProfilePhoto, Err = Self::Err>;
+
+    /// For Telegram documentation see [`RemoveMyProfilePhoto`].
+    fn remove_my_profile_photo(&self) -> Self::RemoveMyProfilePhoto;
+
+    type GetManagedBotToken: Request<Payload = GetManagedBotToken, Err = Self::Err>;
+
+    /// For Telegram documentation see [`GetManagedBotToken`].
+    fn get_managed_bot_token(&self, managed_bot_user_id: u64) -> Self::GetManagedBotToken;
+
+    type ReplaceManagedBotToken: Request<Payload = ReplaceManagedBotToken, Err = Self::Err>;
+
+    /// For Telegram documentation see [`ReplaceManagedBotToken`].
+    fn replace_managed_bot_token(&self, managed_bot_user_id: u64) -> Self::ReplaceManagedBotToken;
+
     type SetChatMenuButton: Request<Payload = SetChatMenuButton, Err = Self::Err>;
 
     /// For Telegram documentation see [`SetChatMenuButton`].
@@ -995,6 +1034,14 @@ pub trait Requester {
         user_id: UserId,
         result: InlineQueryResult,
     ) -> Self::SavePreparedInlineMessage;
+
+    type SavePreparedKeyboardButton: Request<Payload = SavePreparedKeyboardButton, Err = Self::Err>;
+
+    /// For Telegram documentation see [`SavePreparedKeyboardButton`].
+    fn save_prepared_keyboard_button(
+        &self,
+        button: KeyboardButton,
+    ) -> Self::SavePreparedKeyboardButton;
 
     type EditMessageText: Request<Payload = EditMessageText, Err = Self::Err>;
 
@@ -1695,9 +1742,11 @@ macro_rules! forward_all {
             send_poll,
             send_checklist,
             send_dice,
-            send_chat_action,
+            send_message_draft,
+        send_chat_action,
             set_message_reaction,
             get_user_profile_photos,
+        get_user_profile_audios,
             set_user_emoji_status,
             get_file,
             kick_chat_member,
@@ -1706,6 +1755,7 @@ macro_rules! forward_all {
             restrict_chat_member,
             promote_chat_member,
             set_chat_administrator_custom_title,
+        set_chat_member_tag,
             ban_chat_sender_chat,
             unban_chat_sender_chat,
             set_chat_permissions,
@@ -1754,6 +1804,10 @@ macro_rules! forward_all {
             get_my_description,
             set_my_short_description,
             get_my_short_description,
+            set_my_profile_photo,
+            remove_my_profile_photo,
+            get_managed_bot_token,
+            replace_managed_bot_token,
             set_chat_menu_button,
             get_chat_menu_button,
             set_my_default_administrator_rights,
@@ -1762,6 +1816,7 @@ macro_rules! forward_all {
             answer_inline_query,
             answer_web_app_query,
             save_prepared_inline_message,
+            save_prepared_keyboard_button,
             edit_message_text,
             edit_message_text_inline,
             edit_message_caption,

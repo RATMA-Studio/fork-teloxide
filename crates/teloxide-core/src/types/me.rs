@@ -31,6 +31,11 @@ pub struct Me {
 
     /// `true`, if the bot has a main Web App.
     pub has_main_web_app: bool,
+
+    /// `true`, if the bot allows users to create and delete topics in
+    /// private chats.
+    #[serde(default)]
+    pub allows_users_to_create_topics: bool,
 }
 
 impl Me {
@@ -77,12 +82,14 @@ mod tests {
                 language_code: None,
                 is_premium: false,
                 added_to_attachment_menu: false,
+                can_manage_bots: false,
             },
             can_join_groups: false,
             can_read_all_group_messages: false,
             supports_inline_queries: false,
             can_connect_to_business: false,
             has_main_web_app: false,
+            allows_users_to_create_topics: false,
         };
 
         assert_eq!(me.username(), "SomethingSomethingBot");

@@ -685,6 +685,14 @@ macro_rules! requester_forward {
             $body!(send_dice this (chat_id: C))
         }
     };
+    (@method send_message_draft $body:ident $ty:ident) => {
+        type SendMessageDraft = $ty![SendMessageDraft];
+
+        fn send_message_draft<C>(&self, chat_id: C, draft_id: i32) -> Self::SendMessageDraft where C: Into<ChatId> {
+            let this = self;
+            $body!(send_message_draft this (chat_id: C, draft_id: i32))
+        }
+    };
     (@method send_chat_action $body:ident $ty:ident) => {
         type SendChatAction = $ty![SendChatAction];
 
@@ -707,6 +715,14 @@ macro_rules! requester_forward {
         fn get_user_profile_photos(&self, user_id: UserId) -> Self::GetUserProfilePhotos {
             let this = self;
             $body!(get_user_profile_photos this (user_id: UserId))
+        }
+    };
+    (@method get_user_profile_audios $body:ident $ty:ident) => {
+        type GetUserProfileAudios = $ty![GetUserProfileAudios];
+
+        fn get_user_profile_audios(&self, user_id: UserId) -> Self::GetUserProfileAudios {
+            let this = self;
+            $body!(get_user_profile_audios this (user_id: UserId))
         }
     };
     (@method set_user_emoji_status $body:ident $ty:ident) => {
@@ -763,6 +779,14 @@ macro_rules! requester_forward {
         fn promote_chat_member<C>(&self, chat_id: C, user_id: UserId) -> Self::PromoteChatMember where C: Into<Recipient> {
             let this = self;
             $body!(promote_chat_member this (chat_id: C, user_id: UserId))
+        }
+    };
+    (@method set_chat_member_tag $body:ident $ty:ident) => {
+        type SetChatMemberTag = $ty![SetChatMemberTag];
+
+        fn set_chat_member_tag<C>(&self, chat_id: C, user_id: UserId) -> Self::SetChatMemberTag where C: Into<Recipient> {
+            let this = self;
+            $body!(set_chat_member_tag this (chat_id: C, user_id: UserId))
         }
     };
     (@method set_chat_administrator_custom_title $body:ident $ty:ident) => {
@@ -1183,6 +1207,38 @@ macro_rules! requester_forward {
             $body!(get_my_short_description this ())
         }
     };
+    (@method set_my_profile_photo $body:ident $ty:ident) => {
+        type SetMyProfilePhoto = $ty![SetMyProfilePhoto];
+
+        fn set_my_profile_photo(&self, photo: InputProfilePhoto) -> Self::SetMyProfilePhoto {
+            let this = self;
+            $body!(set_my_profile_photo this (photo: InputProfilePhoto))
+        }
+    };
+    (@method remove_my_profile_photo $body:ident $ty:ident) => {
+        type RemoveMyProfilePhoto = $ty![RemoveMyProfilePhoto];
+
+        fn remove_my_profile_photo(&self, ) -> Self::RemoveMyProfilePhoto {
+            let this = self;
+            $body!(remove_my_profile_photo this ())
+        }
+    };
+    (@method get_managed_bot_token $body:ident $ty:ident) => {
+        type GetManagedBotToken = $ty![GetManagedBotToken];
+
+        fn get_managed_bot_token(&self, managed_bot_user_id: u64) -> Self::GetManagedBotToken {
+            let this = self;
+            $body!(get_managed_bot_token this (managed_bot_user_id: u64))
+        }
+    };
+    (@method replace_managed_bot_token $body:ident $ty:ident) => {
+        type ReplaceManagedBotToken = $ty![ReplaceManagedBotToken];
+
+        fn replace_managed_bot_token(&self, managed_bot_user_id: u64) -> Self::ReplaceManagedBotToken {
+            let this = self;
+            $body!(replace_managed_bot_token this (managed_bot_user_id: u64))
+        }
+    };
     (@method set_chat_menu_button $body:ident $ty:ident) => {
         type SetChatMenuButton = $ty![SetChatMenuButton];
 
@@ -1245,6 +1301,14 @@ macro_rules! requester_forward {
         fn save_prepared_inline_message(&self, user_id: UserId, result: InlineQueryResult) -> Self::SavePreparedInlineMessage {
             let this = self;
             $body!(save_prepared_inline_message this (user_id: UserId, result: InlineQueryResult))
+        }
+    };
+    (@method save_prepared_keyboard_button $body:ident $ty:ident) => {
+        type SavePreparedKeyboardButton = $ty![SavePreparedKeyboardButton];
+
+        fn save_prepared_keyboard_button(&self, button: KeyboardButton) -> Self::SavePreparedKeyboardButton {
+            let this = self;
+            $body!(save_prepared_keyboard_button this (button: KeyboardButton))
         }
     };
     (@method edit_message_text $body:ident $ty:ident) => {

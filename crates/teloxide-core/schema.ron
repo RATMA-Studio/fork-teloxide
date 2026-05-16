@@ -2241,6 +2241,24 @@ Schema(
                     descr: Doc(md: "A JSON-serialized list of special entities that appear in the poll question. It can be specified instead of _question\\_parse\\_mode_"),
                 ),
                 Param(
+                    name: "description",
+                    ty: Option(String),
+                    descr: Doc(md: "Poll description, 0-300 characters")
+                ),
+                Param(
+                    name: "description_parse_mode",
+                    ty: Option(RawTy("ParseMode")),
+                    descr: Doc(
+                        md: "Mode for parsing entities in the description. See [formatting options] for more details. Currently, only custom emoji entities are allowed",
+                        md_links: {"formatting options": "https://core.telegram.org/bots/api#formatting-options"}
+                    )
+                ),
+                Param(
+                    name: "description_entities",
+                    ty: Option(ArrayOf(RawTy("MessageEntity"))),
+                    descr: Doc(md: "A JSON-serialized list of special entities that appear in the poll description. It can be specified instead of _description\\_parse\\_mode_"),
+                ),
+                Param(
                     name: "options",
                     ty: ArrayOf(RawTy("InputPollOption")),
                     descr: Doc(md: "A JSON-serialized list of 2-10 answer options"),
@@ -2261,9 +2279,34 @@ Schema(
                     descr: Doc(md: "True, if the poll allows multiple answers, ignored for polls in quiz mode, defaults to False")
                 ),
                 Param(
+                    name: "allows_revoting",
+                    ty: Option(bool),
+                    descr: Doc(md: "Pass `true`, if voters are allowed to change their vote in the poll")
+                ),
+                Param(
+                    name: "shuffle_options",
+                    ty: Option(bool),
+                    descr: Doc(md: "Pass `true`, if the order of options in the poll must be randomized")
+                ),
+                Param(
+                    name: "allow_adding_options",
+                    ty: Option(bool),
+                    descr: Doc(md: "Pass `true`, if poll voters are allowed to add new options to the poll")
+                ),
+                Param(
+                    name: "hide_results_until_closes",
+                    ty: Option(bool),
+                    descr: Doc(md: "Pass `true`, if the poll results must be hidden until the poll is closed")
+                ),
+                Param(
                     name: "correct_option_id",
                     ty: Option(u8),
                     descr: Doc(md: "0-based identifier of the correct answer option, required for polls in quiz mode")
+                ),
+                Param(
+                    name: "correct_option_ids",
+                    ty: Option(ArrayOf(u8)),
+                    descr: Doc(md: "A JSON-serialized list of 0-based identifiers of correct answer options, required for polls in quiz mode with multiple correct answers; pass `correct_option_id` or `correct_option_ids`, but not both")
                 ),
                 Param(
                     name: "explanation",
@@ -2473,6 +2516,45 @@ Schema(
             ],
         ),
         Method(
+            names: ("sendMessageDraft", "SendMessageDraft", "send_message_draft"),
+            return_ty: True,
+            doc: Doc(md: "Use this method to stream a partial message to a user while the message is being generated. Note that the streamed draft is ephemeral and acts as a temporary 30-second preview - once the output is finalized, you must call sendMessage with the complete message to persist it in the user's chat. Returns True on success."),
+            tg_doc: "https://core.telegram.org/bots/api#sendmessagedraft",
+            tg_category: "Available methods",
+            params: [
+                Param(
+                    name: "chat_id",
+                    ty: RawTy("ChatId"),
+                    descr: Doc(md: "Unique identifier for the target private chat")
+                ),
+                Param(
+                    name: "message_thread_id",
+                    ty: Option(RawTy("ThreadId")),
+                    descr: Doc(md: "Unique identifier for the target message thread")
+                ),
+                Param(
+                    name: "draft_id",
+                    ty: i32,
+                    descr: Doc(md: "Unique identifier of the message draft; must be non-zero. Changes of drafts with the same identifier are animated.")
+                ),
+                Param(
+                    name: "text",
+                    ty: Option(String),
+                    descr: Doc(md: "Text of the message to be sent, 0-4096 characters after entities parsing. Pass an empty text to show a \"Thinking…\" placeholder.")
+                ),
+                Param(
+                    name: "parse_mode",
+                    ty: Option(RawTy("ParseMode")),
+                    descr: Doc(md: "Mode for parsing entities in the message text. See formatting options for more details.")
+                ),
+                Param(
+                    name: "entities",
+                    ty: Option(ArrayOf(RawTy("MessageEntity"))),
+                    descr: Doc(md: "A JSON-serialized list of special entities that appear in message text, which can be specified instead of parse_mode")
+                ),
+            ],
+        ),
+        Method(
             names: ("sendChatAction", "SendChatAction", "send_chat_action"),
             return_ty: True,
             doc: Doc(
@@ -2571,6 +2653,33 @@ Schema(
                     name: "limit",
                     ty: Option(u8),
                     descr: Doc(md: "Limits the number of photos to be retrieved. Values between 1-100 are accepted. Defaults to 100.")
+                ),
+            ],
+        ),
+        Method(
+            names: ("getUserProfileAudios", "GetUserProfileAudios", "get_user_profile_audios"),
+            return_ty: RawTy("UserProfileAudios"),
+            doc: Doc(
+                md: "Use this method to get a list of profile audios for a user. Returns a [UserProfileAudios] object.",
+                md_links: {"UserProfileAudios": "https://core.telegram.org/bots/api#userprofileaudios"},
+            ),
+            tg_doc: "https://core.telegram.org/bots/api#getuserprofileaudios",
+            tg_category: "Available methods",
+            params: [
+                Param(
+                    name: "user_id",
+                    ty: RawTy("UserId"),
+                    descr: Doc(md: "Unique identifier of the target user")
+                ),
+                Param(
+                    name: "offset",
+                    ty: Option(u32),
+                    descr: Doc(md: "Sequential number of the first audio to be returned. By default, all audios are returned.")
+                ),
+                Param(
+                    name: "limit",
+                    ty: Option(u8),
+                    descr: Doc(md: "Limits the number of audios to be retrieved. Values between 1-100 are accepted. Defaults to 100.")
                 ),
             ],
         ),
@@ -2841,6 +2950,35 @@ Schema(
                     name: "can_manage_direct_messages",
                     ty: Option(bool),
                     descr: Doc(md: "Pass True if the administrator can manage direct messages within the channel and decline suggested posts; for channels only")
+                ),
+                Param(
+                    name: "can_manage_tags",
+                    ty: Option(bool),
+                    descr: Doc(md: "Pass True if the administrator can edit the tags of regular members; for groups and supergroups only")
+                ),
+            ],
+        ),
+        Method(
+            names: ("setChatMemberTag", "SetChatMemberTag", "set_chat_member_tag"),
+            return_ty: True,
+            doc: Doc(md: "Use this method to set a tag for a regular member in a group or a supergroup. The bot must be an administrator in the chat for this to work and must have the can_manage_tags administrator right. Returns True on success."),
+            tg_doc: "https://core.telegram.org/bots/api#setchatmembertag",
+            tg_category: "Available methods",
+            params: [
+                Param(
+                    name: "chat_id",
+                    ty: RawTy("Recipient"),
+                    descr: Doc(md: "Unique identifier for the target chat or username of the target supergroup")
+                ),
+                Param(
+                    name: "user_id",
+                    ty: RawTy("UserId"),
+                    descr: Doc(md: "Unique identifier of the target user")
+                ),
+                Param(
+                    name: "tag",
+                    ty: Option(String),
+                    descr: Doc(md: "New tag for the member; 0-16 characters, emoji are not allowed")
                 ),
             ],
         ),
@@ -3896,6 +4034,56 @@ Schema(
             ]
         ),
         Method(
+            names: ("setMyProfilePhoto", "SetMyProfilePhoto", "set_my_profile_photo"),
+            return_ty: True,
+            doc: Doc(md: "Changes the profile photo of the bot. Returns True on success."),
+            tg_doc: "https://core.telegram.org/bots/api#setmyprofilephoto",
+            tg_category: "Available methods",
+            params: [
+                Param(
+                    name: "photo",
+                    ty: RawTy("InputProfilePhoto"),
+                    descr: Doc(md: "The new profile photo to set")
+                ),
+            ]
+        ),
+        Method(
+            names: ("removeMyProfilePhoto", "RemoveMyProfilePhoto", "remove_my_profile_photo"),
+            return_ty: True,
+            doc: Doc(md: "Removes the profile photo of the bot. Requires no parameters. Returns True on success."),
+            tg_doc: "https://core.telegram.org/bots/api#removemyprofilephoto",
+            tg_category: "Available methods",
+            params: []
+        ),
+        Method(
+            names: ("getManagedBotToken", "GetManagedBotToken", "get_managed_bot_token"),
+            return_ty: String,
+            doc: Doc(md: "Returns the token of a bot that is managed by the current bot. The current bot must have permissions to manage the bot, granted using the @BotFather Mini App. Returns the token of the requested bot as a String on success."),
+            tg_doc: "https://core.telegram.org/bots/api#getmanagedbottoken",
+            tg_category: "Available methods",
+            params: [
+                Param(
+                    name: "managed_bot_user_id",
+                    ty: u64,
+                    descr: Doc(md: "Unique identifier of the bot")
+                ),
+            ]
+        ),
+        Method(
+            names: ("replaceManagedBotToken", "ReplaceManagedBotToken", "replace_managed_bot_token"),
+            return_ty: String,
+            doc: Doc(md: "Replaces the token of a bot that is managed by the current bot. The current bot must have permissions to manage the bot, granted using the @BotFather Mini App. Returns the new token of the bot as a String on success."),
+            tg_doc: "https://core.telegram.org/bots/api#replacemanagedbottoken",
+            tg_category: "Available methods",
+            params: [
+                Param(
+                    name: "managed_bot_user_id",
+                    ty: u64,
+                    descr: Doc(md: "Unique identifier of the bot")
+                ),
+            ]
+        ),
+        Method(
             names: ("setChatMenuButton", "SetChatMenuButton", "set_chat_menu_button"),
             return_ty: True,
             doc: Doc(md: "Use this method to change the bot's menu button in a private chat, or the default menu button."),
@@ -4083,6 +4271,23 @@ Schema(
                     name: "allow_channel_chats",
                     ty: Option(bool),
                     descr: Doc(md: "Pass `true`, if the message can be sent to channel chats"),
+                ),
+            ]
+        ),
+        Method(
+            names: ("savePreparedKeyboardButton", "SavePreparedKeyboardButton", "save_prepared_keyboard_button"),
+            return_ty: RawTy("PreparedKeyboardButton"),
+            doc: Doc(
+                md: "Use this method to store a keyboard button that can be added by the bot to a reply keyboard of an opener of a Mini App. Returns a [PreparedKeyboardButton] object.",
+                md_links: {"PreparedKeyboardButton": "https://core.telegram.org/bots/api#preparedkeyboardbutton"}
+            ),
+            tg_doc: "https://core.telegram.org/bots/api#savepreparedkeyboardbutton",
+            tg_category: "Available methods",
+            params: [
+                Param(
+                    name: "button",
+                    ty: RawTy("KeyboardButton"),
+                    descr: Doc(md: "A JSON-serialized object describing the keyboard button to be added.")
                 ),
             ]
         ),

@@ -42,6 +42,8 @@ pub struct ReplyParameters {
     pub quote_position: Option<u32>,
     /// Identifier of the specific checklist task to be replied to
     pub checklist_task_id: Option<ChecklistTaskId>,
+    /// Persistent identifier of the specific poll option to be replied to.
+    pub poll_option_id: Option<String>,
 }
 
 impl ReplyParameters {
