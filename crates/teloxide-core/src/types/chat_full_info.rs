@@ -4,8 +4,8 @@ use serde::{Deserialize, Serialize};
 
 use crate::types::{
     AcceptedGiftTypes, Audio, Birthdate, BusinessIntro, BusinessLocation, BusinessOpeningHours,
-    Chat, ChatId, ChatLocation, ChatPermissions, ChatPhoto, Message, ReactionType, Seconds, User,
-    UserRating,
+    Chat, ChatId, ChatLocation, ChatPermissions, ChatPhoto, Message, ReactionType, Seconds,
+    UniqueGiftColors, User, UserRating,
 };
 
 /// Custom emoji identifier.
@@ -109,6 +109,10 @@ pub struct ChatFullInfo {
     /// The number of Telegram Stars a general user has to pay to send a
     /// message to the chat.
     pub paid_message_star_count: Option<u32>,
+
+    /// Color scheme for the chat's name, replies to messages and link previews
+    /// based on a unique gift owned by the chat's owner.
+    pub unique_gift_colors: Option<UniqueGiftColors>,
 }
 
 #[serde_with::skip_serializing_none]
@@ -774,6 +778,7 @@ mod tests {
             max_reaction_count: 0,
             rating: None,
             paid_message_star_count: None,
+            unique_gift_colors: None,
         };
         let actual = from_str(
             r#"{
@@ -841,6 +846,7 @@ mod tests {
             max_reaction_count: 0,
             rating: None,
             paid_message_star_count: None,
+            unique_gift_colors: None,
         };
         eprintln!("{}", to_string(&chat).unwrap());
         assert_eq!(
@@ -906,6 +912,7 @@ mod tests {
             max_reaction_count: 0,
             rating: None,
             paid_message_star_count: None,
+            unique_gift_colors: None,
         };
 
         let json = to_string(&chat).unwrap();
