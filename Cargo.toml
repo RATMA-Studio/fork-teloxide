@@ -15,3 +15,6 @@ repository = "https://github.com/teloxide/teloxide"
 [workspace.metadata.release]
 tag-message = "Release {{crate_name}} version {{version}}"
 tag-name = "{{prefix}}v{{version}}"
+
+[patch.crates-io]
+proc-macro-error2 = { git = "https://github.com/fgardt/proc-macro-error-2", branch = "fix/future-incompat" }
