@@ -195,6 +195,7 @@ where
         delete_my_commands,
         answer_inline_query,
         answer_web_app_query,
+        answer_guest_query,
         save_prepared_inline_message,
             save_prepared_keyboard_button,
         edit_message_text,

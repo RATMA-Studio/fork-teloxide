@@ -1335,6 +1335,14 @@ macro_rules! requester_forward {
             $body!(answer_web_app_query this (web_app_query_id: W, result: InlineQueryResult))
         }
     };
+    (@method answer_guest_query $body:ident $ty:ident) => {
+        type AnswerGuestQuery = $ty![AnswerGuestQuery];
+
+        fn answer_guest_query<G>(&self, guest_query_id: G, result: InlineQueryResult) -> Self::AnswerGuestQuery where G: Into<String> {
+            let this = self;
+            $body!(answer_guest_query this (guest_query_id: G, result: InlineQueryResult))
+        }
+    };
     (@method save_prepared_inline_message $body:ident $ty:ident) => {
         type SavePreparedInlineMessage = $ty![SavePreparedInlineMessage];
 

@@ -1209,6 +1209,22 @@ impl Requester for Bot {
         )
     }
 
+    type AnswerGuestQuery = JsonRequest<payloads::AnswerGuestQuery>;
+
+    fn answer_guest_query<G>(
+        &self,
+        guest_query_id: G,
+        result: InlineQueryResult,
+    ) -> Self::AnswerGuestQuery
+    where
+        G: Into<String>,
+    {
+        Self::AnswerGuestQuery::new(
+            self.clone(),
+            payloads::AnswerGuestQuery::new(guest_query_id, result),
+        )
+    }
+
     type SavePreparedInlineMessage = JsonRequest<payloads::SavePreparedInlineMessage>;
 
     fn save_prepared_inline_message(
