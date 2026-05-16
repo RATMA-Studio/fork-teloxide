@@ -212,6 +212,8 @@ where
         get_my_short_description,
         set_my_profile_photo,
         remove_my_profile_photo,
+        get_managed_bot_token,
+        replace_managed_bot_token,
         set_chat_menu_button,
         get_chat_menu_button,
         set_my_default_administrator_rights,

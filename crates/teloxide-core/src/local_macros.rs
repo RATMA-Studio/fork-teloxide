@@ -1223,6 +1223,22 @@ macro_rules! requester_forward {
             $body!(remove_my_profile_photo this ())
         }
     };
+    (@method get_managed_bot_token $body:ident $ty:ident) => {
+        type GetManagedBotToken = $ty![GetManagedBotToken];
+
+        fn get_managed_bot_token(&self, managed_bot_user_id: u64) -> Self::GetManagedBotToken {
+            let this = self;
+            $body!(get_managed_bot_token this (managed_bot_user_id: u64))
+        }
+    };
+    (@method replace_managed_bot_token $body:ident $ty:ident) => {
+        type ReplaceManagedBotToken = $ty![ReplaceManagedBotToken];
+
+        fn replace_managed_bot_token(&self, managed_bot_user_id: u64) -> Self::ReplaceManagedBotToken {
+            let this = self;
+            $body!(replace_managed_bot_token this (managed_bot_user_id: u64))
+        }
+    };
     (@method set_chat_menu_button $body:ident $ty:ident) => {
         type SetChatMenuButton = $ty![SetChatMenuButton];
 
