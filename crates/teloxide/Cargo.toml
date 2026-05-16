@@ -38,7 +38,7 @@ postgres-storage-rustls = ["sqlx", "sqlx/runtime-tokio-rustls"]
 redis-storage = ["deadpool-redis"]
 
 cbor-serializer = ["serde_cbor"]
-bincode-serializer = ["bincode"]
+bincode-serializer = ["bincode-next"]
 
 macros = ["teloxide-macros"]
 
@@ -117,7 +117,7 @@ deadpool-redis = { version = "0.23", features = [
   "rt_tokio_1",
 ], optional = true }
 serde_cbor = { version = "0.11", optional = true }
-bincode = { version = "2", features = ["serde"], optional = true }
+bincode-next = { version = "3.0.0-rc.13", features = ["serde"], optional = true }
 axum = { version = "0.8.9", optional = true }
 tower = { version = "0.5.3", optional = true }
 tower-http = { version = "0.6.10", features = ["trace"], optional = true }
