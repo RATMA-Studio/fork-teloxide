@@ -39,6 +39,13 @@ pub struct Poll {
     /// emoji entities are allowed in poll questions
     pub question_entities: Option<Vec<MessageEntity>>,
 
+    /// Poll description, 0-300 characters.
+    pub description: Option<String>,
+
+    /// Special entities that appear in the description. Currently, only custom
+    /// emoji entities are allowed in poll descriptions.
+    pub description_entities: Option<Vec<MessageEntity>>,
+
     /// List of poll options.
     pub options: Vec<PollOption>,
 
