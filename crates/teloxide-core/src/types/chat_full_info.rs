@@ -753,6 +753,7 @@ mod tests {
                 limited_gifts: true,
                 unique_gifts: true,
                 premium_subscription: true,
+                gifts_from_channels: true,
             },
             accent_color_id: 0,
             background_custom_emoji_id: None,
@@ -780,7 +781,8 @@ mod tests {
                     "unlimited_gifts": true,
                     "limited_gifts": true,
                     "unique_gifts": true,
-                    "premium_subscription": true
+                    "premium_subscription": true,
+                    "gifts_from_channels": true
                 }
             }"#,
         )
@@ -816,6 +818,7 @@ mod tests {
                 limited_gifts: true,
                 unique_gifts: true,
                 premium_subscription: true,
+                gifts_from_channels: true,
             },
             accent_color_id: 0,
             background_custom_emoji_id: None,
@@ -841,7 +844,8 @@ mod tests {
                         "unlimited_gifts": true,
                         "limited_gifts": true,
                         "unique_gifts": true,
-                        "premium_subscription": true
+                        "premium_subscription": true,
+                        "gifts_from_channels": true
                     }
                 }"#
             )
@@ -877,6 +881,7 @@ mod tests {
                 limited_gifts: true,
                 unique_gifts: true,
                 premium_subscription: true,
+                gifts_from_channels: true,
             },
             accent_color_id: 0,
             background_custom_emoji_id: None,
