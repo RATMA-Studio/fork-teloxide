@@ -720,6 +720,24 @@ pub trait Requester {
     where
         C: Into<Recipient>;
 
+    type DeleteAllMessageReactions: Request<Payload = DeleteAllMessageReactions, Err = Self::Err>;
+
+    /// For Telegram documentation see [`DeleteAllMessageReactions`].
+    fn delete_all_message_reactions<C>(&self, chat_id: C) -> Self::DeleteAllMessageReactions
+    where
+        C: Into<Recipient>;
+
+    type DeleteMessageReaction: Request<Payload = DeleteMessageReaction, Err = Self::Err>;
+
+    /// For Telegram documentation see [`DeleteMessageReaction`].
+    fn delete_message_reaction<C>(
+        &self,
+        chat_id: C,
+        message_id: MessageId,
+    ) -> Self::DeleteMessageReaction
+    where
+        C: Into<Recipient>;
+
     type GetChatMemberCount: Request<Payload = GetChatMemberCount, Err = Self::Err>;
 
     /// For Telegram documentation see [`GetChatMemberCount`].
@@ -1780,6 +1798,8 @@ macro_rules! forward_all {
             leave_chat,
             get_chat,
             get_chat_administrators,
+            delete_all_message_reactions,
+            delete_message_reaction,
             get_chat_members_count,
             get_chat_member_count,
             get_chat_member,

@@ -745,6 +745,34 @@ impl Requester for Bot {
         )
     }
 
+    type DeleteAllMessageReactions = JsonRequest<payloads::DeleteAllMessageReactions>;
+
+    fn delete_all_message_reactions<C>(&self, chat_id: C) -> Self::DeleteAllMessageReactions
+    where
+        C: Into<Recipient>,
+    {
+        Self::DeleteAllMessageReactions::new(
+            self.clone(),
+            payloads::DeleteAllMessageReactions::new(chat_id),
+        )
+    }
+
+    type DeleteMessageReaction = JsonRequest<payloads::DeleteMessageReaction>;
+
+    fn delete_message_reaction<C>(
+        &self,
+        chat_id: C,
+        message_id: MessageId,
+    ) -> Self::DeleteMessageReaction
+    where
+        C: Into<Recipient>,
+    {
+        Self::DeleteMessageReaction::new(
+            self.clone(),
+            payloads::DeleteMessageReaction::new(chat_id, message_id),
+        )
+    }
+
     type GetChatMembersCount = JsonRequest<payloads::GetChatMembersCount>;
 
     fn get_chat_members_count<C>(&self, chat_id: C) -> Self::GetChatMembersCount

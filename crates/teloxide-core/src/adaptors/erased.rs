@@ -253,6 +253,8 @@ where
         leave_chat,
         get_chat,
         get_chat_administrators,
+        delete_all_message_reactions,
+        delete_message_reaction,
         get_chat_members_count,
         get_chat_member_count,
         get_chat_member,
@@ -747,6 +749,17 @@ trait ErasableRequester<'a> {
         &self,
         chat_id: Recipient,
     ) -> ErasedRequest<'a, GetChatAdministrators, Self::Err>;
+
+    fn delete_all_message_reactions(
+        &self,
+        chat_id: Recipient,
+    ) -> ErasedRequest<'a, DeleteAllMessageReactions, Self::Err>;
+
+    fn delete_message_reaction(
+        &self,
+        chat_id: Recipient,
+        message_id: MessageId,
+    ) -> ErasedRequest<'a, DeleteMessageReaction, Self::Err>;
 
     fn get_chat_member_count(
         &self,
@@ -1871,6 +1884,21 @@ where
         chat_id: Recipient,
     ) -> ErasedRequest<'a, GetChatAdministrators, Self::Err> {
         Requester::get_chat_administrators(self, chat_id).erase()
+    }
+
+    fn delete_all_message_reactions(
+        &self,
+        chat_id: Recipient,
+    ) -> ErasedRequest<'a, DeleteAllMessageReactions, Self::Err> {
+        Requester::delete_all_message_reactions(self, chat_id).erase()
+    }
+
+    fn delete_message_reaction(
+        &self,
+        chat_id: Recipient,
+        message_id: MessageId,
+    ) -> ErasedRequest<'a, DeleteMessageReaction, Self::Err> {
+        Requester::delete_message_reaction(self, chat_id, message_id).erase()
     }
 
     fn get_chat_member_count(

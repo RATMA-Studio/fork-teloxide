@@ -250,6 +250,8 @@ where
         leave_chat,
         get_chat,
         get_chat_administrators,
+        delete_all_message_reactions,
+        delete_message_reaction,
         get_chat_members_count,
         get_chat_member_count,
         get_chat_member,
