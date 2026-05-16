@@ -145,6 +145,7 @@ pub enum MessageKind {
     SuggestedPostRefunded(MessageSuggestedPostRefunded),
     GiftInfo(MessageGiftInfo),
     UniqueGiftInfo(MessageUniqueGiftInfo),
+    GiftUpgradeSent(MessageGiftUpgradeSent),
     VideoChatScheduled(MessageVideoChatScheduled),
     VideoChatStarted(MessageVideoChatStarted),
     VideoChatEnded(MessageVideoChatEnded),
@@ -999,6 +1000,15 @@ pub struct MessageUniqueGiftInfo {
 #[serde_with::skip_serializing_none]
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
+pub struct MessageGiftUpgradeSent {
+    /// Service message: upgrade of a gift was purchased after the gift was
+    /// sent
+    pub gift_upgrade_sent: GiftInfo,
+}
+
+#[serde_with::skip_serializing_none]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageVideoChatScheduled {
     /// Service message: video chat scheduled
     pub video_chat_scheduled: VideoChatScheduled,
@@ -1061,10 +1071,11 @@ mod getters {
         MediaGroupId, MessageChatBackground, MessageChatBoostAdded, MessageForumTopicClosed,
         MessageForumTopicCreated, MessageForumTopicEdited, MessageForumTopicReopened,
         MessageGeneralForumTopicHidden, MessageGeneralForumTopicUnhidden, MessageGiftInfo,
-        MessageGiveaway, MessageGiveawayCompleted, MessageGiveawayCreated, MessageGiveawayWinners,
-        MessageMessageAutoDeleteTimerChanged, MessagePaidMessagePriceChanged,
-        MessageUniqueGiftInfo, MessageVideoChatEnded, MessageVideoChatScheduled,
-        MessageVideoChatStarted, MessageWebAppData, MessageWriteAccessAllowed,
+        MessageGiftUpgradeSent, MessageGiveaway, MessageGiveawayCompleted, MessageGiveawayCreated,
+        MessageGiveawayWinners, MessageMessageAutoDeleteTimerChanged,
+        MessagePaidMessagePriceChanged, MessageUniqueGiftInfo, MessageVideoChatEnded,
+        MessageVideoChatScheduled, MessageVideoChatStarted, MessageWebAppData,
+        MessageWriteAccessAllowed,
     };
 
     /// Getters for [Message] fields from [telegram docs].
@@ -2031,6 +2042,16 @@ mod getters {
         pub fn unique_gift_info(&self) -> Option<&types::UniqueGiftInfo> {
             match &self.kind {
                 UniqueGiftInfo(MessageUniqueGiftInfo { unique_gift }) => Some(unique_gift),
+                _ => None,
+            }
+        }
+
+        #[must_use]
+        pub fn gift_upgrade_sent(&self) -> Option<&types::GiftInfo> {
+            match &self.kind {
+                GiftUpgradeSent(MessageGiftUpgradeSent { gift_upgrade_sent }) => {
+                    Some(gift_upgrade_sent)
+                }
                 _ => None,
             }
         }
@@ -3434,6 +3455,7 @@ mod tests {
             "date": 1721162577,
             "unique_gift": {
                 "gift": {
+                    "gift_id": "1",
                     "base_name": "name",
                     "name": "name",
                     "number": 123,
@@ -3487,6 +3509,45 @@ mod tests {
         assert_eq!(message.unique_gift_info().unwrap().origin, UniqueGiftOrigin::Resale);
         assert_eq!(message.unique_gift_info().unwrap().gift.name, "name");
         assert_eq!(message.unique_gift_info().unwrap().gift.backdrop.rarity_per_mille, 123);
+    }
+
+    #[test]
+    fn gift_upgrade_sent() {
+        let json = r#"{
+            "message_id": 28,
+            "sender_chat": {
+                "id": -1002236736395,
+                "title": "Test",
+                "type": "channel"
+            },
+            "chat": {
+                "id": -1002236736395,
+                "title": "Test",
+                "type": "channel"
+            },
+            "date": 1721162577,
+            "gift_upgrade_sent": {
+                "gift": {
+                    "id": "1234",
+                    "sticker": {
+                        "width": 512,
+                        "height": 512,
+                        "emoji": "🎁",
+                        "set_name": "AdvenTimeAnim",
+                        "is_animated": true,
+                        "is_video": false,
+                        "type": "regular",
+                        "thumbnail": null,
+                        "file_id": "CAACAgIAAxkBAAESLdBjMImep-J0W8XaTN6S_Lz1-j1QIQACIwADsND4DGmmygHGlyggKQQ",
+                        "file_unique_id": "AgADIwADsND4DA",
+                        "file_size": 16639
+                    },
+                    "star_count": 10
+                }
+            }
+        }"#;
+        let message: Message = from_str(json).unwrap();
+        assert_eq!(message.gift_upgrade_sent().unwrap().gift.id, "1234".into());
     }
 
     #[test]
