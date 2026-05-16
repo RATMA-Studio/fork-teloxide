@@ -190,8 +190,11 @@ mod tests {
                     language_code: Some(String::from("en")),
                     is_premium: false,
                     added_to_attachment_menu: false,
+                    can_manage_bots: false,
+                    has_topics_enabled: false,
                 }),
                 sender_chat: None,
+                sender_tag: None,
                 is_topic_message: false,
                 is_paid_post: false,
                 suggested_post_info: None,
@@ -208,6 +211,7 @@ mod tests {
                 direct_messages_topic: None,
                 kind: MessageKind::Common(MessageCommon {
                     reply_to_message: None,
+                    reply_to_poll_option_id: None,
                     forward_origin: None,
                     external_reply: None,
                     quote: None,
@@ -250,12 +254,15 @@ mod tests {
                 language_code: None,
                 is_premium: false,
                 added_to_attachment_menu: false,
+                can_manage_bots: false,
+                has_topics_enabled: false,
             },
             can_join_groups: false,
             can_read_all_group_messages: false,
             supports_inline_queries: false,
             can_connect_to_business: false,
             has_main_web_app: false,
+            allows_users_to_create_topics: false,
         }
     }
 
