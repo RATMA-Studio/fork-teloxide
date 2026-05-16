@@ -129,6 +129,23 @@ impl Requester for Bot {
         Self::SendVideo::new(self.clone(), payloads::SendVideo::new(chat_id, video))
     }
 
+    type SendLivePhoto = MultipartRequest<payloads::SendLivePhoto>;
+
+    fn send_live_photo<C>(
+        &self,
+        chat_id: C,
+        live_photo: InputFile,
+        photo: InputFile,
+    ) -> Self::SendLivePhoto
+    where
+        C: Into<Recipient>,
+    {
+        Self::SendLivePhoto::new(
+            self.clone(),
+            payloads::SendLivePhoto::new(chat_id, live_photo, photo),
+        )
+    }
+
     type SendAnimation = MultipartRequest<payloads::SendAnimation>;
 
     fn send_animation<C>(&self, chat_id: C, animation: InputFile) -> Self::SendAnimation

@@ -101,6 +101,7 @@ where
         send_audio,
         send_document,
         send_video,
+        send_live_photo,
         send_animation,
         send_voice,
         send_video_note,

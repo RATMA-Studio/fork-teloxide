@@ -549,6 +549,14 @@ macro_rules! requester_forward {
             $body!(send_video this (chat_id: C, video: InputFile))
         }
     };
+    (@method send_live_photo $body:ident $ty:ident) => {
+        type SendLivePhoto = $ty![SendLivePhoto];
+
+        fn send_live_photo<C>(&self, chat_id: C, live_photo: InputFile, photo: InputFile) -> Self::SendLivePhoto where C: Into<Recipient> {
+            let this = self;
+            $body!(send_live_photo this (chat_id: C, live_photo: InputFile, photo: InputFile))
+        }
+    };
     (@method send_animation $body:ident $ty:ident) => {
         type SendAnimation = $ty![SendAnimation];
 

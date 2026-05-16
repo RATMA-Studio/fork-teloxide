@@ -12,7 +12,7 @@ use crate::types::{
     DirectMessagesTopic, Document, ExternalReplyInfo, ForumTopicClosed, ForumTopicCreated,
     ForumTopicEdited, ForumTopicReopened, Game, GeneralForumTopicHidden, GeneralForumTopicUnhidden,
     GiftInfo, Giveaway, GiveawayCompleted, GiveawayCreated, GiveawayWinners, InlineKeyboardMarkup,
-    Invoice, LinkPreviewOptions, Location, ManagedBotCreated, MaybeInaccessibleMessage,
+    Invoice, LinkPreviewOptions, LivePhoto, Location, ManagedBotCreated, MaybeInaccessibleMessage,
     MessageAutoDeleteTimerChanged, MessageEntity, MessageEntityRef, MessageId, MessageOrigin,
     PaidMediaInfo, PaidMessagePriceChanged, PassportData, PhotoSize, Poll, PollOptionAdded,
     PollOptionDeleted, ProximityAlertTriggered, RefundedPayment, Sticker, Story, SuccessfulPayment,
@@ -481,6 +481,7 @@ pub enum MediaKind {
     Story(MediaStory),
     Text(MediaText),
     Video(MediaVideo),
+    LivePhoto(MediaLivePhoto),
     VideoNote(MediaVideoNote),
     Voice(MediaVoice),
     Migration(ChatMigration),
@@ -691,6 +692,34 @@ pub struct MediaVideo {
     pub video: Video,
 
     /// Caption for the video, 0-1024 characters.
+    pub caption: Option<String>,
+
+    /// For messages with a caption, special entities like usernames, URLs,
+    /// bot commands, etc. that appear in the caption.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub caption_entities: Vec<MessageEntity>,
+
+    /// `true`, if the caption must be shown above the message media.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub show_caption_above_media: bool,
+
+    /// `true`, if the message media is covered by a spoiler animation.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub has_media_spoiler: bool,
+
+    /// The unique identifier of a media message group this message belongs
+    /// to.
+    pub media_group_id: Option<MediaGroupId>,
+}
+
+#[serde_with::skip_serializing_none]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(test, derive(schemars::JsonSchema))]
+pub struct MediaLivePhoto {
+    /// Message is a live photo, information about the live photo.
+    pub live_photo: LivePhoto,
+
+    /// Caption for the live photo, 0-1024 characters.
     pub caption: Option<String>,
 
     /// For messages with a caption, special entities like usernames, URLs,
@@ -1065,8 +1094,8 @@ mod getters {
     use crate::types::{
         self, Chat, ChatId, ChatMigration, EffectId, LinkPreviewOptions, MaybeInaccessibleMessage,
         MediaAnimation, MediaAudio, MediaChecklist, MediaContact, MediaDocument, MediaGame,
-        MediaKind, MediaLocation, MediaPaid, MediaPhoto, MediaPoll, MediaSticker, MediaStory,
-        MediaText, MediaVenue, MediaVideo, MediaVideoNote, MediaVoice, Message,
+        MediaKind, MediaLivePhoto, MediaLocation, MediaPaid, MediaPhoto, MediaPoll, MediaSticker,
+        MediaStory, MediaText, MediaVenue, MediaVideo, MediaVideoNote, MediaVoice, Message,
         MessageChannelChatCreated, MessageChatShared, MessageChecklistTasksAdded,
         MessageChecklistTasksDone, MessageCommon, MessageConnectedWebsite, MessageDeleteChatPhoto,
         MessageDice, MessageDirectMessagePriceChanged, MessageEntity, MessageGroupChatCreated,
@@ -1343,6 +1372,7 @@ mod getters {
                 .map(|m| match m.media_kind {
                     MediaKind::Animation(MediaAnimation { show_caption_above_media, .. })
                     | MediaKind::Photo(MediaPhoto { show_caption_above_media, .. })
+                    | MediaKind::LivePhoto(MediaLivePhoto { show_caption_above_media, .. })
                     | MediaKind::Video(MediaVideo { show_caption_above_media, .. }) => {
                         show_caption_above_media
                     }
@@ -1377,6 +1407,7 @@ mod getters {
                 .map(|m| match m.media_kind {
                     MediaKind::Animation(MediaAnimation { has_media_spoiler, .. })
                     | MediaKind::Photo(MediaPhoto { has_media_spoiler, .. })
+                    | MediaKind::LivePhoto(MediaLivePhoto { has_media_spoiler, .. })
                     | MediaKind::Video(MediaVideo { has_media_spoiler, .. }) => has_media_spoiler,
                     MediaKind::Audio(_)
                     | MediaKind::Contact(_)

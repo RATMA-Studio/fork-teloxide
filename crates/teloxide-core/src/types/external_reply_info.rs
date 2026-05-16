@@ -2,8 +2,8 @@ use serde::{Deserialize, Serialize};
 
 use crate::types::{
     Animation, Audio, Chat, Checklist, Contact, Dice, Document, Game, Giveaway, GiveawayWinners,
-    Invoice, LinkPreviewOptions, Location, MessageId, MessageOrigin, PaidMediaInfo, PhotoSize,
-    Poll, Sticker, Story, Venue, Video, VideoNote, Voice,
+    Invoice, LinkPreviewOptions, LivePhoto, Location, MessageId, MessageOrigin, PaidMediaInfo,
+    PhotoSize, Poll, Sticker, Story, Venue, Video, VideoNote, Voice,
 };
 
 /// This object contains information about a message that is being replied to,
@@ -61,6 +61,7 @@ pub enum ExternalReplyInfoKind {
     Giveaway(Giveaway),
     GiveawayWinners(GiveawayWinners),
     Video(Video),
+    LivePhoto(LivePhoto),
     VideoNote(VideoNote),
     Voice(Voice),
     Invoice(Invoice),
