@@ -3478,6 +3478,11 @@ Schema(
                     ty: RawTy("Recipient"),
                     descr: Doc(md: "Unique identifier for the target chat or username of the target channel (in the format `@channelusername`)")
                 ),
+                Param(
+                    name: "return_bots",
+                    ty: Option(bool),
+                    descr: Doc(md: "Pass _true_ to include other bots in the list of administrators")
+                ),
             ],
         ),
         Method(
