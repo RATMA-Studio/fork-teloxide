@@ -1022,6 +1022,18 @@ impl Requester for Bot {
         Self::GetMyShortDescription::new(self.clone(), payloads::GetMyShortDescription::new())
     }
 
+    type SetMyProfilePhoto = JsonRequest<payloads::SetMyProfilePhoto>;
+
+    fn set_my_profile_photo(&self, photo: InputProfilePhoto) -> Self::SetMyProfilePhoto {
+        Self::SetMyProfilePhoto::new(self.clone(), payloads::SetMyProfilePhoto::new(photo))
+    }
+
+    type RemoveMyProfilePhoto = JsonRequest<payloads::RemoveMyProfilePhoto>;
+
+    fn remove_my_profile_photo(&self) -> Self::RemoveMyProfilePhoto {
+        Self::RemoveMyProfilePhoto::new(self.clone(), payloads::RemoveMyProfilePhoto::new())
+    }
+
     type SetChatMenuButton = JsonRequest<payloads::SetChatMenuButton>;
 
     fn set_chat_menu_button(&self) -> Self::SetChatMenuButton {

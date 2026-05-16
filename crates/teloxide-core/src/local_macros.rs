@@ -1183,6 +1183,22 @@ macro_rules! requester_forward {
             $body!(get_my_short_description this ())
         }
     };
+    (@method set_my_profile_photo $body:ident $ty:ident) => {
+        type SetMyProfilePhoto = $ty![SetMyProfilePhoto];
+
+        fn set_my_profile_photo(&self, photo: InputProfilePhoto) -> Self::SetMyProfilePhoto {
+            let this = self;
+            $body!(set_my_profile_photo this (photo: InputProfilePhoto))
+        }
+    };
+    (@method remove_my_profile_photo $body:ident $ty:ident) => {
+        type RemoveMyProfilePhoto = $ty![RemoveMyProfilePhoto];
+
+        fn remove_my_profile_photo(&self, ) -> Self::RemoveMyProfilePhoto {
+            let this = self;
+            $body!(remove_my_profile_photo this ())
+        }
+    };
     (@method set_chat_menu_button $body:ident $ty:ident) => {
         type SetChatMenuButton = $ty![SetChatMenuButton];
 
