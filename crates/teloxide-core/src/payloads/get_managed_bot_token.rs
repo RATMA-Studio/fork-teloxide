@@ -8,7 +8,7 @@ impl_payload! {
     pub GetManagedBotToken (GetManagedBotTokenSetters) => String {
         required {
             /// Unique identifier of the bot
-            pub managed_bot_user_id: u64,
+            pub user_id: u64,
         }
     }
 }
