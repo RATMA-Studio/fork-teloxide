@@ -241,6 +241,8 @@ mod tests {
             language_code: None,
             is_premium: false,
             added_to_attachment_menu: false,
+            can_manage_bots: false,
+            has_topics_enabled: false,
         };
         assert_eq!(user_mention_or_link(&user_with_username), "@abcd");
         let user_without_username = User {
@@ -252,6 +254,8 @@ mod tests {
             language_code: None,
             is_premium: false,
             added_to_attachment_menu: false,
+            can_manage_bots: false,
+            has_topics_enabled: false,
         };
         assert_eq!(
             user_mention_or_link(&user_without_username),
