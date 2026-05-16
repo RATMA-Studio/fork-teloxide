@@ -288,6 +288,7 @@ where
         replace_managed_bot_token,
         get_managed_bot_access_settings,
         set_managed_bot_access_settings,
+        get_user_personal_chat_messages,
         set_chat_menu_button,
         get_chat_menu_button,
         set_my_default_administrator_rights,
@@ -907,6 +908,12 @@ trait ErasableRequester<'a> {
         user_id: UserId,
         is_access_restricted: bool,
     ) -> ErasedRequest<'a, SetManagedBotAccessSettings, Self::Err>;
+
+    fn get_user_personal_chat_messages(
+        &self,
+        user_id: UserId,
+        limit: u8,
+    ) -> ErasedRequest<'a, GetUserPersonalChatMessages, Self::Err>;
 
     fn set_chat_menu_button(&self) -> ErasedRequest<'a, SetChatMenuButton, Self::Err>;
 
@@ -2095,6 +2102,14 @@ where
         is_access_restricted: bool,
     ) -> ErasedRequest<'a, SetManagedBotAccessSettings, Self::Err> {
         Requester::set_managed_bot_access_settings(self, user_id, is_access_restricted).erase()
+    }
+
+    fn get_user_personal_chat_messages(
+        &self,
+        user_id: UserId,
+        limit: u8,
+    ) -> ErasedRequest<'a, GetUserPersonalChatMessages, Self::Err> {
+        Requester::get_user_personal_chat_messages(self, user_id, limit).erase()
     }
 
     fn set_chat_menu_button(&self) -> ErasedRequest<'a, SetChatMenuButton, Self::Err> {

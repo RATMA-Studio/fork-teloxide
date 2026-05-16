@@ -1100,6 +1100,19 @@ impl Requester for Bot {
         )
     }
 
+    type GetUserPersonalChatMessages = JsonRequest<payloads::GetUserPersonalChatMessages>;
+
+    fn get_user_personal_chat_messages(
+        &self,
+        user_id: UserId,
+        limit: u8,
+    ) -> Self::GetUserPersonalChatMessages {
+        Self::GetUserPersonalChatMessages::new(
+            self.clone(),
+            payloads::GetUserPersonalChatMessages::new(user_id, limit),
+        )
+    }
+
     type SetChatMenuButton = JsonRequest<payloads::SetChatMenuButton>;
 
     fn set_chat_menu_button(&self) -> Self::SetChatMenuButton {

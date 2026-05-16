@@ -285,6 +285,7 @@ where
         replace_managed_bot_token,
         get_managed_bot_access_settings,
         set_managed_bot_access_settings,
+        get_user_personal_chat_messages,
         set_chat_menu_button,
         get_chat_menu_button,
         set_my_default_administrator_rights,
