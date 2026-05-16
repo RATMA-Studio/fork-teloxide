@@ -19,7 +19,7 @@ impl_payload! {
             pub chat_id: Recipient [into],
             /// Poll question, 1-300 characters
             pub question: String [into],
-            /// A JSON-serialized list of 2-10 answer options
+            /// A JSON-serialized list of 1-10 answer options
             pub options: Vec<InputPollOption> [collect],
         }
         optional {
