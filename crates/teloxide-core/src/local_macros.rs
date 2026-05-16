@@ -1239,6 +1239,22 @@ macro_rules! requester_forward {
             $body!(replace_managed_bot_token this (user_id: UserId))
         }
     };
+    (@method get_managed_bot_access_settings $body:ident $ty:ident) => {
+        type GetManagedBotAccessSettings = $ty![GetManagedBotAccessSettings];
+
+        fn get_managed_bot_access_settings(&self, user_id: UserId) -> Self::GetManagedBotAccessSettings {
+            let this = self;
+            $body!(get_managed_bot_access_settings this (user_id: UserId))
+        }
+    };
+    (@method set_managed_bot_access_settings $body:ident $ty:ident) => {
+        type SetManagedBotAccessSettings = $ty![SetManagedBotAccessSettings];
+
+        fn set_managed_bot_access_settings(&self, user_id: UserId, is_access_restricted: bool) -> Self::SetManagedBotAccessSettings {
+            let this = self;
+            $body!(set_managed_bot_access_settings this (user_id: UserId, is_access_restricted: bool))
+        }
+    };
     (@method set_chat_menu_button $body:ident $ty:ident) => {
         type SetChatMenuButton = $ty![SetChatMenuButton];
 

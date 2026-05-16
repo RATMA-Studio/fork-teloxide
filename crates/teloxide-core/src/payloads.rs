@@ -84,6 +84,7 @@ mod get_custom_emoji_stickers;
 mod get_file;
 mod get_forum_topic_icon_stickers;
 mod get_game_high_scores;
+mod get_managed_bot_access_settings;
 mod get_managed_bot_token;
 mod get_me;
 mod get_my_commands;
@@ -162,6 +163,7 @@ mod set_chat_title;
 mod set_custom_emoji_sticker_set_thumbnail;
 mod set_game_score;
 mod set_game_score_inline;
+mod set_managed_bot_access_settings;
 mod set_message_reaction;
 mod set_my_commands;
 mod set_my_default_administrator_rights;
@@ -276,6 +278,9 @@ pub use get_forum_topic_icon_stickers::{
     GetForumTopicIconStickers, GetForumTopicIconStickersSetters,
 };
 pub use get_game_high_scores::{GetGameHighScores, GetGameHighScoresSetters};
+pub use get_managed_bot_access_settings::{
+    GetManagedBotAccessSettings, GetManagedBotAccessSettingsSetters,
+};
 pub use get_managed_bot_token::{GetManagedBotToken, GetManagedBotTokenSetters};
 pub use get_me::{GetMe, GetMeSetters};
 pub use get_my_commands::{GetMyCommands, GetMyCommandsSetters};
@@ -372,6 +377,9 @@ pub use set_custom_emoji_sticker_set_thumbnail::{
 };
 pub use set_game_score::{SetGameScore, SetGameScoreSetters};
 pub use set_game_score_inline::{SetGameScoreInline, SetGameScoreInlineSetters};
+pub use set_managed_bot_access_settings::{
+    SetManagedBotAccessSettings, SetManagedBotAccessSettingsSetters,
+};
 pub use set_message_reaction::{SetMessageReaction, SetMessageReactionSetters};
 pub use set_my_commands::{SetMyCommands, SetMyCommandsSetters};
 pub use set_my_default_administrator_rights::{
