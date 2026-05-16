@@ -106,6 +106,7 @@ mod log_out;
 mod pin_chat_message;
 mod post_story;
 mod promote_chat_member;
+mod repost_story;
 mod read_business_message;
 mod refund_star_payment;
 mod remove_business_account_profile_photo;
@@ -298,6 +299,7 @@ pub use pin_chat_message::{PinChatMessage, PinChatMessageSetters};
 pub use post_story::{PostStory, PostStorySetters};
 pub use promote_chat_member::{PromoteChatMember, PromoteChatMemberSetters};
 pub use read_business_message::{ReadBusinessMessage, ReadBusinessMessageSetters};
+pub use repost_story::{RepostStory, RepostStorySetters};
 pub use refund_star_payment::{RefundStarPayment, RefundStarPaymentSetters};
 pub use remove_business_account_profile_photo::{
     RemoveBusinessAccountProfilePhoto, RemoveBusinessAccountProfilePhotoSetters,

@@ -339,6 +339,7 @@ where
         upgrade_gift,
         transfer_gift,
         post_story,
+        repost_story,
         edit_story,
         delete_story,
         send_invoice,
@@ -1165,6 +1166,14 @@ trait ErasableRequester<'a> {
         content: InputStoryContent,
         active_period: Seconds,
     ) -> ErasedRequest<'a, PostStory, Self::Err>;
+
+    fn repost_story(
+        &self,
+        business_connection_id: BusinessConnectionId,
+        from_chat_id: ChatId,
+        from_story_id: StoryId,
+        active_period: Seconds,
+    ) -> ErasedRequest<'a, RepostStory, Self::Err>;
 
     fn edit_story(
         &self,
@@ -2407,6 +2416,16 @@ where
         active_period: Seconds,
     ) -> ErasedRequest<'a, PostStory, Self::Err> {
         Requester::post_story(self, business_connection_id, content, active_period).erase()
+    }
+
+    fn repost_story(
+        &self,
+        business_connection_id: BusinessConnectionId,
+        from_chat_id: ChatId,
+        from_story_id: StoryId,
+        active_period: Seconds,
+    ) -> ErasedRequest<'a, RepostStory, Self::Err> {
+        Requester::repost_story(self, business_connection_id, from_chat_id, from_story_id, active_period).erase()
     }
 
     fn edit_story(

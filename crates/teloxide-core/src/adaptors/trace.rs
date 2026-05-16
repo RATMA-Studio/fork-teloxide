@@ -275,6 +275,7 @@ where
         upgrade_gift,
         transfer_gift,
         post_story,
+        repost_story,
         edit_story,
         delete_story,
         send_invoice,

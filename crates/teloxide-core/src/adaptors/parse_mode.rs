@@ -330,6 +330,7 @@ where
         convert_gift_to_stars,
         upgrade_gift,
         transfer_gift,
+        repost_story,
         delete_story,
         send_invoice,
         create_invoice_link,

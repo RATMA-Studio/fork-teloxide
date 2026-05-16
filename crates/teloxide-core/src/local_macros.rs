@@ -1735,6 +1735,14 @@ macro_rules! requester_forward {
             $body!(post_story this (business_connection_id: BusinessConnectionId, content: InputStoryContent, active_period: Seconds))
         }
     };
+    (@method repost_story $body:ident $ty:ident) => {
+        type RepostStory = $ty![RepostStory];
+
+        fn repost_story(&self, business_connection_id: BusinessConnectionId, from_chat_id: ChatId, from_story_id: StoryId, active_period: Seconds) -> Self::RepostStory {
+            let this = self;
+            $body!(repost_story this (business_connection_id: BusinessConnectionId, from_chat_id: ChatId, from_story_id: StoryId, active_period: Seconds))
+        }
+    };
     (@method edit_story $body:ident $ty:ident) => {
         type EditStory = $ty![EditStory];
 

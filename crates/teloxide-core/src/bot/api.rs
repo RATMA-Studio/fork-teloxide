@@ -1857,6 +1857,26 @@ impl Requester for Bot {
         )
     }
 
+    type RepostStory = JsonRequest<payloads::RepostStory>;
+
+    fn repost_story(
+        &self,
+        business_connection_id: BusinessConnectionId,
+        from_chat_id: ChatId,
+        from_story_id: StoryId,
+        active_period: Seconds,
+    ) -> Self::RepostStory {
+        Self::RepostStory::new(
+            self.clone(),
+            payloads::RepostStory::new(
+                business_connection_id,
+                from_chat_id,
+                from_story_id,
+                active_period,
+            ),
+        )
+    }
+
     type EditStory = JsonRequest<payloads::EditStory>;
 
     fn edit_story(
