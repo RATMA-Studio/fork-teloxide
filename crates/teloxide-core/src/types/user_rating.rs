@@ -43,14 +43,18 @@ mod tests {
         let r: UserRating = serde_json::from_str(json).unwrap();
         assert_eq!(
             r,
-            UserRating { level: 3, rating: 1250, current_level_rating: 1000, next_level_rating: Some(2000) }
+            UserRating {
+                level: 3,
+                rating: 1250,
+                current_level_rating: 1000,
+                next_level_rating: Some(2000)
+            }
         );
     }
 
     #[test]
     fn deserialize_negative_max_level() {
-        let json =
-            r#"{"level":-1,"rating":0,"current_level_rating":0}"#;
+        let json = r#"{"level":-1,"rating":0,"current_level_rating":0}"#;
         let r: UserRating = serde_json::from_str(json).unwrap();
         assert_eq!(r.level, -1);
         assert_eq!(r.next_level_rating, None);

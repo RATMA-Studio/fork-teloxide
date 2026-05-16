@@ -10,7 +10,7 @@ use crate::{
     requests::Requester,
     stop::StopFlag,
     types::{Update, UpdateKind},
-    update_listeners::{webhooks::Options, UpdateListener},
+    update_listeners::{UpdateListener, webhooks::Options},
 };
 
 /// Webhook implementation based on the [mod@axum] framework.
@@ -156,8 +156,8 @@ pub fn axum_no_setup(
     options: Options,
 ) -> (impl UpdateListener<Err = Infallible>, impl Future<Output = ()>, axum::Router) {
     use crate::{
-        stop::{mk_stop_token, StopToken},
-        update_listeners::{webhooks::tuple_first_mut, StatefulListener},
+        stop::{StopToken, mk_stop_token},
+        update_listeners::{StatefulListener, webhooks::tuple_first_mut},
     };
     use axum::{response::IntoResponse, routing::post};
     use tokio_stream::wrappers::UnboundedReceiverStream;

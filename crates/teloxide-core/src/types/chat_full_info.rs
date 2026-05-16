@@ -629,7 +629,9 @@ impl ChatFullInfo {
 }
 
 mod serde_helper {
-    use crate::types::{Audio, Birthdate, BusinessIntro, BusinessLocation, BusinessOpeningHours, Chat};
+    use crate::types::{
+        Audio, Birthdate, BusinessIntro, BusinessLocation, BusinessOpeningHours, Chat,
+    };
     use serde::{Deserialize, Serialize};
 
     #[derive(Serialize, Deserialize)]

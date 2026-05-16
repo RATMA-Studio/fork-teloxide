@@ -45,10 +45,10 @@ where
     /// ```
     /// # async {
     /// use teloxide_core::{
+    ///     Bot,
     ///     payloads::GetMe,
     ///     requests::{JsonRequest, Request},
     ///     types::Me,
-    ///     Bot,
     /// };
     ///
     /// let bot = Bot::new("TOKEN");

@@ -6,16 +6,16 @@ use serde::{Deserialize, Serialize};
 use url::Url;
 
 use crate::types::{
-    Animation, Audio, BareChatId, BusinessConnectionId, Chat, ChatBackground, ChatBoostAdded, ChatOwnerChanged, ChatOwnerLeft,
-    ChatId, ChatShared, Checklist, ChecklistTaskId, ChecklistTasksAdded, ChecklistTasksDone,
-    Contact, Dice, DirectMessagePriceChanged, DirectMessagesTopic, Document, ExternalReplyInfo,
-    ForumTopicClosed, ForumTopicCreated, ForumTopicEdited, ForumTopicReopened, Game,
-    GeneralForumTopicHidden, GeneralForumTopicUnhidden, GiftInfo, Giveaway, GiveawayCompleted,
-    GiveawayCreated, GiveawayWinners, InlineKeyboardMarkup, Invoice, LinkPreviewOptions, Location,
-    ManagedBotCreated, MaybeInaccessibleMessage, MessageAutoDeleteTimerChanged, MessageEntity,
-    MessageEntityRef, MessageId, MessageOrigin, PaidMediaInfo, PaidMessagePriceChanged,
-    PassportData, PhotoSize,
-    Poll, PollOptionAdded, PollOptionDeleted, ProximityAlertTriggered, RefundedPayment, Sticker, Story, SuccessfulPayment,
+    Animation, Audio, BareChatId, BusinessConnectionId, Chat, ChatBackground, ChatBoostAdded,
+    ChatId, ChatOwnerChanged, ChatOwnerLeft, ChatShared, Checklist, ChecklistTaskId,
+    ChecklistTasksAdded, ChecklistTasksDone, Contact, Dice, DirectMessagePriceChanged,
+    DirectMessagesTopic, Document, ExternalReplyInfo, ForumTopicClosed, ForumTopicCreated,
+    ForumTopicEdited, ForumTopicReopened, Game, GeneralForumTopicHidden, GeneralForumTopicUnhidden,
+    GiftInfo, Giveaway, GiveawayCompleted, GiveawayCreated, GiveawayWinners, InlineKeyboardMarkup,
+    Invoice, LinkPreviewOptions, Location, ManagedBotCreated, MaybeInaccessibleMessage,
+    MessageAutoDeleteTimerChanged, MessageEntity, MessageEntityRef, MessageId, MessageOrigin,
+    PaidMediaInfo, PaidMessagePriceChanged, PassportData, PhotoSize, Poll, PollOptionAdded,
+    PollOptionDeleted, ProximityAlertTriggered, RefundedPayment, Sticker, Story, SuccessfulPayment,
     SuggestedPostApprovalFailed, SuggestedPostApproved, SuggestedPostDeclined, SuggestedPostInfo,
     SuggestedPostPaid, SuggestedPostRefunded, TextQuote, ThreadId, True, UniqueGiftInfo, User,
     UsersShared, Venue, Video, VideoChatEnded, VideoChatParticipantsInvited, VideoChatScheduled,
@@ -1051,11 +1051,11 @@ mod getters {
     use std::ops::Deref;
 
     use crate::types::{
-        self, message::MessageKind::*, Chat, ChatId, ChatMigration, EffectId, LinkPreviewOptions,
-        MaybeInaccessibleMessage, MediaAnimation, MediaAudio, MediaChecklist, MediaContact,
-        MediaDocument, MediaGame, MediaKind, MediaLocation, MediaPaid, MediaPhoto, MediaPoll,
-        MediaSticker, MediaStory, MediaText, MediaVenue, MediaVideo, MediaVideoNote, MediaVoice,
-        Message, MessageChannelChatCreated, MessageChatShared, MessageChecklistTasksAdded,
+        self, Chat, ChatId, ChatMigration, EffectId, LinkPreviewOptions, MaybeInaccessibleMessage,
+        MediaAnimation, MediaAudio, MediaChecklist, MediaContact, MediaDocument, MediaGame,
+        MediaKind, MediaLocation, MediaPaid, MediaPhoto, MediaPoll, MediaSticker, MediaStory,
+        MediaText, MediaVenue, MediaVideo, MediaVideoNote, MediaVoice, Message,
+        MessageChannelChatCreated, MessageChatShared, MessageChecklistTasksAdded,
         MessageChecklistTasksDone, MessageCommon, MessageConnectedWebsite, MessageDeleteChatPhoto,
         MessageDice, MessageDirectMessagePriceChanged, MessageEntity, MessageGroupChatCreated,
         MessageId, MessageInvoice, MessageLeftChatMember, MessageNewChatMembers,
@@ -1064,7 +1064,7 @@ mod getters {
         MessageSuggestedPostApprovalFailed, MessageSuggestedPostApproved,
         MessageSuggestedPostDeclined, MessageSuggestedPostPaid, MessageSuggestedPostRefunded,
         MessageSupergroupChatCreated, MessageUsersShared, MessageVideoChatParticipantsInvited,
-        PhotoSize, Story, TextQuote, User,
+        PhotoSize, Story, TextQuote, User, message::MessageKind::*,
     };
 
     use super::{
@@ -3085,7 +3085,7 @@ mod tests {
                     },
                     via_bot: None,
                     sender_business_bot: None,
-                sender_tag: None,
+                    sender_tag: None,
                     suggested_post_info: None,
                     kind: MessageKind::Giveaway(MessageGiveaway {
                         giveaway: Giveaway {
@@ -3201,7 +3201,7 @@ mod tests {
                     is_premium: false,
                     added_to_attachment_menu: false,
                     can_manage_bots: false,
-                has_topics_enabled: false,
+                    has_topics_enabled: false,
                 }],
                 additional_chat_count: None,
                 premium_subscription_month_count: Some(6),

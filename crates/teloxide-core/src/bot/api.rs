@@ -1,7 +1,7 @@
 use url::Url;
 
 use crate::{
-    payloads,
+    Bot, payloads,
     prelude::Requester,
     requests::{JsonRequest, MultipartRequest},
     types::{
@@ -9,11 +9,9 @@ use crate::{
         ChatPermissions, CustomEmojiId, FileId, GiftId, InlineQueryId, InlineQueryResult,
         InputChecklist, InputFile, InputMedia, InputPaidMedia, InputPollOption, InputProfilePhoto,
         InputSticker, InputStoryContent, KeyboardButton, LabeledPrice, MessageId, OwnedGiftId,
-        PreCheckoutQueryId,
-        Recipient, Seconds, ShippingQueryId, StickerFormat, StoryId, TelegramTransactionId,
-        ThreadId, UserId,
+        PreCheckoutQueryId, Recipient, Seconds, ShippingQueryId, StickerFormat, StoryId,
+        TelegramTransactionId, ThreadId, UserId,
     },
-    Bot,
 };
 
 impl Requester for Bot {
@@ -495,10 +493,7 @@ impl Requester for Bot {
     where
         C: Into<Recipient>,
     {
-        Self::SetChatMemberTag::new(
-            self.clone(),
-            payloads::SetChatMemberTag::new(chat_id, user_id),
-        )
+        Self::SetChatMemberTag::new(self.clone(), payloads::SetChatMemberTag::new(chat_id, user_id))
     }
 
     type BanChatSenderChat = JsonRequest<payloads::BanChatSenderChat>;
@@ -1068,10 +1063,7 @@ impl Requester for Bot {
     type GetManagedBotToken = JsonRequest<payloads::GetManagedBotToken>;
 
     fn get_managed_bot_token(&self, user_id: UserId) -> Self::GetManagedBotToken {
-        Self::GetManagedBotToken::new(
-            self.clone(),
-            payloads::GetManagedBotToken::new(user_id),
-        )
+        Self::GetManagedBotToken::new(self.clone(), payloads::GetManagedBotToken::new(user_id))
     }
 
     type ReplaceManagedBotToken = JsonRequest<payloads::ReplaceManagedBotToken>;

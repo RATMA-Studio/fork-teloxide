@@ -1,4 +1,4 @@
-use serde::{de::Error, Deserialize, Deserializer, Serialize, Serializer};
+use serde::{Deserialize, Deserializer, Serialize, Serializer, de::Error};
 
 use crate::types::{
     KeyboardButtonPollType, KeyboardButtonRequestChat, KeyboardButtonRequestManagedBot,
@@ -46,12 +46,7 @@ impl KeyboardButton {
     where
         T: Into<String>,
     {
-        Self {
-            text: text.into(),
-            icon_custom_emoji_id: None,
-            style: None,
-            request: None,
-        }
+        Self { text: text.into(), icon_custom_emoji_id: None, style: None, request: None }
     }
 
     pub fn icon_custom_emoji_id<S: Into<String>>(mut self, id: S) -> Self {
@@ -221,8 +216,8 @@ impl<'de> Deserialize<'de> for ButtonRequest {
                 managed_bot: None,
             } => Err(D::Error::custom(
                 "Either one of `request_contact`, `request_chat`, `request_users`, \
-                 `request_location`, `request_poll`, `web_app` and `request_managed_bot` \
-                 fields is required",
+                 `request_location`, `request_poll`, `web_app` and `request_managed_bot` fields \
+                 is required",
             )),
         }
     }
@@ -265,9 +260,12 @@ mod tests {
 
     #[test]
     fn serialize_no_request() {
-        let button = KeyboardButton { text: String::from(""), icon_custom_emoji_id: None,
+        let button = KeyboardButton {
+            text: String::from(""),
+            icon_custom_emoji_id: None,
             style: None,
-            request: None };
+            request: None,
+        };
         let expected = r#"{"text":""}"#;
         let actual = serde_json::to_string(&button).unwrap();
         assert_eq!(expected, actual);
@@ -275,10 +273,12 @@ mod tests {
 
     #[test]
     fn serialize_request_contact() {
-        let button =
-            KeyboardButton { text: String::from(""), icon_custom_emoji_id: None,
+        let button = KeyboardButton {
+            text: String::from(""),
+            icon_custom_emoji_id: None,
             style: None,
-            request: Some(ButtonRequest::Contact) };
+            request: Some(ButtonRequest::Contact),
+        };
         let expected = r#"{"text":"","request_contact":true}"#;
         let actual = serde_json::to_string(&button).unwrap();
         assert_eq!(expected, actual);
@@ -303,9 +303,12 @@ mod tests {
     #[test]
     fn deserialize_no_request() {
         let json = r#"{"text":""}"#;
-        let expected = KeyboardButton { text: String::from(""), icon_custom_emoji_id: None,
+        let expected = KeyboardButton {
+            text: String::from(""),
+            icon_custom_emoji_id: None,
             style: None,
-            request: None };
+            request: None,
+        };
         let actual = serde_json::from_str(json).unwrap();
         assert_eq!(expected, actual);
     }
@@ -313,10 +316,12 @@ mod tests {
     #[test]
     fn deserialize_request_contact() {
         let json = r#"{"text":"","request_contact":true}"#;
-        let expected =
-            KeyboardButton { text: String::from(""), icon_custom_emoji_id: None,
+        let expected = KeyboardButton {
+            text: String::from(""),
+            icon_custom_emoji_id: None,
             style: None,
-            request: Some(ButtonRequest::Contact) };
+            request: Some(ButtonRequest::Contact),
+        };
         let actual = serde_json::from_str(json).unwrap();
         assert_eq!(expected, actual);
     }

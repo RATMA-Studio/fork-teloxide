@@ -1,6 +1,6 @@
 use std::{future::IntoFuture, sync::Arc};
 
-use futures::{future::BoxFuture, FutureExt};
+use futures::{FutureExt, future::BoxFuture};
 use reqwest::Url;
 
 use crate::{
@@ -1104,7 +1104,7 @@ trait ErasableRequester<'a> {
     fn get_available_gifts(&self) -> ErasedRequest<'a, GetAvailableGifts, Self::Err>;
 
     fn send_gift(&self, user_id: UserId, gift_id: GiftId)
-        -> ErasedRequest<'a, SendGift, Self::Err>;
+    -> ErasedRequest<'a, SendGift, Self::Err>;
 
     fn send_gift_chat(
         &self,
@@ -2543,7 +2543,14 @@ where
         from_story_id: StoryId,
         active_period: Seconds,
     ) -> ErasedRequest<'a, RepostStory, Self::Err> {
-        Requester::repost_story(self, business_connection_id, from_chat_id, from_story_id, active_period).erase()
+        Requester::repost_story(
+            self,
+            business_connection_id,
+            from_chat_id,
+            from_story_id,
+            active_period,
+        )
+        .erase()
     }
 
     fn edit_story(

@@ -1,7 +1,7 @@
-use super::{serializer::Serializer, Storage};
+use super::{Storage, serializer::Serializer};
 use futures::future::BoxFuture;
-use serde::{de::DeserializeOwned, Serialize};
-use sqlx::{sqlite::SqlitePool, Executor};
+use serde::{Serialize, de::DeserializeOwned};
+use sqlx::{Executor, sqlite::SqlitePool};
 use std::{
     convert::Infallible,
     fmt::{Debug, Display},

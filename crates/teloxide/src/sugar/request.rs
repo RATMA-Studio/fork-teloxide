@@ -113,7 +113,7 @@ mod tests {
     use std::ops::Deref;
 
     use super::*;
-    use teloxide_core::{prelude::*, Bot};
+    use teloxide_core::{Bot, prelude::*};
 
     #[test]
     fn test_reply_to() {

@@ -2,7 +2,7 @@
 
 use std::time::Duration;
 
-pub use self::download::{download_file, download_file_stream, Download};
+pub use self::download::{Download, download_file, download_file_stream};
 
 pub(crate) use self::{
     request::{request_json, request_multipart},
