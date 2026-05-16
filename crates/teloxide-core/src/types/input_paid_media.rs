@@ -14,12 +14,14 @@ use crate::types::{InputFile, Seconds};
 pub enum InputPaidMedia {
     Photo(InputPaidMediaPhoto),
     Video(Box<InputPaidMediaVideo>),
+    LivePhoto(InputPaidMediaLivePhoto),
 }
 
 impl From<InputPaidMedia> for InputFile {
     fn from(media: InputPaidMedia) -> InputFile {
         match media {
-            InputPaidMedia::Photo(InputPaidMediaPhoto { media, .. }) => media,
+            InputPaidMedia::Photo(InputPaidMediaPhoto { media, .. })
+            | InputPaidMedia::LivePhoto(InputPaidMediaLivePhoto { media, .. }) => media,
             InputPaidMedia::Video(input_paid_media_video) => input_paid_media_video.media,
         }
     }
@@ -30,28 +32,30 @@ impl InputPaidMedia {
     pub(crate) fn files(&self) -> impl Iterator<Item = &InputFile> {
         use InputPaidMedia::*;
 
-        let (media, thumbnail) = match self {
+        let (media, extra) = match self {
             Photo(InputPaidMediaPhoto { media, .. }) => (media, None),
             Video(input_paid_media_video) => {
                 (&input_paid_media_video.media, input_paid_media_video.thumbnail.as_ref())
             }
+            LivePhoto(InputPaidMediaLivePhoto { media, photo, .. }) => (media, Some(photo)),
         };
 
-        iter::once(media).chain(thumbnail)
+        iter::once(media).chain(extra)
     }
 
     /// Returns an iterator of all files in this input media
     pub(crate) fn files_mut(&mut self) -> impl Iterator<Item = &mut InputFile> {
         use InputPaidMedia::*;
 
-        let (media, thumbnail) = match self {
+        let (media, extra) = match self {
             Photo(InputPaidMediaPhoto { media, .. }) => (media, None),
             Video(input_paid_media_video) => {
                 (&mut input_paid_media_video.media, input_paid_media_video.thumbnail.as_mut())
             }
+            LivePhoto(InputPaidMediaLivePhoto { media, photo, .. }) => (media, Some(photo)),
         };
 
-        iter::once(media).chain(thumbnail)
+        iter::once(media).chain(extra)
     }
 }
 
@@ -131,6 +135,43 @@ pub struct InputPaidMediaVideo {
 
     /// Pass `true`, if the uploaded video is suitable for streaming.
     pub supports_streaming: Option<bool>,
+}
+
+/// The paid media to send is a live photo.
+///
+/// [The official docs](https://core.telegram.org/bots/api#inputpaidmedialivephoto).
+#[derive(Clone, Debug, Serialize)]
+#[cfg_attr(test, derive(schemars::JsonSchema))]
+pub struct InputPaidMediaLivePhoto {
+    /// Video of the live photo to send. Pass a file_id to send a file that
+    /// exists on the Telegram servers (recommended) or pass
+    /// `attach://<file_attach_name>` to upload a new one using
+    /// multipart/form-data under `<file_attach_name>` name. Sending live photos
+    /// by a URL is currently unsupported.
+    pub media: InputFile,
+
+    /// The static photo to send. Pass a file_id to send a file that exists on
+    /// the Telegram servers (recommended) or pass
+    /// `attach://<file_attach_name>` to upload a new one using
+    /// multipart/form-data under `<file_attach_name>` name. Sending live photos
+    /// by a URL is currently unsupported.
+    pub photo: InputFile,
+}
+
+impl InputPaidMediaLivePhoto {
+    pub const fn new(media: InputFile, photo: InputFile) -> Self {
+        Self { media, photo }
+    }
+
+    pub fn media(mut self, val: InputFile) -> Self {
+        self.media = val;
+        self
+    }
+
+    pub fn photo(mut self, val: InputFile) -> Self {
+        self.photo = val;
+        self
+    }
 }
 
 impl InputPaidMediaVideo {

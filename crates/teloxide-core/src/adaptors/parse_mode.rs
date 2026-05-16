@@ -539,6 +539,7 @@ fn visit_parse_modes_in_input_media(
         Animation(m) => &mut m.parse_mode,
         Audio(m) => &mut m.parse_mode,
         Document(m) => &mut m.parse_mode,
+        LivePhoto(m) => &mut m.parse_mode,
     };
 
     visitor(parse_mode);
