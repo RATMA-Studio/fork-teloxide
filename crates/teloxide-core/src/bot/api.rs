@@ -353,6 +353,18 @@ impl Requester for Bot {
         Self::SendDice::new(self.clone(), payloads::SendDice::new(chat_id))
     }
 
+    type SendMessageDraft = JsonRequest<payloads::SendMessageDraft>;
+
+    fn send_message_draft<C>(&self, chat_id: C, draft_id: i32) -> Self::SendMessageDraft
+    where
+        C: Into<ChatId>,
+    {
+        Self::SendMessageDraft::new(
+            self.clone(),
+            payloads::SendMessageDraft::new(chat_id, draft_id),
+        )
+    }
+
     type SendChatAction = JsonRequest<payloads::SendChatAction>;
 
     fn send_chat_action<C>(

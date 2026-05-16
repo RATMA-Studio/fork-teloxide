@@ -685,6 +685,14 @@ macro_rules! requester_forward {
             $body!(send_dice this (chat_id: C))
         }
     };
+    (@method send_message_draft $body:ident $ty:ident) => {
+        type SendMessageDraft = $ty![SendMessageDraft];
+
+        fn send_message_draft<C>(&self, chat_id: C, draft_id: i32) -> Self::SendMessageDraft where C: Into<ChatId> {
+            let this = self;
+            $body!(send_message_draft this (chat_id: C, draft_id: i32))
+        }
+    };
     (@method send_chat_action $body:ident $ty:ident) => {
         type SendChatAction = $ty![SendChatAction];
 
