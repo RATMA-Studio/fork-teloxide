@@ -1501,6 +1501,18 @@ pub trait Requester {
         business_connection_id: BusinessConnectionId,
     ) -> Self::GetBusinessAccountGifts;
 
+    type GetUserGifts: Request<Payload = GetUserGifts, Err = Self::Err>;
+
+    /// For Telegram documentation see [`GetUserGifts`].
+    fn get_user_gifts(&self, user_id: UserId) -> Self::GetUserGifts;
+
+    type GetChatGifts: Request<Payload = GetChatGifts, Err = Self::Err>;
+
+    /// For Telegram documentation see [`GetChatGifts`].
+    fn get_chat_gifts<C>(&self, chat_id: C) -> Self::GetChatGifts
+    where
+        C: Into<Recipient>;
+
     type ConvertGiftToStars: Request<Payload = ConvertGiftToStars, Err = Self::Err>;
 
     /// For Telegram documentation see [`ConvertGiftToStars`].
@@ -1877,6 +1889,8 @@ macro_rules! forward_all {
             get_business_account_star_balance,
             transfer_business_account_stars,
             get_business_account_gifts,
+            get_user_gifts,
+            get_chat_gifts,
             convert_gift_to_stars,
             upgrade_gift,
             transfer_gift,

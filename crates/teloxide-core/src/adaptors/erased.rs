@@ -335,6 +335,8 @@ where
         get_business_account_star_balance,
         transfer_business_account_stars,
         get_business_account_gifts,
+        get_user_gifts,
+        get_chat_gifts,
         convert_gift_to_stars,
         upgrade_gift,
         transfer_gift,
@@ -1140,6 +1142,10 @@ trait ErasableRequester<'a> {
         &self,
         business_connection_id: BusinessConnectionId,
     ) -> ErasedRequest<'a, GetBusinessAccountGifts, Self::Err>;
+
+    fn get_user_gifts(&self, user_id: UserId) -> ErasedRequest<'a, GetUserGifts, Self::Err>;
+
+    fn get_chat_gifts(&self, chat_id: Recipient) -> ErasedRequest<'a, GetChatGifts, Self::Err>;
 
     fn convert_gift_to_stars(
         &self,
@@ -2381,6 +2387,14 @@ where
         business_connection_id: BusinessConnectionId,
     ) -> ErasedRequest<'a, GetBusinessAccountGifts, Self::Err> {
         Requester::get_business_account_gifts(self, business_connection_id).erase()
+    }
+
+    fn get_user_gifts(&self, user_id: UserId) -> ErasedRequest<'a, GetUserGifts, Self::Err> {
+        Requester::get_user_gifts(self, user_id).erase()
+    }
+
+    fn get_chat_gifts(&self, chat_id: Recipient) -> ErasedRequest<'a, GetChatGifts, Self::Err> {
+        Requester::get_chat_gifts(self, chat_id).erase()
     }
 
     fn convert_gift_to_stars(
