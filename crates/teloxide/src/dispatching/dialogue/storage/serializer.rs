@@ -63,14 +63,14 @@ where
 pub struct Bincode;
 
 /// Error type for the [`Bincode`] serializer covering both encoding and
-/// decoding failures from `bincode` v2.
+/// decoding failures from `bincode-next` v3.
 #[cfg(feature = "bincode-serializer")]
 #[derive(Debug, thiserror::Error)]
 pub enum BincodeError {
     #[error(transparent)]
-    Encode(#[from] bincode::error::EncodeError),
+    Encode(#[from] bincode_next::error::EncodeError),
     #[error(transparent)]
-    Decode(#[from] bincode::error::DecodeError),
+    Decode(#[from] bincode_next::error::DecodeError),
 }
 
 #[cfg(feature = "bincode-serializer")]
@@ -81,12 +81,12 @@ where
     type Error = BincodeError;
 
     fn serialize(&self, val: &D) -> Result<Vec<u8>, Self::Error> {
-        let config = bincode::config::standard();
-        bincode::serde::encode_to_vec(val, config).map_err(Into::into)
+        let config = bincode_next::config::standard();
+        bincode_next::serde::encode_to_vec(val, config).map_err(Into::into)
     }
 
     fn deserialize(&self, data: &[u8]) -> Result<D, Self::Error> {
-        let config = bincode::config::standard();
-        bincode::serde::decode_from_slice(data, config).map(|(d, _)| d).map_err(Into::into)
+        let config = bincode_next::config::standard();
+        bincode_next::serde::decode_from_slice(data, config).map(|(d, _)| d).map_err(Into::into)
     }
 }
