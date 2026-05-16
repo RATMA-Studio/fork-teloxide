@@ -69,23 +69,6 @@ pub struct Poll {
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub allows_revoting: bool,
 
-    /// `true`, if the order of options in the poll is randomized.
-    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
-    pub shuffle_options: bool,
-
-    /// `true`, if poll voters are allowed to add new options to the poll.
-    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
-    pub allow_adding_options: bool,
-
-    /// `true`, if poll results are hidden until the poll is closed.
-    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
-    pub hide_results_until_closes: bool,
-
-    /// 0-based identifier of the correct answer option. Available only for
-    /// polls in the quiz mode, which are closed, or was sent (not
-    /// forwarded) by the bot or to the private chat with the bot.
-    pub correct_option_id: Option<u8>,
-
     /// List of 0-based identifiers of the correct answer options. Available
     /// only for polls in the quiz mode with multiple correct options, which
     /// are closed, or were sent (not forwarded) by the bot or to the private

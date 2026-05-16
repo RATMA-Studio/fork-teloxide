@@ -56,9 +56,7 @@ impl_payload! {
             pub allow_adding_options: bool,
             /// Pass `true`, if the poll results must be hidden until the poll is closed
             pub hide_results_until_closes: bool,
-            /// 0-based identifier of the correct answer option, required for polls in quiz mode
-            pub correct_option_id: u8,
-            /// A JSON-serialized list of 0-based identifiers of correct answer options, required for polls in quiz mode with multiple correct answers; pass `correct_option_id` or `correct_option_ids`, but not both
+            /// A JSON-serialized list of monotonically increasing 0-based identifiers of the correct answer options, required for polls in quiz mode.
             pub correct_option_ids: Vec<u8> [collect],
             /// Text that is shown when a user chooses an incorrect answer or taps on the lamp icon in a quiz-style poll, 0-200 characters with at most 2 line feeds after entities parsing
             pub explanation: String [into],

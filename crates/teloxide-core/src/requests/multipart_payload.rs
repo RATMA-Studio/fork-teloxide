@@ -52,6 +52,16 @@ impl MultipartPayload for payloads::EditMessageMediaInline {
     }
 }
 
+impl MultipartPayload for payloads::SetMyProfilePhoto {
+    fn copy_files(&self, into: &mut dyn FnMut(InputFile)) {
+        self.photo.files().for_each(|f| f.copy_into(into))
+    }
+
+    fn move_files(&mut self, into: &mut dyn FnMut(InputFile)) {
+        self.photo.files_mut().for_each(|f| f.move_into(into))
+    }
+}
+
 impl MultipartPayload for payloads::CreateNewStickerSet {
     fn copy_files(&self, into: &mut dyn FnMut(InputFile)) {
         self.stickers
