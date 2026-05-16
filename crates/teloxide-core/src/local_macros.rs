@@ -382,9 +382,9 @@ macro_rules! download_forward {
             fn download_file<'dst>(
                 &self,
                 path: &'dst str,
-                destination: &'dst mut (dyn tokio::io::AsyncWrite
-                               + core::marker::Unpin
-                               + core::marker::Send),
+                destination: &'dst mut (
+                              dyn tokio::io::AsyncWrite + core::marker::Unpin + core::marker::Send
+                          ),
             ) -> Self::Fut<'dst> {
                 let $this = self;
                 ($inner).download_file(path, destination)
@@ -1897,7 +1897,7 @@ macro_rules! requester_forward {
 fn codegen_requester_forward() {
     use crate::codegen::{
         add_hidden_preamble,
-        convert::{convert_for, Convert},
+        convert::{Convert, convert_for},
         ensure_file_contents, min_prefix, project_root, reformat, replace_block,
         schema::{self, Type},
         to_uppercase,
