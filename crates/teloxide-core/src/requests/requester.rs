@@ -934,6 +934,16 @@ pub trait Requester {
     /// For Telegram documentation see [`GetMyShortDescription`].
     fn get_my_short_description(&self) -> Self::GetMyShortDescription;
 
+    type SetMyProfilePhoto: Request<Payload = SetMyProfilePhoto, Err = Self::Err>;
+
+    /// For Telegram documentation see [`SetMyProfilePhoto`].
+    fn set_my_profile_photo(&self, photo: InputProfilePhoto) -> Self::SetMyProfilePhoto;
+
+    type RemoveMyProfilePhoto: Request<Payload = RemoveMyProfilePhoto, Err = Self::Err>;
+
+    /// For Telegram documentation see [`RemoveMyProfilePhoto`].
+    fn remove_my_profile_photo(&self) -> Self::RemoveMyProfilePhoto;
+
     type SetChatMenuButton: Request<Payload = SetChatMenuButton, Err = Self::Err>;
 
     /// For Telegram documentation see [`SetChatMenuButton`].
@@ -1754,6 +1764,8 @@ macro_rules! forward_all {
             get_my_description,
             set_my_short_description,
             get_my_short_description,
+            set_my_profile_photo,
+            remove_my_profile_photo,
             set_chat_menu_button,
             get_chat_menu_button,
             set_my_default_administrator_rights,
