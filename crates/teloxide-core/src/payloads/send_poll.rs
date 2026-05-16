@@ -40,6 +40,14 @@ impl_payload! {
             pub type_: PollType,
             /// True, if the poll allows multiple answers, ignored for polls in quiz mode, defaults to False
             pub allows_multiple_answers: bool,
+            /// Pass `true`, if voters are allowed to change their vote in the poll
+            pub allows_revoting: bool,
+            /// Pass `true`, if the order of options in the poll must be randomized
+            pub shuffle_options: bool,
+            /// Pass `true`, if poll voters are allowed to add new options to the poll
+            pub allow_adding_options: bool,
+            /// Pass `true`, if the poll results must be hidden until the poll is closed
+            pub hide_results_until_closes: bool,
             /// 0-based identifier of the correct answer option, required for polls in quiz mode
             pub correct_option_id: u8,
             /// A JSON-serialized list of 0-based identifiers of correct answer options, required for polls in quiz mode with multiple correct answers; pass `correct_option_id` or `correct_option_ids`, but not both
