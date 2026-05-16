@@ -4232,6 +4232,23 @@ Schema(
             ]
         ),
         Method(
+            names: ("savePreparedKeyboardButton", "SavePreparedKeyboardButton", "save_prepared_keyboard_button"),
+            return_ty: RawTy("PreparedKeyboardButton"),
+            doc: Doc(
+                md: "Use this method to store a keyboard button that can be added by the bot to a reply keyboard of an opener of a Mini App. Returns a [PreparedKeyboardButton] object.",
+                md_links: {"PreparedKeyboardButton": "https://core.telegram.org/bots/api#preparedkeyboardbutton"}
+            ),
+            tg_doc: "https://core.telegram.org/bots/api#savepreparedkeyboardbutton",
+            tg_category: "Available methods",
+            params: [
+                Param(
+                    name: "button",
+                    ty: RawTy("KeyboardButton"),
+                    descr: Doc(md: "A JSON-serialized object describing the keyboard button to be added.")
+                ),
+            ]
+        ),
+        Method(
             names: ("editMessageText", "EditMessageText", "edit_message_text"),
             return_ty: RawTy("Message"),
             doc: Doc(

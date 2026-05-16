@@ -230,6 +230,7 @@ where
         promote_chat_member,
         set_chat_administrator_custom_title,
         set_chat_member_tag,
+        save_prepared_keyboard_button,
         ban_chat_sender_chat,
         unban_chat_sender_chat,
         set_chat_permissions,
