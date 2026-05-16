@@ -2008,11 +2008,11 @@ fn codegen_requester_forward() {
                 .flat_map(|p| match convert_for(&p.ty) {
                     Convert::Id(_) => None,
                     Convert::Into(ty) => {
-                        Some(format!("{}: Into<{}>", &to_uppercase(prefixes[&*p.name]), ty))
+                        Some(format!("{}: Into<{}>", to_uppercase(prefixes[&*p.name]), ty))
                     }
                     Convert::Collect(ty) => Some(format!(
                         "{}: IntoIterator<Item = {}>",
-                        &to_uppercase(prefixes[&*p.name]),
+                        to_uppercase(prefixes[&*p.name]),
                         ty
                     )),
                 })

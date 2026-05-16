@@ -162,10 +162,8 @@ where
 
     let is_webhook_setup = webhook_info.url.is_some();
 
-    if is_webhook_setup {
-        if let Err(e) = requester.delete_webhook().send().await {
-            log::error!("Failed to delete a webhook: {e:?}");
-        }
+    if is_webhook_setup && let Err(e) = requester.delete_webhook().send().await {
+        log::error!("Failed to delete a webhook: {e:?}");
     }
 }
 

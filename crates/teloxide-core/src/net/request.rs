@@ -134,21 +134,18 @@ where
             //
             //       We specifically handle `Vec<Update>` here, because that's the return
             //       type of the only method that returns updates.
-            if TypeId::of::<T>() == TypeId::of::<Vec<Update>>() {
-                if let TelegramResponse::Ok { response, .. } = &mut response {
-                    if let Some(updates) =
-                        (response as &mut T as &mut dyn Any).downcast_mut::<Vec<Update>>()
-                    {
-                        if updates.iter().any(|u| matches!(u.kind, UpdateKind::Error(_))) {
-                            let re_parsed = serde_json::from_str(&text);
+            if TypeId::of::<T>() == TypeId::of::<Vec<Update>>()
+                && let TelegramResponse::Ok { response, .. } = &mut response
+                && let Some(updates) =
+                    (response as &mut T as &mut dyn Any).downcast_mut::<Vec<Update>>()
+                && updates.iter().any(|u| matches!(u.kind, UpdateKind::Error(_)))
+            {
+                let re_parsed = serde_json::from_str(&text);
 
-                            if let Ok(TelegramResponse::Ok { response: values, .. }) = re_parsed {
-                                for (update, value) in zip::<_, Vec<_>>(updates, values) {
-                                    if let UpdateKind::Error(dest) = &mut update.kind {
-                                        *dest = value;
-                                    }
-                                }
-                            }
+                if let Ok(TelegramResponse::Ok { response: values, .. }) = re_parsed {
+                    for (update, value) in zip::<_, Vec<_>>(updates, values) {
+                        if let UpdateKind::Error(dest) = &mut update.kind {
+                            *dest = value;
                         }
                     }
                 }

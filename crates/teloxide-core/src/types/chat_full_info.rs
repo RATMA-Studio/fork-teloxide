@@ -437,10 +437,10 @@ impl ChatFullInfo {
     /// For supergroups, name of group sticker set.
     #[must_use]
     pub fn sticker_set_name(&self) -> Option<&str> {
-        if let ChatFullInfoKind::Public(this) = &self.kind {
-            if let ChatFullInfoPublicKind::Supergroup(this) = &this.kind {
-                return this.sticker_set_name.as_deref();
-            }
+        if let ChatFullInfoKind::Public(this) = &self.kind
+            && let ChatFullInfoPublicKind::Supergroup(this) = &this.kind
+        {
+            return this.sticker_set_name.as_deref();
         }
 
         None
@@ -449,10 +449,10 @@ impl ChatFullInfo {
     /// `true`, if the bot can change the group sticker set.
     #[must_use]
     pub fn can_set_sticker_set(&self) -> bool {
-        if let ChatFullInfoKind::Public(this) = &self.kind {
-            if let ChatFullInfoPublicKind::Supergroup(this) = &this.kind {
-                return this.can_set_sticker_set;
-            }
+        if let ChatFullInfoKind::Public(this) = &self.kind
+            && let ChatFullInfoPublicKind::Supergroup(this) = &this.kind
+        {
+            return this.can_set_sticker_set;
         }
 
         false
@@ -463,10 +463,10 @@ impl ChatFullInfo {
     /// group.
     #[must_use]
     pub fn custom_emoji_sticker_set_name(&self) -> Option<&str> {
-        if let ChatFullInfoKind::Public(this) = &self.kind {
-            if let ChatFullInfoPublicKind::Supergroup(this) = &this.kind {
-                return this.custom_emoji_sticker_set_name.as_deref();
-            }
+        if let ChatFullInfoKind::Public(this) = &self.kind
+            && let ChatFullInfoPublicKind::Supergroup(this) = &this.kind
+        {
+            return this.custom_emoji_sticker_set_name.as_deref();
         }
 
         None
@@ -476,10 +476,10 @@ impl ChatFullInfo {
     /// unpriviledged user.
     #[must_use]
     pub fn slow_mode_delay(&self) -> Option<Seconds> {
-        if let ChatFullInfoKind::Public(this) = &self.kind {
-            if let ChatFullInfoPublicKind::Supergroup(this) = &this.kind {
-                return this.slow_mode_delay;
-            }
+        if let ChatFullInfoKind::Public(this) = &self.kind
+            && let ChatFullInfoPublicKind::Supergroup(this) = &this.kind
+        {
+            return this.slow_mode_delay;
         }
 
         None
@@ -489,10 +489,10 @@ impl ChatFullInfo {
     /// identifier for a channel and vice versa.
     #[must_use]
     pub fn unrestrict_boost_count(&self) -> Option<u16> {
-        if let ChatFullInfoKind::Public(this) = &self.kind {
-            if let ChatFullInfoPublicKind::Supergroup(this) = &this.kind {
-                return this.unrestrict_boost_count;
-            }
+        if let ChatFullInfoKind::Public(this) = &self.kind
+            && let ChatFullInfoPublicKind::Supergroup(this) = &this.kind
+        {
+            return this.unrestrict_boost_count;
         }
 
         None
@@ -501,10 +501,10 @@ impl ChatFullInfo {
     /// The location to which the supergroup is connected.
     #[must_use]
     pub fn location(&self) -> Option<&ChatLocation> {
-        if let ChatFullInfoKind::Public(this) = &self.kind {
-            if let ChatFullInfoPublicKind::Supergroup(this) = &this.kind {
-                return this.location.as_ref();
-            }
+        if let ChatFullInfoKind::Public(this) = &self.kind
+            && let ChatFullInfoPublicKind::Supergroup(this) = &this.kind
+        {
+            return this.location.as_ref();
         }
 
         None
@@ -514,10 +514,10 @@ impl ChatFullInfo {
     /// messages.
     #[must_use]
     pub fn join_to_send_messages(&self) -> bool {
-        if let ChatFullInfoKind::Public(this) = &self.kind {
-            if let ChatFullInfoPublicKind::Supergroup(this) = &this.kind {
-                return this.join_to_send_messages;
-            }
+        if let ChatFullInfoKind::Public(this) = &self.kind
+            && let ChatFullInfoPublicKind::Supergroup(this) = &this.kind
+        {
+            return this.join_to_send_messages;
         }
 
         false
@@ -527,10 +527,10 @@ impl ChatFullInfo {
     /// by supergroup administrators.
     #[must_use]
     pub fn join_by_request(&self) -> bool {
-        if let ChatFullInfoKind::Public(this) = &self.kind {
-            if let ChatFullInfoPublicKind::Supergroup(this) = &this.kind {
-                return this.join_by_request;
-            }
+        if let ChatFullInfoKind::Public(this) = &self.kind
+            && let ChatFullInfoPublicKind::Supergroup(this) = &this.kind
+        {
+            return this.join_by_request;
         }
 
         false

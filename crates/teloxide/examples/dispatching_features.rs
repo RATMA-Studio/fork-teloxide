@@ -1,7 +1,7 @@
 // This example provide a quick overview of the new features in the
 // `dispatching` module.
 
-use rand::Rng;
+use rand::RngExt;
 
 use teloxide::{
     dispatching::HandlerExt, prelude::*, sugar::request::RequestReplyExt, types::Dice,
