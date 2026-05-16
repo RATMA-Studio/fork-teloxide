@@ -268,6 +268,10 @@ pub enum MessageEntityKind {
     TextLink { url: reqwest::Url },
     TextMention { user: User },
     CustomEmoji { custom_emoji_id: CustomEmojiId },
+    /// A formatted date and time entity. Allowed in message text and caption,
+    /// poll question and option entities, checklist title and task text,
+    /// `TextQuote`, `ReplyParameters.quote`, `sendGift.text` and
+    /// `giftPremiumSubscription.text` entities.
     DateTime {
         /// The Unix time associated with the entity.
         unix_time: i64,
