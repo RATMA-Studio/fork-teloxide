@@ -209,6 +209,10 @@ pub struct Restricted {
     /// `true`, if the user is allowed to edit their own tag.
     #[serde(default)]
     pub can_edit_tag: bool,
+
+    /// `true`, if the user is allowed to react to messages.
+    #[serde(default)]
+    pub can_react_to_messages: bool,
 }
 
 /// User that was banned in the chat and can't return to it or view chat
@@ -837,6 +841,7 @@ mod tests {
                 ),
                 tag: None,
                 can_edit_tag: false,
+                can_react_to_messages: false,
             }),
         };
         let actual = serde_json::from_str::<ChatMember>(json).unwrap();

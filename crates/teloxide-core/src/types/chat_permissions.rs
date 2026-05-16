@@ -89,6 +89,9 @@ bitflags::bitflags! {
         /// Set if the user is allowed to edit their own tag.
         const EDIT_TAG = 1 << 14;
 
+        /// Set if the user is allowed to react to messages.
+        const REACT_TO_MESSAGES = 1 << 15;
+
         /// Set if the user is allowed to send audios, documents,
         /// photos, videos, video notes and voice notes, implies
         /// `SEND_AUDIOS`, `SEND_DOCUMENTS`, `SEND_PHOTOS`,
@@ -216,6 +219,13 @@ impl ChatPermissions {
     pub fn can_edit_tag(&self) -> bool {
         self.contains(ChatPermissions::EDIT_TAG)
     }
+
+    /// Checks for [`REACT_TO_MESSAGES`] permission.
+    ///
+    /// [`REACT_TO_MESSAGES`]: ChatPermissions::REACT_TO_MESSAGES
+    pub fn can_react_to_messages(&self) -> bool {
+        self.contains(ChatPermissions::REACT_TO_MESSAGES)
+    }
 }
 
 /// Helper for (de)serialization
@@ -270,6 +280,9 @@ struct ChatPermissionsRaw {
 
     #[serde(default, skip_serializing_if = "Not::not")]
     can_edit_tag: bool,
+
+    #[serde(default, skip_serializing_if = "Not::not")]
+    can_react_to_messages: bool,
 }
 
 impl From<ChatPermissions> for ChatPermissionsRaw {
@@ -290,6 +303,7 @@ impl From<ChatPermissions> for ChatPermissionsRaw {
             can_pin_messages: this.can_pin_messages(),
             can_manage_topics: this.can_manage_topics(),
             can_edit_tag: this.can_edit_tag(),
+            can_react_to_messages: this.can_react_to_messages(),
         }
     }
 }
@@ -312,6 +326,7 @@ impl From<ChatPermissionsRaw> for ChatPermissions {
             can_pin_messages,
             can_manage_topics,
             can_edit_tag,
+            can_react_to_messages,
         }: ChatPermissionsRaw,
     ) -> Self {
         let mut this = Self::empty();
@@ -361,6 +376,9 @@ impl From<ChatPermissionsRaw> for ChatPermissions {
         }
         if can_edit_tag {
             this |= Self::EDIT_TAG;
+        }
+        if can_react_to_messages {
+            this |= Self::REACT_TO_MESSAGES;
         }
 
         this
