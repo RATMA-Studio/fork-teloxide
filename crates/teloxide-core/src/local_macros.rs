@@ -781,6 +781,14 @@ macro_rules! requester_forward {
             $body!(promote_chat_member this (chat_id: C, user_id: UserId))
         }
     };
+    (@method set_chat_member_tag $body:ident $ty:ident) => {
+        type SetChatMemberTag = $ty![SetChatMemberTag];
+
+        fn set_chat_member_tag<C>(&self, chat_id: C, user_id: UserId) -> Self::SetChatMemberTag where C: Into<Recipient> {
+            let this = self;
+            $body!(set_chat_member_tag this (chat_id: C, user_id: UserId))
+        }
+    };
     (@method set_chat_administrator_custom_title $body:ident $ty:ident) => {
         type SetChatAdministratorCustomTitle = $ty![SetChatAdministratorCustomTitle];
 

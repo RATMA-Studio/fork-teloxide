@@ -134,6 +134,9 @@ pub struct Administrator {
 pub struct Member {
     /// Date when the user's subscription will expire
     pub until_date: Option<UntilDate>,
+
+    /// Tag of the member.
+    pub tag: Option<String>,
 }
 
 /// User, restricted in the group. This struct is part of the [`ChatMemberKind`]
@@ -194,6 +197,13 @@ pub struct Restricted {
 
     /// `true` if the user is allowed to send polls.
     pub can_send_polls: bool,
+
+    /// Tag of the member.
+    pub tag: Option<String>,
+
+    /// `true`, if the user is allowed to edit their own tag.
+    #[serde(default)]
+    pub can_edit_tag: bool,
 }
 
 /// User that was banned in the chat and can't return to it or view chat
@@ -815,6 +825,8 @@ mod tests {
                 until_date: UntilDate::Date(
                     chrono::DateTime::from_timestamp(1620000000, 0).unwrap(),
                 ),
+                tag: None,
+                can_edit_tag: false,
             }),
         };
         let actual = serde_json::from_str::<ChatMember>(json).unwrap();
