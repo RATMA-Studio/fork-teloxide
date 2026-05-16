@@ -257,7 +257,7 @@ impl Bot {
     pub(crate) fn execute_multipart<P>(
         &self,
         payload: &mut P,
-    ) -> impl Future<Output = ResponseResult<P::Output>>
+    ) -> impl Future<Output = ResponseResult<P::Output>> + use<P>
     where
         P: MultipartPayload + Serialize,
         P::Output: DeserializeOwned + 'static,
@@ -287,7 +287,7 @@ impl Bot {
     pub(crate) fn execute_multipart_ref<P>(
         &self,
         payload: &P,
-    ) -> impl Future<Output = ResponseResult<P::Output>>
+    ) -> impl Future<Output = ResponseResult<P::Output>> + use<P>
     where
         P: MultipartPayload + Serialize,
         P::Output: DeserializeOwned + 'static,

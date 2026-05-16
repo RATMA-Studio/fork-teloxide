@@ -1,12 +1,12 @@
 [workspace]
 members = ["crates/*"]
-resolver = "2"
+resolver = "3"
 
 # The settings below will be applied to all crates in the workspace
 [workspace.package]
 # MSRV (minimal supported Rust version).
-rust-version = "1.82"
-edition = "2021"
+rust-version = "1.95"
+edition = "2024"
 
 license = "MIT"
 homepage = "https://github.com/teloxide/teloxide"
@@ -15,3 +15,6 @@ repository = "https://github.com/teloxide/teloxide"
 [workspace.metadata.release]
 tag-message = "Release {{crate_name}} version {{version}}"
 tag-name = "{{prefix}}v{{version}}"
+
+[patch.crates-io]
+proc-macro-error2 = { git = "https://github.com/fgardt/proc-macro-error-2", branch = "fix/future-incompat" }

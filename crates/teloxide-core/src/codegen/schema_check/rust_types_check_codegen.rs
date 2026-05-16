@@ -350,7 +350,6 @@ fn extract_fields_from_references_array(
 ) -> Vec<Property> {
     let mut fields = vec![];
 
-    // Gets all of the fields in one big array
     for value in array.clone() {
         if value.get("type").map(Value::as_str) == Some("object".into()) {
             let x = get_fields_of_rust_object(
@@ -358,11 +357,26 @@ fn extract_fields_from_references_array(
                 official_types.clone(),
                 references,
                 initial_object_name.clone(),
-                false, // If `most_fields_are_optional` is true, the fields will be made optional
-                // later
+                false,
                 exceptions,
             );
             fields.extend(x);
+            continue;
+        }
+
+        if value.get("oneOf").is_some() || value.get("anyOf").is_some() {
+            fields.extend(get_fields_of_rust_object(
+                &value,
+                official_types.clone(),
+                references,
+                initial_object_name.clone(),
+                false,
+                exceptions,
+            ));
+            continue;
+        }
+
+        if value.as_object().is_some_and(|o| o.is_empty()) {
             continue;
         }
 
@@ -380,8 +394,7 @@ fn extract_fields_from_references_array(
                 exceptions,
             ));
         } else {
-            continue; // Its probably an empty field like
-                      // ButtonRequest::Location
+            continue;
         }
     }
 

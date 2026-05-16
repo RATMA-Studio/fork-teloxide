@@ -21,8 +21,6 @@ categories = ["api-bindings", "asynchronous"]
 
 default = ["native-tls"]
 
-rustls = ["reqwest/rustls-tls"]
-rustls-native-roots = ["reqwest/rustls-tls-native-roots"]
 native-tls = ["reqwest/native-tls"]
 
 # Features which require nightly compiler.
@@ -48,58 +46,58 @@ full = ["throttle", "trace_adaptor", "erased", "cache_me"]
 
 
 [dependencies]
-schemars = { version = "1.0.4", features = ["chrono04", "url2"]}
-futures = "0.3.5"
-tokio = { version = "1.39", features = ["fs", "io-util"] }
-tokio-util = { version = "0.7.0", features = ["codec"] }
-pin-project = "1.0.12"
-bytes = "1.0.0"
-reqwest = { version = "0.12.7", features = [
-    "json",
-    "stream",
-    "multipart",
+schemars = { version = "1.2.1", features = ["chrono04", "url2"] }
+futures = "0.3.32"
+tokio = { version = "1.52", features = ["fs", "io-util"] }
+tokio-util = { version = "0.7.18", features = ["codec"] }
+pin-project = "1.1.13"
+bytes = "1.11.1"
+reqwest = { version = "0.13", features = [
+  "json",
+  "stream",
+  "multipart",
 ], default-features = false }
 url = { version = "2", features = ["serde"] }
 log = "0.4"
 
-serde = { version = "1.0.114", features = ["derive"] }
-serde_json = "1.0.55"
-serde_with = "3.12.0"
-uuid = { version = "1.1.0", features = ["v4"] }        # for attaching input files
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.149"
+serde_with = "3.17.0"
+uuid = { version = "1.20.0", features = ["v4"] }       # for attaching input files
 
 stacker = "0.1"
 
-derive_more = { version = "2.0.1", features = ["display", "from", "deref"] }
-mime = "0.3.16"
-thiserror = "2.0.11"
-once_cell = "1.5.0"
+derive_more = { version = "2.1.1", features = ["display", "from", "deref"] }
+mime = "0.3.17"
+thiserror = "2.0.18"
+once_cell = "1.21.4"
 takecell = "0.1"
 take_mut = "0.2"
-rc-box = "1.1.1"
-chrono = { version = "0.4.32", default-features = false }
-either = "1.6.1"
+rc-box = "1.3.0"
+chrono = { version = "0.4.44", default-features = false }
+either = "1.15.0"
 bitflags = "2"
-rgb = "0.8.48"
+rgb = "0.8.53"
 
 vecrem = { version = "0.1", optional = true }
 
 
 [dev-dependencies]
 pretty_env_logger = "0.5"
-tokio = { version = "1.39.0", features = [
-    "fs",
-    "macros",
-    "macros",
-    "rt-multi-thread",
+tokio = { version = "1.52.3", features = [
+  "fs",
+  "macros",
+  "macros",
+  "rt-multi-thread",
 ] }
-cool_asserts = "2.0.3"
+cool_asserts = "2.0.4"
 
 xshell = "0.2.7"
-ron = "0.8.1"
-indexmap = { version = "2.7.1", features = ["serde"] }
-aho-corasick = "1.1.3"
+ron = "0.12"
+indexmap = { version = "2.13.1", features = ["serde"] }
+aho-corasick = "1.1.4"
 itertools = "0.14"
-pretty_assertions = "1.4.0"
+pretty_assertions = "1.4.1"
 
 
 [package.metadata.docs.rs]
@@ -113,9 +111,9 @@ cargo-args = ["-Zunstable-options", "-Zrustdoc-scrape-examples"]
 tag-prefix = "core-"
 enable-features = ["full"]
 pre-release-replacements = [
-    { file = "README.md", search = "teloxide-core = \"[^\"]+\"", replace = "teloxide-core = \"{{version}}\"" },
-    { file = "src/lib.rs", search = "teloxide-core = \"[^\"]+\"", replace = "teloxide-core = \"{{version}}\"" },
-    { file = "CHANGELOG.md", search = "## unreleased", replace = "## unreleased\n\n## {{version}} - {{date}}", exactly = 1 },
+  { file = "README.md", search = "teloxide-core = \"[^\"]+\"", replace = "teloxide-core = \"{{version}}\"" },
+  { file = "src/lib.rs", search = "teloxide-core = \"[^\"]+\"", replace = "teloxide-core = \"{{version}}\"" },
+  { file = "CHANGELOG.md", search = "## unreleased", replace = "## unreleased\n\n## {{version}} - {{date}}", exactly = 1 },
 ]
 
 [lints.rust]
@@ -133,8 +131,8 @@ doc-scrape-examples = true
 [[example]]
 name = "erased"
 required-features = [
-    "tokio/macros",
-    "tokio/rt-multi-thread",
-    "erased",
-    "trace_adaptor",
+  "tokio/macros",
+  "tokio/rt-multi-thread",
+  "erased",
+  "trace_adaptor",
 ]
