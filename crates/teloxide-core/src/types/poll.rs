@@ -69,6 +69,19 @@ pub struct Poll {
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub allows_revoting: bool,
 
+    /// `true` if voting is limited to users who have been members of the chat
+    /// where the poll was originally sent for more than 24 hours.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub members_only: bool,
+
+    /// A list of two-letter [ISO 3166-1 alpha-2] country codes indicating the
+    /// countries from which users can vote in the poll. The country code "FT"
+    /// is used for users with anonymous numbers. If omitted, then users from
+    /// any country can participate in the poll.
+    ///
+    /// [ISO 3166-1 alpha-2]: https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+    pub country_codes: Option<Vec<String>>,
+
     /// List of 0-based identifiers of the correct answer options. Available
     /// only for polls in the quiz mode with multiple correct options, which
     /// are closed, or were sent (not forwarded) by the bot or to the private

@@ -56,6 +56,12 @@ impl_payload! {
             pub allow_adding_options: bool,
             /// Pass `true`, if the poll results must be hidden until the poll is closed
             pub hide_results_until_closes: bool,
+            /// Pass `true` to limit voting to users who have been members of the chat for more than 24 hours
+            pub members_only: bool,
+            /// A JSON-serialized list of two-letter [ISO 3166-1 alpha-2] country codes indicating the countries from which users can vote in the poll. The country code "FT" is used for users with anonymous numbers. If omitted, then users from any country can participate in the poll.
+            ///
+            /// [ISO 3166-1 alpha-2]: https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+            pub country_codes: Vec<String> [collect],
             /// A JSON-serialized list of monotonically increasing 0-based identifiers of the correct answer options, required for polls in quiz mode.
             pub correct_option_ids: Vec<u8> [collect],
             /// Text that is shown when a user chooses an incorrect answer or taps on the lamp icon in a quiz-style poll, 0-200 characters with at most 2 line feeds after entities parsing
