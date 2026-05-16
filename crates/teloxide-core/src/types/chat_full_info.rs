@@ -105,6 +105,10 @@ pub struct ChatFullInfo {
     /// Rating of the chat based on Telegram Star spendings; only for private
     /// chats.
     pub rating: Option<UserRating>,
+
+    /// The number of Telegram Stars a general user has to pay to send a
+    /// message to the chat.
+    pub paid_message_star_count: Option<u32>,
 }
 
 #[serde_with::skip_serializing_none]
@@ -769,6 +773,7 @@ mod tests {
             has_visible_history: false,
             max_reaction_count: 0,
             rating: None,
+            paid_message_star_count: None,
         };
         let actual = from_str(
             r#"{
@@ -835,6 +840,7 @@ mod tests {
             has_visible_history: false,
             max_reaction_count: 0,
             rating: None,
+            paid_message_star_count: None,
         };
         eprintln!("{}", to_string(&chat).unwrap());
         assert_eq!(
@@ -899,6 +905,7 @@ mod tests {
             has_visible_history: false,
             max_reaction_count: 0,
             rating: None,
+            paid_message_star_count: None,
         };
 
         let json = to_string(&chat).unwrap();
