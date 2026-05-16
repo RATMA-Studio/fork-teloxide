@@ -17,4 +17,7 @@ pub struct AcceptedGiftTypes {
 
     /// `true`, if a Telegram Premium subscription is accepted
     pub premium_subscription: bool,
+
+    /// `true`, if transfers of unique gifts from channels are accepted
+    pub gifts_from_channels: bool,
 }
