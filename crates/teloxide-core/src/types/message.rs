@@ -3180,6 +3180,7 @@ mod tests {
                     is_premium: false,
                     added_to_attachment_menu: false,
                     can_manage_bots: false,
+                has_topics_enabled: false,
                 }],
                 additional_chat_count: None,
                 premium_subscription_month_count: Some(6),
