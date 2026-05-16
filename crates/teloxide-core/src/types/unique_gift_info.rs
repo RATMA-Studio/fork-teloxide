@@ -12,11 +12,19 @@ pub struct UniqueGiftInfo {
 
     /// Origin of the gift. Currently, either `Upgrade` for gifts upgraded from
     /// regular gifts, `Transfer` for gifts transferred from other users or
-    /// channels, or `Resale` for gifts bought from other users
+    /// channels, `Resale` for gifts bought from other users, `GiftedUpgrade`
+    /// for upgrades purchased after the gift was sent, or `Offer` for gifts
+    /// bought or sold through gift purchase offers
     pub origin: UniqueGiftOrigin,
 
-    /// For gifts bought from other users, the price paid for the gift
-    pub last_resale_star_count: Option<u32>,
+    /// For gifts bought from other users, the currency in which the payment
+    /// for the gift was done. Currently, one of `XTR` for Telegram Stars or
+    /// `TON` for toncoins.
+    pub last_resale_currency: Option<String>,
+
+    /// For gifts bought from other users, the price paid for the gift in
+    /// either Telegram Stars or nanotoncoins
+    pub last_resale_amount: Option<i64>,
 
     /// Unique identifier of the received gift for the bot; only present for
     /// gifts received on behalf of business accounts
@@ -35,7 +43,9 @@ pub struct UniqueGiftInfo {
 
 /// Origin of the gift. Currently, either `Upgrade` for gifts upgraded from
 /// regular gifts, `Transfer` for gifts transferred from other users or
-/// channels, or `Resale` for gifts bought from other users
+/// channels, `Resale` for gifts bought from other users, `GiftedUpgrade` for
+/// upgrades purchased after the gift was sent, or `Offer` for gifts bought or
+/// sold through gift purchase offers.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
@@ -43,6 +53,8 @@ pub enum UniqueGiftOrigin {
     Upgrade,
     Transfer,
     Resale,
+    GiftedUpgrade,
+    Offer,
 }
 
 #[cfg(test)]
@@ -53,6 +65,7 @@ mod tests {
     fn deserialize() {
         let data = r#"{
             "gift": {
+                "gift_id": "1",
                 "base_name": "name",
                 "name": "name",
                 "number": 123,

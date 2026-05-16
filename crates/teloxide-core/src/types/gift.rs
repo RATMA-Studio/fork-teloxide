@@ -1,7 +1,7 @@
 use derive_more::From;
 use serde::{Deserialize, Serialize};
 
-use crate::types::{Chat, Sticker};
+use crate::types::{Chat, GiftBackground, Sticker};
 
 /// This object represent a list of gifts.
 ///
@@ -46,13 +46,38 @@ pub struct Gift {
     /// unique one
     pub upgrade_star_count: Option<u32>,
 
-    /// The total number of the gifts of this type that can be sent; for limited
-    /// gifts only
+    /// `true`, if the gift can only be purchased by Telegram Premium
+    /// subscribers
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub is_premium: bool,
+
+    /// `true`, if the gift can be used (after being upgraded) to customize a
+    /// user's appearance
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub has_colors: bool,
+
+    /// The total number of the gifts of this type that can be sent by all
+    /// users; for limited gifts only
     pub total_count: Option<u32>,
 
-    /// The number of remaining gifts of this type that can be sent; for limited
-    /// gifts only
+    /// The number of remaining gifts of this type that can be sent by all
+    /// users; for limited gifts only
     pub remaining_count: Option<u32>,
+
+    /// The total number of gifts of this type that can be sent by the bot; for
+    /// limited gifts only
+    pub personal_total_count: Option<u32>,
+
+    /// The number of remaining gifts of this type that can be sent by the bot;
+    /// for limited gifts only
+    pub personal_remaining_count: Option<u32>,
+
+    /// Background of the gift
+    pub background: Option<GiftBackground>,
+
+    /// The total number of different unique gifts that can be obtained by
+    /// upgrading the gift
+    pub unique_gift_variant_count: Option<u32>,
 
     /// Information about the chat that published the gift
     pub publisher_chat: Option<Chat>,
