@@ -42,14 +42,11 @@ pub fn reformat(text: String) -> String {
     let sh = Shell::new().unwrap();
     ensure_rustfmt(&sh);
     let rustfmt_toml = project_root().join("../../rustfmt.toml");
-    let mut stdout = cmd!(
-        sh,
-        "rustup run {toolchain} rustfmt --edition 2024 --config-path {rustfmt_toml} --config \
-         fn_single_line=true"
-    )
-    .stdin(text)
-    .read()
-    .unwrap();
+    #[rustfmt::skip]
+    let mut stdout = cmd!(sh, "rustup run {toolchain} rustfmt --edition 2024 --config-path {rustfmt_toml} --config fn_single_line=true")
+        .stdin(text)
+        .read()
+        .unwrap();
     if !stdout.ends_with('\n') {
         stdout.push('\n');
     }
