@@ -96,10 +96,9 @@ impl Exceptions {
     fn get_renamed(&self, api_object: String) -> Option<String> {
         for exception in self.exceptions.iter() {
             if let Exception::RenameCheckingObject { api_object_name, rust_object_name } = exception
+                && *api_object_name == api_object
             {
-                if *api_object_name == api_object {
-                    return Some(rust_object_name.to_owned());
-                }
+                return Some(rust_object_name.to_owned());
             }
         }
 
@@ -468,34 +467,30 @@ fn extract_fields_from_properties_object(
         if let Kind::Reference { ref reference } = kind {
             // If its a reference that isnt in official types, its probably a wrapper for a
             // type
-            if !official_types.contains(reference)
+            if (!official_types.contains(reference)
                 // Some official types are still in need of being expanded, like InputFile
-                || exceptions.is_expand_reference(reference.to_owned())
-            {
-                if let Some(reference_kind) = expand_reference(
+                || exceptions.is_expand_reference(reference.to_owned()))
+                && let Some(reference_kind) = expand_reference(
                     references,
                     reference.to_owned(),
                     name.to_owned(),
                     initial_object_name.clone(),
-                ) {
-                    kind = reference_kind
-                }
+                )
+            {
+                kind = reference_kind
             }
-        } else if let Kind::Array { ref array } = kind {
-            if let Kind::Reference { ref reference } = array.0 {
-                if !official_types.contains(reference)
-                    || exceptions.is_expand_reference(reference.to_owned())
-                {
-                    if let Some(reference_kind) = expand_reference(
-                        references,
-                        reference.to_owned(),
-                        name.to_owned(),
-                        initial_object_name.clone(),
-                    ) {
-                        kind = Kind::Array { array: Box::new(KindWrapper(reference_kind)) }
-                    }
-                }
-            }
+        } else if let Kind::Array { ref array } = kind
+            && let Kind::Reference { ref reference } = array.0
+            && (!official_types.contains(reference)
+                || exceptions.is_expand_reference(reference.to_owned()))
+            && let Some(reference_kind) = expand_reference(
+                references,
+                reference.to_owned(),
+                name.to_owned(),
+                initial_object_name.clone(),
+            )
+        {
+            kind = Kind::Array { array: Box::new(KindWrapper(reference_kind)) }
         }
         fields.push(Property {
             name: name.to_owned(),

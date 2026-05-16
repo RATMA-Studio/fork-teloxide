@@ -104,10 +104,8 @@ impl CommandAttrs {
                             d.strip_prefix(' ').unwrap_or(&d),
                             attr.sp,
                         );
-                        if is_doc {
-                            if let Some((_, is_doc, _)) = &mut this.description {
-                                *is_doc = true;
-                            }
+                        if is_doc && let Some((_, is_doc, _)) = &mut this.description {
+                            *is_doc = true;
                         }
                         Ok(())
                     }

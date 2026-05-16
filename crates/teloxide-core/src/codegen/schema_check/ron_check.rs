@@ -218,22 +218,22 @@ fn check_ron_params(
 ) {
     let all_params: Vec<&String> = ron_method.params.iter().map(|a| &a.name).collect();
     for (param1, param2) in &usually_siblings.params {
-        if all_params.contains(&param1) && all_params.contains(&param2) {
-            if let Some(ron_param1) = find_ron_param_by_name(param1, ron_method) {
-                if let Some(ron_param2) = find_ron_param_by_name(param2, ron_method) {
-                    // If they arent optional then its like chat_id and user_id in getChatMember
-                    if let schema::Type::Option(_) = ron_param1.ty {
-                        if let schema::Type::Option(_) = ron_param2.ty {
-                            errors.push(ApiCheckError::ParamsShouldBeSiblings {
-                                method: ron_method.names.0.clone(),
-                                param1: param1.to_owned(),
-                                param2: param2.to_owned(),
-                            })
-                        }
-                    }
-                }
-            } // No need to error if they dont exist, it is checked next
-        }
+        if all_params.contains(&param1)
+            && all_params.contains(&param2)
+            && let Some(ron_param1) = find_ron_param_by_name(param1, ron_method)
+            && let Some(ron_param2) = find_ron_param_by_name(param2, ron_method)
+        {
+            // If they arent optional then its like chat_id and user_id in getChatMember
+            if let schema::Type::Option(_) = ron_param1.ty
+                && let schema::Type::Option(_) = ron_param2.ty
+            {
+                errors.push(ApiCheckError::ParamsShouldBeSiblings {
+                    method: ron_method.names.0.clone(),
+                    param1: param1.to_owned(),
+                    param2: param2.to_owned(),
+                })
+            }
+        } // No need to error if they dont exist, it is checked next
     }
 
     for param in &method.arguments {
@@ -518,7 +518,7 @@ mod tests {
                         .unwrap_or_else(|| {
                             panic!(
                                 "{}",
-                                format!("Sibling method of {} does not exist", &method.name)
+                                format!("Sibling method of {} does not exist", method.name)
                             )
                         });
 
