@@ -4359,6 +4359,28 @@ Schema(
             ]
         ),
         Method(
+            names: ("answerGuestQuery", "AnswerGuestQuery", "answer_guest_query"),
+            return_ty: RawTy("SentGuestMessage"),
+            doc: Doc(
+                md: "Use this method to reply to a received guest message. On success, a [SentGuestMessage] object is returned.",
+                md_links: {"SentGuestMessage": "https://core.telegram.org/bots/api#sentguestmessage"}
+            ),
+            tg_doc: "https://core.telegram.org/bots/api#answerguestquery",
+            tg_category: "Inline Mode",
+            params: [
+                Param(
+                    name: "guest_query_id",
+                    ty: String,
+                    descr: Doc(md: "Unique identifier for the query to be answered")
+                ),
+                Param(
+                    name: "result",
+                    ty: RawTy("InlineQueryResult"),
+                    descr: Doc(md: "A JSON-serialized object describing the message to be sent"),
+                ),
+            ]
+        ),
+        Method(
             names: ("savePreparedInlineMessage", "SavePreparedInlineMessage", "save_prepared_inline_message"),
             return_ty: RawTy("PreparedInlineMessage"),
             doc: Doc(

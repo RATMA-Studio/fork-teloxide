@@ -2,14 +2,15 @@
 
 #[doc(no_inline)]
 pub use crate::payloads::{
-    AddStickerToSetSetters as _, AnswerCallbackQuerySetters as _, AnswerInlineQuerySetters as _,
-    AnswerPreCheckoutQuerySetters as _, AnswerShippingQuerySetters as _,
-    AnswerWebAppQuerySetters as _, ApproveChatJoinRequestSetters as _,
-    ApproveSuggestedPostSetters as _, BanChatMemberSetters as _, BanChatSenderChatSetters as _,
-    CloseForumTopicSetters as _, CloseGeneralForumTopicSetters as _, CloseSetters as _,
-    ConvertGiftToStarsSetters as _, CopyMessageSetters as _, CopyMessagesSetters as _,
-    CreateChatInviteLinkSetters as _, CreateChatSubscriptionInviteLinkSetters as _,
-    CreateForumTopicSetters as _, CreateInvoiceLinkSetters as _, CreateNewStickerSetSetters as _,
+    AddStickerToSetSetters as _, AnswerCallbackQuerySetters as _, AnswerGuestQuerySetters as _,
+    AnswerInlineQuerySetters as _, AnswerPreCheckoutQuerySetters as _,
+    AnswerShippingQuerySetters as _, AnswerWebAppQuerySetters as _,
+    ApproveChatJoinRequestSetters as _, ApproveSuggestedPostSetters as _,
+    BanChatMemberSetters as _, BanChatSenderChatSetters as _, CloseForumTopicSetters as _,
+    CloseGeneralForumTopicSetters as _, CloseSetters as _, ConvertGiftToStarsSetters as _,
+    CopyMessageSetters as _, CopyMessagesSetters as _, CreateChatInviteLinkSetters as _,
+    CreateChatSubscriptionInviteLinkSetters as _, CreateForumTopicSetters as _,
+    CreateInvoiceLinkSetters as _, CreateNewStickerSetSetters as _,
     DeclineChatJoinRequestSetters as _, DeclineSuggestedPostSetters as _,
     DeleteAllMessageReactionsSetters as _, DeleteBusinessMessagesSetters as _,
     DeleteChatPhotoSetters as _, DeleteChatStickerSetSetters as _, DeleteForumTopicSetters as _,
