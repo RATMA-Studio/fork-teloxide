@@ -210,6 +210,10 @@ pub struct MessageCommon {
     /// Identifier of the specific checklist task that is being replied to
     pub reply_to_checklist_task_id: Option<ChecklistTaskId>,
 
+    /// Persistent identifier of the specific poll option that is being
+    /// replied to.
+    pub reply_to_poll_option_id: Option<String>,
+
     /// If the sender of the message boosted the chat, the number of boosts
     /// added by the user
     pub sender_boost_count: Option<u16>,

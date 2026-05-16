@@ -631,6 +631,7 @@ mod test {
                     external_reply: None,
                     quote: None,
                     reply_to_checklist_task_id: None,
+                    reply_to_poll_option_id: None,
                     reply_to_story: None,
                     sender_boost_count: None,
                     edit_date: None,
