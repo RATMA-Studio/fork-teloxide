@@ -1541,6 +1541,17 @@ pub trait Requester {
         active_period: Seconds,
     ) -> Self::PostStory;
 
+    type RepostStory: Request<Payload = RepostStory, Err = Self::Err>;
+
+    /// For Telegram documentation see [`RepostStory`].
+    fn repost_story(
+        &self,
+        business_connection_id: BusinessConnectionId,
+        from_chat_id: ChatId,
+        from_story_id: StoryId,
+        active_period: Seconds,
+    ) -> Self::RepostStory;
+
     type EditStory: Request<Payload = EditStory, Err = Self::Err>;
 
     /// For Telegram documentation see [`EditStory`].
@@ -1870,6 +1881,7 @@ macro_rules! forward_all {
             upgrade_gift,
             transfer_gift,
             post_story,
+            repost_story,
             edit_story,
             delete_story,
             send_invoice,

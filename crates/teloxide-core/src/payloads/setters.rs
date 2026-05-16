@@ -38,7 +38,7 @@ pub use crate::payloads::{
     GiftPremiumSubscriptionSetters as _, HideGeneralForumTopicSetters as _,
     KickChatMemberSetters as _, LeaveChatSetters as _, LogOutSetters as _,
     PinChatMessageSetters as _, PostStorySetters as _, PromoteChatMemberSetters as _,
-    ReadBusinessMessageSetters as _, RefundStarPaymentSetters as _,
+    ReadBusinessMessageSetters as _, RefundStarPaymentSetters as _, RepostStorySetters as _,
     RemoveBusinessAccountProfilePhotoSetters as _, RemoveChatVerificationSetters as _,
     RemoveMyProfilePhotoSetters as _, RemoveUserVerificationSetters as _,
     ReopenForumTopicSetters as _, ReopenGeneralForumTopicSetters as _,
