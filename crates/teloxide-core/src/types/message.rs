@@ -3156,7 +3156,8 @@ mod tests {
                     username: Some("shdwchn10".to_owned()),
                     language_code: None,
                     is_premium: false,
-                    added_to_attachment_menu: false
+                    added_to_attachment_menu: false,
+                    can_manage_bots: false,
                 }],
                 additional_chat_count: None,
                 premium_subscription_month_count: Some(6),
