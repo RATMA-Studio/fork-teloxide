@@ -62,18 +62,31 @@ where
 #[cfg(feature = "bincode-serializer")]
 pub struct Bincode;
 
+/// Error type for the [`Bincode`] serializer covering both encoding and
+/// decoding failures from `bincode` v2.
+#[cfg(feature = "bincode-serializer")]
+#[derive(Debug, thiserror::Error)]
+pub enum BincodeError {
+    #[error(transparent)]
+    Encode(#[from] bincode::error::EncodeError),
+    #[error(transparent)]
+    Decode(#[from] bincode::error::DecodeError),
+}
+
 #[cfg(feature = "bincode-serializer")]
 impl<D> Serializer<D> for Bincode
 where
     D: Serialize + DeserializeOwned,
 {
-    type Error = bincode::Error;
+    type Error = BincodeError;
 
     fn serialize(&self, val: &D) -> Result<Vec<u8>, Self::Error> {
-        bincode::serialize(val)
+        let config = bincode::config::standard();
+        bincode::serde::encode_to_vec(val, config).map_err(Into::into)
     }
 
     fn deserialize(&self, data: &[u8]) -> Result<D, Self::Error> {
-        bincode::deserialize(data)
+        let config = bincode::config::standard();
+        bincode::serde::decode_from_slice(data, config).map(|(d, _)| d).map_err(Into::into)
     }
 }

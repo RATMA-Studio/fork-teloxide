@@ -226,7 +226,7 @@ impl Bot {
     pub(crate) fn execute_json<P>(
         &self,
         payload: &P,
-    ) -> impl Future<Output = ResponseResult<P::Output>> + 'static
+    ) -> impl Future<Output = ResponseResult<P::Output>> + use<P>
     where
         P: Payload + Serialize,
         P::Output: DeserializeOwned + 'static,
