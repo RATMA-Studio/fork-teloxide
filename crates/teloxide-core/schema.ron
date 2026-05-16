@@ -2261,6 +2261,26 @@ Schema(
                     descr: Doc(md: "True, if the poll allows multiple answers, ignored for polls in quiz mode, defaults to False")
                 ),
                 Param(
+                    name: "allows_revoting",
+                    ty: Option(bool),
+                    descr: Doc(md: "Pass `true`, if voters are allowed to change their vote in the poll")
+                ),
+                Param(
+                    name: "shuffle_options",
+                    ty: Option(bool),
+                    descr: Doc(md: "Pass `true`, if the order of options in the poll must be randomized")
+                ),
+                Param(
+                    name: "allow_adding_options",
+                    ty: Option(bool),
+                    descr: Doc(md: "Pass `true`, if poll voters are allowed to add new options to the poll")
+                ),
+                Param(
+                    name: "hide_results_until_closes",
+                    ty: Option(bool),
+                    descr: Doc(md: "Pass `true`, if the poll results must be hidden until the poll is closed")
+                ),
+                Param(
                     name: "correct_option_id",
                     ty: Option(u8),
                     descr: Doc(md: "0-based identifier of the correct answer option, required for polls in quiz mode")
