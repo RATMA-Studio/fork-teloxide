@@ -7,6 +7,8 @@
 >
 > Issues and PRs in this repository are scoped to the fork; please don't file upstream bugs here. The fork may diverge from upstream over time; we re-base when it makes sense and skip the re-base when it doesn't.
 >
+> <p align="right"><em>— <img src="https://avatars.githubusercontent.com/in/3730924?v=4" width="20" align="middle"/> <a href="https://github.com/apps/ratma-studio-github-bot">ratma-studio-github-bot</a></em></p>
+>
 > [`teloxide/teloxide`]: https://github.com/teloxide/teloxide
 > [RATMA Studio]: https://github.com/RATMA-Studio
 
