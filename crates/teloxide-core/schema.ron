@@ -4089,6 +4089,28 @@ Schema(
             ]
         ),
         Method(
+            names: ("getUserPersonalChatMessages", "GetUserPersonalChatMessages", "get_user_personal_chat_messages"),
+            return_ty: ArrayOf(RawTy("Message")),
+            doc: Doc(
+                md: "Use this method to get the last messages from the personal chat (i.e., the chat currently added to their profile) of a given user. On success, an array of [Message] objects is returned.",
+                md_links: {"Message": "https://core.telegram.org/bots/api#message"}
+            ),
+            tg_doc: "https://core.telegram.org/bots/api#getuserpersonalchatmessages",
+            tg_category: "Available methods",
+            params: [
+                Param(
+                    name: "user_id",
+                    ty: RawTy("UserId"),
+                    descr: Doc(md: "Unique identifier for the target user")
+                ),
+                Param(
+                    name: "limit",
+                    ty: u8,
+                    descr: Doc(md: "The maximum number of messages to return; 1-20")
+                ),
+            ]
+        ),
+        Method(
             names: ("getManagedBotAccessSettings", "GetManagedBotAccessSettings", "get_managed_bot_access_settings"),
             return_ty: RawTy("BotAccessSettings"),
             doc: Doc(

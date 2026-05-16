@@ -1239,6 +1239,14 @@ macro_rules! requester_forward {
             $body!(replace_managed_bot_token this (user_id: UserId))
         }
     };
+    (@method get_user_personal_chat_messages $body:ident $ty:ident) => {
+        type GetUserPersonalChatMessages = $ty![GetUserPersonalChatMessages];
+
+        fn get_user_personal_chat_messages(&self, user_id: UserId, limit: u8) -> Self::GetUserPersonalChatMessages {
+            let this = self;
+            $body!(get_user_personal_chat_messages this (user_id: UserId, limit: u8))
+        }
+    };
     (@method get_managed_bot_access_settings $body:ident $ty:ident) => {
         type GetManagedBotAccessSettings = $ty![GetManagedBotAccessSettings];
 
