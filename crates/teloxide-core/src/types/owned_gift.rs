@@ -86,6 +86,15 @@ pub struct OwnedGiftRegular {
     /// Number of Telegram Stars that were paid by the sender for the ability to
     /// upgrade the gift
     pub prepaid_upgrade_star_count: Option<u32>,
+
+    /// `true`, if the gift's upgrade was purchased after the gift was sent;
+    /// for gifts received on behalf of business accounts only
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub is_upgrade_separate: bool,
+
+    /// Unique number reserved for this gift when upgraded. See the
+    /// [`UniqueGift::number`] field.
+    pub unique_gift_number: Option<u32>,
 }
 
 /// Describes a unique gift received and owned by a user or a chat.
