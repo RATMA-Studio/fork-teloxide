@@ -107,6 +107,7 @@ where
         stop_message_live_location,
         stop_message_live_location_inline,
         edit_message_checklist,
+        send_message_draft,
         send_chat_action,
         set_message_reaction,
         get_user_profile_photos,

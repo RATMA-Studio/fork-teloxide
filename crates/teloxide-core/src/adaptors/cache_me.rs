@@ -118,6 +118,7 @@ where
         send_poll,
         send_checklist,
         send_dice,
+        send_message_draft,
         send_chat_action,
         set_message_reaction,
         get_user_profile_photos,

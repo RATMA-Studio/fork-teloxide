@@ -2473,6 +2473,45 @@ Schema(
             ],
         ),
         Method(
+            names: ("sendMessageDraft", "SendMessageDraft", "send_message_draft"),
+            return_ty: True,
+            doc: Doc(md: "Use this method to stream a partial message to a user while the message is being generated. Note that the streamed draft is ephemeral and acts as a temporary 30-second preview - once the output is finalized, you must call sendMessage with the complete message to persist it in the user's chat. Returns True on success."),
+            tg_doc: "https://core.telegram.org/bots/api#sendmessagedraft",
+            tg_category: "Available methods",
+            params: [
+                Param(
+                    name: "chat_id",
+                    ty: RawTy("ChatId"),
+                    descr: Doc(md: "Unique identifier for the target private chat")
+                ),
+                Param(
+                    name: "message_thread_id",
+                    ty: Option(RawTy("ThreadId")),
+                    descr: Doc(md: "Unique identifier for the target message thread")
+                ),
+                Param(
+                    name: "draft_id",
+                    ty: i32,
+                    descr: Doc(md: "Unique identifier of the message draft; must be non-zero. Changes of drafts with the same identifier are animated.")
+                ),
+                Param(
+                    name: "text",
+                    ty: Option(String),
+                    descr: Doc(md: "Text of the message to be sent, 0-4096 characters after entities parsing. Pass an empty text to show a \"Thinking…\" placeholder.")
+                ),
+                Param(
+                    name: "parse_mode",
+                    ty: Option(RawTy("ParseMode")),
+                    descr: Doc(md: "Mode for parsing entities in the message text. See formatting options for more details.")
+                ),
+                Param(
+                    name: "entities",
+                    ty: Option(ArrayOf(RawTy("MessageEntity"))),
+                    descr: Doc(md: "A JSON-serialized list of special entities that appear in message text, which can be specified instead of parse_mode")
+                ),
+            ],
+        ),
+        Method(
             names: ("sendChatAction", "SendChatAction", "send_chat_action"),
             return_ty: True,
             doc: Doc(
