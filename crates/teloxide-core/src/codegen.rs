@@ -44,7 +44,8 @@ pub fn reformat(text: String) -> String {
     let rustfmt_toml = project_root().join("../../rustfmt.toml");
     let mut stdout = cmd!(
         sh,
-        "rustup run {toolchain} rustfmt --config-path {rustfmt_toml} --config fn_single_line=true"
+        "rustup run {toolchain} rustfmt --edition 2024 --config-path {rustfmt_toml} --config \
+         fn_single_line=true"
     )
     .stdin(text)
     .read()
