@@ -306,6 +306,8 @@ mod tests {
             language_code: None,
             is_premium: false,
             added_to_attachment_menu: false,
+            can_manage_bots: false,
+            has_topics_enabled: false,
         };
         assert_eq!(user_mention_or_link(&user_with_username), "@abcd");
         // Telegram allows underscores in usernames
@@ -322,6 +324,8 @@ mod tests {
             language_code: None,
             is_premium: false,
             added_to_attachment_menu: false,
+            can_manage_bots: false,
+            has_topics_enabled: false,
         };
         assert_eq!(user_mention_or_link(&user_without_username), "[Name](tg://user/?id=123456789)")
     }
