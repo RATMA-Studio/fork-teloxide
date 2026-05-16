@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 use crate::types::{
     AcceptedGiftTypes, Audio, Birthdate, BusinessIntro, BusinessLocation, BusinessOpeningHours,
     Chat, ChatId, ChatLocation, ChatPermissions, ChatPhoto, Message, ReactionType, Seconds, User,
+    UserRating,
 };
 
 /// Custom emoji identifier.
@@ -100,6 +101,10 @@ pub struct ChatFullInfo {
     /// The maximum number of reactions that can be set on a message in the
     /// chat
     pub max_reaction_count: u8,
+
+    /// Rating of the chat based on Telegram Star spendings; only for private
+    /// chats.
+    pub rating: Option<UserRating>,
 }
 
 #[serde_with::skip_serializing_none]
@@ -763,6 +768,7 @@ mod tests {
             emoji_status_expiration_date: DateTime::from_timestamp(1720708004, 0),
             has_visible_history: false,
             max_reaction_count: 0,
+            rating: None,
         };
         let actual = from_str(
             r#"{
@@ -828,6 +834,7 @@ mod tests {
             emoji_status_expiration_date: DateTime::from_timestamp(1720708004, 0),
             has_visible_history: false,
             max_reaction_count: 0,
+            rating: None,
         };
         eprintln!("{}", to_string(&chat).unwrap());
         assert_eq!(
@@ -891,6 +898,7 @@ mod tests {
             emoji_status_expiration_date: None,
             has_visible_history: false,
             max_reaction_count: 0,
+            rating: None,
         };
 
         let json = to_string(&chat).unwrap();
