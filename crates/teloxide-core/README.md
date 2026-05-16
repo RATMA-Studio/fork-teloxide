@@ -1,3 +1,15 @@
+> [!IMPORTANT]
+> **This is `RATMA-Studio/fork-teloxide`, a downstream fork of [`teloxide/teloxide`] maintained by [RATMA Studio].**
+>
+> We needed Telegram Bot API features (9.3 → 10.0: Guest Mode, Managed Bots, Polls 2.0, Suggested Posts, Live Photos, and the rest) shipped faster than upstream could merge them, so we cut our own line and keep it green ourselves. We don't wait — we ship.
+>
+> If you just want a stable, mainline experience, use upstream. If you want the latest Bot API surface and you're comfortable tracking a moving target, you're in the right place.
+>
+> Issues and PRs in this repository are scoped to the fork; please don't file upstream bugs here. The fork may diverge from upstream over time; we re-base when it makes sense and skip the re-base when it doesn't.
+>
+> [`teloxide/teloxide`]: https://github.com/teloxide/teloxide
+> [RATMA Studio]: https://github.com/RATMA-Studio
+
 <div align="center">
   <img src="../../media/teloxide-core-logo.svg" width="250"/>
 
