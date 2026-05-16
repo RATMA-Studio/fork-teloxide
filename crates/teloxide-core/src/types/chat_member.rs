@@ -124,6 +124,11 @@ pub struct Administrator {
     /// directly or indirectly (promoted by administrators that were appointed
     /// by the user).
     pub can_promote_members: bool,
+
+    /// `true`, if the administrator can edit the tags of regular members;
+    /// for groups and supergroups only.
+    #[serde(default)]
+    pub can_manage_tags: bool,
 }
 
 /// Represents a chat member that has no additional privileges or restrictions.
@@ -740,6 +745,7 @@ mod tests {
                 is_premium: false,
                 added_to_attachment_menu: false,
                 can_manage_bots: false,
+                has_topics_enabled: false,
             },
             kind: ChatMemberKind::Administrator(Administrator {
                 custom_title: None,
@@ -760,6 +766,7 @@ mod tests {
                 can_promote_members: true,
                 can_manage_direct_messages: true,
                 can_manage_topics: false,
+                can_manage_tags: false,
             }),
         };
         let actual = serde_json::from_str::<ChatMember>(json).unwrap();
@@ -807,6 +814,7 @@ mod tests {
                 is_premium: false,
                 added_to_attachment_menu: false,
                 can_manage_bots: false,
+                has_topics_enabled: false,
             },
             kind: ChatMemberKind::Restricted(Restricted {
                 is_member: true,
