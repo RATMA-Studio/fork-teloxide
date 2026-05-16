@@ -21,10 +21,14 @@ impl_payload! {
             pub exclude_saved: bool,
             /// Pass _true_ to exclude gifts that can be purchased an unlimited number of times
             pub exclude_unlimited: bool,
-            /// Pass _true_ to exclude gifts that can be purchased a limited number of times
-            pub exclude_limited: bool,
+            /// Pass _true_ to exclude gifts that can be purchased a limited number of times and can be upgraded to unique
+            pub exclude_limited_upgradable: bool,
+            /// Pass _true_ to exclude gifts that can be purchased a limited number of times and can't be upgraded to unique
+            pub exclude_limited_non_upgradable: bool,
             /// Pass _true_ to exclude unique gifts
             pub exclude_unique: bool,
+            /// Pass _true_ to exclude gifts that were assigned from the TON blockchain and can't be resold or transferred in Telegram
+            pub exclude_from_blockchain: bool,
             /// Pass _true_ to sort results by gift price instead of send date. Sorting is applied before pagination
             pub sort_by_price: bool,
             /// Offset of the first entry to return as received from the previous request; use empty string to get the first chunk of results
