@@ -2241,6 +2241,24 @@ Schema(
                     descr: Doc(md: "A JSON-serialized list of special entities that appear in the poll question. It can be specified instead of _question\\_parse\\_mode_"),
                 ),
                 Param(
+                    name: "description",
+                    ty: Option(String),
+                    descr: Doc(md: "Poll description, 0-300 characters")
+                ),
+                Param(
+                    name: "description_parse_mode",
+                    ty: Option(RawTy("ParseMode")),
+                    descr: Doc(
+                        md: "Mode for parsing entities in the description. See [formatting options] for more details. Currently, only custom emoji entities are allowed",
+                        md_links: {"formatting options": "https://core.telegram.org/bots/api#formatting-options"}
+                    )
+                ),
+                Param(
+                    name: "description_entities",
+                    ty: Option(ArrayOf(RawTy("MessageEntity"))),
+                    descr: Doc(md: "A JSON-serialized list of special entities that appear in the poll description. It can be specified instead of _description\\_parse\\_mode_"),
+                ),
+                Param(
                     name: "options",
                     ty: ArrayOf(RawTy("InputPollOption")),
                     descr: Doc(md: "A JSON-serialized list of 2-10 answer options"),

@@ -33,6 +33,14 @@ impl_payload! {
             pub question_parse_mode: ParseMode,
             /// A JSON-serialized list of special entities that appear in the poll question. It can be specified instead of _question\_parse\_mode_
             pub question_entities: Vec<MessageEntity> [collect],
+            /// Poll description, 0-300 characters
+            pub description: String [into],
+            /// Mode for parsing entities in the description. See [formatting options] for more details. Currently, only custom emoji entities are allowed
+            ///
+            /// [formatting options]: https://core.telegram.org/bots/api#formatting-options
+            pub description_parse_mode: ParseMode,
+            /// A JSON-serialized list of special entities that appear in the poll description. It can be specified instead of _description\_parse\_mode_
+            pub description_entities: Vec<MessageEntity> [collect],
             /// True, if the poll needs to be anonymous, defaults to True
             pub is_anonymous: bool,
             /// Poll type, “quiz” or “regular”, defaults to “regular”
