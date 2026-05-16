@@ -524,6 +524,13 @@ pub trait Requester {
     where
         C: Into<Recipient>;
 
+    type SetChatMemberTag: Request<Payload = SetChatMemberTag, Err = Self::Err>;
+
+    /// For Telegram documentation see [`SetChatMemberTag`].
+    fn set_chat_member_tag<C>(&self, chat_id: C, user_id: UserId) -> Self::SetChatMemberTag
+    where
+        C: Into<Recipient>;
+
     type SetChatAdministratorCustomTitle: Request<
         Payload = SetChatAdministratorCustomTitle,
         Err = Self::Err,
@@ -1730,6 +1737,7 @@ macro_rules! forward_all {
             restrict_chat_member,
             promote_chat_member,
             set_chat_administrator_custom_title,
+        set_chat_member_tag,
             ban_chat_sender_chat,
             unban_chat_sender_chat,
             set_chat_permissions,
