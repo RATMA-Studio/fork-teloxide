@@ -8,7 +8,7 @@ impl_payload! {
     /// Use this method to get information about a member of a chat. Returns a [`ChatMember`] object on success.
     ///
     /// [`ChatMember`]: crate::types::ChatMember
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub GetChatMember (GetChatMemberSetters) => ChatMember {
         required {
             /// Unique identifier for the target chat or username of the target channel (in the format `@channelusername`)

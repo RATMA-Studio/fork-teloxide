@@ -6,7 +6,7 @@ use crate::types::UserId;
 
 impl_payload! {
     /// Returns the token of a managed bot. Returns the token as a String on success.
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub GetManagedBotToken (GetManagedBotTokenSetters) => String {
         required {
             /// User identifier of the managed bot whose token will be returned

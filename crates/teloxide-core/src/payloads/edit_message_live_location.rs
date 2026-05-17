@@ -10,7 +10,7 @@ impl_payload! {
     /// See also: [`EditMessageLiveLocationInline`](crate::payloads::EditMessageLiveLocationInline)
     ///
     /// [`StopMessageLiveLocation`]: crate::payloads::StopMessageLiveLocation
-    #[derive(Debug, PartialEq, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Default, Clone, Serialize)]
     pub EditMessageLiveLocation (EditMessageLiveLocationSetters) => Message {
         required {
             /// Unique identifier for the target chat or username of the target channel (in the format `@channelusername`)

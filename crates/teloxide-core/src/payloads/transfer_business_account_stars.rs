@@ -6,7 +6,7 @@ use crate::types::{BusinessConnectionId, True};
 
 impl_payload! {
     /// Transfers Telegram Stars from the business account balance to the bot's balance. Requires the _can_transfer_stars_ business bot right. Returns _true_ on success.
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub TransferBusinessAccountStars (TransferBusinessAccountStarsSetters) => True {
         required {
             /// Unique identifier of the business connection

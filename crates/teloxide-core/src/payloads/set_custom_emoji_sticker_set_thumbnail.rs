@@ -6,7 +6,7 @@ use crate::types::{CustomEmojiId, True};
 
 impl_payload! {
     /// Use this method to set the thumbnail of a custom emoji sticker set. Returns True on success.
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub SetCustomEmojiStickerSetThumbnail (SetCustomEmojiStickerSetThumbnailSetters) => True {
         required {
             /// Sticker set name

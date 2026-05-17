@@ -9,7 +9,7 @@ impl_payload! {
     /// Use this method to edit a non-primary invite link created by the bot. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns the edited invite link as a [`ChatInviteLink`] object.
     ///
     /// [`ChatInviteLink`]: crate::types::ChatInviteLink
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub EditChatInviteLink (EditChatInviteLinkSetters) => ChatInviteLink {
         required {
             /// Unique identifier for the target chat or username of the target channel (in the format `@channelusername`)

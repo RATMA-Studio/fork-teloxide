@@ -6,7 +6,7 @@ use crate::types::{BusinessConnectionId, MessageId, True};
 
 impl_payload! {
     /// Delete messages on behalf of a business account. Requires the _can_delete_sent_messages_ business bot right to delete messages sent by the bot itself, or the _can_delete_all_messages_ business bot right to delete any message. Returns _true_ on success.
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub DeleteBusinessMessages (DeleteBusinessMessagesSetters) => True {
         required {
             /// Unique identifier of the business connection on behalf of which to delete the messages

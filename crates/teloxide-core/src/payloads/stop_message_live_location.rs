@@ -11,7 +11,7 @@ impl_payload! {
     ///
     /// [`Message`]: crate::types::Message
     /// [`StopMessageLiveLocation`]: crate::payloads::StopMessageLiveLocation
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub StopMessageLiveLocation (StopMessageLiveLocationSetters) => Message {
         required {
             /// Unique identifier for the target chat or username of the target channel (in the format `@channelusername`)

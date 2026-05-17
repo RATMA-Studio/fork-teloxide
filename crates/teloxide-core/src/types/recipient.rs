@@ -26,6 +26,15 @@ pub enum Recipient {
     ChannelUsername(String),
 }
 
+impl Default for Recipient {
+    /// Returns `Recipient::Id(ChatId::default())`. Useful for `Default`-driven
+    /// payload construction in tests; the resulting `ChatId(0)` is, of
+    /// course, not a meaningful chat id at runtime.
+    fn default() -> Self {
+        Self::Id(ChatId::default())
+    }
+}
+
 impl From<UserId> for Recipient {
     fn from(id: UserId) -> Self {
         Self::Id(id.into())

@@ -10,7 +10,7 @@ impl_payload! {
     /// See also: [`SetGameScoreInline`](crate::payloads::SetGameScoreInline)
     ///
     /// [`Message`]: crate::types::Message
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub SetGameScore (SetGameScoreSetters) => Message {
         required {
             /// User identifier

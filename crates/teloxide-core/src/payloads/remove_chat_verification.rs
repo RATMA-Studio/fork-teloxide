@@ -8,7 +8,7 @@ impl_payload! {
     /// Removes verification from a chat that is currently verified [on behalf of the organization] represented by the bot. Returns _true_ on success.
     ///
     /// [on behalf of the organization]: https://telegram.org/verify#third-party-verification
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub RemoveChatVerification (RemoveChatVerificationSetters) => True {
         required {
             /// Unique identifier for the target chat or username of the target channel

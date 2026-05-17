@@ -8,7 +8,7 @@ impl_payload! {
     /// Use this method to get a list of profile audios for a user. Returns a [`UserProfileAudios`] object.
     ///
     /// [`UserProfileAudios`]: crate::types::UserProfileAudios
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub GetUserProfileAudios (GetUserProfileAudiosSetters) => UserProfileAudios {
         required {
             /// Unique identifier of the target user

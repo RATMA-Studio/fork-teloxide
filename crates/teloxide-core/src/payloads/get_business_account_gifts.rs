@@ -8,7 +8,7 @@ impl_payload! {
     /// Returns the gifts received and owned by a managed business account. Requires the _can_view_gifts_and_stars_ business bot right. Returns [`OwnedGifts`] on success.
     ///
     /// [`OwnedGifts`]: crate::types::OwnedGifts
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub GetBusinessAccountGifts (GetBusinessAccountGiftsSetters) => OwnedGifts {
         required {
             /// Unique identifier of the business connection

@@ -6,7 +6,7 @@ use crate::types::True;
 
 impl_payload! {
     /// Use this method to delete a sticker from a set created by the bot. Returns _True_ on success.
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub DeleteStickerFromSet (DeleteStickerFromSetSetters) => True {
         required {
             /// File identifier of the sticker

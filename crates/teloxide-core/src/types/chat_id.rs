@@ -5,7 +5,7 @@ use crate::types::UserId;
 /// Identifier of a chat.
 ///
 /// Note that "a chat" here means any of group, supergroup, channel or user PM.
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Default)]
 #[derive(Debug, derive_more::Display)]
 #[derive(PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[derive(Serialize, Deserialize)]

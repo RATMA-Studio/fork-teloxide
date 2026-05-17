@@ -6,7 +6,7 @@ use crate::types::{BusinessConnectionId, ChatId, MessageId, True};
 
 impl_payload! {
     /// Marks incoming message as read on behalf of a business account. Requires the _can_read_messages_ business bot right. Returns _true_ on success.
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub ReadBusinessMessage (ReadBusinessMessageSetters) => True {
         required {
             /// Unique identifier of the business connection on behalf of which to read the message

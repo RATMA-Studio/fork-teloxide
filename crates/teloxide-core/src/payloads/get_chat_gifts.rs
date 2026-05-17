@@ -8,7 +8,7 @@ impl_payload! {
     /// Returns the gifts owned by a chat. Returns [`OwnedGifts`] on success.
     ///
     /// [`OwnedGifts`]: crate::types::OwnedGifts
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub GetChatGifts (GetChatGiftsSetters) => OwnedGifts {
         required {
             /// Unique identifier for the target chat or username of the target channel in the format `@channelusername`

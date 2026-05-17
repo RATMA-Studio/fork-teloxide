@@ -8,7 +8,7 @@ impl_payload! {
     /// Use this method to get a list of profile pictures for a user. Returns a [`UserProfilePhotos`] object.
     ///
     /// [`UserProfilePhotos`]: crate::types::UserProfilePhotos
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub GetUserProfilePhotos (GetUserProfilePhotosSetters) => UserProfilePhotos {
         required {
             /// Unique identifier of the target user

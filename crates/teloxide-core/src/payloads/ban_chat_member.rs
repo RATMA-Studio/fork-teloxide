@@ -9,7 +9,7 @@ impl_payload! {
     /// Use this method to ban a user in a group, a supergroup or a channel. In the case of supergroups and channels, the user will not be able to return to the chat on their own using invite links, etc., unless [unbanned] first. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns _True_ on success.
     ///
     /// [unbanned]: crate::payloads::UnbanChatMember
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub BanChatMember (BanChatMemberSetters) => True {
         required {
             /// Unique identifier for the target chat or username of the target channel (in the format `@channelusername`)

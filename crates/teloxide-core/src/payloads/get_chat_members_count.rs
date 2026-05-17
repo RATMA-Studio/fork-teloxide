@@ -6,7 +6,7 @@ use crate::types::Recipient;
 
 impl_payload! {
     /// Use this method to get the number of members in a chat. Returns _Int_ on success.
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub GetChatMembersCount (GetChatMembersCountSetters) => u32 {
         required {
             /// Unique identifier for the target chat or username of the target channel (in the format `@channelusername`)

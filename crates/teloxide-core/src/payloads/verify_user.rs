@@ -8,7 +8,7 @@ impl_payload! {
     /// Verifies a user [on behalf of the organization] which is represented by the bot. Returns _true_ on success.
     ///
     /// [on behalf of the organization]: https://telegram.org/verify#third-party-verification
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub VerifyUser (VerifyUserSetters) => True {
         required {
             /// Unique identifier of the target user

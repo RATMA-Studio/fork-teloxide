@@ -8,7 +8,7 @@ impl_payload! {
     /// Returns the gifts owned and hosted by a user. Returns [`OwnedGifts`] on success.
     ///
     /// [`OwnedGifts`]: crate::types::OwnedGifts
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub GetUserGifts (GetUserGiftsSetters) => OwnedGifts {
         required {
             /// Unique identifier of the user

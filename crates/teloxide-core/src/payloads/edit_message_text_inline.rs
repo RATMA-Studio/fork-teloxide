@@ -10,7 +10,7 @@ impl_payload! {
     /// See also: [`EditMessageText`](crate::payloads::EditMessageText)
     ///
     /// [games]: https://core.telegram.org/bots/api#games
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub EditMessageTextInline (EditMessageTextInlineSetters) => True {
         required {
             /// Identifier of the inline message

@@ -6,7 +6,7 @@ use crate::types::True;
 
 impl_payload! {
     /// Use this method to move a sticker in a set created by the bot to a specific position. Returns _True_ on success.
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub SetStickerPositionInSet (SetStickerPositionInSetSetters) => True {
         required {
             /// File identifier of the sticker

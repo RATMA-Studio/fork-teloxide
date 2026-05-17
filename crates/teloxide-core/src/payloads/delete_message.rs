@@ -15,7 +15,7 @@ impl_payload! {
     /// - If the bot has can_delete_messages permission in a supergroup or a channel, it can delete any message there.
     ///
     /// Returns True on success.
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub DeleteMessage (DeleteMessageSetters) => True {
         required {
             /// Unique identifier for the target chat or username of the target channel (in the format `@channelusername`).

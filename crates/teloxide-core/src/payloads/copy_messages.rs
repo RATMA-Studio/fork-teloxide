@@ -10,7 +10,7 @@ impl_payload! {
     /// [`Poll`]: crate::types::Poll
     /// [`MessageId`]: crate::types::MessageId
     /// [`ForwardMessages`]: crate::payloads::ForwardMessages
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub CopyMessages (CopyMessagesSetters) => Vec<MessageId> {
         required {
             /// Unique identifier for the target chat or username of the target channel (in the format `@channelusername`)

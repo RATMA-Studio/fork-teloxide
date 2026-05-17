@@ -11,7 +11,7 @@ impl_payload! {
     /// Use this method to send information about a venue. On success, the sent [`Message`] is returned.
     ///
     /// [`Message`]: crate::types::Message
-    #[derive(Debug, PartialEq, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Default, Clone, Serialize)]
     pub SendVenue (SendVenueSetters) => Message {
         required {
             /// Unique identifier for the target chat or username of the target channel (in the format `@channelusername`)

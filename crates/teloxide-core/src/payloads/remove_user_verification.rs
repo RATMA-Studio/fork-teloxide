@@ -8,7 +8,7 @@ impl_payload! {
     /// Removes verification from a user who is currently verified [on behalf of the organization] represented by the bot. Returns _true_ on success.
     ///
     /// [on behalf of the organization]: https://telegram.org/verify#third-party-verification
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub RemoveUserVerification (RemoveUserVerificationSetters) => True {
         required {
             /// Unique identifier of the target user

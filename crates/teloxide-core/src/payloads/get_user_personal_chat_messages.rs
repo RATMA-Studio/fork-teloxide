@@ -8,7 +8,7 @@ impl_payload! {
     /// Use this method to get the last messages from the personal chat (i.e., the chat currently added to their profile) of a given user. On success, an array of [`Message`] objects is returned.
     ///
     /// [`Message`]: crate::types::Message
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub GetUserPersonalChatMessages (GetUserPersonalChatMessagesSetters) => Vec<Message> {
         required {
             /// Unique identifier for the target user

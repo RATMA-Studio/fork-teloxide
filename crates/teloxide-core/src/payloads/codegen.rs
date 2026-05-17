@@ -212,8 +212,41 @@ fn eq_hash_suitable(method: &Method) -> bool {
     method.params.iter().all(|p| ty_eq_hash_suitable(&p.ty))
 }
 
+/// Returns `true` if `#[derive(Default)]` will compile for this payload —
+/// i.e. every required field's type implements `Default`. Optional fields
+/// are wrapped in `Option<…>` (which is always `Default`), and `ArrayOf(…)`
+/// becomes `Vec<…>` (also always `Default`), so the check reduces to: are
+/// the *required* scalars and raw types known-`Default`-able?
 fn default_needed(method: &Method) -> bool {
-    method.params.iter().all(|p| matches!(p.ty, Type::Option(_)))
+    fn ty_is_default(ty: &Type) -> bool {
+        match ty {
+            // Optional and `Vec<…>` are always `Default`.
+            Type::Option(_) | Type::ArrayOf(_) => true,
+            Type::True => false,
+            Type::u8
+            | Type::u16
+            | Type::u32
+            | Type::i32
+            | Type::u64
+            | Type::i64
+            | Type::f64
+            | Type::bool
+            | Type::String => true,
+            Type::Url | Type::DateTime => false,
+            Type::RawTy(raw) => matches!(
+                raw.as_str(),
+                "ChatId"
+                    | "UserId"
+                    | "ThreadId"
+                    | "MessageId"
+                    | "BusinessConnectionId"
+                    | "Recipient"
+                    | "User"
+                    | "Me"
+            ),
+        }
+    }
+    method.params.iter().all(|p| ty_is_default(&p.ty))
 }
 
 fn params(params: impl Iterator<Item = impl Borrow<Param>>) -> String {
