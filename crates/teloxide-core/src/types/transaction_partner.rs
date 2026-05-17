@@ -258,6 +258,7 @@ mod tests {
                 added_to_attachment_menu: false,
                 can_manage_bots: false,
                 has_topics_enabled: false,
+                allows_users_to_create_topics: false,
                 supports_guest_queries: false,
             },
             kind: TransactionPartnerUserKind::PremiumPurchase(

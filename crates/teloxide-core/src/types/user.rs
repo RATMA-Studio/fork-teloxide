@@ -47,6 +47,11 @@ pub struct User {
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub has_topics_enabled: bool,
 
+    /// `true`, if the bot allows users to create and delete topics in private
+    /// chats. Returned only in `getMe`.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub allows_users_to_create_topics: bool,
+
     /// `true`, if the bot supports guest queries from chats it is not a member
     /// of.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
@@ -169,6 +174,7 @@ mod tests {
             added_to_attachment_menu: false,
             can_manage_bots: false,
             has_topics_enabled: false,
+            allows_users_to_create_topics: false,
             supports_guest_queries: false,
         };
         let actual = serde_json::from_str::<User>(json).unwrap();
@@ -188,6 +194,7 @@ mod tests {
             added_to_attachment_menu: false,
             can_manage_bots: false,
             has_topics_enabled: false,
+            allows_users_to_create_topics: false,
             supports_guest_queries: false,
         };
 
@@ -202,6 +209,7 @@ mod tests {
             added_to_attachment_menu: false,
             can_manage_bots: false,
             has_topics_enabled: false,
+            allows_users_to_create_topics: false,
             supports_guest_queries: false,
         };
 

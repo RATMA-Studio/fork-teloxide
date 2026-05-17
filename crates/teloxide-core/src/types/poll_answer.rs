@@ -25,7 +25,7 @@ pub struct PollAnswer {
     /// Persistent identifiers of answer options, chosen by the user.
     ///
     /// May be empty if the user retracted their vote.
-    pub option_persistent_ids: Option<Vec<String>>,
+    pub option_persistent_ids: Vec<String>,
 }
 
 /// These fields `chat` and `user` from the original [`PollAnswer`] should be
@@ -56,7 +56,8 @@ mod tests {
         let json = r#"{
             "poll_id": "POLL_ID",
             "user": {"id": 42,"is_bot": false,"first_name": "blah"},
-            "option_ids": []
+            "option_ids": [],
+            "option_persistent_ids": []
         }"#;
 
         let poll_answer: PollAnswer = serde_json::from_str(json).unwrap();
@@ -73,7 +74,8 @@ mod tests {
                 "title": "a",
                 "type": "group"
             },
-            "option_ids": []
+            "option_ids": [],
+            "option_persistent_ids": []
         }"#;
 
         let poll_answer: PollAnswer = serde_json::from_str(json).unwrap();
@@ -90,7 +92,8 @@ mod tests {
                 "type": "group"
             },
             "user": {"id": 136817688,"is_bot": true,"first_name": "Channel_Bot"},
-            "option_ids": []
+            "option_ids": [],
+            "option_persistent_ids": []
         }"#;
 
         let poll_answer: PollAnswer = serde_json::from_str(json).unwrap();

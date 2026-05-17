@@ -225,7 +225,8 @@ mod tests {
                     "poll_answer":{
                         "poll_id":"POLL_ID",
                         "user": {"id":42,"is_bot":false,"first_name":"blah"},
-                        "option_ids": []
+                        "option_ids": [],
+                        "option_persistent_ids": []
                     }
                 }
             ]
@@ -246,7 +247,8 @@ mod tests {
                     "poll_answer":{
                         "poll_id":"POLL_ID",
                         "user": {"id":42,"is_bot":false,"first_name":"blah"},
-                        "option_ids": []
+                        "option_ids": [],
+                        "option_persistent_ids": []
                     }
                 },
                 {
@@ -258,7 +260,8 @@ mod tests {
                     "poll_answer":{
                         "poll_id":"POLL_ID",
                         "user": {"id":42,"is_bot":false,"first_name":"blah"},
-                        "option_ids": [3, 4, 8]
+                        "option_ids": [3, 4, 8],
+                        "option_persistent_ids": []
                     }
                 },
                 {
