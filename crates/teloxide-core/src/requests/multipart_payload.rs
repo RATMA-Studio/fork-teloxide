@@ -4,6 +4,9 @@ use crate::{
     types::{InputFile, InputFileLike, InputMedia, InputPaidMedia, InputSticker},
 };
 
+// Used in the `SendPoll` impl below.
+use crate::types::{InputPollMedia, InputPollOptionMedia};
+
 /// Payloads that need to be sent as `multipart/form-data` because they contain
 /// files inside.
 pub trait MultipartPayload: Payload {
@@ -59,6 +62,36 @@ impl MultipartPayload for payloads::SetMyProfilePhoto {
 
     fn move_files(&mut self, into: &mut dyn FnMut(InputFile)) {
         self.photo.files_mut().for_each(|f| f.move_into(into))
+    }
+}
+
+impl MultipartPayload for payloads::SendPoll {
+    fn copy_files(&self, into: &mut dyn FnMut(InputFile)) {
+        if let Some(media) = self.media.as_ref() {
+            InputPollMedia::files(media).for_each(|f| f.copy_into(into));
+        }
+        if let Some(explanation_media) = self.explanation_media.as_ref() {
+            InputPollMedia::files(explanation_media).for_each(|f| f.copy_into(into));
+        }
+        for option in &self.options {
+            if let Some(option_media) = option.media.as_ref() {
+                InputPollOptionMedia::files(option_media).for_each(|f| f.copy_into(into));
+            }
+        }
+    }
+
+    fn move_files(&mut self, into: &mut dyn FnMut(InputFile)) {
+        if let Some(media) = self.media.as_mut() {
+            InputPollMedia::files_mut(media).for_each(|f| f.move_into(into));
+        }
+        if let Some(explanation_media) = self.explanation_media.as_mut() {
+            InputPollMedia::files_mut(explanation_media).for_each(|f| f.move_into(into));
+        }
+        for option in &mut self.options {
+            if let Some(option_media) = option.media.as_mut() {
+                InputPollOptionMedia::files_mut(option_media).for_each(|f| f.move_into(into));
+            }
+        }
     }
 }
 

@@ -23,7 +23,6 @@ pub enum InputPollOptionMedia {
     Video(InputMediaVideo),
 }
 
-#[allow(dead_code)]
 impl InputPollOptionMedia {
     /// Returns an iterator of all files in this input poll-option media. Empty
     /// for non-file variants (`Location`, `Venue`).
