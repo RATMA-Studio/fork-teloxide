@@ -32,13 +32,17 @@ impl RequestLock {
 }
 
 impl Future for RequestWaiter {
-    type Output = (bool, mpsc::Sender<FreezeUntil>);
+    /// `None` means the throttle worker dropped the [`RequestLock`] before
+    /// signalling — i.e. the worker future was aborted or panicked between
+    /// receiving our request and replying. The caller should fall back to
+    /// sending the request without a throttle decision rather than crash.
+    type Output = Option<(bool, mpsc::Sender<FreezeUntil>)>;
 
     fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         let this = self.project();
         match this.0.poll(cx) {
-            Poll::Ready(Ok(ret)) => Poll::Ready(ret),
-            Poll::Ready(Err(_)) => panic!("`RequestLock` is dropped by the throttle worker"),
+            Poll::Ready(Ok(ret)) => Poll::Ready(Some(ret)),
+            Poll::Ready(Err(_)) => Poll::Ready(None),
             Poll::Pending => Poll::Pending,
         }
     }

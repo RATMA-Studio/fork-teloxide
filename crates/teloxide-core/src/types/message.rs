@@ -2369,7 +2369,7 @@ impl Message {
         use BareChatId::*;
 
         // Note: `t.me` links use bare chat ids
-        let chat_id = match chat_id.to_bare() {
+        let chat_id = match chat_id.to_bare()? {
             // For private chats (i.e.: DMs) we can't produce "normal" t.me link.
             //
             // There are "tg://openmessage?user_id={0}&message_id={1}" links, which are

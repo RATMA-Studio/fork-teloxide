@@ -185,7 +185,21 @@ where
             return res;
         };
 
-        let (retry, freeze) = wait.await;
+        let (retry, freeze) = match wait.await {
+            Some(pair) => pair,
+            // Throttle worker dropped the lock between accepting and
+            // responding (e.g. its task was aborted). Fall back to sending
+            // the request without a throttle decision — same fallback used
+            // when `worker.send(...)` above fails.
+            None => {
+                log::error!("Throttle worker dropped the request lock before responding");
+                let res = match &mut request {
+                    ShareableRequest::Shared(shared) => shared.send_ref().await,
+                    ShareableRequest::Owned(owned) => owned.take().unwrap().await,
+                };
+                return res;
+            }
+        };
 
         let res = match (retry, &mut request) {
             // Retries are turned on, use `send_ref` even if we have owned access
