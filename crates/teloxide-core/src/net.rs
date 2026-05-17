@@ -70,6 +70,14 @@ pub fn client_from_env() -> reqwest::Client {
 ///
 /// [issue 223]: https://github.com/teloxide/teloxide/issues/223
 pub fn default_reqwest_settings() -> reqwest::ClientBuilder {
+    // `connect_timeout` (5s): a TCP/TLS handshake to api.telegram.org from
+    // anywhere reasonable should complete in well under a second; 5s leaves
+    // headroom for noisy networks and avoids hanging on a black-holed IP.
+    //
+    // `timeout` (17s): default long-poll on `getUpdates` is 0 + a few
+    // seconds of slack from Telegram's edge; pick a value just under
+    // Telegram's documented 20s max long-poll so non-polling calls fail
+    // fast instead of stalling for the full long-poll budget.
     reqwest::Client::builder()
         .connect_timeout(Duration::from_secs(5))
         .timeout(Duration::from_secs(17))

@@ -8,6 +8,12 @@ use serde::de::DeserializeOwned;
 
 use crate::{RequestError, net::TelegramResponse, requests::ResponseResult};
 
+/// Cool-off applied after a 5xx response before we hand the error back to
+/// the caller. Telegram's API does not pin a specific retry delay in its
+/// docs, so we use a value comparable to the default `getUpdates` long-poll
+/// (10s) — long enough that we don't hammer the upstream during a real
+/// outage, short enough that a transient bounce doesn't visibly stall an
+/// interactive bot.
 const DELAY_ON_SERVER_ERROR: Duration = Duration::from_secs(10);
 
 pub async fn request_multipart<T>(
@@ -97,16 +103,19 @@ where
         tokio::time::sleep(DELAY_ON_SERVER_ERROR).await;
     }
 
-    let text = response.text().await?;
+    // `bytes()` skips the UTF-8 validation that `text()` performs eagerly
+    // and avoids the intermediate `String` allocation. `serde_json::from_slice`
+    // validates UTF-8 itself, so correctness is preserved.
+    let body = response.bytes().await?;
 
-    deserialize_response(text)
+    deserialize_response(&body)
 }
 
-fn deserialize_response<T>(text: String) -> Result<T, RequestError>
+fn deserialize_response<T>(body: &[u8]) -> Result<T, RequestError>
 where
     T: DeserializeOwned + 'static,
 {
-    serde_json::from_str::<TelegramResponse<T>>(&text)
+    serde_json::from_slice::<TelegramResponse<T>>(body)
         .map(|mut response| {
             use crate::types::{Update, UpdateKind};
             use std::{any::Any, iter::zip};
@@ -140,7 +149,7 @@ where
                     (response as &mut T as &mut dyn Any).downcast_mut::<Vec<Update>>()
                 && updates.iter().any(|u| matches!(u.kind, UpdateKind::Error(_)))
             {
-                let re_parsed = serde_json::from_str(&text);
+                let re_parsed = serde_json::from_slice(body);
 
                 if let Ok(TelegramResponse::Ok { response: values, .. }) = re_parsed {
                     for (update, value) in zip::<_, Vec<_>>(updates, values) {
@@ -153,7 +162,14 @@ where
 
             response
         })
-        .map_err(|source| RequestError::InvalidJson { source: Arc::new(source), raw: text.into() })?
+        .map_err(|source| RequestError::InvalidJson {
+            source: Arc::new(source),
+            // The body may not be valid UTF-8 if parsing failed for a non-JSON
+            // response (e.g. an HTML 502 page from a proxy). `from_utf8_lossy`
+            // keeps something showable for the error message rather than
+            // dropping the body entirely.
+            raw: String::from_utf8_lossy(body).into_owned().into_boxed_str(),
+        })?
         .into()
 }
 
@@ -169,34 +185,33 @@ mod tests {
 
     #[test]
     fn smoke_ok() {
-        let json = r#"{"ok":true,"result":true}"#.to_owned();
+        let json = r#"{"ok":true,"result":true}"#;
 
-        let res = deserialize_response::<True>(json);
+        let res = deserialize_response::<True>(json.as_bytes());
         assert_matches!(res, Ok(True));
     }
 
     #[test]
     fn smoke_err() {
-        let json =
-            r#"{"ok":false,"description":"Forbidden: bot was blocked by the user"}"#.to_owned();
+        let json = r#"{"ok":false,"description":"Forbidden: bot was blocked by the user"}"#;
 
-        let res = deserialize_response::<True>(json);
+        let res = deserialize_response::<True>(json.as_bytes());
         assert_matches!(res, Err(RequestError::Api(ApiError::BotBlocked)));
     }
 
     #[test]
     fn migrate() {
-        let json = r#"{"ok":false,"description":"this string is ignored","parameters":{"migrate_to_chat_id":123456}}"#.to_owned();
+        let json = r#"{"ok":false,"description":"this string is ignored","parameters":{"migrate_to_chat_id":123456}}"#;
 
-        let res = deserialize_response::<True>(json);
+        let res = deserialize_response::<True>(json.as_bytes());
         assert_matches!(res, Err(RequestError::MigrateToChatId(ChatId(123456))));
     }
 
     #[test]
     fn retry_after() {
-        let json = r#"{"ok":false,"description":"this string is ignored","parameters":{"retry_after":123456}}"#.to_owned();
+        let json = r#"{"ok":false,"description":"this string is ignored","parameters":{"retry_after":123456}}"#;
 
-        let res = deserialize_response::<True>(json);
+        let res = deserialize_response::<True>(json.as_bytes());
         assert_matches!(res, Err(RequestError::RetryAfter(duration)) if duration == Seconds::from_seconds(123456));
     }
 
@@ -214,10 +229,9 @@ mod tests {
                     }
                 }
             ]
-        }"#
-        .to_owned();
+        }"#;
 
-        let res = deserialize_response::<Vec<Update>>(json).unwrap();
+        let res = deserialize_response::<Vec<Update>>(json.as_bytes()).unwrap();
         assert_matches!(res, [Update { id: UpdateId(0), kind: UpdateKind::PollAnswer(_) }]);
     }
 
@@ -252,10 +266,9 @@ mod tests {
                     "message":{"some fields are missing":true}
                 }
             ]
-        }"#
-        .to_owned();
+        }"#;
 
-        let res = deserialize_response::<Vec<Update>>(json).unwrap();
+        let res = deserialize_response::<Vec<Update>>(json.as_bytes()).unwrap();
         assert_matches!(
             res,
             [
