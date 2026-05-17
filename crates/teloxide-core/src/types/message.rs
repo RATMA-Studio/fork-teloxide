@@ -1243,8 +1243,8 @@ mod getters {
     use crate::types::{
         self, Chat, ChatId, ChatMigration, EffectId, LinkPreviewOptions, MaybeInaccessibleMessage,
         MediaAnimation, MediaAudio, MediaChecklist, MediaContact, MediaDocument, MediaGame,
-        MediaKind, MediaLivePhoto, MediaLocation, MediaPaid, MediaPhoto, MediaSticker,
-        MediaStory, MediaText, MediaVenue, MediaVideo, MediaVideoNote, MediaVoice, Message,
+        MediaKind, MediaLivePhoto, MediaLocation, MediaPaid, MediaPhoto, MediaSticker, MediaStory,
+        MediaText, MediaVenue, MediaVideo, MediaVideoNote, MediaVoice, Message,
         MessageChannelChatCreated, MessageChatShared, MessageChecklistTasksAdded,
         MessageChecklistTasksDone, MessageCommon, MessageConnectedWebsite, MessageDeleteChatPhoto,
         MessageDice, MessageDirectMessagePriceChanged, MessageEntity, MessageGroupChatCreated,
