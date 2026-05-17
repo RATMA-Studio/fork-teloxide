@@ -456,19 +456,11 @@ pub struct MessagePassportData {
     pub passport_data: PassportData,
 }
 
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(untagged)]
 #[non_exhaustive]
 pub enum MediaKind {
-    // Note:
-    // - `Venue` must be in front of `Location`
-    // - `Animation` must be in front of `Document`
-    //
-    // This is needed so serde doesn't parse `Venue` as `Location` or `Animation` as `Document`
-    // (for backward compatability telegram duplicates some fields)
-    //
-    // See <https://github.com/teloxide/teloxide/issues/481>
     Animation(MediaAnimation),
     Audio(MediaAudio),
     Contact(MediaContact),
@@ -478,7 +470,14 @@ pub enum MediaKind {
     Venue(MediaVenue),
     Location(MediaLocation),
     Photo(MediaPhoto),
-    Poll(MediaPoll),
+    // `MediaPoll` is boxed because it carries the full `Poll` struct, which
+    // — after Bot API 10.0 added inline `PollMedia` fields — dwarfs every
+    // other variant. Without the indirection `MediaKind` becomes the size of
+    // the worst variant times 19, and the parent `MessageKind` (also
+    // `#[serde(untagged)]`) starts overflowing cargo-test's 2 MiB stack
+    // while matching variants. This is the standard `clippy::large_enum_variant`
+    // remediation, the same trick `UpdateKind` already documents.
+    Poll(Box<MediaPoll>),
     Checklist(MediaChecklist),
     Sticker(MediaSticker),
     Story(MediaStory),
@@ -488,6 +487,153 @@ pub enum MediaKind {
     VideoNote(MediaVideoNote),
     Voice(MediaVoice),
     Migration(ChatMigration),
+}
+
+// Manual `Deserialize` for `MediaKind`.
+//
+// Background: Telegram serializes each MediaKind variant by the presence of a
+// single top-level "discriminator" field — `text` for a text message,
+// `photo` for a photo, `poll` for a poll, and so on. The `#[serde(untagged)]`
+// derive emulates this by cloning the input and trying every variant in
+// declaration order. That works but has two costs that compound on bigger
+// variants:
+//
+//  1. Quadratic-ish wire decode (the input is re-traversed up to N times).
+//  2. Pathological stack pressure — each variant attempt instantiates its full
+//     struct in a temporary, so the 19-arm match has to fit the largest variant
+//     19 times on the stack. With `Poll` carrying inline `PollMedia` after Bot
+//     API 10.0, this overflows cargo-test's default 2 MiB stack (see the
+//     `giveaway_winners` fixture).
+//
+// The fix is to do what the wire format already encodes: read the JSON
+// object once, peek at which discriminator key is present, and dispatch to
+// the matching variant deserialize. Single pass, no clone-and-retry, no
+// stack inflation, no `Box` smuggled into the public enum.
+//
+// The dispatch is JSON-specific (we depend on `serde_json::Value`), which
+// matches reality — Bot API payloads are always JSON.
+impl<'de> serde::Deserialize<'de> for MediaKind {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        use serde::de::Error as _;
+
+        let value = serde_json::Value::deserialize(deserializer)?;
+        let object = match &value {
+            serde_json::Value::Object(map) => map,
+            _ => return Err(D::Error::custom("MediaKind: expected a JSON object")),
+        };
+
+        // Priority order matters where Telegram duplicates fields for
+        // backward compatibility (see teloxide#481): an Animation payload
+        // also includes a `document` field, a Venue payload also includes
+        // a `location` field, etc. The more-specific key wins.
+        //
+        // We resolve the discriminator while the immutable borrow of
+        // `value` is still alive, then drop it before consuming `value`
+        // into the variant struct.
+        enum Tag {
+            Animation,
+            Audio,
+            Contact,
+            Document,
+            PaidMedia,
+            Game,
+            Venue,
+            Location,
+            Photo,
+            Poll,
+            Checklist,
+            Sticker,
+            Story,
+            Text,
+            Video,
+            LivePhoto,
+            VideoNote,
+            Voice,
+            Migration,
+        }
+
+        let tag = if object.contains_key("migrate_to_chat_id")
+            || object.contains_key("migrate_from_chat_id")
+        {
+            Tag::Migration
+        } else if object.contains_key("animation") {
+            Tag::Animation
+        } else if object.contains_key("audio") {
+            Tag::Audio
+        } else if object.contains_key("paid_media") {
+            Tag::PaidMedia
+        } else if object.contains_key("game") {
+            Tag::Game
+        } else if object.contains_key("venue") {
+            Tag::Venue
+        } else if object.contains_key("photo") {
+            Tag::Photo
+        } else if object.contains_key("poll") {
+            Tag::Poll
+        } else if object.contains_key("checklist") {
+            Tag::Checklist
+        } else if object.contains_key("sticker") {
+            Tag::Sticker
+        } else if object.contains_key("story") {
+            Tag::Story
+        } else if object.contains_key("contact") {
+            Tag::Contact
+        } else if object.contains_key("live_photo") {
+            Tag::LivePhoto
+        } else if object.contains_key("video_note") {
+            Tag::VideoNote
+        } else if object.contains_key("voice") {
+            Tag::Voice
+        } else if object.contains_key("video") {
+            Tag::Video
+        } else if object.contains_key("location") {
+            Tag::Location
+        } else if object.contains_key("document") {
+            Tag::Document
+        } else if object.contains_key("text") {
+            Tag::Text
+        } else {
+            return Err(D::Error::custom("MediaKind: no known discriminator field present"));
+        };
+
+        macro_rules! parse {
+            ($variant:ident, $ty:ty) => {
+                serde_json::from_value::<$ty>(value)
+                    .map(MediaKind::$variant)
+                    .map_err(D::Error::custom)
+            };
+            (boxed $variant:ident, $ty:ty) => {
+                serde_json::from_value::<$ty>(value)
+                    .map(|x| MediaKind::$variant(Box::new(x)))
+                    .map_err(D::Error::custom)
+            };
+        }
+
+        match tag {
+            Tag::Animation => parse!(Animation, MediaAnimation),
+            Tag::Audio => parse!(Audio, MediaAudio),
+            Tag::Contact => parse!(Contact, MediaContact),
+            Tag::Document => parse!(Document, MediaDocument),
+            Tag::PaidMedia => parse!(PaidMedia, MediaPaid),
+            Tag::Game => parse!(Game, MediaGame),
+            Tag::Venue => parse!(Venue, MediaVenue),
+            Tag::Location => parse!(Location, MediaLocation),
+            Tag::Photo => parse!(Photo, MediaPhoto),
+            Tag::Poll => parse!(boxed Poll, MediaPoll),
+            Tag::Checklist => parse!(Checklist, MediaChecklist),
+            Tag::Sticker => parse!(Sticker, MediaSticker),
+            Tag::Story => parse!(Story, MediaStory),
+            Tag::Text => parse!(Text, MediaText),
+            Tag::Video => parse!(Video, MediaVideo),
+            Tag::LivePhoto => parse!(LivePhoto, MediaLivePhoto),
+            Tag::VideoNote => parse!(VideoNote, MediaVideoNote),
+            Tag::Voice => parse!(Voice, MediaVoice),
+            Tag::Migration => parse!(Migration, ChatMigration),
+        }
+    }
 }
 
 #[serde_with::skip_serializing_none]
@@ -1097,8 +1243,8 @@ mod getters {
     use crate::types::{
         self, Chat, ChatId, ChatMigration, EffectId, LinkPreviewOptions, MaybeInaccessibleMessage,
         MediaAnimation, MediaAudio, MediaChecklist, MediaContact, MediaDocument, MediaGame,
-        MediaKind, MediaLivePhoto, MediaLocation, MediaPaid, MediaPhoto, MediaPoll, MediaSticker,
-        MediaStory, MediaText, MediaVenue, MediaVideo, MediaVideoNote, MediaVoice, Message,
+        MediaKind, MediaLivePhoto, MediaLocation, MediaPaid, MediaPhoto, MediaSticker, MediaStory,
+        MediaText, MediaVenue, MediaVideo, MediaVideoNote, MediaVoice, Message,
         MessageChannelChatCreated, MessageChatShared, MessageChecklistTasksAdded,
         MessageChecklistTasksDone, MessageCommon, MessageConnectedWebsite, MessageDeleteChatPhoto,
         MessageDice, MessageDirectMessagePriceChanged, MessageEntity, MessageGroupChatCreated,
@@ -1605,10 +1751,9 @@ mod getters {
         #[must_use]
         pub fn poll(&self) -> Option<&types::Poll> {
             match &self.kind {
-                Common(MessageCommon {
-                    media_kind: MediaKind::Poll(MediaPoll { poll, .. }),
-                    ..
-                }) => Some(poll),
+                Common(MessageCommon { media_kind: MediaKind::Poll(boxed), .. }) => {
+                    Some(&boxed.poll)
+                }
                 _ => None,
             }
         }
