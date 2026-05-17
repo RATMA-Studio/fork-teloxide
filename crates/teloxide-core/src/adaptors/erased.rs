@@ -204,6 +204,7 @@ where
         send_audio,
         send_document,
         send_video,
+        send_live_photo,
         send_animation,
         send_voice,
         send_video_note,
@@ -453,6 +454,13 @@ trait ErasableRequester<'a> {
         chat_id: Recipient,
         video: InputFile,
     ) -> ErasedRequest<'a, SendVideo, Self::Err>;
+
+    fn send_live_photo(
+        &self,
+        chat_id: Recipient,
+        live_photo: InputFile,
+        photo: InputFile,
+    ) -> ErasedRequest<'a, SendLivePhoto, Self::Err>;
 
     fn send_animation(
         &self,
@@ -1477,6 +1485,15 @@ where
         video: InputFile,
     ) -> ErasedRequest<'a, SendVideo, Self::Err> {
         Requester::send_video(self, chat_id, video).erase()
+    }
+
+    fn send_live_photo(
+        &self,
+        chat_id: Recipient,
+        live_photo: InputFile,
+        photo: InputFile,
+    ) -> ErasedRequest<'a, SendLivePhoto, Self::Err> {
+        Requester::send_live_photo(self, chat_id, live_photo, photo).erase()
     }
 
     fn send_animation(

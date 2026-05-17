@@ -272,6 +272,18 @@ pub trait Requester {
     where
         C: Into<Recipient>;
 
+    type SendLivePhoto: Request<Payload = SendLivePhoto, Err = Self::Err>;
+
+    /// For Telegram documentation see [`SendLivePhoto`].
+    fn send_live_photo<C>(
+        &self,
+        chat_id: C,
+        live_photo: InputFile,
+        photo: InputFile,
+    ) -> Self::SendLivePhoto
+    where
+        C: Into<Recipient>;
+
     type SendAnimation: Request<Payload = SendAnimation, Err = Self::Err>;
 
     /// For Telegram documentation see [`SendAnimation`].
@@ -1760,6 +1772,7 @@ macro_rules! forward_all {
             send_audio,
             send_document,
             send_video,
+            send_live_photo,
             send_animation,
             send_voice,
             send_video_note,
