@@ -16,6 +16,7 @@ use crate::types::Seconds;
 // schemars that its a u32
 #[cfg_attr(test, schemars(with = "u32"))]
 #[serde(untagged)]
+#[non_exhaustive]
 pub enum LivePeriod {
     Timeframe(Seconds),
     Indefinite,

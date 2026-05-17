@@ -74,6 +74,7 @@ pub struct Sticker {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(tag = "type")]
 #[serde(rename_all = "snake_case")]
+#[non_exhaustive]
 pub enum StickerKind {
     /// "Normal", raster, animated or video sticker.
     Regular {
@@ -99,6 +100,7 @@ pub enum StickerKind {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(tag = "sticker_type")]
 #[serde(rename_all = "snake_case")]
+#[non_exhaustive]
 pub enum StickerType {
     /// "Normal", raster, animated or video sticker.
     Regular,
@@ -123,6 +125,7 @@ pub struct StickerFormatFlags {
 #[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
+#[non_exhaustive]
 pub enum StickerFormat {
     /// Image in `.png` or `.webp` format.
     Static,

@@ -12,6 +12,7 @@ use crate::types::{Chat, Gift, PaidMedia, RevenueWithdrawalState, Seconds, User}
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type")]
+#[non_exhaustive]
 pub enum TransactionPartner {
     Fragment(TransactionPartnerFragment),
     User(Box<TransactionPartnerUser>),
@@ -56,6 +57,7 @@ pub struct TransactionPartnerUser {
 #[derive(Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(tag = "transaction_type", rename_all = "snake_case")]
+#[non_exhaustive]
 pub enum TransactionPartnerUserKind {
     InvoicePayment(TransactionPartnerUserInvoicePayment),
     PaidMediaPayment(TransactionPartnerUserPaidMediaPayment),

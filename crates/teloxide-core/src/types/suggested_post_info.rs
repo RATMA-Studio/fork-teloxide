@@ -29,6 +29,7 @@ pub struct SuggestedPostInfo {
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
+#[non_exhaustive]
 pub enum SuggestedPostState {
     Pending,
     Approved,

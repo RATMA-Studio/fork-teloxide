@@ -10,6 +10,7 @@ use crate::types::{LabeledPrice, LinkPreviewOptions, LivePeriod, MessageEntity, 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(untagged)]
+#[non_exhaustive]
 pub enum InputMessageContent {
     Text(InputMessageContentText),
     Location(InputMessageContentLocation),

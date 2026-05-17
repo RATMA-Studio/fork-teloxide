@@ -119,6 +119,7 @@ pub struct ChatFullInfo {
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(untagged)]
+#[non_exhaustive]
 pub enum ChatFullInfoKind {
     Public(Box<ChatFullInfoPublic>),
     Private(Box<ChatFullInfoPrivate>),
@@ -208,6 +209,7 @@ pub struct ChatFullInfoPrivate {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type")]
+#[non_exhaustive]
 pub enum ChatFullInfoPublicKind {
     Channel(ChatFullInfoPublicChannel),
     Group(ChatFullInfoPublicGroup),

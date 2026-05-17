@@ -25,6 +25,7 @@ pub struct SuggestedPostRefunded {
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
+#[non_exhaustive]
 pub enum SuggestedPostRefundReason {
     PostDeleted,
     PaymentRefunded,

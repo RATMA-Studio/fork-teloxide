@@ -107,6 +107,7 @@ pub struct Message {
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(untagged)]
+#[non_exhaustive]
 pub enum MessageKind {
     Common(MessageCommon),
     NewChatMembers(MessageNewChatMembers),
@@ -360,6 +361,7 @@ pub struct MessageMessageAutoDeleteTimerChanged {
 #[derive(Copy, Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(untagged)]
+#[non_exhaustive]
 pub enum ChatMigration {
     /// The group has been migrated to a supergroup with the specified
     /// identifier `chat_id`.
@@ -457,6 +459,7 @@ pub struct MessagePassportData {
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(untagged)]
+#[non_exhaustive]
 pub enum MediaKind {
     // Note:
     // - `Venue` must be in front of `Location`

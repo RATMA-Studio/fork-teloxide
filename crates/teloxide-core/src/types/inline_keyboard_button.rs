@@ -34,6 +34,7 @@ pub struct InlineKeyboardButton {
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
+#[non_exhaustive]
 pub enum InlineKeyboardButtonKind {
     /// HTTP or `tg://` url to be opened when button is pressed.
     ///

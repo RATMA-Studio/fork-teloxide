@@ -25,6 +25,7 @@ pub struct EncryptedPassportElement {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case", untagged)]
 #[allow(clippy::large_enum_variant)]
+#[non_exhaustive]
 pub enum EncryptedPassportElementKind {
     PersonalDetails(EncryptedPassportElementPersonalDetails),
     Passport(EncryptedPassportElementPassport),

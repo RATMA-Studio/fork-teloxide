@@ -7,6 +7,7 @@ use crate::types::InputFile;
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type")]
+#[non_exhaustive]
 pub enum InputStoryContent {
     Photo(InputStoryContentPhoto),
     Video(InputStoryContentVideo),

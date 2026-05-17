@@ -8,6 +8,7 @@ use crate::types::serde_timestamp;
 #[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[cfg_attr(test, schemars(with = "i64"))]
+#[non_exhaustive]
 pub enum UntilDate {
     /// The range is bound by a given date and time.
     Date(DateTime<Utc>),

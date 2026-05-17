@@ -20,6 +20,7 @@ pub struct InlineQueryResultsButton {
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
+#[non_exhaustive]
 pub enum InlineQueryResultsButtonKind {
     /// Description of the [Web App] that will be launched when the user presses
     /// the button. The Web App will be able to switch back to the inline mode

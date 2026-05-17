@@ -49,6 +49,7 @@ pub struct UniqueGiftInfo {
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
+#[non_exhaustive]
 pub enum UniqueGiftOrigin {
     Upgrade,
     Transfer,

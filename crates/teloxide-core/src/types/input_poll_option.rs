@@ -25,6 +25,7 @@ pub struct InputPollOption {
 #[derive(Serialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
+#[non_exhaustive]
 pub enum InputPollOptionFormatting {
     /// Mode for parsing entities in the text. See [formatting options] for more
     /// details. Currently, only custom emoji entities are allowed.

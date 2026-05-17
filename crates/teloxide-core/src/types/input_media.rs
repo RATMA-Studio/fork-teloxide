@@ -11,6 +11,7 @@ use crate::types::{InputFile, MessageEntity, ParseMode, Seconds};
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(tag = "type")]
 #[serde(rename_all = "snake_case")]
+#[non_exhaustive]
 pub enum InputMedia {
     Photo(InputMediaPhoto),
     Video(InputMediaVideo),

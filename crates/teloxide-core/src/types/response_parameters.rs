@@ -8,6 +8,7 @@ use crate::types::{ChatId, Seconds};
 #[derive(Copy, Clone, Debug, Eq, Hash, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
+#[non_exhaustive]
 pub enum ResponseParameters {
     /// The group has been migrated to a supergroup with the specified
     /// identifier.

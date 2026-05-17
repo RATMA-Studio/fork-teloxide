@@ -23,6 +23,7 @@ pub struct ChatMember {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "status")]
+#[non_exhaustive]
 pub enum ChatMemberKind {
     #[serde(rename = "creator")]
     Owner(Owner),
@@ -617,6 +618,7 @@ impl ChatMemberKind {
 
 #[derive(Copy, Clone, Debug, Eq, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
+#[non_exhaustive]
 pub enum ChatMemberStatus {
     #[serde(rename = "creator")]
     Owner,

@@ -45,6 +45,7 @@ use crate::types::{Recipient, UserId};
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type")]
+#[non_exhaustive]
 pub enum BotCommandScope {
     Default,
     AllPrivateChats,

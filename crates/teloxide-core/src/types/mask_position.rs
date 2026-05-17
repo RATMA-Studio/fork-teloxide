@@ -63,6 +63,7 @@ impl Hash for MaskPosition {
 #[derive(Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
+#[non_exhaustive]
 pub enum MaskPoint {
     Forehead,
     Eyes,
