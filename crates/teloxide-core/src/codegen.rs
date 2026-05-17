@@ -22,9 +22,24 @@ use std::{
 use aho_corasick::AhoCorasick;
 use xshell::{Shell, cmd};
 
+/// Reads `channel = "..."` from the workspace `rust-toolchain.toml` so the
+/// codegen tooling stays in lock-step with whatever the rest of the workspace
+/// is pinned to.
+fn toolchain() -> String {
+    const TOOLCHAIN_TOML: &str = include_str!("../../../rust-toolchain.toml");
+
+    TOOLCHAIN_TOML
+        .lines()
+        .find_map(|line| {
+            let rest = line.trim().strip_prefix("channel")?;
+            let rest = rest.trim_start().strip_prefix('=')?.trim();
+            Some(rest.trim_matches('"').trim_matches('\'').to_owned())
+        })
+        .expect("`channel = \"...\"` not found in rust-toolchain.toml")
+}
+
 fn ensure_rustfmt(sh: &Shell) {
-    // FIXME(waffle): find a better way to set toolchain
-    let toolchain = "nightly-2026-05-15";
+    let toolchain = toolchain();
 
     let version = cmd!(sh, "rustup run {toolchain} rustfmt --version").read().unwrap_or_default();
 
@@ -37,7 +52,7 @@ fn ensure_rustfmt(sh: &Shell) {
 }
 
 pub fn reformat(text: String) -> String {
-    let toolchain = "nightly-2026-05-15";
+    let toolchain = toolchain();
 
     let sh = Shell::new().unwrap();
     ensure_rustfmt(&sh);
