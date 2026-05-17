@@ -291,9 +291,12 @@ impl StickerFormatFlags {
     pub fn format(&self) -> StickerFormat {
         match (self.is_animated, self.is_video) {
             (false, false) => StickerFormat::Static,
-            (true, false) => StickerFormat::Animated,
+            // If a future server build ever emits both flags simultaneously
+            // we fall back to `Animated` rather than panic — animation takes
+            // precedence over the static interpretation, matching the order
+            // Telegram clients use when both file formats are available.
+            (true, false) | (true, true) => StickerFormat::Animated,
             (false, true) => StickerFormat::Video,
-            (true, true) => panic!("`is_animated` and `is_video` flags present at the same time"),
         }
     }
 }
@@ -499,12 +502,12 @@ mod tests {
     }
 
     #[test]
-    #[should_panic]
-    fn wrong_sticker_format_flags_serde() {
-        {
-            let json = r#"{"is_animated":true,"is_video":true}"#;
-            let fmt_flags: StickerFormatFlags = serde_json::from_str(json).unwrap();
-            fmt_flags.format();
-        }
+    fn both_format_flags_fall_back_to_animated() {
+        // Telegram never emits both flags today, but defensive: if a future
+        // API version did, the previous implementation panicked the bot. We
+        // now resolve the ambiguity in favor of `Animated`.
+        let json = r#"{"is_animated":true,"is_video":true}"#;
+        let fmt_flags: StickerFormatFlags = serde_json::from_str(json).unwrap();
+        assert_eq!(fmt_flags.format(), StickerFormat::Animated);
     }
 }
