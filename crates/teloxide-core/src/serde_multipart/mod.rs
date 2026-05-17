@@ -88,8 +88,10 @@ mod tests {
     use crate::{
         payloads::{self, setters::*},
         types::{
-            ChatId, InputFile, InputMedia, InputMediaAnimation, InputMediaAudio,
-            InputMediaDocument, InputMediaPhoto, InputMediaVideo, InputSticker, MessageEntity,
+            BusinessConnectionId, ChatId, InputFile, InputMedia, InputMediaAnimation,
+            InputMediaAudio, InputMediaDocument, InputMediaPhoto, InputMediaVideo, InputPollMedia,
+            InputPollOption, InputPollOptionMedia, InputProfilePhoto, InputProfilePhotoStatic,
+            InputSticker, InputStoryContent, InputStoryContentPhoto, MessageEntity,
             MessageEntityKind, ParseMode, StickerFormat, UserId,
         },
     };
@@ -176,6 +178,68 @@ mod tests {
                 File::open("../../media/teloxide-core-logo.png").await.unwrap(),
             )),
         )
+        .unwrap()
+        .await;
+    }
+
+    // Regression coverage for #150: a `SendPoll` payload that carries
+    // `InputFile`s inside its `media`, `explanation_media`, and an
+    // `options[i].media` must produce a multipart form (not silently drop
+    // the files by JSON-serializing `"attach://..."` placeholders without
+    // attaching their bytes).
+    #[tokio::test]
+    async fn send_poll_with_inline_files() {
+        to_form_ref(
+            &payloads::SendPoll::new(
+                ChatId(0),
+                "Pick one",
+                [
+                    InputPollOption::new("File on disk").media(InputPollOptionMedia::Photo(
+                        InputMediaPhoto::new(InputFile::file("../../media/teloxide-core-logo.png")),
+                    )),
+                    InputPollOption::new("File id").media(InputPollOptionMedia::Video(
+                        InputMediaVideo::new(InputFile::file_id("17".into())),
+                    )),
+                ],
+            )
+            .media(InputPollMedia::Photo(InputMediaPhoto::new(InputFile::file(
+                "../../media/teloxide-core-logo.png",
+            ))))
+            .explanation_media(InputPollMedia::Audio(InputMediaAudio::new(
+                InputFile::memory(&b"audio-bytes"[..]),
+            ))),
+        )
+        .unwrap()
+        .await;
+    }
+
+    // Regression coverage for #150 — `PostStory` was `JsonRequest` and
+    // dropped any `InputFile` in `content`. After the fix it must serialize
+    // through multipart.
+    #[tokio::test]
+    async fn post_story_uploads_file() {
+        to_form_ref(&payloads::PostStory::new(
+            BusinessConnectionId("conn-id".to_owned()),
+            InputStoryContent::Photo(InputStoryContentPhoto {
+                photo: InputFile::file("../../media/teloxide-core-logo.png"),
+            }),
+            crate::types::Seconds::from_seconds(86400),
+        ))
+        .unwrap()
+        .await;
+    }
+
+    // Regression coverage for #150 — `SetBusinessAccountProfilePhoto` was
+    // `JsonRequest` and dropped its `InputFile`. After the fix it must
+    // serialize through multipart.
+    #[tokio::test]
+    async fn set_business_account_profile_photo_uploads_file() {
+        to_form_ref(&payloads::SetBusinessAccountProfilePhoto::new(
+            BusinessConnectionId("conn-id".to_owned()),
+            InputProfilePhoto::Static(InputProfilePhotoStatic {
+                photo: InputFile::file("../../media/teloxide-core-logo.png"),
+            }),
+        ))
         .unwrap()
         .await;
     }

@@ -95,6 +95,36 @@ impl MultipartPayload for payloads::SendPoll {
     }
 }
 
+impl MultipartPayload for payloads::PostStory {
+    fn copy_files(&self, into: &mut dyn FnMut(InputFile)) {
+        self.content.files().for_each(|f| f.copy_into(into))
+    }
+
+    fn move_files(&mut self, into: &mut dyn FnMut(InputFile)) {
+        self.content.files_mut().for_each(|f| f.move_into(into))
+    }
+}
+
+impl MultipartPayload for payloads::EditStory {
+    fn copy_files(&self, into: &mut dyn FnMut(InputFile)) {
+        self.content.files().for_each(|f| f.copy_into(into))
+    }
+
+    fn move_files(&mut self, into: &mut dyn FnMut(InputFile)) {
+        self.content.files_mut().for_each(|f| f.move_into(into))
+    }
+}
+
+impl MultipartPayload for payloads::SetBusinessAccountProfilePhoto {
+    fn copy_files(&self, into: &mut dyn FnMut(InputFile)) {
+        self.photo.files().for_each(|f| f.copy_into(into))
+    }
+
+    fn move_files(&mut self, into: &mut dyn FnMut(InputFile)) {
+        self.photo.files_mut().for_each(|f| f.move_into(into))
+    }
+}
+
 impl MultipartPayload for payloads::CreateNewStickerSet {
     fn copy_files(&self, into: &mut dyn FnMut(InputFile)) {
         self.stickers

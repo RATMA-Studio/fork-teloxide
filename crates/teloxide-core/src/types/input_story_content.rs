@@ -13,6 +13,29 @@ pub enum InputStoryContent {
     Video(InputStoryContentVideo),
 }
 
+impl InputStoryContent {
+    /// Returns the single file attached to this story content. Used by the
+    /// multipart serializer to collect `InputFile`s that need to ride along
+    /// as multipart parts.
+    pub(crate) fn files(&self) -> impl Iterator<Item = &InputFile> {
+        let f = match self {
+            InputStoryContent::Photo(p) => &p.photo,
+            InputStoryContent::Video(v) => &v.video,
+        };
+        std::iter::once(f)
+    }
+
+    /// Mutable counterpart of [`files`] for in-place attachment fix-up when
+    /// the multipart body is being built.
+    pub(crate) fn files_mut(&mut self) -> impl Iterator<Item = &mut InputFile> {
+        let f = match self {
+            InputStoryContent::Photo(p) => &mut p.photo,
+            InputStoryContent::Video(v) => &mut v.video,
+        };
+        std::iter::once(f)
+    }
+}
+
 /// Describes a regular gift owned by a user or a chat.
 #[derive(Clone, Debug, Serialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]

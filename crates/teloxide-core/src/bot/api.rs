@@ -1810,7 +1810,8 @@ impl Requester for Bot {
         )
     }
 
-    type SetBusinessAccountProfilePhoto = JsonRequest<payloads::SetBusinessAccountProfilePhoto>;
+    type SetBusinessAccountProfilePhoto =
+        MultipartRequest<payloads::SetBusinessAccountProfilePhoto>;
 
     fn set_business_account_profile_photo(
         &self,
@@ -1949,7 +1950,7 @@ impl Requester for Bot {
         )
     }
 
-    type PostStory = JsonRequest<payloads::PostStory>;
+    type PostStory = MultipartRequest<payloads::PostStory>;
 
     fn post_story(
         &self,
@@ -1986,7 +1987,7 @@ impl Requester for Bot {
         )
     }
 
-    type EditStory = JsonRequest<payloads::EditStory>;
+    type EditStory = MultipartRequest<payloads::EditStory>;
 
     fn edit_story(
         &self,
