@@ -6,7 +6,7 @@ use crate::types::{BusinessConnectionId, LabeledPrice, Seconds};
 
 impl_payload! {
     /// Use this method to create a link for an invoice. Returns the created invoice link as String on success.
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub CreateInvoiceLink (CreateInvoiceLinkSetters) => String {
         required {
             /// Product name, 1-32 characters

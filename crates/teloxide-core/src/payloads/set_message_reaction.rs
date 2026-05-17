@@ -6,7 +6,7 @@ use crate::types::{MessageId, ReactionType, Recipient, True};
 
 impl_payload! {
     /// Use this method to change the chosen reactions on a message. Service messages can't be reacted to. Automatically forwarded messages from a channel to its discussion group have the same available reactions as messages in the channel. Returns True on success.
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub SetMessageReaction (SetMessageReactionSetters) => True {
         required {
             /// Unique identifier for the target chat or username of the target channel (in the format @channelusername)

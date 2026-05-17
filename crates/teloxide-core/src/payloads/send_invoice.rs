@@ -12,7 +12,7 @@ impl_payload! {
     /// Use this method to send invoices. On success, the sent [`Message`] is returned.
     ///
     /// [`Message`]: crate::types::Message
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub SendInvoice (SendInvoiceSetters) => Message {
         required {
             /// Unique identifier for the target private chat

@@ -6,7 +6,7 @@ use crate::types::{True, UserId};
 
 impl_payload! {
     /// Use this method to change the access settings of a managed bot. Returns _true_ on success.
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub SetManagedBotAccessSettings (SetManagedBotAccessSettingsSetters) => True {
         required {
             /// User identifier of the managed bot whose access settings will be changed

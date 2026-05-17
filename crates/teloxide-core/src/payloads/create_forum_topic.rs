@@ -6,7 +6,7 @@ use crate::types::{CustomEmojiId, ForumTopic, Recipient, Rgb};
 
 impl_payload! {
     /// Use this method to create a topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the _can\_manage\_topics_ administrator rights. Returns information about the created topic as a `ForumTopic` object.
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub CreateForumTopic (CreateForumTopicSetters) => ForumTopic {
         required {
             /// Unique identifier for the target chat or username of the target channel (in the format `@channelusername`)

@@ -6,7 +6,7 @@ use crate::types::{MessageEntity, ParseMode, True, UserId};
 
 impl_payload! {
     /// Gifts a Telegram Premium subscription to the given user. Returns True on success.
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub GiftPremiumSubscription (GiftPremiumSubscriptionSetters) => True {
         required {
             /// Unique identifier of the target user

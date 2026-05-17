@@ -7,7 +7,7 @@ use crate::types::{ChatId, MessageId, True};
 
 impl_payload! {
     /// Use this method to approve a suggested post in a direct messages chat. The bot must have the 'can_post_messages' administrator right in the corresponding channel chat. Returns `true` on success.
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub ApproveSuggestedPost (ApproveSuggestedPostSetters) => True {
         required {
             /// Unique identifier for the target direct messages chat

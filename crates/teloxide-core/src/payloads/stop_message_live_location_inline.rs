@@ -10,7 +10,7 @@ impl_payload! {
     /// See also: [`StopMessageLiveLocation`](crate::payloads::StopMessageLiveLocation)
     ///
     /// [`StopMessageLiveLocation`]: crate::payloads::StopMessageLiveLocation
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub StopMessageLiveLocationInline (StopMessageLiveLocationInlineSetters) => True {
         required {
             /// Identifier of the inline message

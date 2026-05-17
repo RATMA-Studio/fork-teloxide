@@ -6,7 +6,7 @@ use crate::types::StickerSet;
 
 impl_payload! {
     /// Use this method to get a sticker set. On success, a StickerSet object is returned.
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub GetStickerSet (GetStickerSetSetters) => StickerSet {
         required {
             /// Name of the sticker set

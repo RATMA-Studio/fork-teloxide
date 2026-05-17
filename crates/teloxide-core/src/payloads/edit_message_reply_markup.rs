@@ -8,7 +8,7 @@ impl_payload! {
     /// Use this method to edit only the reply markup of messages. On success, the edited Message is returned. Note that business messages that were not sent by the bot and do not contain an inline keyboard can only be edited within **48 hours** from the time they were sent.
     ///
     /// See also: [`EditMessageReplyMarkupInline`](crate::payloads::EditMessageReplyMarkupInline)
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub EditMessageReplyMarkup (EditMessageReplyMarkupSetters) => Message {
         required {
             /// Unique identifier for the target chat or username of the target channel (in the format `@channelusername`).

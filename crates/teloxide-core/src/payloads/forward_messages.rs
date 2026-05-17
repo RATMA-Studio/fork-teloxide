@@ -8,7 +8,7 @@ impl_payload! {
     /// Use this method to forward multiple messages of any kind. If some of the specified messages can't be found or forwarded, they are skipped. Service messages and messages with protected content can't be forwarded. Album grouping is kept for forwarded messages. On success, an array of [`MessageId`] of the sent messages is returned.
     ///
     /// [`MessageId`]: crate::types::MessageId
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub ForwardMessages (ForwardMessagesSetters) => Vec<MessageId> {
         required {
             /// Unique identifier for the target chat or username of the target channel (in the format `@channelusername`)

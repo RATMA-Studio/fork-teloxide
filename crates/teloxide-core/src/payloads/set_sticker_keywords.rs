@@ -6,7 +6,7 @@ use crate::types::True;
 
 impl_payload! {
     /// Use this method to change search keywords assigned to a regular or custom emoji sticker. The sticker must belong to a sticker set created by the bot. Returns True on success.
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub SetStickerKeywords (SetStickerKeywordsSetters) => True {
         required {
             /// File identifier of the sticker

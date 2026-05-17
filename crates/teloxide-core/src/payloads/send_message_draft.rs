@@ -6,7 +6,7 @@ use crate::types::{ChatId, MessageEntity, ParseMode, ThreadId, True};
 
 impl_payload! {
     /// Use this method to stream a partial message to a user while the message is being generated. Note that the streamed draft is ephemeral and acts as a temporary 30-second preview - once the output is finalized, you must call sendMessage with the complete message to persist it in the user's chat. Returns True on success.
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub SendMessageDraft (SendMessageDraftSetters) => True {
         required {
             /// Unique identifier for the target private chat

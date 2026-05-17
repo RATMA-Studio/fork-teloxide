@@ -8,7 +8,7 @@ impl_payload! {
     /// Use this method to edit a subscription invite link created by the bot. The bot must have the can_invite_users administrator rights. Returns the edited invite link as a [`ChatInviteLink`] object.
     ///
     /// [`ChatInviteLink`]: crate::types::ChatInviteLink
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub EditChatSubscriptionInviteLink (EditChatSubscriptionInviteLinkSetters) => ChatInviteLink {
         required {
             /// Unique identifier for the target chat or username of the target channel (in the format `@channelusername`)

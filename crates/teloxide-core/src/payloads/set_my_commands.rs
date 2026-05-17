@@ -6,7 +6,7 @@ use crate::types::{BotCommand, BotCommandScope, True};
 
 impl_payload! {
     /// Use this method to change the list of the bot's commands. Returns _True_ on success.
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub SetMyCommands (SetMyCommandsSetters) => True {
         required {
             /// A JSON-serialized list of bot commands to be set as the list of the bot's commands. At most 100 commands can be specified.

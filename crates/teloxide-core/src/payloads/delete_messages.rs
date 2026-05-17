@@ -6,7 +6,7 @@ use crate::types::{MessageId, Recipient, True};
 
 impl_payload! {
     /// Use this method to delete multiple messages simultaneously. If some of the specified messages can't be found, they are skipped. Returns _True_ on success.
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub DeleteMessages (DeleteMessagesSetters) => True {
         required {
             /// Unique identifier for the target chat or username of the target channel (in the format `@channelusername`).

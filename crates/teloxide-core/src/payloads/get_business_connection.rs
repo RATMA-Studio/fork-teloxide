@@ -6,7 +6,7 @@ use crate::types::{BusinessConnection, BusinessConnectionId};
 
 impl_payload! {
     /// Use this method to get information about the connection of the bot with a business account. Returns a BusinessConnection object on success.
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub GetBusinessConnection (GetBusinessConnectionSetters) => BusinessConnection {
         required {
             /// Unique identifier of the business connection

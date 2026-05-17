@@ -9,7 +9,7 @@ impl_payload! {
     /// Changes the emoji status for a given user that previously allowed the bot to manage their emoji status via the Mini App method [requestEmojiStatusAccess]. Returns True on success.
     ///
     /// [requestEmojiStatusAccess]: https://core.telegram.org/bots/webapps#initializing-mini-apps
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub SetUserEmojiStatus (SetUserEmojiStatusSetters) => True {
         required {
             /// Unique identifier of the target user

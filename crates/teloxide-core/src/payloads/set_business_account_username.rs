@@ -6,7 +6,7 @@ use crate::types::{BusinessConnectionId, True};
 
 impl_payload! {
     /// Changes the username of a managed business account. Requires the _can_change_username_ business bot right. Returns _true_ on success.
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub SetBusinessAccountUsername (SetBusinessAccountUsernameSetters) => True {
         required {
             /// Unique identifier of the business connection

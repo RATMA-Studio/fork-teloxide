@@ -6,7 +6,7 @@ use crate::types::{Recipient, True, UserId};
 
 impl_payload! {
     /// Use this method to set a custom title for an administrator in a supergroup promoted by the bot. Returns _True_on success.
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub SetChatAdministratorCustomTitle (SetChatAdministratorCustomTitleSetters) => True {
         required {
             /// Unique identifier for the target chat or username of the target channel (in the format `@channelusername`)

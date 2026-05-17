@@ -6,7 +6,7 @@ use crate::types::{MaskPosition, True};
 
 impl_payload! {
     /// Use this method to change the mask position of a mask sticker. The sticker must belong to a sticker set that was created by the bot. Returns True on success.
-    #[derive(Debug, PartialEq, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Default, Clone, Serialize)]
     pub SetStickerMaskPosition (SetStickerMaskPositionSetters) => True {
         required {
             /// File identifier of the sticker

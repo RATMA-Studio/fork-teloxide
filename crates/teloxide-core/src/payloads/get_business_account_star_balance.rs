@@ -8,7 +8,7 @@ impl_payload! {
     /// Returns the amount of Telegram Stars owned by a managed business account. Requires the _can_view_gifts_and_stars_ business bot right. Returns [`StarAmount`] on success.
     ///
     /// [`StarAmount`]: crate::types::StarAmount
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub GetBusinessAccountStarBalance (GetBusinessAccountStarBalanceSetters) => StarAmount {
         required {
             /// Unique identifier of the business connection

@@ -6,7 +6,7 @@ use crate::types::True;
 
 impl_payload! {
     /// Use this method to set the title of a created sticker set. Returns True on success.
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub SetStickerSetTitle (SetStickerSetTitleSetters) => True {
         required {
             /// Sticker set name

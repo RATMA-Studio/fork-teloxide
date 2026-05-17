@@ -11,7 +11,7 @@ impl_payload! {
     /// Use this method to edit captions of messages. On success, the edited Message is returned. Note that business messages that were not sent by the bot and do not contain an inline keyboard can only be edited within **48 hours** from the time they were sent.
     ///
     /// See also: [`EditMessageCaptionInline`](crate::payloads::EditMessageCaptionInline)
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub EditMessageCaption (EditMessageCaptionSetters) => Message {
         required {
             /// Unique identifier for the target chat or username of the target channel (in the format `@channelusername`).

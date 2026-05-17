@@ -10,7 +10,7 @@ impl_payload! {
     ///
     /// [`ChatInviteLink`]: crate::types::ChatInviteLink
     /// [`RevokeChatInviteLink`]: crate::payloads::RevokeChatInviteLink
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub CreateChatInviteLink (CreateChatInviteLinkSetters) => ChatInviteLink {
         required {
             /// Unique identifier for the target chat or username of the target channel (in the format `@channelusername`)

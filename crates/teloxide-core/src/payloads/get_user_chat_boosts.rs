@@ -8,7 +8,7 @@ impl_payload! {
     /// Use this method to get the list of boosts added to a chat by a user. Requires administrator rights in the chat. Returns a [`UserChatBoosts`] object.
     ///
     /// [`UserChatBoosts`]: crate::types::UserChatBoosts
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub GetUserChatBoosts (GetUserChatBoostsSetters) => UserChatBoosts {
         required {
             /// Unique identifier for the chat or username of the channel (in the format @channelusername)

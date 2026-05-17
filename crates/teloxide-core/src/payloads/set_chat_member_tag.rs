@@ -6,7 +6,7 @@ use crate::types::{Recipient, True, UserId};
 
 impl_payload! {
     /// Use this method to set a tag for a regular member in a group or a supergroup. The bot must be an administrator in the chat for this to work and must have the can_manage_tags administrator right. Returns True on success.
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub SetChatMemberTag (SetChatMemberTagSetters) => True {
         required {
             /// Unique identifier for the target chat or username of the target supergroup

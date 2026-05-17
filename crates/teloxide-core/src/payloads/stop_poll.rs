@@ -6,7 +6,7 @@ use crate::types::{BusinessConnectionId, InlineKeyboardMarkup, MessageId, Poll, 
 
 impl_payload! {
     /// Use this method to stop a poll which was sent by the bot. On success, the stopped Poll with the final results is returned.
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub StopPoll (StopPollSetters) => Poll {
         required {
             /// Unique identifier for the target chat or username of the target channel (in the format `@channelusername`).

@@ -6,7 +6,7 @@ use crate::types::UserId;
 
 impl_payload! {
     /// Revokes the current token of a managed bot and generates a new one. Returns the new token as a String on success.
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub ReplaceManagedBotToken (ReplaceManagedBotTokenSetters) => String {
         required {
             /// User identifier of the managed bot whose token will be revoked

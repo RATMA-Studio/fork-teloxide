@@ -6,7 +6,7 @@ use crate::types::{ChatId, MessageId, Recipient, True, UserId};
 
 impl_payload! {
     /// Use this method to remove a reaction from a message in a group or a supergroup chat. The bot must have the 'can_delete_messages' administrator right in the chat. Returns _True_ on success.
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub DeleteMessageReaction (DeleteMessageReactionSetters) => True {
         required {
             /// Unique identifier for the target chat or username of the target supergroup in the format `@username`

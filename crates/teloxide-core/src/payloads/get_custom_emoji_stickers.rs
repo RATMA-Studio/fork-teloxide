@@ -6,7 +6,7 @@ use crate::types::{CustomEmojiId, Sticker};
 
 impl_payload! {
     /// Use this method to get information about custom emoji stickers by their identifiers. Returns an Array of Sticker objects.
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, PartialEq, Eq, Hash, Default, Clone, Serialize)]
     pub GetCustomEmojiStickers (GetCustomEmojiStickersSetters) => Vec<Sticker> {
         required {
             /// List of custom emoji identifiers. At most 200 custom emoji identifiers can be specified.
