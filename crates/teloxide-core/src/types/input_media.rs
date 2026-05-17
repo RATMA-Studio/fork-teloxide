@@ -582,6 +582,138 @@ impl InputMediaDocument {
     }
 }
 
+/// Represents a sticker file to be sent.
+///
+/// Currently only usable as part of [`InputPollOptionMedia`].
+///
+/// [The official docs](https://core.telegram.org/bots/api#inputmediasticker).
+///
+/// [`InputPollOptionMedia`]: crate::types::InputPollOptionMedia
+#[serde_with::skip_serializing_none]
+#[derive(Clone, Debug, Serialize)]
+#[cfg_attr(test, derive(schemars::JsonSchema))]
+pub struct InputMediaSticker {
+    /// File to send. Pass a file_id to send a file that exists on the Telegram
+    /// servers (recommended), pass an HTTP URL for Telegram to get a .WEBP
+    /// sticker from the Internet, or pass `attach://<file_attach_name>` to
+    /// upload a new .WEBP, .TGS, or .WEBM sticker using multipart/form-data
+    /// under `<file_attach_name>` name.
+    pub media: InputFile,
+
+    /// Emoji associated with the sticker; only for just uploaded stickers.
+    pub emoji: Option<String>,
+}
+
+impl InputMediaSticker {
+    pub const fn new(media: InputFile) -> Self {
+        Self { media, emoji: None }
+    }
+
+    pub fn media(mut self, val: InputFile) -> Self {
+        self.media = val;
+        self
+    }
+
+    pub fn emoji<S>(mut self, val: S) -> Self
+    where
+        S: Into<String>,
+    {
+        self.emoji = Some(val.into());
+        self
+    }
+}
+
+/// Represents a location to be sent.
+///
+/// Currently only usable as part of [`InputPollMedia`] or
+/// [`InputPollOptionMedia`].
+///
+/// [The official docs](https://core.telegram.org/bots/api#inputmedialocation).
+///
+/// [`InputPollMedia`]: crate::types::InputPollMedia
+/// [`InputPollOptionMedia`]: crate::types::InputPollOptionMedia
+#[serde_with::skip_serializing_none]
+#[derive(Clone, Copy, Debug, Serialize)]
+#[cfg_attr(test, derive(schemars::JsonSchema))]
+pub struct InputMediaLocation {
+    /// Latitude of the location.
+    pub latitude: f64,
+
+    /// Longitude of the location.
+    pub longitude: f64,
+
+    /// The radius of uncertainty for the location, measured in meters; 0-1500.
+    pub horizontal_accuracy: Option<f64>,
+}
+
+impl InputMediaLocation {
+    pub const fn new(latitude: f64, longitude: f64) -> Self {
+        Self { latitude, longitude, horizontal_accuracy: None }
+    }
+
+    pub const fn horizontal_accuracy(mut self, val: f64) -> Self {
+        self.horizontal_accuracy = Some(val);
+        self
+    }
+}
+
+/// Represents a venue to be sent.
+///
+/// Currently only usable as part of [`InputPollMedia`] or
+/// [`InputPollOptionMedia`].
+///
+/// [The official docs](https://core.telegram.org/bots/api#inputmediavenue).
+///
+/// [`InputPollMedia`]: crate::types::InputPollMedia
+/// [`InputPollOptionMedia`]: crate::types::InputPollOptionMedia
+#[serde_with::skip_serializing_none]
+#[derive(Clone, Debug, Serialize)]
+#[cfg_attr(test, derive(schemars::JsonSchema))]
+pub struct InputMediaVenue {
+    /// Latitude of the location.
+    pub latitude: f64,
+
+    /// Longitude of the location.
+    pub longitude: f64,
+
+    /// Name of the venue.
+    pub title: String,
+
+    /// Address of the venue.
+    pub address: String,
+
+    /// Foursquare identifier of the venue.
+    pub foursquare_id: Option<String>,
+
+    /// Foursquare type of the venue, if known.
+    pub foursquare_type: Option<String>,
+
+    /// Google Places identifier of the venue.
+    pub google_place_id: Option<String>,
+
+    /// Google Places type of the venue.
+    pub google_place_type: Option<String>,
+}
+
+impl InputMediaVenue {
+    pub fn new<T, A>(latitude: f64, longitude: f64, title: T, address: A) -> Self
+    where
+        T: Into<String>,
+        A: Into<String>,
+    {
+        Self {
+            latitude,
+            longitude,
+            title: title.into(),
+            address: address.into(),
+            foursquare_id: None,
+            foursquare_type: None,
+            google_place_id: None,
+            google_place_type: None,
+        }
+    }
+}
+
 /// Represents a live photo to be sent.
 ///
 /// [The official docs](https://core.telegram.org/bots/api#inputmedialivephoto).
