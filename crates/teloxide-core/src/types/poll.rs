@@ -1,4 +1,4 @@
-use crate::types::{MessageEntity, PollType, Seconds, User};
+use crate::types::{MessageEntity, PollMedia, PollType, Seconds, User};
 
 use chrono::{DateTime, Utc};
 use derive_more::derive::From;
@@ -26,7 +26,7 @@ pub struct PollId(pub String);
 ///
 /// [The official docs](https://core.telegram.org/bots/api#poll).
 #[serde_with::skip_serializing_none]
-#[derive(Clone, Debug, Eq, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct Poll {
     /// Unique poll identifier.
@@ -96,6 +96,13 @@ pub struct Poll {
     /// the explanation.
     pub explanation_entities: Option<Vec<MessageEntity>>,
 
+    /// Media added to the quiz explanation.
+    pub explanation_media: Option<Box<PollMedia>>,
+
+    /// Media added to the poll description; for polls inside the `Message`
+    /// object only.
+    pub media: Option<Box<PollMedia>>,
+
     /// Amount of time in seconds the poll will be active after creation.
     pub open_period: Option<Seconds>,
 
@@ -109,7 +116,7 @@ pub struct Poll {
 ///
 /// [The official docs](https://core.telegram.org/bots/api#polloption).
 #[serde_with::skip_serializing_none]
-#[derive(Clone, Debug, Eq, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct PollOption {
     /// Persistent identifier of the option. Available only for polls that
@@ -123,6 +130,9 @@ pub struct PollOption {
     /// Special entities that appear in the option text. Currently, only custom
     /// emoji entities are allowed in poll option texts
     pub text_entities: Option<Vec<MessageEntity>>,
+
+    /// Media added to the poll option.
+    pub media: Option<Box<PollMedia>>,
 
     /// User that added the option to the poll. Available only for options
     /// added by users.

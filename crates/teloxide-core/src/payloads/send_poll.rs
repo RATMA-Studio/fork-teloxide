@@ -4,15 +4,15 @@ use chrono::{DateTime, Utc};
 use serde::Serialize;
 
 use crate::types::{
-    BusinessConnectionId, EffectId, InputPollOption, Message, MessageEntity, ParseMode, PollType,
-    Recipient, ReplyMarkup, ReplyParameters, ThreadId,
+    BusinessConnectionId, EffectId, InputPollMedia, InputPollOption, Message, MessageEntity,
+    ParseMode, PollType, Recipient, ReplyMarkup, ReplyParameters, ThreadId,
 };
 
 impl_payload! {
     /// Use this method to send a native poll. On success, the sent [`Message`] is returned.
     ///
     /// [`Message`]: crate::types::Message
-    #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
+    #[derive(Debug, Clone, Serialize)]
     pub SendPoll (SendPollSetters) => Message {
         required {
             /// Unique identifier for the target chat or username of the target channel (in the format `@channelusername`)
@@ -72,6 +72,10 @@ impl_payload! {
             pub explanation_parse_mode: ParseMode,
             /// List of special entities that appear in the poll explanation, which can be specified instead of _parse\_mode_
             pub explanation_entities: Vec<MessageEntity> [collect],
+            /// A JSON-serialized object describing media to add to the quiz explanation
+            pub explanation_media: InputPollMedia,
+            /// A JSON-serialized object describing media to add to the poll description
+            pub media: InputPollMedia,
             /// Amount of time in seconds the poll will be active after creation, 5-600. Can't be used together with close_date.
             pub open_period: u16,
             /// Point in time (Unix timestamp) when the poll will be automatically closed. Must be at least 5 and no more than 600 seconds in the future. Can't be used together with open_period.

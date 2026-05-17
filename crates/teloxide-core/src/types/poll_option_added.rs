@@ -6,7 +6,7 @@ use crate::types::{PollId, PollOption};
 ///
 /// [The official docs](https://core.telegram.org/bots/api#polloptionadded).
 #[serde_with::skip_serializing_none]
-#[derive(Clone, Debug, Eq, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct PollOptionAdded {
     /// Unique poll identifier.
