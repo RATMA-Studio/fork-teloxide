@@ -293,38 +293,15 @@ mod tests {
 
     #[test]
     fn user_mention_link() {
-        let user_with_username = User {
-            id: UserId(0),
-            is_bot: false,
-            first_name: "".to_string(),
-            last_name: None,
-            username: Some("abcd".to_string()),
-            language_code: None,
-            is_premium: false,
-            added_to_attachment_menu: false,
-            can_manage_bots: false,
-            has_topics_enabled: false,
-            supports_guest_queries: false,
-        };
+        let user_with_username = User { username: Some("abcd".to_string()), ..Default::default() };
         assert_eq!(user_mention_or_link(&user_with_username), "@abcd");
         // Telegram allows underscores in usernames
         // https://telegram.org/faq?setln=en#q-what-can-i-use-as-my-username
         let user_with_username_underscore =
             User { username: Some("Abcd_Efg".to_string()), ..user_with_username };
         assert_eq!(user_mention_or_link(&user_with_username_underscore), "@Abcd\\_Efg");
-        let user_without_username = User {
-            id: UserId(123_456_789),
-            is_bot: false,
-            first_name: "Name".to_string(),
-            last_name: None,
-            username: None,
-            language_code: None,
-            is_premium: false,
-            added_to_attachment_menu: false,
-            can_manage_bots: false,
-            has_topics_enabled: false,
-            supports_guest_queries: false,
-        };
+        let user_without_username =
+            User { id: UserId(123_456_789), first_name: "Name".to_string(), ..Default::default() };
         assert_eq!(user_mention_or_link(&user_without_username), "[Name](tg://user/?id=123456789)")
     }
 }

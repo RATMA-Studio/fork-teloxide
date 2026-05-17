@@ -8,7 +8,7 @@ use crate::types::User;
 ///
 /// [`GetMe`]: crate::payloads::GetMe
 #[serde_with::skip_serializing_none]
-#[derive(Clone, Debug, Eq, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, Default, Eq, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Me {
     #[serde(flatten)]
     pub user: User,

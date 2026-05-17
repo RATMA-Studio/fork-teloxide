@@ -183,16 +183,10 @@ mod tests {
                 thread_id: None,
                 from: Some(User {
                     id: UserId(109_998_024),
-                    is_bot: false,
                     first_name: String::from("Laster"),
-                    last_name: None,
                     username: Some(String::from("laster_alex")),
                     language_code: Some(String::from("en")),
-                    is_premium: false,
-                    added_to_attachment_menu: false,
-                    can_manage_bots: false,
-                    has_topics_enabled: false,
-                    supports_guest_queries: false,
+                    ..Default::default()
                 }),
                 sender_chat: None,
                 sender_tag: None,
@@ -253,21 +247,10 @@ mod tests {
                 id: UserId(42),
                 is_bot: true,
                 first_name: "First".to_owned(),
-                last_name: None,
                 username: Some("SomethingSomethingBot".to_owned()),
-                language_code: None,
-                is_premium: false,
-                added_to_attachment_menu: false,
-                can_manage_bots: false,
-                has_topics_enabled: false,
-                supports_guest_queries: false,
+                ..Default::default()
             },
-            can_join_groups: false,
-            can_read_all_group_messages: false,
-            supports_inline_queries: false,
-            can_connect_to_business: false,
-            has_main_web_app: false,
-            allows_users_to_create_topics: false,
+            ..Default::default()
         }
     }
 

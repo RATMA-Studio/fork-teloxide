@@ -6,7 +6,7 @@ use crate::types::UserId;
 ///
 /// [The official docs](https://core.telegram.org/bots/api#user).
 #[serde_with::skip_serializing_none]
-#[derive(Clone, Debug, Eq, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, Default, Eq, Hash, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct User {
     /// Unique identifier for this user or bot.
