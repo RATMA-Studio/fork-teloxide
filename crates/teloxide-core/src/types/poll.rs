@@ -119,10 +119,9 @@ pub struct Poll {
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct PollOption {
-    /// Persistent identifier of the option. Available only for polls that
-    /// allow voters to add new options or that have such an option already
-    /// added.
-    pub persistent_id: Option<String>,
+    /// Persistent identifier of the option, persistent on option addition
+    /// and deletion.
+    pub persistent_id: String,
 
     /// Option text, 1-100 characters.
     pub text: String,
@@ -180,22 +179,27 @@ mod tests {
             "is_closed": false,
             "options": [
                 {
+                    "persistent_id": "opt1",
                     "text": "1",
                     "voter_count": 1
                 },
                 {
+                    "persistent_id": "opt2",
                     "text": "2",
                     "voter_count": 0
                 },
                 {
+                    "persistent_id": "opt3",
                     "text": "3",
                     "voter_count": 0
                 },
                 {
+                    "persistent_id": "opt4",
                     "text": "4",
                     "voter_count": 0
                 },
                 {
+                    "persistent_id": "opt5",
                     "text": "5",
                     "voter_count": 0
                 }
