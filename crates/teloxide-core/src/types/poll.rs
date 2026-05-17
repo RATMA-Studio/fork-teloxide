@@ -97,11 +97,11 @@ pub struct Poll {
     pub explanation_entities: Option<Vec<MessageEntity>>,
 
     /// Media added to the quiz explanation.
-    pub explanation_media: Option<Box<PollMedia>>,
+    pub explanation_media: Option<PollMedia>,
 
     /// Media added to the poll description; for polls inside the `Message`
     /// object only.
-    pub media: Option<Box<PollMedia>>,
+    pub media: Option<PollMedia>,
 
     /// Amount of time in seconds the poll will be active after creation.
     pub open_period: Option<Seconds>,
@@ -132,7 +132,7 @@ pub struct PollOption {
     pub text_entities: Option<Vec<MessageEntity>>,
 
     /// Media added to the poll option.
-    pub media: Option<Box<PollMedia>>,
+    pub media: Option<PollMedia>,
 
     /// User that added the option to the poll. Available only for options
     /// added by users.

@@ -55,7 +55,10 @@ pub enum ExternalReplyInfoKind {
     Venue(Venue),
     Location(Location),
     Photo(Vec<PhotoSize>),
-    Poll(Poll),
+    // `Poll` is boxed for the same reason `MediaKind::Poll` is: with inline
+    // `PollMedia` (Bot API 10.0) `Poll` dwarfs the other variants, inflating
+    // `ExternalReplyInfoKind` and the parent untagged matchers.
+    Poll(Box<Poll>),
     Checklist(Checklist),
     Sticker(Sticker),
     Story(Story),
