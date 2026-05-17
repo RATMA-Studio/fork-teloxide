@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use crate::types::{ChatId, MAX_USER_ID, MIN_USER_ID};
 
 /// Identifier of a user.
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Default)]
 #[derive(Debug, derive_more::Display)]
 #[derive(PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[derive(Serialize, Deserialize)]
