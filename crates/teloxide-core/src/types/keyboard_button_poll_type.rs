@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type")]
+#[non_exhaustive]
 pub enum KeyboardButtonPollType {
     /// If `Quiz` is passed, the user will be allowed to create only polls in
     /// the quiz mode.

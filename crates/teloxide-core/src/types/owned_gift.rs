@@ -10,6 +10,7 @@ use crate::types::{Gift, MessageEntity, OwnedGiftId, UniqueGift, User};
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type")]
+#[non_exhaustive]
 pub enum OwnedGift {
     Regular(Box<OwnedGiftRegular>),
     Unique(Box<OwnedGiftUnique>),

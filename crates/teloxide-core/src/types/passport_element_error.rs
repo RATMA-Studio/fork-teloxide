@@ -42,6 +42,7 @@ impl PassportElementError {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "source")]
+#[non_exhaustive]
 pub enum PassportElementErrorKind {
     #[serde(rename = "data")]
     DataField(PassportElementErrorDataField),
@@ -436,6 +437,7 @@ impl PassportElementErrorUnspecified {
 #[derive(Clone, Copy, Debug, Hash, Eq, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
+#[non_exhaustive]
 pub enum PassportElementErrorDataFieldType {
     PersonalDetails,
     Passport,
@@ -448,6 +450,7 @@ pub enum PassportElementErrorDataFieldType {
 #[derive(Clone, Copy, Debug, Hash, Eq, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
+#[non_exhaustive]
 pub enum PassportElementErrorFrontSideType {
     Passport,
     DriverLicense,
@@ -458,6 +461,7 @@ pub enum PassportElementErrorFrontSideType {
 #[derive(Clone, Copy, Debug, Hash, Eq, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
+#[non_exhaustive]
 pub enum PassportElementErrorReverseSideType {
     DriverLicense,
     IdentityCard,
@@ -466,6 +470,7 @@ pub enum PassportElementErrorReverseSideType {
 #[derive(Clone, Copy, Debug, Hash, Eq, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
+#[non_exhaustive]
 pub enum PassportElementErrorSelfieType {
     Passport,
     DriverLicense,
@@ -476,6 +481,7 @@ pub enum PassportElementErrorSelfieType {
 #[derive(Clone, Copy, Debug, Hash, Eq, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
+#[non_exhaustive]
 pub enum PassportElementErrorFileType {
     UtilityBill,
     BankStatement,
@@ -487,6 +493,7 @@ pub enum PassportElementErrorFileType {
 #[derive(Clone, Copy, Debug, Hash, Eq, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
+#[non_exhaustive]
 pub enum PassportElementErrorFilesType {
     UtilityBill,
     BankStatement,
@@ -498,6 +505,7 @@ pub enum PassportElementErrorFilesType {
 #[derive(Clone, Copy, Debug, Hash, Eq, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
+#[non_exhaustive]
 pub enum PassportElementErrorTranslationFileType {
     Passport,
     DriverLicense,
@@ -513,6 +521,7 @@ pub enum PassportElementErrorTranslationFileType {
 #[derive(Clone, Copy, Debug, Hash, Eq, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
+#[non_exhaustive]
 pub enum PassportElementErrorTranslationFilesType {
     Passport,
     DriverLicense,
@@ -528,6 +537,7 @@ pub enum PassportElementErrorTranslationFilesType {
 #[derive(Clone, Copy, Debug, Hash, Eq, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
+#[non_exhaustive]
 pub enum PassportElementErrorUnspecifiedType {
     DataField,
     FrontSide,

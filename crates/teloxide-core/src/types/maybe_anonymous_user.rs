@@ -7,6 +7,7 @@ use crate::types::{Chat, User};
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(untagged)]
+#[non_exhaustive]
 pub enum MaybeAnonymousUser {
     User(User),
     Chat(Chat),

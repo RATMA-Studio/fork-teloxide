@@ -202,6 +202,10 @@ mod tests {
                 | GuestMessage => {
                     assert!(full_set.contains(&Kind(update)))
                 }
+                _ => panic!(
+                    "new `AllowedUpdate` variant detected; add it to `allowed_updates_reference` \
+                     and `Kind::full_set()`"
+                ),
             }
         }
     }

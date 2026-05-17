@@ -12,6 +12,7 @@ use crate::types::{
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(tag = "type")]
 #[serde(rename_all = "snake_case")]
+#[non_exhaustive]
 pub enum InputPollOptionMedia {
     Animation(InputMediaAnimation),
     LivePhoto(InputMediaLivePhoto),

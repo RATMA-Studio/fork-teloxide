@@ -8,6 +8,7 @@ use crate::types::{Chat, MessageId, User};
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type")]
+#[non_exhaustive]
 pub enum MessageOrigin {
     User {
         /// Date the message was sent originally in Unix time

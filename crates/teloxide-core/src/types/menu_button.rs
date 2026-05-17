@@ -11,6 +11,7 @@ use crate::types::WebAppInfo;
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type")]
+#[non_exhaustive]
 pub enum MenuButton {
     /// Represents a menu button, which opens the bot's list of commands.
     Commands,

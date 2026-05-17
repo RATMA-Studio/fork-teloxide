@@ -166,6 +166,7 @@ use serde::{Deserialize, Serialize};
 /// [`Markdown`]: ParseMode::Markdown
 #[derive(Copy, Clone, Debug, Eq, Hash, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
+#[non_exhaustive]
 pub enum ParseMode {
     MarkdownV2,
     #[serde(rename = "HTML")]

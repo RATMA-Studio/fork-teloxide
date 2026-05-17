@@ -9,6 +9,7 @@ use crate::types::{Chat, InaccessibleMessage, Message, MessageId};
 #[derive(Clone, Debug, PartialEq, Serialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(untagged)]
+#[non_exhaustive]
 pub enum MaybeInaccessibleMessage {
     Inaccessible(InaccessibleMessage),
     Regular(Box<Message>),

@@ -42,6 +42,7 @@ pub struct Update {
 pub struct UpdateId(pub u32);
 
 #[derive(Clone, Debug, PartialEq)]
+#[non_exhaustive]
 pub enum UpdateKind {
     // NB: When adding new variants, don't forget to update
     //     - `AllowedUpdate`

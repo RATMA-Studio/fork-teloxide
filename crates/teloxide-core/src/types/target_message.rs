@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 /// A message in chat or inline message.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
+#[non_exhaustive]
 pub enum TargetMessage {
     Common {
         chat_id: Recipient,

@@ -8,6 +8,7 @@ use crate::types::{MessageId, User};
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "source")]
+#[non_exhaustive]
 pub enum ChatBoostSource {
     Premium(ChatBoostSourcePremium),
     GiftCode(ChatBoostSourceGiftCode),

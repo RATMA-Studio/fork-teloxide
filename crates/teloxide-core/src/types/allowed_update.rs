@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[cfg_attr(test, schemars(with = "String"))]
 #[serde(rename_all = "snake_case")]
+#[non_exhaustive]
 pub enum AllowedUpdate {
     Message,
     EditedMessage,

@@ -73,6 +73,7 @@ impl KeyboardButton {
 /// See individual variants documentation for more info.
 #[derive(Clone, Debug, Eq, Hash, PartialEq /*, Serialize, Deserialize */)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
+#[non_exhaustive]
 pub enum ButtonRequest {
     /// If this variant is used, the user's current location will be sent when
     /// the button is pressed.

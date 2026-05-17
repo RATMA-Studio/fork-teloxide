@@ -21,6 +21,7 @@ use crate::types::{
 #[serde(rename_all = "snake_case")]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(from = "raw::InlineQueryResult", into = "raw::InlineQueryResult")]
+#[non_exhaustive]
 pub enum InlineQueryResult {
     #[serde(rename = "audio")]
     CachedAudio(InlineQueryResultCachedAudio),

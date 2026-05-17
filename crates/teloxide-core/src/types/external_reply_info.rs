@@ -35,6 +35,7 @@ pub struct ExternalReplyInfo {
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
+#[non_exhaustive]
 pub enum ExternalReplyInfoKind {
     // Note:
     // - `Venue` must be in front of `Location`

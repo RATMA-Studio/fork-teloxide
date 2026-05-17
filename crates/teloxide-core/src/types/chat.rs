@@ -20,6 +20,7 @@ pub struct Chat {
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize, Eq, Hash)]
 #[serde(untagged)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
+#[non_exhaustive]
 pub enum ChatKind {
     Public(ChatPublic),
     Private(ChatPrivate),
@@ -57,6 +58,7 @@ pub struct ChatPrivate {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type")]
+#[non_exhaustive]
 pub enum PublicChatKind {
     Channel(PublicChatChannel),
     Group,
