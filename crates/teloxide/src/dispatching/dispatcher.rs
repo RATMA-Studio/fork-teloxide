@@ -540,26 +540,28 @@ where
 
     #[inline(never)] // Cold function.
     async fn remove_inactive_workers(&mut self) {
-        let handles = self
-            .workers
-            .iter()
-            .filter(|(_, worker)| {
-                worker.tx.capacity() == self.worker_queue_size
-                    && worker.is_waiting.load(Ordering::Relaxed)
-            })
-            .map(|(k, _)| k)
-            .cloned()
-            .collect::<Vec<_>>()
-            .into_iter()
-            .map(|key| {
-                let Worker { tx, handle, .. } = self.workers.remove(&key).unwrap();
+        let handles =
+            self.workers
+                .iter()
+                .filter(|(_, worker)| {
+                    worker.tx.capacity() == self.worker_queue_size
+                        && worker.is_waiting.load(Ordering::Relaxed)
+                })
+                .map(|(k, _)| k)
+                .cloned()
+                .collect::<Vec<_>>()
+                .into_iter()
+                .map(|key| {
+                    let Worker { tx, handle, .. } = self.workers.remove(&key).expect(
+                        "invariant: worker key was taken from `self.workers` snapshot above",
+                    );
 
-                // Close channel, worker should stop almost immediately
-                // (it's been supposedly waiting on the channel)
-                drop(tx);
+                    // Close channel, worker should stop almost immediately
+                    // (it's been supposedly waiting on the channel)
+                    drop(tx);
 
-                handle
-            });
+                    handle
+                });
 
         for handle in handles {
             // We must wait for worker to stop anyway, even though it should stop
