@@ -1,13 +1,13 @@
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 
-use crate::types::{MessageEntity, ParseMode};
+use crate::types::{InputPollOptionMedia, MessageEntity, ParseMode};
 
 /// This object contains information about one answer option in a poll to send.
 ///
 /// [The official docs](https://core.telegram.org/bots/api#inputpolloption).
+#[serde_with::skip_serializing_none]
 #[derive(Clone, Debug)]
-#[derive(PartialEq, Eq, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct InputPollOption {
     /// Option text, 1-100 characters.
@@ -15,11 +15,14 @@ pub struct InputPollOption {
 
     #[serde(flatten, skip_serializing_if = "Option::is_none")]
     pub formatting: Option<InputPollOptionFormatting>,
+
+    /// Media added to the poll option.
+    pub media: Option<InputPollOptionMedia>,
 }
 
 #[derive(Clone, Debug)]
 #[derive(PartialEq, Eq, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 pub enum InputPollOptionFormatting {
@@ -39,7 +42,12 @@ impl InputPollOption {
     where
         S: Into<String>,
     {
-        Self { text: text.into(), formatting: None }
+        Self { text: text.into(), formatting: None, media: None }
+    }
+
+    pub fn media(mut self, media: InputPollOptionMedia) -> Self {
+        self.media = Some(media);
+        self
     }
 
     pub fn text_parse_mode(self, text_parse_mode: ParseMode) -> Self {

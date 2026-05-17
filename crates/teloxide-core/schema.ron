@@ -2465,6 +2465,16 @@ Schema(
                     descr: Doc(md: "List of special entities that appear in the poll explanation, which can be specified instead of _parse\\_mode_"),
                 ),
                 Param(
+                    name: "explanation_media",
+                    ty: Option(RawTy("InputPollMedia")),
+                    descr: Doc(md: "A JSON-serialized object describing media to add to the quiz explanation"),
+                ),
+                Param(
+                    name: "media",
+                    ty: Option(RawTy("InputPollMedia")),
+                    descr: Doc(md: "A JSON-serialized object describing media to add to the poll description"),
+                ),
+                Param(
                     name: "open_period",
                     ty: Option(u16),
                     descr: Doc(md: "Amount of time in seconds the poll will be active after creation, 5-600. Can't be used together with close_date.")
