@@ -3,7 +3,7 @@
 use serde::Serialize;
 
 use crate::types::{
-    BusinessConnectionId, InputStoryContent, MessageEntity, ParseMode, Seconds, Story, StoryArea,
+    BusinessConnectionId, InputStoryContent, MessageEntity, ParseMode, Seconds, Story, StoryArea
 };
 
 impl_payload! {

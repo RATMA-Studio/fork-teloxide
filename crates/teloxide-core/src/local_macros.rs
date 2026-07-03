@@ -384,7 +384,7 @@ macro_rules! download_forward {
                 path: &'dst str,
                 destination: &'dst mut (
                               dyn tokio::io::AsyncWrite + core::marker::Unpin + core::marker::Send
-                          ),
+                          )
             ) -> Self::Fut<'dst> {
                 let $this = self;
                 ($inner).download_file(path, destination)
@@ -1951,15 +1951,16 @@ macro_rules! requester_forward {
 // waffle: efficiency is not important here, and I don't want to rewrite this
 #[allow(clippy::format_collect)]
 fn codegen_requester_forward() {
+    use indexmap::IndexMap;
+    use itertools::Itertools;
+
     use crate::codegen::{
         add_hidden_preamble,
         convert::{Convert, convert_for},
         ensure_file_contents, min_prefix, project_root, reformat, replace_block,
         schema::{self, Type},
-        to_uppercase,
+        to_uppercase
     };
-    use indexmap::IndexMap;
-    use itertools::Itertools;
 
     let path = project_root().join("src/local_macros.rs");
     let schema = schema::get();
@@ -2006,7 +2007,7 @@ fn codegen_requester_forward() {
                 .filter(|p| !matches!(p.ty, Type::Option(_)))
                 .map(|p| match prefixes.get(&*p.name) {
                     Some(prefix) => format!("{}: {}", p.name, to_uppercase(prefix)),
-                    None => format!("{}: {}", p.name, p.ty),
+                    None => format!("{}: {}", p.name, p.ty)
                 })
                 .join(", ");
 
@@ -2023,19 +2024,24 @@ fn codegen_requester_forward() {
                 .filter(|p| !matches!(p.ty, Type::Option(_)))
                 .flat_map(|p| match convert_for(&p.ty) {
                     Convert::Id(_) => None,
-                    Convert::Into(ty) => {
-                        Some(format!("{}: Into<{}>", to_uppercase(prefixes[&*p.name]), ty))
-                    }
+                    Convert::Into(ty) => Some(format!(
+                        "{}: Into<{}>",
+                        to_uppercase(prefixes[&*p.name]),
+                        ty
+                    )),
                     Convert::Collect(ty) => Some(format!(
                         "{}: IntoIterator<Item = {}>",
                         to_uppercase(prefixes[&*p.name]),
                         ty
-                    )),
+                    ))
                 })
                 .join(",\n        ");
 
-            let generics =
-                if generics.is_empty() { String::from("") } else { format!("<{generics}>") };
+            let generics = if generics.is_empty() {
+                String::from("")
+            } else {
+                format!("<{generics}>")
+            };
 
             let where_clause = if where_clause.is_empty() {
                 String::from("")
@@ -2062,7 +2068,7 @@ fn codegen_requester_forward() {
     let contents = reformat(replace_block(
         &path,
         "requester_forward_at_method",
-        &add_hidden_preamble("codegen_requester_forward", contents),
+        &add_hidden_preamble("codegen_requester_forward", contents)
     ));
 
     ensure_file_contents(&path, &contents);

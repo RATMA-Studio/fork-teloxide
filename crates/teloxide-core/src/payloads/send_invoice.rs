@@ -5,7 +5,7 @@ use url::Url;
 
 use crate::types::{
     EffectId, InlineKeyboardMarkup, LabeledPrice, Message, Recipient, ReplyParameters,
-    SuggestedPostParameters, ThreadId, TopicId,
+    SuggestedPostParameters, ThreadId, TopicId
 };
 
 impl_payload! {

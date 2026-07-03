@@ -3,7 +3,7 @@
 use serde::Serialize;
 
 use crate::types::{
-    EffectId, Message, MessageId, Recipient, Seconds, SuggestedPostParameters, ThreadId, TopicId,
+    EffectId, Message, MessageId, Recipient, Seconds, SuggestedPostParameters, ThreadId, TopicId
 };
 
 impl_payload! {

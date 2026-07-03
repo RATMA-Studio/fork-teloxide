@@ -4,7 +4,7 @@ use serde::Serialize;
 
 use crate::types::{
     BusinessConnectionId, InlineKeyboardMarkup, LinkPreviewOptions, Message, MessageEntity,
-    MessageId, ParseMode, Recipient,
+    MessageId, ParseMode, Recipient
 };
 
 impl_payload! {

@@ -5,7 +5,7 @@ use serde::Serialize;
 
 use crate::types::{
     BusinessConnectionId, EffectId, InputPollMedia, InputPollOption, Message, MessageEntity,
-    ParseMode, PollType, Recipient, ReplyMarkup, ReplyParameters, ThreadId,
+    ParseMode, PollType, Recipient, ReplyMarkup, ReplyParameters, ThreadId
 };
 
 impl_payload! {

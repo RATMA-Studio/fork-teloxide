@@ -25,7 +25,7 @@ use crate::{errors::AsResponseParameters, payloads::*, requests::Request, types:
 /// # let chat_id = ChatId(-1);
 /// use teloxide_core::{
 ///     prelude::*,
-///     types::{ChatId, ParseMode},
+///     types::{ChatId, ParseMode}
 /// };
 ///
 /// // Bot implements `Requester`
@@ -57,7 +57,7 @@ use crate::{errors::AsResponseParameters, payloads::*, requests::Request, types:
 /// # let chat_id = ChatId(-1);
 /// use teloxide_core::{
 ///     prelude::*,
-///     types::{ChatId, ParseMode},
+///     types::{ChatId, ParseMode}
 /// };
 ///
 /// let bot = Bot::new("TOKEN")
@@ -68,7 +68,9 @@ use crate::{errors::AsResponseParameters, payloads::*, requests::Request, types:
 /// bot.send_message(chat_id, "<b>Text</b>").await?;
 ///
 /// // This will use `ParseMode::MarkdownV2`
-/// bot.send_message(chat_id, "**Text**").parse_mode(ParseMode::MarkdownV2).await?;
+/// bot.send_message(chat_id, "**Text**")
+///     .parse_mode(ParseMode::MarkdownV2)
+///     .await?;
 /// # Ok::<_, teloxide_core::RequestError>(())
 /// # };
 /// ```
@@ -118,12 +120,12 @@ use crate::{errors::AsResponseParameters, payloads::*, requests::Request, types:
 /// ```
 /// use teloxide_core::{
 ///     prelude::*,
-///     types::{ChatId, Message},
+///     types::{ChatId, Message}
 /// };
 ///
 /// async fn send_hi<R>(bot: R, chat: ChatId) -> Message
 /// where
-///     R: Requester,
+///     R: Requester
 /// {
 ///     bot.send_message(chat, "hi").await.expect("error")
 /// }
@@ -197,7 +199,7 @@ pub trait Requester {
         &self,
         chat_id: C,
         from_chat_id: F,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> Self::ForwardMessage
     where
         C: Into<Recipient>,
@@ -210,7 +212,7 @@ pub trait Requester {
         &self,
         chat_id: C,
         from_chat_id: F,
-        message_ids: M,
+        message_ids: M
     ) -> Self::ForwardMessages
     where
         C: Into<Recipient>,
@@ -224,7 +226,7 @@ pub trait Requester {
         &self,
         chat_id: C,
         from_chat_id: F,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> Self::CopyMessage
     where
         C: Into<Recipient>,
@@ -237,7 +239,7 @@ pub trait Requester {
         &self,
         chat_id: C,
         from_chat_id: F,
-        message_ids: M,
+        message_ids: M
     ) -> Self::CopyMessages
     where
         C: Into<Recipient>,
@@ -279,7 +281,7 @@ pub trait Requester {
         &self,
         chat_id: C,
         live_photo: InputFile,
-        photo: InputFile,
+        photo: InputFile
     ) -> Self::SendLivePhoto
     where
         C: Into<Recipient>;
@@ -336,7 +338,7 @@ pub trait Requester {
         chat_id: C,
         message_id: MessageId,
         latitude: f64,
-        longitude: f64,
+        longitude: f64
     ) -> Self::EditMessageLiveLocation
     where
         C: Into<Recipient>;
@@ -348,7 +350,7 @@ pub trait Requester {
         &self,
         inline_message_id: I,
         latitude: f64,
-        longitude: f64,
+        longitude: f64
     ) -> Self::EditMessageLiveLocationInline
     where
         I: Into<String>;
@@ -359,7 +361,7 @@ pub trait Requester {
     fn stop_message_live_location<C>(
         &self,
         chat_id: C,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> Self::StopMessageLiveLocation
     where
         C: Into<Recipient>;
@@ -369,7 +371,7 @@ pub trait Requester {
     /// For Telegram documentation see [`StopMessageLiveLocationInline`].
     fn stop_message_live_location_inline<I>(
         &self,
-        inline_message_id: I,
+        inline_message_id: I
     ) -> Self::StopMessageLiveLocationInline
     where
         I: Into<String>;
@@ -382,7 +384,7 @@ pub trait Requester {
         business_connection_id: BusinessConnectionId,
         chat_id: C,
         message_id: MessageId,
-        checklist: InputChecklist,
+        checklist: InputChecklist
     ) -> Self::EditMessageChecklist
     where
         C: Into<ChatId>;
@@ -396,7 +398,7 @@ pub trait Requester {
         latitude: f64,
         longitude: f64,
         title: T,
-        address: A,
+        address: A
     ) -> Self::SendVenue
     where
         C: Into<Recipient>,
@@ -410,7 +412,7 @@ pub trait Requester {
         &self,
         chat_id: C,
         phone_number: P,
-        first_name: F,
+        first_name: F
     ) -> Self::SendContact
     where
         C: Into<Recipient>,
@@ -433,7 +435,7 @@ pub trait Requester {
         &self,
         business_connection_id: BusinessConnectionId,
         chat_id: C,
-        checklist: InputChecklist,
+        checklist: InputChecklist
     ) -> Self::SendChecklist
     where
         C: Into<ChatId>;
@@ -465,7 +467,7 @@ pub trait Requester {
     fn set_message_reaction<C>(
         &self,
         chat_id: C,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> Self::SetMessageReaction
     where
         C: Into<Recipient>;
@@ -518,7 +520,7 @@ pub trait Requester {
         &self,
         chat_id: C,
         user_id: UserId,
-        permissions: ChatPermissions,
+        permissions: ChatPermissions
     ) -> Self::RestrictChatMember
     where
         C: Into<Recipient>;
@@ -544,7 +546,7 @@ pub trait Requester {
         &self,
         chat_id: Ch,
         user_id: UserId,
-        custom_title: C,
+        custom_title: C
     ) -> Self::SetChatAdministratorCustomTitle
     where
         Ch: Into<Recipient>,
@@ -564,7 +566,7 @@ pub trait Requester {
     fn unban_chat_sender_chat<C, S>(
         &self,
         chat_id: C,
-        sender_chat_id: S,
+        sender_chat_id: S
     ) -> Self::UnbanChatSenderChat
     where
         C: Into<Recipient>,
@@ -576,7 +578,7 @@ pub trait Requester {
     fn set_chat_permissions<C>(
         &self,
         chat_id: C,
-        permissions: ChatPermissions,
+        permissions: ChatPermissions
     ) -> Self::SetChatPermissions
     where
         C: Into<Recipient>;
@@ -610,7 +612,7 @@ pub trait Requester {
         &self,
         chat_id: C,
         subscription_period: Seconds,
-        subscription_price: u32,
+        subscription_price: u32
     ) -> Self::CreateChatSubscriptionInviteLink
     where
         C: Into<Recipient>;
@@ -621,7 +623,7 @@ pub trait Requester {
     fn edit_chat_subscription_invite_link<C, I>(
         &self,
         chat_id: C,
-        invite_link: I,
+        invite_link: I
     ) -> Self::EditChatSubscriptionInviteLink
     where
         C: Into<Recipient>,
@@ -633,7 +635,7 @@ pub trait Requester {
     fn revoke_chat_invite_link<C, I>(
         &self,
         chat_id: C,
-        invite_link: I,
+        invite_link: I
     ) -> Self::RevokeChatInviteLink
     where
         C: Into<Recipient>,
@@ -645,7 +647,7 @@ pub trait Requester {
     fn approve_chat_join_request<C>(
         &self,
         chat_id: C,
-        user_id: UserId,
+        user_id: UserId
     ) -> Self::ApproveChatJoinRequest
     where
         C: Into<Recipient>;
@@ -656,7 +658,7 @@ pub trait Requester {
     fn decline_chat_join_request<C>(
         &self,
         chat_id: C,
-        user_id: UserId,
+        user_id: UserId
     ) -> Self::DeclineChatJoinRequest
     where
         C: Into<Recipient>;
@@ -745,7 +747,7 @@ pub trait Requester {
     fn delete_message_reaction<C>(
         &self,
         chat_id: C,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> Self::DeleteMessageReaction
     where
         C: Into<Recipient>;
@@ -777,7 +779,7 @@ pub trait Requester {
     fn set_chat_sticker_set<C, S>(
         &self,
         chat_id: C,
-        sticker_set_name: S,
+        sticker_set_name: S
     ) -> Self::SetChatStickerSet
     where
         C: Into<Recipient>,
@@ -816,7 +818,7 @@ pub trait Requester {
     fn close_forum_topic<C>(
         &self,
         chat_id: C,
-        message_thread_id: ThreadId,
+        message_thread_id: ThreadId
     ) -> Self::CloseForumTopic
     where
         C: Into<Recipient>;
@@ -827,7 +829,7 @@ pub trait Requester {
     fn reopen_forum_topic<C>(
         &self,
         chat_id: C,
-        message_thread_id: ThreadId,
+        message_thread_id: ThreadId
     ) -> Self::ReopenForumTopic
     where
         C: Into<Recipient>;
@@ -838,7 +840,7 @@ pub trait Requester {
     fn delete_forum_topic<C>(
         &self,
         chat_id: C,
-        message_thread_id: ThreadId,
+        message_thread_id: ThreadId
     ) -> Self::DeleteForumTopic
     where
         C: Into<Recipient>;
@@ -849,7 +851,7 @@ pub trait Requester {
     fn unpin_all_forum_topic_messages<C>(
         &self,
         chat_id: C,
-        message_thread_id: ThreadId,
+        message_thread_id: ThreadId
     ) -> Self::UnpinAllForumTopicMessages
     where
         C: Into<Recipient>;
@@ -895,7 +897,7 @@ pub trait Requester {
     /// For Telegram documentation see [`UnpinAllGeneralForumTopicMessages`].
     fn unpin_all_general_forum_topic_messages<C>(
         &self,
-        chat_id: C,
+        chat_id: C
     ) -> Self::UnpinAllGeneralForumTopicMessages
     where
         C: Into<Recipient>;
@@ -905,7 +907,7 @@ pub trait Requester {
     /// For Telegram documentation see [`AnswerCallbackQuery`].
     fn answer_callback_query(
         &self,
-        callback_query_id: CallbackQueryId,
+        callback_query_id: CallbackQueryId
     ) -> Self::AnswerCallbackQuery;
 
     type GetUserChatBoosts: Request<Payload = GetUserChatBoosts, Err = Self::Err>;
@@ -927,7 +929,7 @@ pub trait Requester {
     /// For Telegram documentation see [`GetBusinessConnection`].
     fn get_business_connection(
         &self,
-        business_connection_id: BusinessConnectionId,
+        business_connection_id: BusinessConnectionId
     ) -> Self::GetBusinessConnection;
 
     type GetMyCommands: Request<Payload = GetMyCommands, Err = Self::Err>;
@@ -991,14 +993,16 @@ pub trait Requester {
     fn get_user_personal_chat_messages(
         &self,
         user_id: UserId,
-        limit: u8,
+        limit: u8
     ) -> Self::GetUserPersonalChatMessages;
 
     type GetManagedBotAccessSettings: Request<Payload = GetManagedBotAccessSettings, Err = Self::Err>;
 
     /// For Telegram documentation see [`GetManagedBotAccessSettings`].
-    fn get_managed_bot_access_settings(&self, user_id: UserId)
-    -> Self::GetManagedBotAccessSettings;
+    fn get_managed_bot_access_settings(
+        &self,
+        user_id: UserId
+    ) -> Self::GetManagedBotAccessSettings;
 
     type SetManagedBotAccessSettings: Request<Payload = SetManagedBotAccessSettings, Err = Self::Err>;
 
@@ -1006,7 +1010,7 @@ pub trait Requester {
     fn set_managed_bot_access_settings(
         &self,
         user_id: UserId,
-        is_access_restricted: bool,
+        is_access_restricted: bool
     ) -> Self::SetManagedBotAccessSettings;
 
     type SetChatMenuButton: Request<Payload = SetChatMenuButton, Err = Self::Err>;
@@ -1040,7 +1044,7 @@ pub trait Requester {
     fn answer_inline_query<R>(
         &self,
         inline_query_id: InlineQueryId,
-        results: R,
+        results: R
     ) -> Self::AnswerInlineQuery
     where
         R: IntoIterator<Item = InlineQueryResult>;
@@ -1051,7 +1055,7 @@ pub trait Requester {
     fn answer_web_app_query<W>(
         &self,
         web_app_query_id: W,
-        result: InlineQueryResult,
+        result: InlineQueryResult
     ) -> Self::AnswerWebAppQuery
     where
         W: Into<String>;
@@ -1062,7 +1066,7 @@ pub trait Requester {
     fn answer_guest_query<G>(
         &self,
         guest_query_id: G,
-        result: InlineQueryResult,
+        result: InlineQueryResult
     ) -> Self::AnswerGuestQuery
     where
         G: Into<String>;
@@ -1073,7 +1077,7 @@ pub trait Requester {
     fn save_prepared_inline_message(
         &self,
         user_id: UserId,
-        result: InlineQueryResult,
+        result: InlineQueryResult
     ) -> Self::SavePreparedInlineMessage;
 
     type SavePreparedKeyboardButton: Request<Payload = SavePreparedKeyboardButton, Err = Self::Err>;
@@ -1082,7 +1086,7 @@ pub trait Requester {
     fn save_prepared_keyboard_button(
         &self,
         user_id: UserId,
-        button: KeyboardButton,
+        button: KeyboardButton
     ) -> Self::SavePreparedKeyboardButton;
 
     type EditMessageText: Request<Payload = EditMessageText, Err = Self::Err>;
@@ -1092,7 +1096,7 @@ pub trait Requester {
         &self,
         chat_id: C,
         message_id: MessageId,
-        text: T,
+        text: T
     ) -> Self::EditMessageText
     where
         C: Into<Recipient>,
@@ -1104,7 +1108,7 @@ pub trait Requester {
     fn edit_message_text_inline<I, T>(
         &self,
         inline_message_id: I,
-        text: T,
+        text: T
     ) -> Self::EditMessageTextInline
     where
         I: Into<String>,
@@ -1116,7 +1120,7 @@ pub trait Requester {
     fn edit_message_caption<C>(
         &self,
         chat_id: C,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> Self::EditMessageCaption
     where
         C: Into<Recipient>;
@@ -1126,7 +1130,7 @@ pub trait Requester {
     /// For Telegram documentation see [`EditMessageCaptionInline`].
     fn edit_message_caption_inline<I>(
         &self,
-        inline_message_id: I,
+        inline_message_id: I
     ) -> Self::EditMessageCaptionInline
     where
         I: Into<String>;
@@ -1138,7 +1142,7 @@ pub trait Requester {
         &self,
         chat_id: C,
         message_id: MessageId,
-        media: InputMedia,
+        media: InputMedia
     ) -> Self::EditMessageMedia
     where
         C: Into<Recipient>;
@@ -1149,7 +1153,7 @@ pub trait Requester {
     fn edit_message_media_inline<I>(
         &self,
         inline_message_id: I,
-        media: InputMedia,
+        media: InputMedia
     ) -> Self::EditMessageMediaInline
     where
         I: Into<String>;
@@ -1160,7 +1164,7 @@ pub trait Requester {
     fn edit_message_reply_markup<C>(
         &self,
         chat_id: C,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> Self::EditMessageReplyMarkup
     where
         C: Into<Recipient>;
@@ -1170,7 +1174,7 @@ pub trait Requester {
     /// For Telegram documentation see [`EditMessageReplyMarkupInline`].
     fn edit_message_reply_markup_inline<I>(
         &self,
-        inline_message_id: I,
+        inline_message_id: I
     ) -> Self::EditMessageReplyMarkupInline
     where
         I: Into<String>;
@@ -1188,7 +1192,7 @@ pub trait Requester {
     fn approve_suggested_post<C>(
         &self,
         chat_id: C,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> Self::ApproveSuggestedPost
     where
         C: Into<ChatId>;
@@ -1199,7 +1203,7 @@ pub trait Requester {
     fn decline_suggested_post<C>(
         &self,
         chat_id: C,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> Self::DeclineSuggestedPost
     where
         C: Into<ChatId>;
@@ -1247,7 +1251,7 @@ pub trait Requester {
         &self,
         user_id: UserId,
         sticker: InputFile,
-        sticker_format: StickerFormat,
+        sticker_format: StickerFormat
     ) -> Self::UploadStickerFile;
 
     type CreateNewStickerSet: Request<Payload = CreateNewStickerSet, Err = Self::Err>;
@@ -1258,7 +1262,7 @@ pub trait Requester {
         user_id: UserId,
         name: N,
         title: T,
-        stickers: S,
+        stickers: S
     ) -> Self::CreateNewStickerSet
     where
         N: Into<String>,
@@ -1272,7 +1276,7 @@ pub trait Requester {
         &self,
         user_id: UserId,
         name: N,
-        sticker: InputSticker,
+        sticker: InputSticker
     ) -> Self::AddStickerToSet
     where
         N: Into<String>;
@@ -1283,7 +1287,7 @@ pub trait Requester {
     fn set_sticker_position_in_set<S>(
         &self,
         sticker: S,
-        position: u32,
+        position: u32
     ) -> Self::SetStickerPositionInSet
     where
         S: Into<String>;
@@ -1303,7 +1307,7 @@ pub trait Requester {
         user_id: UserId,
         name: N,
         old_sticker: O,
-        sticker: InputSticker,
+        sticker: InputSticker
     ) -> Self::ReplaceStickerInSet
     where
         N: Into<String>,
@@ -1316,7 +1320,7 @@ pub trait Requester {
         &self,
         name: N,
         user_id: UserId,
-        format: StickerFormat,
+        format: StickerFormat
     ) -> Self::SetStickerSetThumbnail
     where
         N: Into<String>;
@@ -1326,7 +1330,7 @@ pub trait Requester {
     /// For Telegram documentation see [`SetCustomEmojiStickerSetThumbnail`].
     fn set_custom_emoji_sticker_set_thumbnail<N>(
         &self,
-        name: N,
+        name: N
     ) -> Self::SetCustomEmojiStickerSetThumbnail
     where
         N: Into<String>;
@@ -1392,7 +1396,7 @@ pub trait Requester {
         &self,
         user_id: UserId,
         month_count: u8,
-        star_count: u32,
+        star_count: u32
     ) -> Self::GiftPremiumSubscription;
 
     type VerifyUser: Request<Payload = VerifyUser, Err = Self::Err>;
@@ -1426,7 +1430,7 @@ pub trait Requester {
         &self,
         business_connection_id: BusinessConnectionId,
         chat_id: C,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> Self::ReadBusinessMessage
     where
         C: Into<ChatId>;
@@ -1437,7 +1441,7 @@ pub trait Requester {
     fn delete_business_messages<M>(
         &self,
         business_connection_id: BusinessConnectionId,
-        message_ids: M,
+        message_ids: M
     ) -> Self::DeleteBusinessMessages
     where
         M: IntoIterator<Item = MessageId>;
@@ -1448,7 +1452,7 @@ pub trait Requester {
     fn set_business_account_name<F>(
         &self,
         business_connection_id: BusinessConnectionId,
-        first_name: F,
+        first_name: F
     ) -> Self::SetBusinessAccountName
     where
         F: Into<String>;
@@ -1458,7 +1462,7 @@ pub trait Requester {
     /// For Telegram documentation see [`SetBusinessAccountUsername`].
     fn set_business_account_username(
         &self,
-        business_connection_id: BusinessConnectionId,
+        business_connection_id: BusinessConnectionId
     ) -> Self::SetBusinessAccountUsername;
 
     type SetBusinessAccountBio: Request<Payload = SetBusinessAccountBio, Err = Self::Err>;
@@ -1466,7 +1470,7 @@ pub trait Requester {
     /// For Telegram documentation see [`SetBusinessAccountBio`].
     fn set_business_account_bio(
         &self,
-        business_connection_id: BusinessConnectionId,
+        business_connection_id: BusinessConnectionId
     ) -> Self::SetBusinessAccountBio;
 
     type SetBusinessAccountProfilePhoto: Request<Payload = SetBusinessAccountProfilePhoto, Err = Self::Err>;
@@ -1475,7 +1479,7 @@ pub trait Requester {
     fn set_business_account_profile_photo(
         &self,
         business_connection_id: BusinessConnectionId,
-        photo: InputProfilePhoto,
+        photo: InputProfilePhoto
     ) -> Self::SetBusinessAccountProfilePhoto;
 
     type RemoveBusinessAccountProfilePhoto: Request<Payload = RemoveBusinessAccountProfilePhoto, Err = Self::Err>;
@@ -1483,7 +1487,7 @@ pub trait Requester {
     /// For Telegram documentation see [`RemoveBusinessAccountProfilePhoto`].
     fn remove_business_account_profile_photo(
         &self,
-        business_connection_id: BusinessConnectionId,
+        business_connection_id: BusinessConnectionId
     ) -> Self::RemoveBusinessAccountProfilePhoto;
 
     type SetBusinessAccountGiftSettings: Request<Payload = SetBusinessAccountGiftSettings, Err = Self::Err>;
@@ -1493,7 +1497,7 @@ pub trait Requester {
         &self,
         business_connection_id: BusinessConnectionId,
         show_gift_button: bool,
-        accepted_gift_types: AcceptedGiftTypes,
+        accepted_gift_types: AcceptedGiftTypes
     ) -> Self::SetBusinessAccountGiftSettings;
 
     type GetBusinessAccountStarBalance: Request<Payload = GetBusinessAccountStarBalance, Err = Self::Err>;
@@ -1501,7 +1505,7 @@ pub trait Requester {
     /// For Telegram documentation see [`GetBusinessAccountStarBalance`].
     fn get_business_account_star_balance(
         &self,
-        business_connection_id: BusinessConnectionId,
+        business_connection_id: BusinessConnectionId
     ) -> Self::GetBusinessAccountStarBalance;
 
     type TransferBusinessAccountStars: Request<Payload = TransferBusinessAccountStars, Err = Self::Err>;
@@ -1510,7 +1514,7 @@ pub trait Requester {
     fn transfer_business_account_stars(
         &self,
         business_connection_id: BusinessConnectionId,
-        star_count: u32,
+        star_count: u32
     ) -> Self::TransferBusinessAccountStars;
 
     type GetBusinessAccountGifts: Request<Payload = GetBusinessAccountGifts, Err = Self::Err>;
@@ -1518,7 +1522,7 @@ pub trait Requester {
     /// For Telegram documentation see [`GetBusinessAccountGifts`].
     fn get_business_account_gifts(
         &self,
-        business_connection_id: BusinessConnectionId,
+        business_connection_id: BusinessConnectionId
     ) -> Self::GetBusinessAccountGifts;
 
     type GetUserGifts: Request<Payload = GetUserGifts, Err = Self::Err>;
@@ -1539,7 +1543,7 @@ pub trait Requester {
     fn convert_gift_to_stars(
         &self,
         business_connection_id: BusinessConnectionId,
-        owned_gift_id: OwnedGiftId,
+        owned_gift_id: OwnedGiftId
     ) -> Self::ConvertGiftToStars;
 
     type UpgradeGift: Request<Payload = UpgradeGift, Err = Self::Err>;
@@ -1548,7 +1552,7 @@ pub trait Requester {
     fn upgrade_gift(
         &self,
         business_connection_id: BusinessConnectionId,
-        owned_gift_id: OwnedGiftId,
+        owned_gift_id: OwnedGiftId
     ) -> Self::UpgradeGift;
 
     type TransferGift: Request<Payload = TransferGift, Err = Self::Err>;
@@ -1558,7 +1562,7 @@ pub trait Requester {
         &self,
         business_connection_id: BusinessConnectionId,
         owned_gift_id: OwnedGiftId,
-        new_owner_chat_id: N,
+        new_owner_chat_id: N
     ) -> Self::TransferGift
     where
         N: Into<ChatId>;
@@ -1570,7 +1574,7 @@ pub trait Requester {
         &self,
         business_connection_id: BusinessConnectionId,
         content: InputStoryContent,
-        active_period: Seconds,
+        active_period: Seconds
     ) -> Self::PostStory;
 
     type RepostStory: Request<Payload = RepostStory, Err = Self::Err>;
@@ -1581,7 +1585,7 @@ pub trait Requester {
         business_connection_id: BusinessConnectionId,
         from_chat_id: F,
         from_story_id: StoryId,
-        active_period: Seconds,
+        active_period: Seconds
     ) -> Self::RepostStory
     where
         F: Into<ChatId>;
@@ -1593,7 +1597,7 @@ pub trait Requester {
         &self,
         business_connection_id: BusinessConnectionId,
         story_id: StoryId,
-        content: InputStoryContent,
+        content: InputStoryContent
     ) -> Self::EditStory;
 
     type DeleteStory: Request<Payload = DeleteStory, Err = Self::Err>;
@@ -1602,7 +1606,7 @@ pub trait Requester {
     fn delete_story(
         &self,
         business_connection_id: BusinessConnectionId,
-        story_id: StoryId,
+        story_id: StoryId
     ) -> Self::DeleteStory;
 
     type SendInvoice: Request<Payload = SendInvoice, Err = Self::Err>;
@@ -1615,7 +1619,7 @@ pub trait Requester {
         description: D,
         payload: Pa,
         currency: C,
-        prices: P,
+        prices: P
     ) -> Self::SendInvoice
     where
         Ch: Into<Recipient>,
@@ -1634,7 +1638,7 @@ pub trait Requester {
         description: D,
         payload: Pa,
         currency: C,
-        prices: P,
+        prices: P
     ) -> Self::CreateInvoiceLink
     where
         T: Into<String>,
@@ -1649,7 +1653,7 @@ pub trait Requester {
     fn answer_shipping_query(
         &self,
         shipping_query_id: ShippingQueryId,
-        ok: bool,
+        ok: bool
     ) -> Self::AnswerShippingQuery;
 
     type AnswerPreCheckoutQuery: Request<Payload = AnswerPreCheckoutQuery, Err = Self::Err>;
@@ -1658,7 +1662,7 @@ pub trait Requester {
     fn answer_pre_checkout_query(
         &self,
         pre_checkout_query_id: PreCheckoutQueryId,
-        ok: bool,
+        ok: bool
     ) -> Self::AnswerPreCheckoutQuery;
 
     type GetMyStarBalance: Request<Payload = GetMyStarBalance, Err = Self::Err>;
@@ -1677,7 +1681,7 @@ pub trait Requester {
     fn refund_star_payment(
         &self,
         user_id: UserId,
-        telegram_payment_charge_id: TelegramTransactionId,
+        telegram_payment_charge_id: TelegramTransactionId
     ) -> Self::RefundStarPayment;
 
     type EditUserStarSubscription: Request<Payload = EditUserStarSubscription, Err = Self::Err>;
@@ -1687,7 +1691,7 @@ pub trait Requester {
         &self,
         user_id: UserId,
         telegram_payment_charge_id: TelegramTransactionId,
-        is_canceled: bool,
+        is_canceled: bool
     ) -> Self::EditUserStarSubscription;
 
     type SetPassportDataErrors: Request<Payload = SetPassportDataErrors, Err = Self::Err>;
@@ -1696,7 +1700,7 @@ pub trait Requester {
     fn set_passport_data_errors<E>(
         &self,
         user_id: UserId,
-        errors: E,
+        errors: E
     ) -> Self::SetPassportDataErrors
     where
         E: IntoIterator<Item = PassportElementError>;
@@ -1717,7 +1721,7 @@ pub trait Requester {
         user_id: UserId,
         score: u64,
         chat_id: u32,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> Self::SetGameScore;
 
     type SetGameScoreInline: Request<Payload = SetGameScoreInline, Err = Self::Err>;
@@ -1727,7 +1731,7 @@ pub trait Requester {
         &self,
         user_id: UserId,
         score: u64,
-        inline_message_id: I,
+        inline_message_id: I
     ) -> Self::SetGameScoreInline
     where
         I: Into<String>;
@@ -1952,7 +1956,7 @@ macro_rules! forward_all {
 
 impl<B> Requester for &B
 where
-    B: Requester,
+    B: Requester
 {
     type Err = B::Err;
 
@@ -1961,7 +1965,7 @@ where
 
 impl<B> Requester for &mut B
 where
-    B: Requester,
+    B: Requester
 {
     type Err = B::Err;
 
@@ -1970,7 +1974,7 @@ where
 
 impl<B> Requester for Box<B>
 where
-    B: Requester,
+    B: Requester
 {
     type Err = B::Err;
 
@@ -1979,7 +1983,7 @@ where
 
 impl<B> Requester for std::sync::Arc<B>
 where
-    B: Requester,
+    B: Requester
 {
     type Err = B::Err;
 
@@ -1988,7 +1992,7 @@ where
 
 impl<B> Requester for std::rc::Rc<B>
 where
-    B: Requester,
+    B: Requester
 {
     type Err = B::Err;
 
@@ -2024,15 +2028,16 @@ where
 // waffle: efficiency is not important here, and I don't want to rewrite this
 #[allow(clippy::format_collect)]
 fn codegen_requester_methods() {
+    use indexmap::IndexMap;
+    use itertools::Itertools;
+
     use crate::codegen::{
         add_hidden_preamble,
         convert::{Convert, convert_for},
         ensure_file_contents, min_prefix, project_root, reformat, replace_block,
         schema::{self, Type},
-        to_uppercase,
+        to_uppercase
     };
-    use indexmap::IndexMap;
-    use itertools::Itertools;
 
     let schema = schema::get();
 
@@ -2066,7 +2071,7 @@ fn codegen_requester_methods() {
                 .filter(|p| !matches!(p.ty, schema::Type::Option(_)))
                 .map(|p| match prefixes.get(&*p.name) {
                     Some(prefix) => format!("{}: {}", p.name, to_uppercase(prefix)),
-                    None => format!("{}: {}", p.name, p.ty),
+                    None => format!("{}: {}", p.name, p.ty)
                 })
                 .join(", ");
 
@@ -2083,19 +2088,24 @@ fn codegen_requester_methods() {
                 .filter(|p| !matches!(p.ty, Type::Option(_)))
                 .flat_map(|p| match convert_for(&p.ty) {
                     Convert::Id(_) => None,
-                    Convert::Into(ty) => {
-                        Some(format!("{}: Into<{}>", to_uppercase(prefixes[&*p.name]), ty))
-                    }
+                    Convert::Into(ty) => Some(format!(
+                        "{}: Into<{}>",
+                        to_uppercase(prefixes[&*p.name]),
+                        ty
+                    )),
                     Convert::Collect(ty) => Some(format!(
                         "{}: IntoIterator<Item = {}>",
                         to_uppercase(prefixes[&*p.name]),
                         ty
-                    )),
+                    ))
                 })
                 .join(",\n        ");
 
-            let generics =
-                if generics.is_empty() { String::from("") } else { format!("<{generics}>") };
+            let generics = if generics.is_empty() {
+                String::from("")
+            } else {
+                format!("<{generics}>")
+            };
 
             let where_clause = if where_clause.is_empty() {
                 String::from("")
@@ -2123,7 +2133,7 @@ fn {method} {generics} (&self, {args}) -> Self::{Method}{where_clause};
         &reformat(replace_block(
             &path,
             "requester_methods",
-            &add_hidden_preamble("codegen_requester_methods", methods),
-        )),
+            &add_hidden_preamble("codegen_requester_methods", methods)
+        ))
     );
 }

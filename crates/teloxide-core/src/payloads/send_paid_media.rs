@@ -4,7 +4,7 @@ use serde::Serialize;
 
 use crate::types::{
     BusinessConnectionId, InputPaidMedia, Message, MessageEntity, ParseMode, Recipient,
-    ReplyMarkup, ReplyParameters, SuggestedPostParameters, ThreadId, TopicId,
+    ReplyMarkup, ReplyParameters, SuggestedPostParameters, ThreadId, TopicId
 };
 
 impl_payload! {

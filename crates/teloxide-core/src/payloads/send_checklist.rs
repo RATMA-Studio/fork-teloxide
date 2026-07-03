@@ -3,7 +3,7 @@
 use serde::Serialize;
 
 use crate::types::{
-    BusinessConnectionId, ChatId, EffectId, InputChecklist, Message, ReplyMarkup, ReplyParameters,
+    BusinessConnectionId, ChatId, EffectId, InputChecklist, Message, ReplyMarkup, ReplyParameters
 };
 
 impl_payload! {
