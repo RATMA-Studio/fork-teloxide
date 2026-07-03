@@ -5,10 +5,20 @@ use crate::types::UserId;
 /// Identifier of a chat.
 ///
 /// Note that "a chat" here means any of group, supergroup, channel or user PM.
-#[derive(Clone, Copy, Default)]
-#[derive(Debug, derive_more::Display)]
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(
+    Clone,
+    Copy,
+    Default,
+    Debug,
+    derive_more::Display,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    Hash,
+    Serialize,
+    Deserialize,
+)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(transparent)]
 pub struct ChatId(pub i64);
@@ -27,7 +37,7 @@ pub(crate) enum BareChatId {
     User(UserId),
     Group(u64),
     /// Note: supergroups are considered channels.
-    Channel(u64),
+    Channel(u64)
 }
 
 impl ChatId {
@@ -56,7 +66,7 @@ impl ChatId {
     pub fn as_user(self) -> Option<UserId> {
         match self.to_bare()? {
             BareChatId::User(u) => Some(u),
-            BareChatId::Group(_) | BareChatId::Channel(_) => None,
+            BareChatId::Group(_) | BareChatId::Channel(_) => None
         }
     }
 
@@ -77,7 +87,7 @@ impl ChatId {
                 Channel((MAX_MARKED_CHANNEL_ID - id) as _)
             }
             id @ MIN_USER_ID..=MAX_USER_ID => User(UserId(id as _)),
-            _ => return None,
+            _ => return None
         };
         Some(bare)
     }
@@ -104,7 +114,7 @@ impl BareChatId {
         match self {
             User(UserId(id)) => ChatId(id as _),
             Group(id) => ChatId(-(id as i64)),
-            Channel(id) => ChatId(MAX_MARKED_CHANNEL_ID - (id as i64)),
+            Channel(id) => ChatId(MAX_MARKED_CHANNEL_ID - (id as i64))
         }
     }
 }
@@ -126,12 +136,14 @@ mod tests {
     /// Test that `ChatId` is serialized as the underlying integer
     #[test]
     fn deser() {
-        let chat_id = S { chat_id: ChatId(0xAA) };
+        let chat_id = S {
+            chat_id: ChatId(0xAA)
+        };
         let json = r#"{"chat_id":170}"#;
 
         #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
         struct S {
-            chat_id: ChatId,
+            chat_id: ChatId
         }
 
         assert_eq!(serde_json::to_string(&chat_id).unwrap(), json);
@@ -140,7 +152,10 @@ mod tests {
 
     #[test]
     fn chonky_user_id_to_bare() {
-        assert!(matches!(ChatId(5298363099).to_bare(), Some(BareChatId::User(UserId(5298363099)))));
+        assert!(matches!(
+            ChatId(5298363099).to_bare(),
+            Some(BareChatId::User(UserId(5298363099)))
+        ));
     }
 
     #[test]
@@ -156,14 +171,28 @@ mod tests {
         fn assert_identity(x: u64) {
             use BareChatId::*;
 
-            assert_eq!(Some(User(UserId(x))), User(UserId(x)).to_bot_api().to_bare());
+            assert_eq!(
+                Some(User(UserId(x))),
+                User(UserId(x)).to_bot_api().to_bare()
+            );
             assert_eq!(Some(Group(x)), Group(x).to_bot_api().to_bare());
             assert_eq!(Some(Channel(x)), Channel(x).to_bot_api().to_bare());
         }
 
         // Somewhat random numbers
-        let ids =
-            [1, 4, 17, 34, 51, 777000, 1000000, 617136926, 1666111087, 1 << 20, (1 << 35) | 123456];
+        let ids = [
+            1,
+            4,
+            17,
+            34,
+            51,
+            777000,
+            1000000,
+            617136926,
+            1666111087,
+            1 << 20,
+            (1 << 35) | 123456
+        ];
 
         // rust 2021 when :(
         ids.iter().copied().for_each(assert_identity);

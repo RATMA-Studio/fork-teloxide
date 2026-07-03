@@ -22,7 +22,7 @@ pub struct SuggestedPostInfo {
     /// the user or administrator who approves it.
     #[serde(with = "crate::types::serde_opt_date_from_unix_timestamp")]
     #[cfg_attr(test, schemars(with = "Option<i64>"))]
-    pub send_date: Option<DateTime<Utc>>,
+    pub send_date: Option<DateTime<Utc>>
 }
 
 /// State of the suggested post
@@ -33,5 +33,5 @@ pub struct SuggestedPostInfo {
 pub enum SuggestedPostState {
     Pending,
     Approved,
-    Declined,
+    Declined
 }

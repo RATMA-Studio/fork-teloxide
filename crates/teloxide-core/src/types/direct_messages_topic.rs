@@ -3,10 +3,19 @@ use serde::{Deserialize, Serialize};
 use crate::types::User;
 
 /// Unique identifier of the topic.
-#[derive(Clone, Copy)]
-#[derive(Debug, derive_more::Display)]
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(
+    Clone,
+    Copy,
+    Debug,
+    derive_more::Display,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    Hash,
+    Serialize,
+    Deserialize,
+)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(transparent)]
 pub struct TopicId(pub i32);
@@ -23,5 +32,5 @@ pub struct DirectMessagesTopic {
 
     /// Information about the user that created the topic. Currently, it is
     /// always present
-    pub user: Option<User>,
+    pub user: Option<User>
 }

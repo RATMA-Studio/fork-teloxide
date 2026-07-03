@@ -5,16 +5,7 @@ use crate::types::{ChatType, Location, User};
 
 /// Unique query identifier.
 #[derive(
-    Default,
-    Clone,
-    Debug,
-    derive_more::Display,
-    PartialEq,
-    Eq,
-    Hash,
-    Serialize,
-    Deserialize,
-    From
+    Default, Clone, Debug, derive_more::Display, PartialEq, Eq, Hash, Serialize, Deserialize, From,
 )]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(transparent)]
@@ -51,5 +42,5 @@ pub struct InlineQuery {
     /// The chat type should be always known for requests sent from official
     /// clients and most third-party clients, unless the request was sent
     /// from a secret chat.
-    pub chat_type: Option<ChatType>,
+    pub chat_type: Option<ChatType>
 }

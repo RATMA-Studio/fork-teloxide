@@ -5,7 +5,7 @@ use serde::{Serialize, de::DeserializeOwned};
 use crate::{
     RequestError,
     bot::Bot,
-    requests::{HasPayload, Payload, Request, ResponseResult},
+    requests::{HasPayload, Payload, Request, ResponseResult}
 };
 
 /// A ready-to-send Telegram request whose payload is sent using [JSON].
@@ -14,13 +14,16 @@ use crate::{
 #[must_use = "Requests are lazy and do nothing unless sent"]
 #[derive(Clone)]
 pub struct JsonRequest<P> {
-    bot: Bot,
-    payload: P,
+    bot:     Bot,
+    payload: P
 }
 
 impl<P> JsonRequest<P> {
     pub const fn new(bot: Bot, payload: P) -> Self {
-        Self { bot, payload }
+        Self {
+            bot,
+            payload
+        }
     }
 }
 
@@ -36,7 +39,7 @@ where
     // non-'static payloads)
     P: 'static,
     P: Payload + Serialize,
-    P::Output: DeserializeOwned,
+    P::Output: DeserializeOwned
 {
     type Err = RequestError;
     type Send = Send<P>;
@@ -55,7 +58,7 @@ impl<P> IntoFuture for JsonRequest<P>
 where
     P: 'static,
     P: Payload + Serialize,
-    P::Output: DeserializeOwned,
+    P::Output: DeserializeOwned
 {
     type Output = Result<P::Output, RequestError>;
     type IntoFuture = <Self as Request>::Send;
@@ -67,7 +70,7 @@ where
 
 impl<P> HasPayload for JsonRequest<P>
 where
-    P: Payload,
+    P: Payload
 {
     type Payload = P;
 

@@ -22,7 +22,7 @@ mod tests {
         let cases = [
             (1, Duration::from_secs(2)),
             (5, Duration::from_secs(32)),
-            (42, Duration::from_secs(64)),
+            (42, Duration::from_secs(64))
         ];
 
         for (error_count, expected) in cases {

@@ -2,7 +2,7 @@ use serde::Serialize;
 
 use crate::types::{
     InputFile, InputMediaAnimation, InputMediaAudio, InputMediaDocument, InputMediaLivePhoto,
-    InputMediaLocation, InputMediaPhoto, InputMediaVenue, InputMediaVideo,
+    InputMediaLocation, InputMediaPhoto, InputMediaVenue, InputMediaVideo
 };
 
 /// Represents the content of a poll description or a quiz explanation to be
@@ -22,7 +22,7 @@ pub enum InputPollMedia {
     Location(InputMediaLocation),
     Photo(InputMediaPhoto),
     Venue(InputMediaVenue),
-    Video(InputMediaVideo),
+    Video(InputMediaVideo)
 }
 
 impl InputPollMedia {
@@ -32,13 +32,35 @@ impl InputPollMedia {
         use InputPollMedia::*;
 
         let pair: (Option<&InputFile>, Option<&InputFile>) = match self {
-            Photo(InputMediaPhoto { media, .. }) => (Some(media), None),
-            Document(InputMediaDocument { media, thumbnail, .. })
-            | Audio(InputMediaAudio { media, thumbnail, .. })
-            | Animation(InputMediaAnimation { media, thumbnail, .. })
-            | Video(InputMediaVideo { media, thumbnail, .. }) => (Some(media), thumbnail.as_ref()),
-            LivePhoto(InputMediaLivePhoto { media, photo, .. }) => (Some(media), Some(photo)),
-            Location(_) | Venue(_) => (None, None),
+            Photo(InputMediaPhoto {
+                media, ..
+            }) => (Some(media), None),
+            Document(InputMediaDocument {
+                media,
+                thumbnail,
+                ..
+            })
+            | Audio(InputMediaAudio {
+                media,
+                thumbnail,
+                ..
+            })
+            | Animation(InputMediaAnimation {
+                media,
+                thumbnail,
+                ..
+            })
+            | Video(InputMediaVideo {
+                media,
+                thumbnail,
+                ..
+            }) => (Some(media), thumbnail.as_ref()),
+            LivePhoto(InputMediaLivePhoto {
+                media,
+                photo,
+                ..
+            }) => (Some(media), Some(photo)),
+            Location(_) | Venue(_) => (None, None)
         };
 
         pair.0.into_iter().chain(pair.1)
@@ -50,13 +72,35 @@ impl InputPollMedia {
         use InputPollMedia::*;
 
         let pair: (Option<&mut InputFile>, Option<&mut InputFile>) = match self {
-            Photo(InputMediaPhoto { media, .. }) => (Some(media), None),
-            Document(InputMediaDocument { media, thumbnail, .. })
-            | Audio(InputMediaAudio { media, thumbnail, .. })
-            | Animation(InputMediaAnimation { media, thumbnail, .. })
-            | Video(InputMediaVideo { media, thumbnail, .. }) => (Some(media), thumbnail.as_mut()),
-            LivePhoto(InputMediaLivePhoto { media, photo, .. }) => (Some(media), Some(photo)),
-            Location(_) | Venue(_) => (None, None),
+            Photo(InputMediaPhoto {
+                media, ..
+            }) => (Some(media), None),
+            Document(InputMediaDocument {
+                media,
+                thumbnail,
+                ..
+            })
+            | Audio(InputMediaAudio {
+                media,
+                thumbnail,
+                ..
+            })
+            | Animation(InputMediaAnimation {
+                media,
+                thumbnail,
+                ..
+            })
+            | Video(InputMediaVideo {
+                media,
+                thumbnail,
+                ..
+            }) => (Some(media), thumbnail.as_mut()),
+            LivePhoto(InputMediaLivePhoto {
+                media,
+                photo,
+                ..
+            }) => (Some(media), Some(photo)),
+            Location(_) | Venue(_) => (None, None)
         };
 
         pair.0.into_iter().chain(pair.1)

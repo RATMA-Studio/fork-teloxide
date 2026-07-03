@@ -10,5 +10,5 @@ pub struct BusinessOpeningHours {
     pub time_zone_name: String,
 
     /// List of time intervals describing business opening hours.
-    pub opening_hours: Vec<BusinessOpeningHoursInterval>,
+    pub opening_hours: Vec<BusinessOpeningHoursInterval>
 }

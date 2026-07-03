@@ -21,5 +21,5 @@ pub struct SuggestedPostApproved {
     /// Date when the post will be published
     #[serde(with = "crate::types::serde_date_from_unix_timestamp")]
     #[cfg_attr(test, schemars(with = "i64"))]
-    pub send_date: DateTime<Utc>,
+    pub send_date: DateTime<Utc>
 }

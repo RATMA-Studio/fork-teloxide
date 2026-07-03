@@ -16,7 +16,7 @@ pub struct ChatMember {
 
     /// The member's status in the chat.
     #[serde(flatten)]
-    pub kind: ChatMemberKind,
+    pub kind: ChatMemberKind
 }
 
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Serialize, Deserialize)]
@@ -32,7 +32,7 @@ pub enum ChatMemberKind {
     Restricted(Restricted),
     Left,
     #[serde(rename = "kicked")]
-    Banned(Banned),
+    Banned(Banned)
 }
 
 /// Owner of the group. This struct is part of the [`ChatMemberKind`] enum.
@@ -44,7 +44,7 @@ pub struct Owner {
     pub custom_title: Option<String>,
 
     /// True, if the user's presence in the chat is hidden
-    pub is_anonymous: bool,
+    pub is_anonymous: bool
 }
 
 /// Administrator of the group. This struct is part of the [`ChatMemberKind`]
@@ -129,7 +129,7 @@ pub struct Administrator {
     /// `true`, if the administrator can edit the tags of regular members;
     /// for groups and supergroups only.
     #[serde(default)]
-    pub can_manage_tags: bool,
+    pub can_manage_tags: bool
 }
 
 /// Represents a chat member that has no additional privileges or restrictions.
@@ -142,7 +142,7 @@ pub struct Member {
     pub until_date: Option<UntilDate>,
 
     /// Tag of the member.
-    pub tag: Option<String>,
+    pub tag: Option<String>
 }
 
 /// User, restricted in the group. This struct is part of the [`ChatMemberKind`]
@@ -213,7 +213,7 @@ pub struct Restricted {
 
     /// `true`, if the user is allowed to react to messages.
     #[serde(default)]
-    pub can_react_to_messages: bool,
+    pub can_react_to_messages: bool
 }
 
 /// User that was banned in the chat and can't return to it or view chat
@@ -223,7 +223,7 @@ pub struct Restricted {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct Banned {
     /// Date when restrictions will be lifted for this user.
-    pub until_date: UntilDate,
+    pub until_date: UntilDate
 }
 
 /// This allows calling [`ChatMemberKind`]'s methods directly on [`ChatMember`].
@@ -255,7 +255,7 @@ impl ChatMemberKind {
             ChatMemberKind::Member(_) => ChatMemberStatus::Member,
             ChatMemberKind::Restricted(_) => ChatMemberStatus::Restricted,
             ChatMemberKind::Left => ChatMemberStatus::Left,
-            ChatMemberKind::Banned(_) => ChatMemberStatus::Banned,
+            ChatMemberKind::Banned(_) => ChatMemberStatus::Banned
         }
     }
 
@@ -344,8 +344,13 @@ impl ChatMemberKind {
     /// [restricted]: ChatMemberKind::Restricted
     #[must_use]
     pub fn is_present(&self) -> bool {
-        let is_restricted_non_member =
-            matches!(self, Self::Restricted(Restricted { is_member: false, .. }));
+        let is_restricted_non_member = matches!(
+            self,
+            Self::Restricted(Restricted {
+                is_member: false,
+                ..
+            })
+        );
 
         !(self.is_left() || self.is_banned() || is_restricted_non_member)
     }
@@ -357,9 +362,13 @@ impl ChatMemberKind {
     #[must_use]
     pub fn custom_title(&self) -> Option<&str> {
         match &self {
-            Self::Administrator(Administrator { custom_title, .. })
-            | Self::Owner(Owner { custom_title, .. }) => custom_title.as_deref(),
-            Self::Member(_) | Self::Restricted(_) | Self::Left | Self::Banned(_) => None,
+            Self::Administrator(Administrator {
+                custom_title, ..
+            })
+            | Self::Owner(Owner {
+                custom_title, ..
+            }) => custom_title.as_deref(),
+            Self::Member(_) | Self::Restricted(_) | Self::Left | Self::Banned(_) => None
         }
     }
 
@@ -373,9 +382,13 @@ impl ChatMemberKind {
     #[must_use]
     pub fn is_anonymous(&self) -> bool {
         match self {
-            Self::Owner(Owner { is_anonymous, .. })
-            | Self::Administrator(Administrator { is_anonymous, .. }) => *is_anonymous,
-            Self::Member(_) | Self::Restricted(_) | Self::Left | Self::Banned(_) => false,
+            Self::Owner(Owner {
+                is_anonymous, ..
+            })
+            | Self::Administrator(Administrator {
+                is_anonymous, ..
+            }) => *is_anonymous,
+            Self::Member(_) | Self::Restricted(_) | Self::Left | Self::Banned(_) => false
         }
     }
 
@@ -386,11 +399,20 @@ impl ChatMemberKind {
         match &self {
             Self::Owner(_)
             | Self::Administrator(_)
-            | Self::Member(Member { until_date: None, .. })
+            | Self::Member(Member {
+                until_date: None, ..
+            })
             | Self::Left => None,
-            Self::Restricted(Restricted { until_date, .. })
-            | Self::Member(Member { until_date: Some(until_date), .. })
-            | Self::Banned(Banned { until_date, .. }) => Some(*until_date),
+            Self::Restricted(Restricted {
+                until_date, ..
+            })
+            | Self::Member(Member {
+                until_date: Some(until_date),
+                ..
+            })
+            | Self::Banned(Banned {
+                until_date, ..
+            }) => Some(*until_date)
         }
     }
 }
@@ -402,13 +424,15 @@ impl ChatMemberKind {
     #[must_use]
     pub fn can_be_edited(&self) -> bool {
         match self {
-            Self::Administrator(Administrator { can_be_edited, .. }) => *can_be_edited,
+            Self::Administrator(Administrator {
+                can_be_edited, ..
+            }) => *can_be_edited,
             // Owner can't ever be edited by any bot.
             Self::Owner(_)
             | Self::Member(_)
             | Self::Restricted(_)
             | Self::Left
-            | Self::Banned(_) => false,
+            | Self::Banned(_) => false
         }
     }
 
@@ -429,8 +453,10 @@ impl ChatMemberKind {
     pub fn can_manage_chat(&self) -> bool {
         match self {
             Self::Owner(_) => true,
-            Self::Administrator(Administrator { can_manage_chat, .. }) => *can_manage_chat,
-            Self::Member(_) | Self::Restricted(_) | Self::Left | Self::Banned(_) => false,
+            Self::Administrator(Administrator {
+                can_manage_chat, ..
+            }) => *can_manage_chat,
+            Self::Member(_) | Self::Restricted(_) | Self::Left | Self::Banned(_) => false
         }
     }
 
@@ -448,8 +474,10 @@ impl ChatMemberKind {
     pub fn can_post_messages(&self) -> bool {
         match self {
             Self::Owner(_) => true,
-            Self::Administrator(Administrator { can_post_messages, .. }) => *can_post_messages,
-            Self::Member(_) | Self::Restricted(_) | Self::Left | Self::Banned(_) => false,
+            Self::Administrator(Administrator {
+                can_post_messages, ..
+            }) => *can_post_messages,
+            Self::Member(_) | Self::Restricted(_) | Self::Left | Self::Banned(_) => false
         }
     }
 
@@ -468,8 +496,10 @@ impl ChatMemberKind {
     pub fn can_edit_messages(&self) -> bool {
         match self {
             Self::Owner(_) => true,
-            Self::Administrator(Administrator { can_edit_messages, .. }) => *can_edit_messages,
-            Self::Member(_) | Self::Restricted(_) | Self::Left | Self::Banned(_) => false,
+            Self::Administrator(Administrator {
+                can_edit_messages, ..
+            }) => *can_edit_messages,
+            Self::Member(_) | Self::Restricted(_) | Self::Left | Self::Banned(_) => false
         }
     }
 
@@ -487,8 +517,11 @@ impl ChatMemberKind {
     pub fn can_delete_messages(&self) -> bool {
         match self {
             Self::Owner(_) => true,
-            Self::Administrator(Administrator { can_delete_messages, .. }) => *can_delete_messages,
-            Self::Member(_) | Self::Restricted(_) | Self::Left | Self::Banned(_) => false,
+            Self::Administrator(Administrator {
+                can_delete_messages,
+                ..
+            }) => *can_delete_messages,
+            Self::Member(_) | Self::Restricted(_) | Self::Left | Self::Banned(_) => false
         }
     }
 
@@ -506,8 +539,10 @@ impl ChatMemberKind {
     pub fn can_post_stories(&self) -> bool {
         match self {
             Self::Owner(_) => true,
-            Self::Administrator(Administrator { can_post_stories, .. }) => *can_post_stories,
-            Self::Member(_) | Self::Restricted(_) | Self::Left | Self::Banned(_) => false,
+            Self::Administrator(Administrator {
+                can_post_stories, ..
+            }) => *can_post_stories,
+            Self::Member(_) | Self::Restricted(_) | Self::Left | Self::Banned(_) => false
         }
     }
 
@@ -526,8 +561,10 @@ impl ChatMemberKind {
     pub fn can_edit_stories(&self) -> bool {
         match self {
             Self::Owner(_) => true,
-            Self::Administrator(Administrator { can_edit_stories, .. }) => *can_edit_stories,
-            Self::Member(_) | Self::Restricted(_) | Self::Left | Self::Banned(_) => false,
+            Self::Administrator(Administrator {
+                can_edit_stories, ..
+            }) => *can_edit_stories,
+            Self::Member(_) | Self::Restricted(_) | Self::Left | Self::Banned(_) => false
         }
     }
 
@@ -546,8 +583,10 @@ impl ChatMemberKind {
     pub fn can_delete_stories(&self) -> bool {
         match self {
             Self::Owner(_) => true,
-            Self::Administrator(Administrator { can_delete_stories, .. }) => *can_delete_stories,
-            Self::Member(_) | Self::Restricted(_) | Self::Left | Self::Banned(_) => false,
+            Self::Administrator(Administrator {
+                can_delete_stories, ..
+            }) => *can_delete_stories,
+            Self::Member(_) | Self::Restricted(_) | Self::Left | Self::Banned(_) => false
         }
     }
 
@@ -565,10 +604,11 @@ impl ChatMemberKind {
     pub fn can_manage_video_chats(&self) -> bool {
         match self {
             Self::Owner(_) => true,
-            Self::Administrator(Administrator { can_manage_video_chats, .. }) => {
-                *can_manage_video_chats
-            }
-            Self::Member(_) | Self::Restricted(_) | Self::Left | Self::Banned(_) => false,
+            Self::Administrator(Administrator {
+                can_manage_video_chats,
+                ..
+            }) => *can_manage_video_chats,
+            Self::Member(_) | Self::Restricted(_) | Self::Left | Self::Banned(_) => false
         }
     }
 
@@ -586,10 +626,11 @@ impl ChatMemberKind {
     pub fn can_restrict_members(&self) -> bool {
         match self {
             Self::Owner(_) => true,
-            Self::Administrator(Administrator { can_restrict_members, .. }) => {
-                *can_restrict_members
-            }
-            Self::Member(_) | Self::Restricted(_) | Self::Left | Self::Banned(_) => false,
+            Self::Administrator(Administrator {
+                can_restrict_members,
+                ..
+            }) => *can_restrict_members,
+            Self::Member(_) | Self::Restricted(_) | Self::Left | Self::Banned(_) => false
         }
     }
 
@@ -610,8 +651,11 @@ impl ChatMemberKind {
     pub fn can_promote_members(&self) -> bool {
         match self {
             Self::Owner(_) => true,
-            Self::Administrator(Administrator { can_promote_members, .. }) => *can_promote_members,
-            Self::Member(_) | Self::Restricted(_) | Self::Left | Self::Banned(_) => false,
+            Self::Administrator(Administrator {
+                can_promote_members,
+                ..
+            }) => *can_promote_members,
+            Self::Member(_) | Self::Restricted(_) | Self::Left | Self::Banned(_) => false
         }
     }
 }
@@ -627,7 +671,7 @@ pub enum ChatMemberStatus {
     Restricted,
     Left,
     #[serde(rename = "kicked")]
-    Banned,
+    Banned
 }
 
 /// Simple methods for checking a user status.
@@ -712,9 +756,8 @@ impl ChatMemberStatus {
 
 #[cfg(test)]
 mod tests {
-    use crate::types::UserId;
-
     use super::*;
+    use crate::types::UserId;
 
     #[test]
     fn deserialize_administrator() {
@@ -753,29 +796,29 @@ mod tests {
                 can_manage_bots: false,
                 has_topics_enabled: false,
                 allows_users_to_create_topics: false,
-                supports_guest_queries: false,
+                supports_guest_queries: false
             },
             kind: ChatMemberKind::Administrator(Administrator {
-                custom_title: None,
-                is_anonymous: false,
-                can_be_edited: false,
-                can_manage_chat: true,
-                can_change_info: true,
-                can_post_messages: false,
-                can_edit_messages: false,
-                can_delete_messages: true,
-                can_post_stories: false,
-                can_edit_stories: false,
-                can_delete_stories: false,
-                can_manage_video_chats: true,
-                can_invite_users: true,
-                can_restrict_members: true,
-                can_pin_messages: true,
-                can_promote_members: true,
+                custom_title:               None,
+                is_anonymous:               false,
+                can_be_edited:              false,
+                can_manage_chat:            true,
+                can_change_info:            true,
+                can_post_messages:          false,
+                can_edit_messages:          false,
+                can_delete_messages:        true,
+                can_post_stories:           false,
+                can_edit_stories:           false,
+                can_delete_stories:         false,
+                can_manage_video_chats:     true,
+                can_invite_users:           true,
+                can_restrict_members:       true,
+                can_pin_messages:           true,
+                can_promote_members:        true,
                 can_manage_direct_messages: true,
-                can_manage_topics: false,
-                can_manage_tags: false,
-            }),
+                can_manage_topics:          false,
+                can_manage_tags:            false
+            })
         };
         let actual = serde_json::from_str::<ChatMember>(json).unwrap();
         assert_eq!(actual, expected)
@@ -824,7 +867,7 @@ mod tests {
                 can_manage_bots: false,
                 has_topics_enabled: false,
                 allows_users_to_create_topics: false,
-                supports_guest_queries: false,
+                supports_guest_queries: false
             },
             kind: ChatMemberKind::Restricted(Restricted {
                 is_member: true,
@@ -843,12 +886,12 @@ mod tests {
                 can_invite_users: true,
                 can_pin_messages: true,
                 until_date: UntilDate::Date(
-                    chrono::DateTime::from_timestamp(1620000000, 0).unwrap(),
+                    chrono::DateTime::from_timestamp(1620000000, 0).unwrap()
                 ),
                 tag: None,
                 can_edit_tag: false,
-                can_react_to_messages: false,
-            }),
+                can_react_to_messages: false
+            })
         };
         let actual = serde_json::from_str::<ChatMember>(json).unwrap();
         assert_eq!(actual, expected)

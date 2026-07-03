@@ -20,12 +20,12 @@
 //!     Start,
 //!     ReceiveFullName,
 //!     ReceiveAge {
-//!         full_name: String,
+//!         full_name: String
 //!     },
 //!     ReceiveLocation {
 //!         full_name: String,
-//!         age: u8,
-//!     },
+//!         age:       u8
+//!     }
 //! }
 //! ```
 //!
@@ -41,12 +41,18 @@
 //!     bot: Bot,
 //!     dialogue: MyDialogue,
 //!     full_name: String, // Available from `State::ReceiveAge`.
-//!     msg: Message,
+//!     msg: Message
 //! ) -> HandlerResult {
 //!     match msg.text().map(|text| text.parse::<u8>()) {
 //!         Some(Ok(age)) => {
-//!             bot.send_message(msg.chat.id, "What's your location?").await?;
-//!             dialogue.update(State::ReceiveLocation { full_name, age }).await?;
+//!             bot.send_message(msg.chat.id, "What's your location?")
+//!                 .await?;
+//!             dialogue
+//!                 .update(State::ReceiveLocation {
+//!                     full_name,
+//!                     age
+//!                 })
+//!                 .await?;
 //!         }
 //!         _ => {
 //!             bot.send_message(msg.chat.id, "Send me a number.").await?;
@@ -73,17 +79,20 @@
 //!     bot: Bot,
 //!     dialogue: MyDialogue,
 //!     (full_name, age): (String, u8), // Available from `State::ReceiveLocation`.
-//!     msg: Message,
+//!     msg: Message
 //! ) -> HandlerResult {
 //!     match msg.text() {
 //!         Some(location) => {
-//!             let message =
-//!                 format!("Full name: {}\nAge: {}\nLocation: {}", full_name, age, location);
+//!             let message = format!(
+//!                 "Full name: {}\nAge: {}\nLocation: {}",
+//!                 full_name, age, location
+//!             );
 //!             bot.send_message(msg.chat.id, message).await?;
 //!             dialogue.exit().await?;
 //!         }
 //!         None => {
-//!             bot.send_message(msg.chat.id, "Send me a text message.").await?;
+//!             bot.send_message(msg.chat.id, "Send me a text message.")
+//!                 .await?;
 //!         }
 //!     }
 //!
@@ -93,23 +102,25 @@
 //!
 //! [`examples/dialogue.rs`]: https://github.com/teloxide/teloxide/blob/master/crates/teloxide/examples/dialogue.rs
 
-#[cfg(feature = "redis-storage")]
-pub use self::{RedisStorage, RedisStorageError};
-
-#[cfg(any(feature = "sqlite-storage-nativetls", feature = "sqlite-storage-rustls"))]
-pub use self::{SqliteStorage, SqliteStorageError};
-
-#[cfg(any(feature = "postgres-storage-nativetls", feature = "postgres-storage-rustls"))]
-pub use self::{PostgresStorage, PostgresStorageError};
-
-pub use get_chat_id::GetChatId;
-pub use storage::*;
-
-use dptree::Handler;
-use teloxide_core::types::ChatId;
-
 use std::{fmt::Debug, marker::PhantomData, sync::Arc};
 
+use dptree::Handler;
+pub use get_chat_id::GetChatId;
+pub use storage::*;
+use teloxide_core::types::ChatId;
+
+#[cfg(any(
+    feature = "postgres-storage-nativetls",
+    feature = "postgres-storage-rustls"
+))]
+pub use self::{PostgresStorage, PostgresStorageError};
+#[cfg(feature = "redis-storage")]
+pub use self::{RedisStorage, RedisStorageError};
+#[cfg(any(
+    feature = "sqlite-storage-nativetls",
+    feature = "sqlite-storage-rustls"
+))]
+pub use self::{SqliteStorage, SqliteStorageError};
 use super::DpHandlerDescription;
 
 mod get_chat_id;
@@ -121,34 +132,42 @@ const TELOXIDE_DIALOGUE_BEHAVIOUR: &str = "TELOXIDE_DIALOGUE_BEHAVIOUR";
 #[derive(Debug)]
 pub struct Dialogue<D, S>
 where
-    S: ?Sized,
+    S: ?Sized
 {
-    storage: Arc<S>,
-    chat_id: ChatId,
-    _phantom: PhantomData<D>,
+    storage:  Arc<S>,
+    chat_id:  ChatId,
+    _phantom: PhantomData<D>
 }
 
 // `#[derive]` requires generics to implement `Clone`, but `S` is wrapped around
 // `Arc`, and `D` is wrapped around PhantomData.
 impl<D, S> Clone for Dialogue<D, S>
 where
-    S: ?Sized,
+    S: ?Sized
 {
     fn clone(&self) -> Self {
-        Dialogue { storage: self.storage.clone(), chat_id: self.chat_id, _phantom: PhantomData }
+        Dialogue {
+            storage:  self.storage.clone(),
+            chat_id:  self.chat_id,
+            _phantom: PhantomData
+        }
     }
 }
 
 impl<D, S> Dialogue<D, S>
 where
     D: Send + 'static,
-    S: Storage<D> + ?Sized,
+    S: Storage<D> + ?Sized
 {
     /// Constructs a new dialogue with `storage` (where dialogues are stored)
     /// and `chat_id` of a current dialogue.
     #[must_use]
     pub fn new(storage: Arc<S>, chat_id: ChatId) -> Self {
-        Self { storage, chat_id, _phantom: PhantomData }
+        Self {
+            storage,
+            chat_id,
+            _phantom: PhantomData
+        }
     }
 
     /// Returns a chat ID associated with this dialogue.
@@ -167,12 +186,15 @@ where
     /// dialogue.
     pub async fn get_or_default(&self) -> Result<D, S::Error>
     where
-        D: Default,
+        D: Default
     {
         match self.get().await? {
             Some(d) => Ok(d),
             None => {
-                self.storage.clone().update_dialogue(self.chat_id, D::default()).await?;
+                self.storage
+                    .clone()
+                    .update_dialogue(self.chat_id, D::default())
+                    .await?;
                 Ok(D::default())
             }
         }
@@ -184,17 +206,20 @@ where
     /// conversion from `State` to `D`.
     pub async fn update<State>(&self, state: State) -> Result<(), S::Error>
     where
-        D: From<State>,
+        D: From<State>
     {
         let new_dialogue = state.into();
-        self.storage.clone().update_dialogue(self.chat_id, new_dialogue).await?;
+        self.storage
+            .clone()
+            .update_dialogue(self.chat_id, new_dialogue)
+            .await?;
         Ok(())
     }
 
     /// Updates the dialogue with a default value.
     pub async fn reset(&self) -> Result<(), S::Error>
     where
-        D: Default,
+        D: Default
     {
         self.update(D::default()).await
     }
@@ -229,7 +254,7 @@ where
     <S as Storage<D>>::Error: Debug + Send,
     D: Default + Clone + Send + Sync + 'static,
     Upd: GetChatId + Clone + Send + Sync + 'static,
-    Output: Send + Sync + 'static,
+    Output: Send + Sync + 'static
 {
     dptree::filter_map(|storage: Arc<S>, upd: Upd| {
         let chat_id = upd.chat_id()?;
@@ -254,7 +279,7 @@ where
                          default/panic"
                     )
                 }
-            },
+            }
         }
     })
 }

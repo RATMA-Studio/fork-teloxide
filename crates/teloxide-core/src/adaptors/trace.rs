@@ -2,7 +2,7 @@ use std::{
     fmt::Debug,
     future::{Future, IntoFuture},
     pin::Pin,
-    task::{self, Poll},
+    task::{self, Poll}
 };
 
 use futures::ready;
@@ -10,7 +10,7 @@ use url::Url;
 
 use crate::{
     requests::{HasPayload, Output, Payload, Request, Requester},
-    types::*,
+    types::*
 };
 
 /// Trace requests and responses.
@@ -27,13 +27,16 @@ use crate::{
 /// ```
 #[derive(Clone, Debug)]
 pub struct Trace<B> {
-    inner: B,
-    settings: Settings,
+    inner:    B,
+    settings: Settings
 }
 
 impl<B> Trace<B> {
     pub fn new(inner: B, settings: Settings) -> Self {
-        Self { inner, settings }
+        Self {
+            inner,
+            settings
+        }
     }
 
     pub fn inner(&self) -> &B {
@@ -111,7 +114,7 @@ macro_rules! fwd_inner {
 
 impl<B> Requester for Trace<B>
 where
-    B: Requester,
+    B: Requester
 {
     type Err = B::Err;
 
@@ -309,17 +312,17 @@ where
 #[must_use = "Requests are lazy and do nothing unless sent"]
 #[derive(Clone)]
 pub struct TraceRequest<R> {
-    inner: R,
-    settings: Settings,
+    inner:    R,
+    settings: Settings
 }
 
 impl<R> TraceRequest<R>
 where
-    R: Request,
+    R: Request
 {
     fn trace_request(&self)
     where
-        R::Payload: Debug,
+        R::Payload: Debug
     {
         if self.settings.contains(Settings::TRACE_REQUESTS_VERBOSE) {
             log::trace!(
@@ -335,11 +338,15 @@ where
     fn trace_response_fn(&self) -> fn(&Result<Output<R>, R::Err>)
     where
         Output<R>: Debug,
-        R::Err: Debug,
+        R::Err: Debug
     {
         if self.settings.contains(Settings::TRACE_RESPONSES_VERBOSE) {
             |response| {
-                log::trace!("Got response from `{}` request: {:?}", R::Payload::NAME, response)
+                log::trace!(
+                    "Got response from `{}` request: {:?}",
+                    R::Payload::NAME,
+                    response
+                )
             }
         } else if self.settings.contains(Settings::TRACE_RESPONSES) {
             |_| log::trace!("Got response from `{}` request", R::Payload::NAME)
@@ -351,7 +358,7 @@ where
 
 impl<R> HasPayload for TraceRequest<R>
 where
-    R: HasPayload,
+    R: HasPayload
 {
     type Payload = R::Payload;
 
@@ -369,7 +376,7 @@ where
     R: Request,
     Output<R>: Debug,
     R::Err: Debug,
-    R::Payload: Debug,
+    R::Payload: Debug
 {
     type Err = R::Err;
 
@@ -380,13 +387,19 @@ where
     fn send(self) -> Self::Send {
         self.trace_request();
 
-        Send { trace_fn: self.trace_response_fn(), inner: self.inner.send() }
+        Send {
+            trace_fn: self.trace_response_fn(),
+            inner:    self.inner.send()
+        }
     }
 
     fn send_ref(&self) -> Self::SendRef {
         self.trace_request();
 
-        Send { trace_fn: self.trace_response_fn(), inner: self.inner.send_ref() }
+        Send {
+            trace_fn: self.trace_response_fn(),
+            inner:    self.inner.send_ref()
+        }
     }
 }
 
@@ -395,7 +408,7 @@ where
     R: Request,
     Output<R>: Debug,
     R::Err: Debug,
-    R::Payload: Debug,
+    R::Payload: Debug
 {
     type Output = Result<Output<Self>, <Self as Request>::Err>;
     type IntoFuture = <Self as Request>::Send;
@@ -408,16 +421,16 @@ where
 #[pin_project::pin_project]
 pub struct Send<F>
 where
-    F: Future,
+    F: Future
 {
     trace_fn: fn(&F::Output),
     #[pin]
-    inner: F,
+    inner:    F
 }
 
 impl<F> Future for Send<F>
 where
-    F: Future,
+    F: Future
 {
     type Output = F::Output;
 

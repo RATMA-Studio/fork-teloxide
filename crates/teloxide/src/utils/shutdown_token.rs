@@ -3,8 +3,8 @@ use std::{
     future::Future,
     sync::{
         Arc,
-        atomic::{AtomicU8, Ordering},
-    },
+        atomic::{AtomicU8, Ordering}
+    }
 };
 
 use tokio::sync::Notify;
@@ -15,8 +15,8 @@ use tokio::sync::Notify;
 #[derive(Clone)]
 pub struct ShutdownToken {
     // FIXME: use a single arc
-    dispatcher_state: Arc<DispatcherState>,
-    shutdown_notify_back: Arc<Notify>,
+    dispatcher_state:     Arc<DispatcherState>,
+    shutdown_notify_back: Arc<Notify>
 }
 
 /// This error is returned from [`ShutdownToken::shutdown`] when trying to
@@ -39,17 +39,17 @@ impl ShutdownToken {
                 log::info!("Trying to shutdown the dispatcher...");
                 self.shutdown_notify_back.notified().await
             }),
-            Err(Err(err)) => Err(err),
+            Err(Err(err)) => Err(err)
         }
     }
 
     pub(crate) fn new() -> Self {
         Self {
-            dispatcher_state: Arc::new(DispatcherState {
-                inner: AtomicU8::new(ShutdownState::Idle as _),
-                notify: <_>::default(),
+            dispatcher_state:     Arc::new(DispatcherState {
+                inner:  AtomicU8::new(ShutdownState::Idle as _),
+                notify: <_>::default()
             }),
-            shutdown_notify_back: <_>::default(),
+            shutdown_notify_back: <_>::default()
         }
     }
 
@@ -58,8 +58,9 @@ impl ShutdownToken {
     }
 
     pub(crate) fn start_dispatching(&self) {
-        if let Err(actual) =
-            self.dispatcher_state.compare_exchange(ShutdownState::Idle, ShutdownState::Running)
+        if let Err(actual) = self
+            .dispatcher_state
+            .compare_exchange(ShutdownState::Idle, ShutdownState::Running)
         {
             panic!(
                 "Dispatching is already running: expected `{:?}` state, found `{:?}`",
@@ -97,8 +98,8 @@ impl fmt::Display for IdleShutdownError {
 impl std::error::Error for IdleShutdownError {}
 
 struct DispatcherState {
-    inner: AtomicU8,
-    notify: Notify,
+    inner:  AtomicU8,
+    notify: Notify
 }
 
 impl DispatcherState {
@@ -115,7 +116,7 @@ impl DispatcherState {
     fn compare_exchange(
         &self,
         current: ShutdownState,
-        new: ShutdownState,
+        new: ShutdownState
     ) -> Result<ShutdownState, ShutdownState> {
         self.inner
             .compare_exchange(current as _, new as _, Ordering::Relaxed, Ordering::Relaxed)
@@ -131,7 +132,7 @@ impl DispatcherState {
 enum ShutdownState {
     Running,
     ShuttingDown,
-    Idle,
+    Idle
 }
 
 impl ShutdownState {
@@ -144,7 +145,7 @@ impl ShutdownState {
             RUNNING => ShutdownState::Running,
             SHUTTING_DOWN => ShutdownState::ShuttingDown,
             IDLE => ShutdownState::Idle,
-            _ => unreachable!(),
+            _ => unreachable!()
         }
     }
 }
@@ -152,7 +153,7 @@ impl ShutdownState {
 struct AlreadyShuttingDown;
 
 fn shutdown_inner(
-    state: &DispatcherState,
+    state: &DispatcherState
 ) -> Result<(), Result<AlreadyShuttingDown, IdleShutdownError>> {
     use ShutdownState::*;
 
@@ -162,6 +163,6 @@ fn shutdown_inner(
         Ok(_) => Ok(()),
         Err(ShuttingDown) => Err(Ok(AlreadyShuttingDown)),
         Err(Idle) => Err(Err(IdleShutdownError)),
-        Err(Running) => unreachable!(),
+        Err(Running) => unreachable!()
     }
 }

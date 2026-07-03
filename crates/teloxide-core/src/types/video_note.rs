@@ -25,5 +25,5 @@ pub struct VideoNote {
     pub duration: Seconds,
 
     /// Video thumbnail.
-    pub thumbnail: Option<PhotoSize>,
+    pub thumbnail: Option<PhotoSize>
 }

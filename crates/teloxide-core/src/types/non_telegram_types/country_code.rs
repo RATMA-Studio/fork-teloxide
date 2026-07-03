@@ -503,5 +503,5 @@ pub enum CountryCode {
     /// Zambia
     ZM,
     /// Zimbabwe
-    ZW,
+    ZW
 }

@@ -1,8 +1,8 @@
 use teloxide::{
     prelude::*,
     types::{
-        InlineQueryResult, InlineQueryResultArticle, InputMessageContent, InputMessageContentText,
-    },
+        InlineQueryResult, InlineQueryResultArticle, InputMessageContent, InputMessageContentText
+    }
 };
 
 #[tokio::main]
@@ -26,7 +26,7 @@ async fn main() {
                 InputMessageContent::Text(InputMessageContentText::new(format!(
                     "https://www.google.com/search?q={}",
                     q.query,
-                ))),
+                )))
             );
             // While constructing them from the struct itself is possible, it is preferred
             // to use the builder pattern if you wish to add more
@@ -38,10 +38,14 @@ async fn main() {
                 InputMessageContent::Text(InputMessageContentText::new(format!(
                     "https://duckduckgo.com/?q={}",
                     q.query
-                ))),
+                )))
             )
             .description("DuckDuckGo Search")
-            .thumbnail_url("https://duckduckgo.com/assets/logo_header.v108.png".parse().unwrap())
+            .thumbnail_url(
+                "https://duckduckgo.com/assets/logo_header.v108.png"
+                    .parse()
+                    .unwrap()
+            )
             .url("https://duckduckgo.com/about".parse().unwrap()); // Note: This is the url that will open if they click the thumbnail
 
             let results = vec![
@@ -56,8 +60,12 @@ async fn main() {
                 log::error!("Error in handler: {err:?}");
             }
             respond(())
-        },
+        }
     ));
 
-    Dispatcher::builder(bot, handler).enable_ctrlc_handler().build().dispatch().await;
+    Dispatcher::builder(bot, handler)
+        .enable_ctrlc_handler()
+        .build()
+        .dispatch()
+        .await;
 }

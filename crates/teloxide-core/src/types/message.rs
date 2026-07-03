@@ -10,16 +10,17 @@ use crate::types::{
     ChatId, ChatOwnerChanged, ChatOwnerLeft, ChatShared, Checklist, ChecklistTaskId,
     ChecklistTasksAdded, ChecklistTasksDone, Contact, Dice, DirectMessagePriceChanged,
     DirectMessagesTopic, Document, ExternalReplyInfo, ForumTopicClosed, ForumTopicCreated,
-    ForumTopicEdited, ForumTopicReopened, Game, GeneralForumTopicHidden, GeneralForumTopicUnhidden,
-    GiftInfo, Giveaway, GiveawayCompleted, GiveawayCreated, GiveawayWinners, InlineKeyboardMarkup,
-    Invoice, LinkPreviewOptions, LivePhoto, Location, ManagedBotCreated, MaybeInaccessibleMessage,
-    MessageAutoDeleteTimerChanged, MessageEntity, MessageEntityRef, MessageId, MessageOrigin,
-    PaidMediaInfo, PaidMessagePriceChanged, PassportData, PhotoSize, Poll, PollOptionAdded,
-    PollOptionDeleted, ProximityAlertTriggered, RefundedPayment, Sticker, Story, SuccessfulPayment,
-    SuggestedPostApprovalFailed, SuggestedPostApproved, SuggestedPostDeclined, SuggestedPostInfo,
-    SuggestedPostPaid, SuggestedPostRefunded, TextQuote, ThreadId, True, UniqueGiftInfo, User,
-    UsersShared, Venue, Video, VideoChatEnded, VideoChatParticipantsInvited, VideoChatScheduled,
-    VideoChatStarted, VideoNote, Voice, WebAppData, WriteAccessAllowed,
+    ForumTopicEdited, ForumTopicReopened, Game, GeneralForumTopicHidden,
+    GeneralForumTopicUnhidden, GiftInfo, Giveaway, GiveawayCompleted, GiveawayCreated,
+    GiveawayWinners, InlineKeyboardMarkup, Invoice, LinkPreviewOptions, LivePhoto, Location,
+    ManagedBotCreated, MaybeInaccessibleMessage, MessageAutoDeleteTimerChanged, MessageEntity,
+    MessageEntityRef, MessageId, MessageOrigin, PaidMediaInfo, PaidMessagePriceChanged,
+    PassportData, PhotoSize, Poll, PollOptionAdded, PollOptionDeleted, ProximityAlertTriggered,
+    RefundedPayment, Sticker, Story, SuccessfulPayment, SuggestedPostApprovalFailed,
+    SuggestedPostApproved, SuggestedPostDeclined, SuggestedPostInfo, SuggestedPostPaid,
+    SuggestedPostRefunded, TextQuote, ThreadId, True, UniqueGiftInfo, User, UsersShared, Venue,
+    Video, VideoChatEnded, VideoChatParticipantsInvited, VideoChatScheduled, VideoChatStarted,
+    VideoNote, Voice, WebAppData, WriteAccessAllowed
 };
 
 /// This object represents a message.
@@ -98,7 +99,7 @@ pub struct Message {
     pub guest_query_id: Option<String>,
 
     #[serde(flatten)]
-    pub kind: MessageKind,
+    pub kind: MessageKind
 }
 
 // FIXME: this could be a use-case for serde mixed-tags, some variants need to
@@ -166,21 +167,12 @@ pub enum MessageKind {
     WebAppData(MessageWebAppData),
     /// An empty, content-less message, that can appear in callback queries
     /// attached to old messages.
-    Empty {},
+    Empty {}
 }
 
 /// Unique identifier of the message effect added to the message
 #[derive(
-    Default,
-    Clone,
-    Debug,
-    derive_more::Display,
-    PartialEq,
-    Eq,
-    Hash,
-    Serialize,
-    Deserialize,
-    From
+    Default, Clone, Debug, derive_more::Display, PartialEq, Eq, Hash, Serialize, Deserialize, From,
 )]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(transparent)]
@@ -262,7 +254,7 @@ pub struct MessageCommon {
     /// received. If non-empty, the message belongs to a chat of the
     /// corresponding business account that is independent from any potential
     /// bot chat which might share the same identifier.
-    pub business_connection_id: Option<BusinessConnectionId>,
+    pub business_connection_id: Option<BusinessConnectionId>
 }
 
 #[serde_with::skip_serializing_none]
@@ -272,7 +264,7 @@ pub struct MessageNewChatMembers {
     /// New members that were added to the group or supergroup and
     /// information about them (the bot itself may be one of these
     /// members).
-    pub new_chat_members: Vec<User>,
+    pub new_chat_members: Vec<User>
 }
 
 #[serde_with::skip_serializing_none]
@@ -281,7 +273,7 @@ pub struct MessageNewChatMembers {
 pub struct MessageLeftChatMember {
     /// A member was removed from the group, information about them (this
     /// member may be the bot itself).
-    pub left_chat_member: User,
+    pub left_chat_member: User
 }
 
 #[serde_with::skip_serializing_none]
@@ -289,7 +281,7 @@ pub struct MessageLeftChatMember {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageNewChatTitle {
     /// A chat title was changed to this value.
-    pub new_chat_title: String,
+    pub new_chat_title: String
 }
 
 #[serde_with::skip_serializing_none]
@@ -297,7 +289,7 @@ pub struct MessageNewChatTitle {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageNewChatPhoto {
     /// A chat photo was change to this value.
-    pub new_chat_photo: Vec<PhotoSize>,
+    pub new_chat_photo: Vec<PhotoSize>
 }
 
 #[serde_with::skip_serializing_none]
@@ -305,7 +297,7 @@ pub struct MessageNewChatPhoto {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageDeleteChatPhoto {
     /// Service message: the chat photo was deleted.
-    pub delete_chat_photo: True,
+    pub delete_chat_photo: True
 }
 
 #[serde_with::skip_serializing_none]
@@ -313,7 +305,7 @@ pub struct MessageDeleteChatPhoto {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageGroupChatCreated {
     /// Service message: the group has been created.
-    pub group_chat_created: True,
+    pub group_chat_created: True
 }
 
 #[serde_with::skip_serializing_none]
@@ -325,7 +317,7 @@ pub struct MessageSupergroupChatCreated {
     /// be a member of a supergroup when it is created. It can only be
     /// found in `reply_to_message` if someone replies to a very first
     /// message in a directly created supergroup.
-    pub supergroup_chat_created: True,
+    pub supergroup_chat_created: True
 }
 
 #[serde_with::skip_serializing_none]
@@ -337,7 +329,7 @@ pub struct MessageChannelChatCreated {
     /// a member of a channel when it is created. It can only be found in
     /// `reply_to_message` if someone replies to a very first message in a
     /// channel.
-    pub channel_chat_created: True,
+    pub channel_chat_created: True
 }
 
 #[serde_with::skip_serializing_none]
@@ -345,7 +337,7 @@ pub struct MessageChannelChatCreated {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageMessageAutoDeleteTimerChanged {
     /// Service message: auto-delete timer settings changed in the chat.
-    pub message_auto_delete_timer_changed: MessageAutoDeleteTimerChanged,
+    pub message_auto_delete_timer_changed: MessageAutoDeleteTimerChanged
 }
 
 /// Represents group migration to a supergroup or a supergroup migration from a
@@ -367,15 +359,15 @@ pub enum ChatMigration {
     /// identifier `chat_id`.
     To {
         #[serde(rename = "migrate_to_chat_id")]
-        chat_id: ChatId,
+        chat_id: ChatId
     },
 
     /// The supergroup has been migrated from a group with the specified
     /// identifier `chat_id`.
     From {
         #[serde(rename = "migrate_from_chat_id")]
-        chat_id: ChatId,
-    },
+        chat_id: ChatId
+    }
 }
 
 #[serde_with::skip_serializing_none]
@@ -386,21 +378,21 @@ pub struct MessagePinned {
     /// field will not contain further `reply_to_message` fields even if it
     /// is itself a reply.
     #[serde(rename = "pinned_message")]
-    pub pinned: Box<MaybeInaccessibleMessage>,
+    pub pinned: Box<MaybeInaccessibleMessage>
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageChatShared {
     /// A chat was shared with the bot.
-    pub chat_shared: ChatShared,
+    pub chat_shared: ChatShared
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageUsersShared {
     /// Users were shared with the bot
-    pub users_shared: UsersShared,
+    pub users_shared: UsersShared
 }
 
 #[serde_with::skip_serializing_none]
@@ -412,7 +404,7 @@ pub struct MessageInvoice {
     ///
     /// [payment]: https://core.telegram.org/bots/api#payments
     /// [More about payments »]: https://core.telegram.org/bots/api#payments
-    pub invoice: Invoice,
+    pub invoice: Invoice
 }
 
 #[serde_with::skip_serializing_none]
@@ -423,7 +415,7 @@ pub struct MessageRefundedPayment {
     /// about the payment. [More about payments »].
     ///
     /// [More about payments »]: https://core.telegram.org/bots/api#payments
-    pub refunded_payment: RefundedPayment,
+    pub refunded_payment: RefundedPayment
 }
 
 #[serde_with::skip_serializing_none]
@@ -434,7 +426,7 @@ pub struct MessageSuccessfulPayment {
     /// information about the payment. [More about payments »].
     ///
     /// [More about payments »]: https://core.telegram.org/bots/api#payments
-    pub successful_payment: SuccessfulPayment,
+    pub successful_payment: SuccessfulPayment
 }
 
 #[serde_with::skip_serializing_none]
@@ -445,7 +437,7 @@ pub struct MessageConnectedWebsite {
     /// [More about Telegram Login »].
     ///
     /// [More about Telegram Login »]: https://core.telegram.org/widgets/login
-    pub connected_website: String,
+    pub connected_website: String
 }
 
 #[serde_with::skip_serializing_none]
@@ -453,7 +445,7 @@ pub struct MessageConnectedWebsite {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessagePassportData {
     /// Telegram Passport data.
-    pub passport_data: PassportData,
+    pub passport_data: PassportData
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
@@ -486,7 +478,7 @@ pub enum MediaKind {
     LivePhoto(MediaLivePhoto),
     VideoNote(MediaVideoNote),
     Voice(MediaVoice),
-    Migration(ChatMigration),
+    Migration(ChatMigration)
 }
 
 // Manual `Deserialize` for `MediaKind`.
@@ -515,14 +507,14 @@ pub enum MediaKind {
 impl<'de> serde::Deserialize<'de> for MediaKind {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
-        D: serde::Deserializer<'de>,
+        D: serde::Deserializer<'de>
     {
         use serde::de::Error as _;
 
         let value = serde_json::Value::deserialize(deserializer)?;
         let object = match &value {
             serde_json::Value::Object(map) => map,
-            _ => return Err(D::Error::custom("MediaKind: expected a JSON object")),
+            _ => return Err(D::Error::custom("MediaKind: expected a JSON object"))
         };
 
         // Priority order matters where Telegram duplicates fields for
@@ -552,7 +544,7 @@ impl<'de> serde::Deserialize<'de> for MediaKind {
             LivePhoto,
             VideoNote,
             Voice,
-            Migration,
+            Migration
         }
 
         let tag = if object.contains_key("migrate_to_chat_id")
@@ -596,7 +588,9 @@ impl<'de> serde::Deserialize<'de> for MediaKind {
         } else if object.contains_key("text") {
             Tag::Text
         } else {
-            return Err(D::Error::custom("MediaKind: no known discriminator field present"));
+            return Err(D::Error::custom(
+                "MediaKind: no known discriminator field present"
+            ));
         };
 
         macro_rules! parse {
@@ -631,7 +625,7 @@ impl<'de> serde::Deserialize<'de> for MediaKind {
             Tag::LivePhoto => parse!(LivePhoto, MediaLivePhoto),
             Tag::VideoNote => parse!(VideoNote, MediaVideoNote),
             Tag::Voice => parse!(Voice, MediaVoice),
-            Tag::Migration => parse!(Migration, ChatMigration),
+            Tag::Migration => parse!(Migration, ChatMigration)
         }
     }
 }
@@ -659,22 +653,13 @@ pub struct MediaAnimation {
 
     /// `true`, if the message media is covered by a spoiler animation.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
-    pub has_media_spoiler: bool,
+    pub has_media_spoiler: bool
     // Note: for backward compatibility telegram also sends `document` field, but we ignore it
 }
 
 /// The unique identifier of a media message group the message belongs to.
 #[derive(
-    Default,
-    Clone,
-    Debug,
-    derive_more::Display,
-    PartialEq,
-    Eq,
-    Hash,
-    Serialize,
-    Deserialize,
-    From
+    Default, Clone, Debug, derive_more::Display, PartialEq, Eq, Hash, Serialize, Deserialize, From,
 )]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(transparent)]
@@ -698,7 +683,7 @@ pub struct MediaAudio {
 
     /// The unique identifier of a media message group this message belongs
     /// to.
-    pub media_group_id: Option<MediaGroupId>,
+    pub media_group_id: Option<MediaGroupId>
 }
 
 #[serde_with::skip_serializing_none]
@@ -706,7 +691,7 @@ pub struct MediaAudio {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MediaContact {
     /// Message is a shared contact, information about the contact.
-    pub contact: Contact,
+    pub contact: Contact
 }
 
 #[serde_with::skip_serializing_none]
@@ -726,14 +711,14 @@ pub struct MediaDocument {
 
     /// The unique identifier of a media message group this message belongs
     /// to.
-    pub media_group_id: Option<MediaGroupId>,
+    pub media_group_id: Option<MediaGroupId>
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MediaPaid {
     /// Message contains paid media; information about the paid media.
-    pub paid_media: PaidMediaInfo,
+    pub paid_media: PaidMediaInfo
 }
 
 #[serde_with::skip_serializing_none]
@@ -744,7 +729,7 @@ pub struct MediaGame {
     /// about games »].
     ///
     /// [More about games »]: https://core.telegram.org/bots/api#games
-    pub game: Game,
+    pub game: Game
 }
 
 #[serde_with::skip_serializing_none]
@@ -752,7 +737,7 @@ pub struct MediaGame {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MediaLocation {
     /// Message is a shared location, information about the location.
-    pub location: Location,
+    pub location: Location
 }
 
 #[serde_with::skip_serializing_none]
@@ -780,7 +765,7 @@ pub struct MediaPhoto {
 
     /// The unique identifier of a media message group this message belongs
     /// to.
-    pub media_group_id: Option<MediaGroupId>,
+    pub media_group_id: Option<MediaGroupId>
 }
 
 #[serde_with::skip_serializing_none]
@@ -788,7 +773,7 @@ pub struct MediaPhoto {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MediaPoll {
     /// Message is a native poll, information about the poll.
-    pub poll: Poll,
+    pub poll: Poll
 }
 
 #[serde_with::skip_serializing_none]
@@ -796,7 +781,7 @@ pub struct MediaPoll {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MediaChecklist {
     /// Message is a checklist, information about the checklist.
-    pub checklist: Checklist,
+    pub checklist: Checklist
 }
 
 #[serde_with::skip_serializing_none]
@@ -804,7 +789,7 @@ pub struct MediaChecklist {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MediaSticker {
     /// Message is a sticker, information about the sticker.
-    pub sticker: Sticker,
+    pub sticker: Sticker
 }
 
 #[serde_with::skip_serializing_none]
@@ -812,7 +797,7 @@ pub struct MediaSticker {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MediaStory {
     /// Message is a forwarded story
-    pub story: Story,
+    pub story: Story
 }
 
 #[serde_with::skip_serializing_none]
@@ -830,7 +815,7 @@ pub struct MediaText {
 
     /// Options used for link preview generation for the message, if it is a
     /// text message and link preview options were changed
-    pub link_preview_options: Option<LinkPreviewOptions>,
+    pub link_preview_options: Option<LinkPreviewOptions>
 }
 
 #[serde_with::skip_serializing_none]
@@ -858,7 +843,7 @@ pub struct MediaVideo {
 
     /// The unique identifier of a media message group this message belongs
     /// to.
-    pub media_group_id: Option<MediaGroupId>,
+    pub media_group_id: Option<MediaGroupId>
 }
 
 #[serde_with::skip_serializing_none]
@@ -886,7 +871,7 @@ pub struct MediaLivePhoto {
 
     /// The unique identifier of a media message group this message belongs
     /// to.
-    pub media_group_id: Option<MediaGroupId>,
+    pub media_group_id: Option<MediaGroupId>
 }
 
 #[serde_with::skip_serializing_none]
@@ -896,7 +881,7 @@ pub struct MediaVideoNote {
     /// Message is a [video note], information about the video message.
     ///
     /// [video note]: https://telegram.org/blog/video-messages-and-telescope
-    pub video_note: VideoNote,
+    pub video_note: VideoNote
 }
 
 #[serde_with::skip_serializing_none]
@@ -912,14 +897,14 @@ pub struct MediaVoice {
     /// For messages with a caption, special entities like usernames, URLs,
     /// bot commands, etc. that appear in the caption.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub caption_entities: Vec<MessageEntity>,
+    pub caption_entities: Vec<MessageEntity>
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MediaVenue {
     /// Message is a venue, information about the venue.
-    pub venue: Venue,
+    pub venue: Venue
     // Note: for backward compatibility telegram also sends `location` field, but we ignore it
 }
 
@@ -928,7 +913,7 @@ pub struct MediaVenue {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageDice {
     /// Message is a dice with random value from 1 to 6.
-    pub dice: Dice,
+    pub dice: Dice
 }
 
 #[serde_with::skip_serializing_none]
@@ -937,7 +922,7 @@ pub struct MessageDice {
 pub struct MessageProximityAlertTriggered {
     /// Service message. A user in the chat triggered another user's proximity
     /// alert while sharing Live Location.
-    pub proximity_alert_triggered: ProximityAlertTriggered,
+    pub proximity_alert_triggered: ProximityAlertTriggered
 }
 
 #[serde_with::skip_serializing_none]
@@ -945,7 +930,7 @@ pub struct MessageProximityAlertTriggered {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageChatBoostAdded {
     /// Service message. User boosted the chat.
-    pub boost_added: ChatBoostAdded,
+    pub boost_added: ChatBoostAdded
 }
 
 #[serde_with::skip_serializing_none]
@@ -953,7 +938,7 @@ pub struct MessageChatBoostAdded {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageChatOwnerLeft {
     /// Service message: chat owner has left.
-    pub chat_owner_left: ChatOwnerLeft,
+    pub chat_owner_left: ChatOwnerLeft
 }
 
 #[serde_with::skip_serializing_none]
@@ -961,7 +946,7 @@ pub struct MessageChatOwnerLeft {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageChatOwnerChanged {
     /// Service message: chat owner has changed.
-    pub chat_owner_changed: ChatOwnerChanged,
+    pub chat_owner_changed: ChatOwnerChanged
 }
 
 #[serde_with::skip_serializing_none]
@@ -969,7 +954,7 @@ pub struct MessageChatOwnerChanged {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageManagedBotCreated {
     /// Service message: a managed bot was created.
-    pub managed_bot_created: ManagedBotCreated,
+    pub managed_bot_created: ManagedBotCreated
 }
 
 #[serde_with::skip_serializing_none]
@@ -977,7 +962,7 @@ pub struct MessageManagedBotCreated {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessagePollOptionAdded {
     /// Service message: a new option was added to a poll.
-    pub poll_option_added: PollOptionAdded,
+    pub poll_option_added: PollOptionAdded
 }
 
 #[serde_with::skip_serializing_none]
@@ -985,7 +970,7 @@ pub struct MessagePollOptionAdded {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessagePollOptionDeleted {
     /// Service message: an option was deleted from a poll.
-    pub poll_option_deleted: PollOptionDeleted,
+    pub poll_option_deleted: PollOptionDeleted
 }
 
 #[serde_with::skip_serializing_none]
@@ -993,7 +978,7 @@ pub struct MessagePollOptionDeleted {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageChatBackground {
     /// Service message. Chat background set.
-    pub chat_background_set: ChatBackground,
+    pub chat_background_set: ChatBackground
 }
 
 #[serde_with::skip_serializing_none]
@@ -1002,7 +987,7 @@ pub struct MessageChatBackground {
 pub struct MessageChecklistTasksDone {
     /// Service message: some tasks in a checklist were marked as done or not
     /// done.
-    pub checklist_tasks_done: ChecklistTasksDone,
+    pub checklist_tasks_done: ChecklistTasksDone
 }
 
 #[serde_with::skip_serializing_none]
@@ -1010,7 +995,7 @@ pub struct MessageChecklistTasksDone {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageChecklistTasksAdded {
     /// Service message: tasks were added to a checklist.
-    pub checklist_tasks_added: ChecklistTasksAdded,
+    pub checklist_tasks_added: ChecklistTasksAdded
 }
 
 #[serde_with::skip_serializing_none]
@@ -1019,7 +1004,7 @@ pub struct MessageChecklistTasksAdded {
 pub struct MessageDirectMessagePriceChanged {
     /// Service message: the price for paid messages in the corresponding direct
     /// messages chat of a channel has changed.
-    pub direct_message_price_changed: DirectMessagePriceChanged,
+    pub direct_message_price_changed: DirectMessagePriceChanged
 }
 
 #[serde_with::skip_serializing_none]
@@ -1028,7 +1013,7 @@ pub struct MessageDirectMessagePriceChanged {
 pub struct MessageWriteAccessAllowed {
     /// Service message: the user allowed the bot added to the attachment menu
     /// to write messages.
-    pub write_access_allowed: WriteAccessAllowed,
+    pub write_access_allowed: WriteAccessAllowed
 }
 
 #[serde_with::skip_serializing_none]
@@ -1036,7 +1021,7 @@ pub struct MessageWriteAccessAllowed {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageForumTopicCreated {
     /// Service message: forum topic created.
-    pub forum_topic_created: ForumTopicCreated,
+    pub forum_topic_created: ForumTopicCreated
 }
 
 #[serde_with::skip_serializing_none]
@@ -1044,7 +1029,7 @@ pub struct MessageForumTopicCreated {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageForumTopicEdited {
     /// Service message: forum topic edited.
-    pub forum_topic_edited: ForumTopicEdited,
+    pub forum_topic_edited: ForumTopicEdited
 }
 
 #[serde_with::skip_serializing_none]
@@ -1052,7 +1037,7 @@ pub struct MessageForumTopicEdited {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageForumTopicClosed {
     /// Service message: forum topic closed.
-    pub forum_topic_closed: ForumTopicClosed,
+    pub forum_topic_closed: ForumTopicClosed
 }
 
 #[serde_with::skip_serializing_none]
@@ -1060,7 +1045,7 @@ pub struct MessageForumTopicClosed {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageForumTopicReopened {
     /// Service message: forum topic reopened.
-    pub forum_topic_reopened: ForumTopicReopened,
+    pub forum_topic_reopened: ForumTopicReopened
 }
 
 #[serde_with::skip_serializing_none]
@@ -1068,7 +1053,7 @@ pub struct MessageForumTopicReopened {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageGeneralForumTopicHidden {
     /// Service message: the 'General' forum topic hidden.
-    pub general_forum_topic_hidden: GeneralForumTopicHidden,
+    pub general_forum_topic_hidden: GeneralForumTopicHidden
 }
 
 #[serde_with::skip_serializing_none]
@@ -1076,7 +1061,7 @@ pub struct MessageGeneralForumTopicHidden {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageGeneralForumTopicUnhidden {
     /// Service message: the 'General' forum topic unhidden.
-    pub general_forum_topic_unhidden: GeneralForumTopicUnhidden,
+    pub general_forum_topic_unhidden: GeneralForumTopicUnhidden
 }
 
 #[serde_with::skip_serializing_none]
@@ -1087,7 +1072,7 @@ pub struct MessageGiveaway {
     /// giveaways »]
     ///
     /// [More about giveaways »]: https://core.telegram.org/api#giveaways-amp-gifts
-    pub giveaway: Giveaway,
+    pub giveaway: Giveaway
 }
 
 #[serde_with::skip_serializing_none]
@@ -1098,7 +1083,7 @@ pub struct MessageGiveawayCompleted {
     /// »]
     ///
     /// [More about giveaways »]: https://core.telegram.org/api#giveaways-amp-gifts
-    pub giveaway_completed: GiveawayCompleted,
+    pub giveaway_completed: GiveawayCompleted
 }
 
 #[serde_with::skip_serializing_none]
@@ -1109,7 +1094,7 @@ pub struct MessageGiveawayCreated {
     /// »]
     ///
     /// [More about giveaways »]: https://core.telegram.org/api#giveaways-amp-gifts
-    pub giveaway_created: GiveawayCreated,
+    pub giveaway_created: GiveawayCreated
 }
 
 #[serde_with::skip_serializing_none]
@@ -1120,7 +1105,7 @@ pub struct MessageGiveawayWinners {
     /// giveaway with public winners. [More about giveaways »]
     ///
     /// [More about giveaways »]: https://core.telegram.org/api#giveaways-amp-gifts
-    pub giveaway_winners: GiveawayWinners,
+    pub giveaway_winners: GiveawayWinners
 }
 
 #[serde_with::skip_serializing_none]
@@ -1128,7 +1113,7 @@ pub struct MessageGiveawayWinners {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessagePaidMessagePriceChanged {
     /// Service message: the price for paid messages has changed in the chat
-    pub paid_message_price_changed: PaidMessagePriceChanged,
+    pub paid_message_price_changed: PaidMessagePriceChanged
 }
 
 #[serde_with::skip_serializing_none]
@@ -1136,7 +1121,7 @@ pub struct MessagePaidMessagePriceChanged {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageSuggestedPostApproved {
     /// Service message: a suggested post was approved
-    pub suggested_post_approved: SuggestedPostApproved,
+    pub suggested_post_approved: SuggestedPostApproved
 }
 
 #[serde_with::skip_serializing_none]
@@ -1144,7 +1129,7 @@ pub struct MessageSuggestedPostApproved {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageSuggestedPostApprovalFailed {
     /// Service message: approval of a suggested post has failed
-    pub suggested_post_approval_failed: SuggestedPostApprovalFailed,
+    pub suggested_post_approval_failed: SuggestedPostApprovalFailed
 }
 
 #[serde_with::skip_serializing_none]
@@ -1152,7 +1137,7 @@ pub struct MessageSuggestedPostApprovalFailed {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageSuggestedPostDeclined {
     /// Service message: a suggested post was declined
-    pub suggested_post_declined: SuggestedPostDeclined,
+    pub suggested_post_declined: SuggestedPostDeclined
 }
 
 #[serde_with::skip_serializing_none]
@@ -1160,7 +1145,7 @@ pub struct MessageSuggestedPostDeclined {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageSuggestedPostPaid {
     /// Service message: payment for a suggested post was received
-    pub suggested_post_paid: SuggestedPostPaid,
+    pub suggested_post_paid: SuggestedPostPaid
 }
 
 #[serde_with::skip_serializing_none]
@@ -1168,7 +1153,7 @@ pub struct MessageSuggestedPostPaid {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageSuggestedPostRefunded {
     /// Service message: payment for a suggested post was refunded
-    pub suggested_post_refunded: SuggestedPostRefunded,
+    pub suggested_post_refunded: SuggestedPostRefunded
 }
 
 #[serde_with::skip_serializing_none]
@@ -1176,7 +1161,7 @@ pub struct MessageSuggestedPostRefunded {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageGiftInfo {
     /// Service message: a regular gift was sent or received
-    pub gift: GiftInfo,
+    pub gift: GiftInfo
 }
 
 #[serde_with::skip_serializing_none]
@@ -1184,7 +1169,7 @@ pub struct MessageGiftInfo {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageUniqueGiftInfo {
     /// Service message: a unique gift was sent or received
-    pub unique_gift: UniqueGiftInfo,
+    pub unique_gift: UniqueGiftInfo
 }
 
 #[serde_with::skip_serializing_none]
@@ -1193,7 +1178,7 @@ pub struct MessageUniqueGiftInfo {
 pub struct MessageGiftUpgradeSent {
     /// Service message: upgrade of a gift was purchased after the gift was
     /// sent
-    pub gift_upgrade_sent: GiftInfo,
+    pub gift_upgrade_sent: GiftInfo
 }
 
 #[serde_with::skip_serializing_none]
@@ -1201,7 +1186,7 @@ pub struct MessageGiftUpgradeSent {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageVideoChatScheduled {
     /// Service message: video chat scheduled
-    pub video_chat_scheduled: VideoChatScheduled,
+    pub video_chat_scheduled: VideoChatScheduled
 }
 
 #[serde_with::skip_serializing_none]
@@ -1209,7 +1194,7 @@ pub struct MessageVideoChatScheduled {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageVideoChatStarted {
     /// Service message: video chat started.
-    pub video_chat_started: VideoChatStarted,
+    pub video_chat_started: VideoChatStarted
 }
 
 #[serde_with::skip_serializing_none]
@@ -1217,7 +1202,7 @@ pub struct MessageVideoChatStarted {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageVideoChatEnded {
     /// Service message: video chat ended.
-    pub video_chat_ended: VideoChatEnded,
+    pub video_chat_ended: VideoChatEnded
 }
 
 #[serde_with::skip_serializing_none]
@@ -1225,7 +1210,7 @@ pub struct MessageVideoChatEnded {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageVideoChatParticipantsInvited {
     /// Service message: new participants invited to a video chat.
-    pub video_chat_participants_invited: VideoChatParticipantsInvited,
+    pub video_chat_participants_invited: VideoChatParticipantsInvited
 }
 
 #[serde_with::skip_serializing_none]
@@ -1233,13 +1218,24 @@ pub struct MessageVideoChatParticipantsInvited {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageWebAppData {
     /// Service message: data sent by a Web App.
-    pub web_app_data: WebAppData,
+    pub web_app_data: WebAppData
 }
 
 mod getters {
-    use chrono::{DateTime, Utc};
     use std::ops::Deref;
 
+    use chrono::{DateTime, Utc};
+
+    use super::{
+        MediaGroupId, MessageChatBackground, MessageChatBoostAdded, MessageForumTopicClosed,
+        MessageForumTopicCreated, MessageForumTopicEdited, MessageForumTopicReopened,
+        MessageGeneralForumTopicHidden, MessageGeneralForumTopicUnhidden, MessageGiftInfo,
+        MessageGiftUpgradeSent, MessageGiveaway, MessageGiveawayCompleted, MessageGiveawayCreated,
+        MessageGiveawayWinners, MessageMessageAutoDeleteTimerChanged,
+        MessagePaidMessagePriceChanged, MessageUniqueGiftInfo, MessageVideoChatEnded,
+        MessageVideoChatScheduled, MessageVideoChatStarted, MessageWebAppData,
+        MessageWriteAccessAllowed
+    };
     use crate::types::{
         self, Chat, ChatId, ChatMigration, EffectId, LinkPreviewOptions, MaybeInaccessibleMessage,
         MediaAnimation, MediaAudio, MediaChecklist, MediaContact, MediaDocument, MediaGame,
@@ -1254,18 +1250,7 @@ mod getters {
         MessageSuggestedPostApprovalFailed, MessageSuggestedPostApproved,
         MessageSuggestedPostDeclined, MessageSuggestedPostPaid, MessageSuggestedPostRefunded,
         MessageSupergroupChatCreated, MessageUsersShared, MessageVideoChatParticipantsInvited,
-        PhotoSize, Story, TextQuote, User, message::MessageKind::*,
-    };
-
-    use super::{
-        MediaGroupId, MessageChatBackground, MessageChatBoostAdded, MessageForumTopicClosed,
-        MessageForumTopicCreated, MessageForumTopicEdited, MessageForumTopicReopened,
-        MessageGeneralForumTopicHidden, MessageGeneralForumTopicUnhidden, MessageGiftInfo,
-        MessageGiftUpgradeSent, MessageGiveaway, MessageGiveawayCompleted, MessageGiveawayCreated,
-        MessageGiveawayWinners, MessageMessageAutoDeleteTimerChanged,
-        MessagePaidMessagePriceChanged, MessageUniqueGiftInfo, MessageVideoChatEnded,
-        MessageVideoChatScheduled, MessageVideoChatStarted, MessageWebAppData,
-        MessageWriteAccessAllowed,
+        PhotoSize, Story, TextQuote, User, message::MessageKind::*
     };
 
     /// Getters for [Message] fields from [telegram docs].
@@ -1283,16 +1268,20 @@ mod getters {
         #[must_use]
         pub fn author_signature(&self) -> Option<&str> {
             match &self.kind {
-                Common(MessageCommon { author_signature, .. }) => author_signature.as_deref(),
-                _ => None,
+                Common(MessageCommon {
+                    author_signature, ..
+                }) => author_signature.as_deref(),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn effect_id(&self) -> Option<&EffectId> {
             match &self.kind {
-                Common(MessageCommon { effect_id, .. }) => effect_id.as_ref(),
-                _ => None,
+                Common(MessageCommon {
+                    effect_id, ..
+                }) => effect_id.as_ref(),
+                _ => None
             }
         }
 
@@ -1305,32 +1294,40 @@ mod getters {
         #[must_use]
         pub fn forward_origin(&self) -> Option<&MessageOrigin> {
             match &self.kind {
-                Common(MessageCommon { forward_origin, .. }) => forward_origin.as_ref(),
-                _ => None,
+                Common(MessageCommon {
+                    forward_origin, ..
+                }) => forward_origin.as_ref(),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn quote(&self) -> Option<&TextQuote> {
             match &self.kind {
-                Common(MessageCommon { quote, .. }) => quote.as_ref(),
-                _ => None,
+                Common(MessageCommon {
+                    quote, ..
+                }) => quote.as_ref(),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn reply_to_story(&self) -> Option<&Story> {
             match &self.kind {
-                Common(MessageCommon { reply_to_story, .. }) => reply_to_story.as_ref(),
-                _ => None,
+                Common(MessageCommon {
+                    reply_to_story, ..
+                }) => reply_to_story.as_ref(),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn sender_boost_count(&self) -> Option<u16> {
             match &self.kind {
-                Common(MessageCommon { sender_boost_count, .. }) => *sender_boost_count,
-                _ => None,
+                Common(MessageCommon {
+                    sender_boost_count, ..
+                }) => *sender_boost_count,
+                _ => None
             }
         }
 
@@ -1342,47 +1339,53 @@ mod getters {
         #[must_use]
         pub fn forward_from_user(&self) -> Option<&User> {
             self.forward_origin().and_then(|origin| match origin {
-                MessageOrigin::User { sender_user, .. } => Some(sender_user),
-                _ => None,
+                MessageOrigin::User {
+                    sender_user, ..
+                } => Some(sender_user),
+                _ => None
             })
         }
 
         #[must_use]
         pub fn forward_from_chat(&self) -> Option<&Chat> {
             self.forward_origin().and_then(|origin| match origin {
-                MessageOrigin::Chat { sender_chat, .. } => Some(sender_chat),
-                _ => None,
+                MessageOrigin::Chat {
+                    sender_chat, ..
+                } => Some(sender_chat),
+                _ => None
             })
         }
 
         #[must_use]
         pub fn forward_from_sender_name(&self) -> Option<&str> {
             self.forward_origin().and_then(|origin| match origin {
-                MessageOrigin::HiddenUser { sender_user_name, .. } => {
-                    Some(sender_user_name.as_str())
-                }
-                _ => None,
+                MessageOrigin::HiddenUser {
+                    sender_user_name, ..
+                } => Some(sender_user_name.as_str()),
+                _ => None
             })
         }
 
         #[must_use]
         pub fn forward_from_message_id(&self) -> Option<MessageId> {
             self.forward_origin().and_then(|origin| match origin {
-                MessageOrigin::Channel { message_id, .. } => Some(*message_id),
-                _ => None,
+                MessageOrigin::Channel {
+                    message_id, ..
+                } => Some(*message_id),
+                _ => None
             })
         }
 
         #[must_use]
         pub fn forward_author_signature(&self) -> Option<&str> {
             self.forward_origin().and_then(|origin| match origin {
-                MessageOrigin::Chat { author_signature, .. } => {
-                    author_signature.as_ref().map(|a| a.as_str())
-                }
-                MessageOrigin::Channel { author_signature, .. } => {
-                    author_signature.as_ref().map(|a| a.as_str())
-                }
-                _ => None,
+                MessageOrigin::Chat {
+                    author_signature, ..
+                } => author_signature.as_ref().map(|a| a.as_str()),
+                MessageOrigin::Channel {
+                    author_signature, ..
+                } => author_signature.as_ref().map(|a| a.as_str()),
+                _ => None
             })
         }
 
@@ -1394,8 +1397,10 @@ mod getters {
         #[must_use]
         pub fn edit_date(&self) -> Option<&DateTime<Utc>> {
             match &self.kind {
-                Common(MessageCommon { edit_date, .. }) => edit_date.as_ref(),
-                _ => None,
+                Common(MessageCommon {
+                    edit_date, ..
+                }) => edit_date.as_ref(),
+                _ => None
             }
         }
 
@@ -1403,22 +1408,34 @@ mod getters {
         pub fn media_group_id(&self) -> Option<&MediaGroupId> {
             match &self.kind {
                 Common(MessageCommon {
-                    media_kind: MediaKind::Video(MediaVideo { media_group_id, .. }),
+                    media_kind:
+                        MediaKind::Video(MediaVideo {
+                            media_group_id, ..
+                        }),
                     ..
                 })
                 | Common(MessageCommon {
-                    media_kind: MediaKind::Photo(MediaPhoto { media_group_id, .. }),
+                    media_kind:
+                        MediaKind::Photo(MediaPhoto {
+                            media_group_id, ..
+                        }),
                     ..
                 })
                 | Common(MessageCommon {
-                    media_kind: MediaKind::Document(MediaDocument { media_group_id, .. }),
+                    media_kind:
+                        MediaKind::Document(MediaDocument {
+                            media_group_id, ..
+                        }),
                     ..
                 })
                 | Common(MessageCommon {
-                    media_kind: MediaKind::Audio(MediaAudio { media_group_id, .. }),
+                    media_kind:
+                        MediaKind::Audio(MediaAudio {
+                            media_group_id, ..
+                        }),
                     ..
                 }) => media_group_id.as_ref(),
-                _ => None,
+                _ => None
             }
         }
 
@@ -1426,10 +1443,13 @@ mod getters {
         pub fn text(&self) -> Option<&str> {
             match &self.kind {
                 Common(MessageCommon {
-                    media_kind: MediaKind::Text(MediaText { text, .. }),
+                    media_kind:
+                        MediaKind::Text(MediaText {
+                            text, ..
+                        }),
                     ..
                 }) => Some(text),
-                _ => None,
+                _ => None
             }
         }
 
@@ -1449,10 +1469,13 @@ mod getters {
         pub fn entities(&self) -> Option<&[MessageEntity]> {
             match &self.kind {
                 Common(MessageCommon {
-                    media_kind: MediaKind::Text(MediaText { entities, .. }),
+                    media_kind:
+                        MediaKind::Text(MediaText {
+                            entities, ..
+                        }),
                     ..
                 }) => Some(entities),
-                _ => None,
+                _ => None
             }
         }
 
@@ -1460,10 +1483,14 @@ mod getters {
         pub fn link_preview_options(&self) -> Option<&LinkPreviewOptions> {
             match &self.kind {
                 Common(MessageCommon {
-                    media_kind: MediaKind::Text(MediaText { link_preview_options, .. }),
+                    media_kind:
+                        MediaKind::Text(MediaText {
+                            link_preview_options,
+                            ..
+                        }),
                     ..
                 }) => link_preview_options.as_ref(),
-                _ => None,
+                _ => None
             }
         }
 
@@ -1483,30 +1510,48 @@ mod getters {
         pub fn caption_entities(&self) -> Option<&[MessageEntity]> {
             match &self.kind {
                 Common(MessageCommon {
-                    media_kind: MediaKind::Animation(MediaAnimation { caption_entities, .. }),
+                    media_kind:
+                        MediaKind::Animation(MediaAnimation {
+                            caption_entities, ..
+                        }),
                     ..
                 })
                 | Common(MessageCommon {
-                    media_kind: MediaKind::Audio(MediaAudio { caption_entities, .. }),
+                    media_kind:
+                        MediaKind::Audio(MediaAudio {
+                            caption_entities, ..
+                        }),
                     ..
                 })
                 | Common(MessageCommon {
-                    media_kind: MediaKind::Document(MediaDocument { caption_entities, .. }),
+                    media_kind:
+                        MediaKind::Document(MediaDocument {
+                            caption_entities, ..
+                        }),
                     ..
                 })
                 | Common(MessageCommon {
-                    media_kind: MediaKind::Photo(MediaPhoto { caption_entities, .. }),
+                    media_kind:
+                        MediaKind::Photo(MediaPhoto {
+                            caption_entities, ..
+                        }),
                     ..
                 })
                 | Common(MessageCommon {
-                    media_kind: MediaKind::Video(MediaVideo { caption_entities, .. }),
+                    media_kind:
+                        MediaKind::Video(MediaVideo {
+                            caption_entities, ..
+                        }),
                     ..
                 })
                 | Common(MessageCommon {
-                    media_kind: MediaKind::Voice(MediaVoice { caption_entities, .. }),
+                    media_kind:
+                        MediaKind::Voice(MediaVoice {
+                            caption_entities, ..
+                        }),
                     ..
                 }) => Some(caption_entities),
-                _ => None,
+                _ => None
             }
         }
 
@@ -1519,12 +1564,22 @@ mod getters {
         pub fn show_caption_above_media(&self) -> bool {
             self.common()
                 .map(|m| match m.media_kind {
-                    MediaKind::Animation(MediaAnimation { show_caption_above_media, .. })
-                    | MediaKind::Photo(MediaPhoto { show_caption_above_media, .. })
-                    | MediaKind::LivePhoto(MediaLivePhoto { show_caption_above_media, .. })
-                    | MediaKind::Video(MediaVideo { show_caption_above_media, .. }) => {
-                        show_caption_above_media
-                    }
+                    MediaKind::Animation(MediaAnimation {
+                        show_caption_above_media,
+                        ..
+                    })
+                    | MediaKind::Photo(MediaPhoto {
+                        show_caption_above_media,
+                        ..
+                    })
+                    | MediaKind::LivePhoto(MediaLivePhoto {
+                        show_caption_above_media,
+                        ..
+                    })
+                    | MediaKind::Video(MediaVideo {
+                        show_caption_above_media,
+                        ..
+                    }) => show_caption_above_media,
                     MediaKind::Audio(_)
                     | MediaKind::Contact(_)
                     | MediaKind::Document(_)
@@ -1539,7 +1594,7 @@ mod getters {
                     | MediaKind::Text(_)
                     | MediaKind::VideoNote(_)
                     | MediaKind::Voice(_)
-                    | MediaKind::Migration(_) => false,
+                    | MediaKind::Migration(_) => false
                 })
                 .unwrap_or(false)
         }
@@ -1554,10 +1609,18 @@ mod getters {
         pub fn has_media_spoiler(&self) -> bool {
             self.common()
                 .map(|m| match m.media_kind {
-                    MediaKind::Animation(MediaAnimation { has_media_spoiler, .. })
-                    | MediaKind::Photo(MediaPhoto { has_media_spoiler, .. })
-                    | MediaKind::LivePhoto(MediaLivePhoto { has_media_spoiler, .. })
-                    | MediaKind::Video(MediaVideo { has_media_spoiler, .. }) => has_media_spoiler,
+                    MediaKind::Animation(MediaAnimation {
+                        has_media_spoiler, ..
+                    })
+                    | MediaKind::Photo(MediaPhoto {
+                        has_media_spoiler, ..
+                    })
+                    | MediaKind::LivePhoto(MediaLivePhoto {
+                        has_media_spoiler, ..
+                    })
+                    | MediaKind::Video(MediaVideo {
+                        has_media_spoiler, ..
+                    }) => has_media_spoiler,
                     MediaKind::Audio(_)
                     | MediaKind::Contact(_)
                     | MediaKind::Document(_)
@@ -1572,7 +1635,7 @@ mod getters {
                     | MediaKind::Text(_)
                     | MediaKind::VideoNote(_)
                     | MediaKind::Voice(_)
-                    | MediaKind::Migration(_) => false,
+                    | MediaKind::Migration(_) => false
                 })
                 .unwrap_or(false)
         }
@@ -1581,10 +1644,13 @@ mod getters {
         pub fn audio(&self) -> Option<&types::Audio> {
             match &self.kind {
                 Common(MessageCommon {
-                    media_kind: MediaKind::Audio(MediaAudio { audio, .. }),
+                    media_kind:
+                        MediaKind::Audio(MediaAudio {
+                            audio, ..
+                        }),
                     ..
                 }) => Some(audio),
-                _ => None,
+                _ => None
             }
         }
 
@@ -1592,10 +1658,13 @@ mod getters {
         pub fn document(&self) -> Option<&types::Document> {
             match &self.kind {
                 Common(MessageCommon {
-                    media_kind: MediaKind::Document(MediaDocument { document, .. }),
+                    media_kind:
+                        MediaKind::Document(MediaDocument {
+                            document, ..
+                        }),
                     ..
                 }) => Some(document),
-                _ => None,
+                _ => None
             }
         }
 
@@ -1603,10 +1672,13 @@ mod getters {
         pub fn paid_media(&self) -> Option<&types::PaidMediaInfo> {
             match &self.kind {
                 Common(MessageCommon {
-                    media_kind: MediaKind::PaidMedia(MediaPaid { paid_media, .. }),
+                    media_kind:
+                        MediaKind::PaidMedia(MediaPaid {
+                            paid_media, ..
+                        }),
                     ..
                 }) => Some(paid_media),
-                _ => None,
+                _ => None
             }
         }
 
@@ -1614,10 +1686,13 @@ mod getters {
         pub fn animation(&self) -> Option<&types::Animation> {
             match &self.kind {
                 Common(MessageCommon {
-                    media_kind: MediaKind::Animation(MediaAnimation { animation, .. }),
+                    media_kind:
+                        MediaKind::Animation(MediaAnimation {
+                            animation, ..
+                        }),
                     ..
                 }) => Some(animation),
-                _ => None,
+                _ => None
             }
         }
 
@@ -1625,10 +1700,13 @@ mod getters {
         pub fn game(&self) -> Option<&types::Game> {
             match &self.kind {
                 Common(MessageCommon {
-                    media_kind: MediaKind::Game(MediaGame { game, .. }),
+                    media_kind:
+                        MediaKind::Game(MediaGame {
+                            game, ..
+                        }),
                     ..
                 }) => Some(game),
-                _ => None,
+                _ => None
             }
         }
 
@@ -1636,10 +1714,13 @@ mod getters {
         pub fn photo(&self) -> Option<&[PhotoSize]> {
             match &self.kind {
                 Common(MessageCommon {
-                    media_kind: MediaKind::Photo(MediaPhoto { photo, .. }),
+                    media_kind:
+                        MediaKind::Photo(MediaPhoto {
+                            photo, ..
+                        }),
                     ..
                 }) => Some(photo),
-                _ => None,
+                _ => None
             }
         }
 
@@ -1647,10 +1728,13 @@ mod getters {
         pub fn sticker(&self) -> Option<&types::Sticker> {
             match &self.kind {
                 Common(MessageCommon {
-                    media_kind: MediaKind::Sticker(MediaSticker { sticker, .. }),
+                    media_kind:
+                        MediaKind::Sticker(MediaSticker {
+                            sticker, ..
+                        }),
                     ..
                 }) => Some(sticker),
-                _ => None,
+                _ => None
             }
         }
 
@@ -1658,10 +1742,13 @@ mod getters {
         pub fn story(&self) -> Option<&types::Story> {
             match &self.kind {
                 Common(MessageCommon {
-                    media_kind: MediaKind::Story(MediaStory { story, .. }),
+                    media_kind:
+                        MediaKind::Story(MediaStory {
+                            story, ..
+                        }),
                     ..
                 }) => Some(story),
-                _ => None,
+                _ => None
             }
         }
 
@@ -1669,10 +1756,13 @@ mod getters {
         pub fn video(&self) -> Option<&types::Video> {
             match &self.kind {
                 Common(MessageCommon {
-                    media_kind: MediaKind::Video(MediaVideo { video, .. }),
+                    media_kind:
+                        MediaKind::Video(MediaVideo {
+                            video, ..
+                        }),
                     ..
                 }) => Some(video),
-                _ => None,
+                _ => None
             }
         }
 
@@ -1680,10 +1770,13 @@ mod getters {
         pub fn voice(&self) -> Option<&types::Voice> {
             match &self.kind {
                 Common(MessageCommon {
-                    media_kind: MediaKind::Voice(MediaVoice { voice, .. }),
+                    media_kind:
+                        MediaKind::Voice(MediaVoice {
+                            voice, ..
+                        }),
                     ..
                 }) => Some(voice),
-                _ => None,
+                _ => None
             }
         }
 
@@ -1691,10 +1784,13 @@ mod getters {
         pub fn video_note(&self) -> Option<&types::VideoNote> {
             match &self.kind {
                 Common(MessageCommon {
-                    media_kind: MediaKind::VideoNote(MediaVideoNote { video_note, .. }),
+                    media_kind:
+                        MediaKind::VideoNote(MediaVideoNote {
+                            video_note, ..
+                        }),
                     ..
                 }) => Some(video_note),
-                _ => None,
+                _ => None
             }
         }
 
@@ -1703,15 +1799,27 @@ mod getters {
             match &self.kind {
                 Common(MessageCommon {
                     media_kind:
-                        MediaKind::Animation(MediaAnimation { caption, .. })
-                        | MediaKind::Audio(MediaAudio { caption, .. })
-                        | MediaKind::Document(MediaDocument { caption, .. })
-                        | MediaKind::Photo(MediaPhoto { caption, .. })
-                        | MediaKind::Video(MediaVideo { caption, .. })
-                        | MediaKind::Voice(MediaVoice { caption, .. }),
+                        MediaKind::Animation(MediaAnimation {
+                            caption, ..
+                        })
+                        | MediaKind::Audio(MediaAudio {
+                            caption, ..
+                        })
+                        | MediaKind::Document(MediaDocument {
+                            caption, ..
+                        })
+                        | MediaKind::Photo(MediaPhoto {
+                            caption, ..
+                        })
+                        | MediaKind::Video(MediaVideo {
+                            caption, ..
+                        })
+                        | MediaKind::Voice(MediaVoice {
+                            caption, ..
+                        }),
                     ..
                 }) => caption.as_ref().map(Deref::deref),
-                _ => None,
+                _ => None
             }
         }
 
@@ -1719,10 +1827,13 @@ mod getters {
         pub fn contact(&self) -> Option<&types::Contact> {
             match &self.kind {
                 Common(MessageCommon {
-                    media_kind: MediaKind::Contact(MediaContact { contact, .. }),
+                    media_kind:
+                        MediaKind::Contact(MediaContact {
+                            contact, ..
+                        }),
                     ..
                 }) => Some(contact),
-                _ => None,
+                _ => None
             }
         }
 
@@ -1730,10 +1841,13 @@ mod getters {
         pub fn location(&self) -> Option<&types::Location> {
             match &self.kind {
                 Common(MessageCommon {
-                    media_kind: MediaKind::Location(MediaLocation { location, .. }),
+                    media_kind:
+                        MediaKind::Location(MediaLocation {
+                            location, ..
+                        }),
                     ..
                 }) => Some(location),
-                _ => None,
+                _ => None
             }
         }
 
@@ -1741,20 +1855,24 @@ mod getters {
         pub fn venue(&self) -> Option<&types::Venue> {
             match &self.kind {
                 Common(MessageCommon {
-                    media_kind: MediaKind::Venue(MediaVenue { venue, .. }),
+                    media_kind:
+                        MediaKind::Venue(MediaVenue {
+                            venue, ..
+                        }),
                     ..
                 }) => Some(venue),
-                _ => None,
+                _ => None
             }
         }
 
         #[must_use]
         pub fn poll(&self) -> Option<&types::Poll> {
             match &self.kind {
-                Common(MessageCommon { media_kind: MediaKind::Poll(boxed), .. }) => {
-                    Some(&boxed.poll)
-                }
-                _ => None,
+                Common(MessageCommon {
+                    media_kind: MediaKind::Poll(boxed),
+                    ..
+                }) => Some(&boxed.poll),
+                _ => None
             }
         }
 
@@ -1762,46 +1880,53 @@ mod getters {
         pub fn checklist(&self) -> Option<&types::Checklist> {
             match &self.kind {
                 Common(MessageCommon {
-                    media_kind: MediaKind::Checklist(MediaChecklist { checklist, .. }),
+                    media_kind:
+                        MediaKind::Checklist(MediaChecklist {
+                            checklist, ..
+                        }),
                     ..
                 }) => Some(checklist),
-                _ => None,
+                _ => None
             }
         }
 
         #[must_use]
         pub fn new_chat_members(&self) -> Option<&[User]> {
             match &self.kind {
-                NewChatMembers(MessageNewChatMembers { new_chat_members }) => {
-                    Some(new_chat_members.as_ref())
-                }
-                _ => None,
+                NewChatMembers(MessageNewChatMembers {
+                    new_chat_members
+                }) => Some(new_chat_members.as_ref()),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn left_chat_member(&self) -> Option<&User> {
             match &self.kind {
-                LeftChatMember(MessageLeftChatMember { left_chat_member }) => {
-                    Some(left_chat_member)
-                }
-                _ => None,
+                LeftChatMember(MessageLeftChatMember {
+                    left_chat_member
+                }) => Some(left_chat_member),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn new_chat_title(&self) -> Option<&str> {
             match &self.kind {
-                NewChatTitle(MessageNewChatTitle { new_chat_title }) => Some(new_chat_title),
-                _ => None,
+                NewChatTitle(MessageNewChatTitle {
+                    new_chat_title
+                }) => Some(new_chat_title),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn new_chat_photo(&self) -> Option<&[PhotoSize]> {
             match &self.kind {
-                NewChatPhoto(MessageNewChatPhoto { new_chat_photo }) => Some(new_chat_photo),
-                _ => None,
+                NewChatPhoto(MessageNewChatPhoto {
+                    new_chat_photo
+                }) => Some(new_chat_photo),
+                _ => None
             }
         }
 
@@ -1818,7 +1943,7 @@ mod getters {
         pub fn delete_chat_photo(&self) -> Option<&MessageDeleteChatPhoto> {
             match &self.kind {
                 DeleteChatPhoto(message_delete_chat_photo) => Some(message_delete_chat_photo),
-                _ => None,
+                _ => None
             }
         }
 
@@ -1835,7 +1960,7 @@ mod getters {
         pub fn group_chat_created(&self) -> Option<&MessageGroupChatCreated> {
             match &self.kind {
                 GroupChatCreated(message_group_chat_created) => Some(message_group_chat_created),
-                _ => None,
+                _ => None
             }
         }
 
@@ -1854,7 +1979,7 @@ mod getters {
                 SupergroupChatCreated(message_supergroup_chat_created) => {
                     Some(message_supergroup_chat_created)
                 }
-                _ => None,
+                _ => None
             }
         }
 
@@ -1873,19 +1998,19 @@ mod getters {
                 ChannelChatCreated(message_channel_chat_created) => {
                     Some(message_channel_chat_created)
                 }
-                _ => None,
+                _ => None
             }
         }
 
         #[must_use]
         pub fn message_auto_delete_timer_changed(
-            &self,
+            &self
         ) -> Option<&types::MessageAutoDeleteTimerChanged> {
             match &self.kind {
                 MessageAutoDeleteTimerChanged(MessageMessageAutoDeleteTimerChanged {
-                    message_auto_delete_timer_changed,
+                    message_auto_delete_timer_changed
                 }) => Some(message_auto_delete_timer_changed),
-                _ => None,
+                _ => None
             }
         }
 
@@ -1893,9 +2018,10 @@ mod getters {
         pub fn chat_migration(&self) -> Option<&ChatMigration> {
             match &self.kind {
                 Common(MessageCommon {
-                    media_kind: MediaKind::Migration(chat_migration), ..
+                    media_kind: MediaKind::Migration(chat_migration),
+                    ..
                 }) => Some(chat_migration),
-                _ => None,
+                _ => None
             }
         }
 
@@ -1905,10 +2031,13 @@ mod getters {
         pub fn migrate_to_chat_id(&self) -> Option<&ChatId> {
             match &self.kind {
                 Common(MessageCommon {
-                    media_kind: MediaKind::Migration(ChatMigration::To { chat_id }),
+                    media_kind:
+                        MediaKind::Migration(ChatMigration::To {
+                            chat_id
+                        }),
                     ..
                 }) => Some(chat_id),
-                _ => None,
+                _ => None
             }
         }
 
@@ -1918,88 +2047,103 @@ mod getters {
         pub fn migrate_from_chat_id(&self) -> Option<&ChatId> {
             match &self.kind {
                 Common(MessageCommon {
-                    media_kind: MediaKind::Migration(ChatMigration::From { chat_id }),
+                    media_kind:
+                        MediaKind::Migration(ChatMigration::From {
+                            chat_id
+                        }),
                     ..
                 }) => Some(chat_id),
-                _ => None,
+                _ => None
             }
         }
 
         #[must_use]
         pub fn pinned_message(&self) -> Option<&MaybeInaccessibleMessage> {
             match &self.kind {
-                Pinned(MessagePinned { pinned }) => Some(pinned),
-                _ => None,
+                Pinned(MessagePinned {
+                    pinned
+                }) => Some(pinned),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn invoice(&self) -> Option<&types::Invoice> {
             match &self.kind {
-                Invoice(MessageInvoice { invoice }) => Some(invoice),
-                _ => None,
+                Invoice(MessageInvoice {
+                    invoice
+                }) => Some(invoice),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn successful_payment(&self) -> Option<&types::SuccessfulPayment> {
             match &self.kind {
-                SuccessfulPayment(MessageSuccessfulPayment { successful_payment }) => {
-                    Some(successful_payment)
-                }
-                _ => None,
+                SuccessfulPayment(MessageSuccessfulPayment {
+                    successful_payment
+                }) => Some(successful_payment),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn connected_website(&self) -> Option<&str> {
             match &self.kind {
-                ConnectedWebsite(MessageConnectedWebsite { connected_website }) => {
-                    Some(connected_website)
-                }
-                _ => None,
+                ConnectedWebsite(MessageConnectedWebsite {
+                    connected_website
+                }) => Some(connected_website),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn write_access_allowed(&self) -> Option<&types::WriteAccessAllowed> {
             match &self.kind {
-                WriteAccessAllowed(MessageWriteAccessAllowed { write_access_allowed }) => {
-                    Some(write_access_allowed)
-                }
-                _ => None,
+                WriteAccessAllowed(MessageWriteAccessAllowed {
+                    write_access_allowed
+                }) => Some(write_access_allowed),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn passport_data(&self) -> Option<&types::PassportData> {
             match &self.kind {
-                PassportData(MessagePassportData { passport_data }) => Some(passport_data),
-                _ => None,
+                PassportData(MessagePassportData {
+                    passport_data
+                }) => Some(passport_data),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn shared_chat(&self) -> Option<&types::ChatShared> {
             match &self.kind {
-                ChatShared(MessageChatShared { chat_shared }) => Some(chat_shared),
-                _ => None,
+                ChatShared(MessageChatShared {
+                    chat_shared
+                }) => Some(chat_shared),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn shared_users(&self) -> Option<&types::UsersShared> {
             match &self.kind {
-                UsersShared(MessageUsersShared { users_shared }) => Some(users_shared),
-                _ => None,
+                UsersShared(MessageUsersShared {
+                    users_shared
+                }) => Some(users_shared),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn dice(&self) -> Option<&types::Dice> {
             match &self.kind {
-                Dice(MessageDice { dice }) => Some(dice),
-                _ => None,
+                Dice(MessageDice {
+                    dice
+                }) => Some(dice),
+                _ => None
             }
         }
 
@@ -2007,47 +2151,49 @@ mod getters {
         pub fn proximity_alert_triggered(&self) -> Option<&types::ProximityAlertTriggered> {
             match &self.kind {
                 ProximityAlertTriggered(MessageProximityAlertTriggered {
-                    proximity_alert_triggered,
+                    proximity_alert_triggered
                 }) => Some(proximity_alert_triggered),
-                _ => None,
+                _ => None
             }
         }
 
         #[must_use]
         pub fn boost_added(&self) -> Option<&types::ChatBoostAdded> {
             match &self.kind {
-                ChatBoostAdded(MessageChatBoostAdded { boost_added }) => Some(boost_added),
-                _ => None,
+                ChatBoostAdded(MessageChatBoostAdded {
+                    boost_added
+                }) => Some(boost_added),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn chat_background_set(&self) -> Option<&types::ChatBackground> {
             match &self.kind {
-                ChatBackground(MessageChatBackground { chat_background_set }) => {
-                    Some(chat_background_set)
-                }
-                _ => None,
+                ChatBackground(MessageChatBackground {
+                    chat_background_set
+                }) => Some(chat_background_set),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn checklist_tasks_done(&self) -> Option<&types::ChecklistTasksDone> {
             match &self.kind {
-                ChecklistTasksDone(MessageChecklistTasksDone { checklist_tasks_done }) => {
-                    Some(checklist_tasks_done)
-                }
-                _ => None,
+                ChecklistTasksDone(MessageChecklistTasksDone {
+                    checklist_tasks_done
+                }) => Some(checklist_tasks_done),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn checklist_tasks_added(&self) -> Option<&types::ChecklistTasksAdded> {
             match &self.kind {
-                ChecklistTasksAdded(MessageChecklistTasksAdded { checklist_tasks_added }) => {
-                    Some(checklist_tasks_added)
-                }
-                _ => None,
+                ChecklistTasksAdded(MessageChecklistTasksAdded {
+                    checklist_tasks_added
+                }) => Some(checklist_tasks_added),
+                _ => None
             }
         }
 
@@ -2055,49 +2201,49 @@ mod getters {
         pub fn direct_message_price_changed(&self) -> Option<&types::DirectMessagePriceChanged> {
             match &self.kind {
                 DirectMessagePriceChanged(MessageDirectMessagePriceChanged {
-                    direct_message_price_changed,
+                    direct_message_price_changed
                 }) => Some(direct_message_price_changed),
-                _ => None,
+                _ => None
             }
         }
 
         #[must_use]
         pub fn forum_topic_created(&self) -> Option<&types::ForumTopicCreated> {
             match &self.kind {
-                ForumTopicCreated(MessageForumTopicCreated { forum_topic_created }) => {
-                    Some(forum_topic_created)
-                }
-                _ => None,
+                ForumTopicCreated(MessageForumTopicCreated {
+                    forum_topic_created
+                }) => Some(forum_topic_created),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn forum_topic_edited(&self) -> Option<&types::ForumTopicEdited> {
             match &self.kind {
-                ForumTopicEdited(MessageForumTopicEdited { forum_topic_edited }) => {
-                    Some(forum_topic_edited)
-                }
-                _ => None,
+                ForumTopicEdited(MessageForumTopicEdited {
+                    forum_topic_edited
+                }) => Some(forum_topic_edited),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn forum_topic_closed(&self) -> Option<&types::ForumTopicClosed> {
             match &self.kind {
-                ForumTopicClosed(MessageForumTopicClosed { forum_topic_closed }) => {
-                    Some(forum_topic_closed)
-                }
-                _ => None,
+                ForumTopicClosed(MessageForumTopicClosed {
+                    forum_topic_closed
+                }) => Some(forum_topic_closed),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn forum_topic_reopened(&self) -> Option<&types::ForumTopicReopened> {
             match &self.kind {
-                ForumTopicReopened(MessageForumTopicReopened { forum_topic_reopened }) => {
-                    Some(forum_topic_reopened)
-                }
-                _ => None,
+                ForumTopicReopened(MessageForumTopicReopened {
+                    forum_topic_reopened
+                }) => Some(forum_topic_reopened),
+                _ => None
             }
         }
 
@@ -2105,9 +2251,9 @@ mod getters {
         pub fn general_forum_topic_hidden(&self) -> Option<&types::GeneralForumTopicHidden> {
             match &self.kind {
                 GeneralForumTopicHidden(MessageGeneralForumTopicHidden {
-                    general_forum_topic_hidden,
+                    general_forum_topic_hidden
                 }) => Some(general_forum_topic_hidden),
-                _ => None,
+                _ => None
             }
         }
 
@@ -2115,47 +2261,49 @@ mod getters {
         pub fn general_forum_topic_unhidden(&self) -> Option<&types::GeneralForumTopicUnhidden> {
             match &self.kind {
                 GeneralForumTopicUnhidden(MessageGeneralForumTopicUnhidden {
-                    general_forum_topic_unhidden,
+                    general_forum_topic_unhidden
                 }) => Some(general_forum_topic_unhidden),
-                _ => None,
+                _ => None
             }
         }
 
         #[must_use]
         pub fn giveaway(&self) -> Option<&types::Giveaway> {
             match &self.kind {
-                Giveaway(MessageGiveaway { giveaway }) => Some(giveaway),
-                _ => None,
+                Giveaway(MessageGiveaway {
+                    giveaway
+                }) => Some(giveaway),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn giveaway_completed(&self) -> Option<&types::GiveawayCompleted> {
             match &self.kind {
-                GiveawayCompleted(MessageGiveawayCompleted { giveaway_completed }) => {
-                    Some(giveaway_completed)
-                }
-                _ => None,
+                GiveawayCompleted(MessageGiveawayCompleted {
+                    giveaway_completed
+                }) => Some(giveaway_completed),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn giveaway_created(&self) -> Option<&types::GiveawayCreated> {
             match &self.kind {
-                GiveawayCreated(MessageGiveawayCreated { giveaway_created }) => {
-                    Some(giveaway_created)
-                }
-                _ => None,
+                GiveawayCreated(MessageGiveawayCreated {
+                    giveaway_created
+                }) => Some(giveaway_created),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn giveaway_winners(&self) -> Option<&types::GiveawayWinners> {
             match &self.kind {
-                GiveawayWinners(MessageGiveawayWinners { giveaway_winners }) => {
-                    Some(giveaway_winners)
-                }
-                _ => None,
+                GiveawayWinners(MessageGiveawayWinners {
+                    giveaway_winners
+                }) => Some(giveaway_winners),
+                _ => None
             }
         }
 
@@ -2163,161 +2311,175 @@ mod getters {
         pub fn paid_message_price_changed(&self) -> Option<&types::PaidMessagePriceChanged> {
             match &self.kind {
                 PaidMessagePriceChanged(MessagePaidMessagePriceChanged {
-                    paid_message_price_changed,
+                    paid_message_price_changed
                 }) => Some(paid_message_price_changed),
-                _ => None,
+                _ => None
             }
         }
 
         #[must_use]
         pub fn suggested_post_approval_failed(
-            &self,
+            &self
         ) -> Option<&types::SuggestedPostApprovalFailed> {
             match &self.kind {
                 SuggestedPostApprovalFailed(MessageSuggestedPostApprovalFailed {
-                    suggested_post_approval_failed,
+                    suggested_post_approval_failed
                 }) => Some(suggested_post_approval_failed),
-                _ => None,
+                _ => None
             }
         }
 
         #[must_use]
         pub fn suggested_post_approved(&self) -> Option<&types::SuggestedPostApproved> {
             match &self.kind {
-                SuggestedPostApproved(MessageSuggestedPostApproved { suggested_post_approved }) => {
-                    Some(suggested_post_approved)
-                }
-                _ => None,
+                SuggestedPostApproved(MessageSuggestedPostApproved {
+                    suggested_post_approved
+                }) => Some(suggested_post_approved),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn suggested_post_declined(&self) -> Option<&types::SuggestedPostDeclined> {
             match &self.kind {
-                SuggestedPostDeclined(MessageSuggestedPostDeclined { suggested_post_declined }) => {
-                    Some(suggested_post_declined)
-                }
-                _ => None,
+                SuggestedPostDeclined(MessageSuggestedPostDeclined {
+                    suggested_post_declined
+                }) => Some(suggested_post_declined),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn suggested_post_paid(&self) -> Option<&types::SuggestedPostPaid> {
             match &self.kind {
-                SuggestedPostPaid(MessageSuggestedPostPaid { suggested_post_paid }) => {
-                    Some(suggested_post_paid)
-                }
-                _ => None,
+                SuggestedPostPaid(MessageSuggestedPostPaid {
+                    suggested_post_paid
+                }) => Some(suggested_post_paid),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn suggested_post_refunded(&self) -> Option<&types::SuggestedPostRefunded> {
             match &self.kind {
-                SuggestedPostRefunded(MessageSuggestedPostRefunded { suggested_post_refunded }) => {
-                    Some(suggested_post_refunded)
-                }
-                _ => None,
+                SuggestedPostRefunded(MessageSuggestedPostRefunded {
+                    suggested_post_refunded
+                }) => Some(suggested_post_refunded),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn gift_info(&self) -> Option<&types::GiftInfo> {
             match &self.kind {
-                GiftInfo(MessageGiftInfo { gift }) => Some(gift),
-                _ => None,
+                GiftInfo(MessageGiftInfo {
+                    gift
+                }) => Some(gift),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn unique_gift_info(&self) -> Option<&types::UniqueGiftInfo> {
             match &self.kind {
-                UniqueGiftInfo(MessageUniqueGiftInfo { unique_gift }) => Some(unique_gift),
-                _ => None,
+                UniqueGiftInfo(MessageUniqueGiftInfo {
+                    unique_gift
+                }) => Some(unique_gift),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn gift_upgrade_sent(&self) -> Option<&types::GiftInfo> {
             match &self.kind {
-                GiftUpgradeSent(MessageGiftUpgradeSent { gift_upgrade_sent }) => {
-                    Some(gift_upgrade_sent)
-                }
-                _ => None,
+                GiftUpgradeSent(MessageGiftUpgradeSent {
+                    gift_upgrade_sent
+                }) => Some(gift_upgrade_sent),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn video_chat_scheduled(&self) -> Option<&types::VideoChatScheduled> {
             match &self.kind {
-                VideoChatScheduled(MessageVideoChatScheduled { video_chat_scheduled }) => {
-                    Some(video_chat_scheduled)
-                }
-                _ => None,
+                VideoChatScheduled(MessageVideoChatScheduled {
+                    video_chat_scheduled
+                }) => Some(video_chat_scheduled),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn video_chat_started(&self) -> Option<&types::VideoChatStarted> {
             match &self.kind {
-                VideoChatStarted(MessageVideoChatStarted { video_chat_started }) => {
-                    Some(video_chat_started)
-                }
-                _ => None,
+                VideoChatStarted(MessageVideoChatStarted {
+                    video_chat_started
+                }) => Some(video_chat_started),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn video_chat_ended(&self) -> Option<&types::VideoChatEnded> {
             match &self.kind {
-                VideoChatEnded(MessageVideoChatEnded { video_chat_ended }) => {
-                    Some(video_chat_ended)
-                }
-                _ => None,
+                VideoChatEnded(MessageVideoChatEnded {
+                    video_chat_ended
+                }) => Some(video_chat_ended),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn video_chat_participants_invited(
-            &self,
+            &self
         ) -> Option<&types::VideoChatParticipantsInvited> {
             match &self.kind {
                 VideoChatParticipantsInvited(MessageVideoChatParticipantsInvited {
-                    video_chat_participants_invited,
+                    video_chat_participants_invited
                 }) => Some(video_chat_participants_invited),
-                _ => None,
+                _ => None
             }
         }
 
         #[must_use]
         pub fn web_app_data(&self) -> Option<&types::WebAppData> {
             match &self.kind {
-                WebAppData(MessageWebAppData { web_app_data }) => Some(web_app_data),
-                _ => None,
+                WebAppData(MessageWebAppData {
+                    web_app_data
+                }) => Some(web_app_data),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn reply_markup(&self) -> Option<&types::InlineKeyboardMarkup> {
             match &self.kind {
-                Common(MessageCommon { reply_markup, .. }) => reply_markup.as_ref(),
-                _ => None,
+                Common(MessageCommon {
+                    reply_markup, ..
+                }) => reply_markup.as_ref(),
+                _ => None
             }
         }
 
         #[must_use]
         pub fn is_automatic_forward(&self) -> bool {
             match &self.kind {
-                Common(MessageCommon { is_automatic_forward, .. }) => *is_automatic_forward,
-                _ => false,
+                Common(MessageCommon {
+                    is_automatic_forward,
+                    ..
+                }) => *is_automatic_forward,
+                _ => false
             }
         }
 
         #[must_use]
         pub fn has_protected_content(&self) -> bool {
             match &self.kind {
-                Common(MessageCommon { has_protected_content, .. }) => *has_protected_content,
-                _ => false,
+                Common(MessageCommon {
+                    has_protected_content,
+                    ..
+                }) => *has_protected_content,
+                _ => false
             }
         }
 
@@ -2325,7 +2487,7 @@ mod getters {
         fn common(&self) -> Option<&MessageCommon> {
             match &self.kind {
                 Common(message) => Some(message),
-                _ => None,
+                _ => None
             }
         }
 
@@ -2364,7 +2526,7 @@ impl Message {
     pub fn url_of(
         chat_id: ChatId,
         chat_username: Option<&str>,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> Option<Url> {
         use BareChatId::*;
 
@@ -2382,7 +2544,7 @@ impl Message {
             //
             // (public groups are always supergroup which are in turn channels).
             Group(_) => return None,
-            Channel(id) => id,
+            Channel(id) => id
         };
 
         let url = match chat_username {
@@ -2391,7 +2553,7 @@ impl Message {
             Some(username) => format!("https://t.me/{0}/{1}", username, message_id.0),
             // For private supergroups and channels we produce "private" t.me/c links. These are
             // only accessible to the group members.
-            None => format!("https://t.me/c/{0}/{1}", chat_id, message_id.0),
+            None => format!("https://t.me/c/{0}/{1}", chat_id, message_id.0)
         };
 
         // UNWRAP:
@@ -2432,7 +2594,7 @@ impl Message {
         channel_id: ChatId,
         channel_username: Option<&str>,
         post_id: MessageId,
-        comment_id: MessageId,
+        comment_id: MessageId
     ) -> Option<Url> {
         Self::url_of(channel_id, channel_username, post_id).map(|mut url| {
             url.set_query(Some(&format!("comment={}", comment_id.0)));
@@ -2453,7 +2615,12 @@ impl Message {
     /// supergroups).
     #[must_use]
     pub fn url_in_thread(&self, thread_starter_msg_id: MessageId) -> Option<Url> {
-        Self::url_in_thread_of(self.chat.id, self.chat.username(), thread_starter_msg_id, self.id)
+        Self::url_in_thread_of(
+            self.chat.id,
+            self.chat.username(),
+            thread_starter_msg_id,
+            self.id
+        )
     }
 
     /// Produces a direct link to a message in a given thread.
@@ -2479,7 +2646,7 @@ impl Message {
         chat_id: ChatId,
         chat_username: Option<&str>,
         thread_starter_msg_id: MessageId,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> Option<Url> {
         Self::url_of(chat_id, chat_username, message_id).map(|mut url| {
             url.set_query(Some(&format!("thread={}", thread_starter_msg_id.0)));
@@ -2498,7 +2665,9 @@ impl Message {
     /// [`parse_caption_entities`]: Message::parse_caption_entities
     #[must_use]
     pub fn parse_entities(&self) -> Option<Vec<MessageEntityRef<'_>>> {
-        self.text().zip(self.entities()).map(|(t, e)| MessageEntityRef::parse(t, e))
+        self.text()
+            .zip(self.entities())
+            .map(|(t, e)| MessageEntityRef::parse(t, e))
     }
 
     /// Returns message entities that represent text formatting.
@@ -2511,7 +2680,9 @@ impl Message {
     /// [`parse_entities`]: Message::parse_entities
     #[must_use]
     pub fn parse_caption_entities(&self) -> Option<Vec<MessageEntityRef<'_>>> {
-        self.caption().zip(self.caption_entities()).map(|(t, e)| MessageEntityRef::parse(t, e))
+        self.caption()
+            .zip(self.caption_entities())
+            .map(|(t, e)| MessageEntityRef::parse(t, e))
     }
 
     /// Returns all users that are "contained" in this `Message` structure.
@@ -2536,22 +2707,33 @@ impl Message {
         self.from
             .iter()
             .chain(self.via_bot.as_ref())
-            .chain(flatten(self.reply_to_message().map(Self::mentioned_users_rec)))
+            .chain(flatten(
+                self.reply_to_message().map(Self::mentioned_users_rec)
+            ))
             .chain(flatten(self.new_chat_members()))
             .chain(self.left_chat_member())
             .chain(self.forward_from_user())
             .chain(flatten(self.game().map(Game::mentioned_users)))
             .chain(flatten(self.entities().map(mentioned_users_from_entities)))
-            .chain(flatten(self.caption_entities().map(mentioned_users_from_entities)))
+            .chain(flatten(
+                self.caption_entities().map(mentioned_users_from_entities)
+            ))
             .chain(flatten(self.poll().map(Poll::mentioned_users)))
-            .chain(flatten(self.proximity_alert_triggered().map(|a| [&a.traveler, &a.watcher])))
-            .chain(flatten(self.video_chat_participants_invited().map(|i| &i.users)))
+            .chain(flatten(
+                self.proximity_alert_triggered()
+                    .map(|a| [&a.traveler, &a.watcher])
+            ))
+            .chain(flatten(
+                self.video_chat_participants_invited().map(|i| &i.users)
+            ))
     }
 
     /// `Message::mentioned_users` is recursive (due to replies), as such we
     /// can't use `->impl Iterator` everywhere, as it would make an infinite
     /// type. So we need to box somewhere.
-    pub(crate) fn mentioned_users_rec(&self) -> Box<dyn Iterator<Item = &User> + Send + Sync + '_> {
+    pub(crate) fn mentioned_users_rec(
+        &self
+    ) -> Box<dyn Iterator<Item = &User> + Send + Sync + '_> {
         Box::new(self.mentioned_users())
     }
 }
@@ -2640,38 +2822,38 @@ mod tests {
         assert_eq!(
             message.unwrap(),
             Message {
-                id: MessageId(198283),
-                thread_id: None,
+                id:                    MessageId(198283),
+                thread_id:             None,
                 direct_messages_topic: None,
-                from: None,
-                sender_chat: None,
-                date: chrono::DateTime::from_timestamp(1567927221, 0).unwrap(),
-                is_topic_message: false,
-                is_paid_post: false,
-                suggested_post_info: None,
-                chat: Chat {
-                    id: ChatId(250918540),
+                from:                  None,
+                sender_chat:           None,
+                date:                  chrono::DateTime::from_timestamp(1567927221, 0).unwrap(),
+                is_topic_message:      false,
+                is_paid_post:          false,
+                suggested_post_info:   None,
+                chat:                  Chat {
+                    id:   ChatId(250918540),
                     kind: ChatKind::Private(ChatPrivate {
                         first_name: Some("Андрей".to_string()),
-                        last_name: Some("Власов".to_string()),
-                        username: Some("aka_dude".to_string()),
-                    }),
+                        last_name:  Some("Власов".to_string()),
+                        username:   Some("aka_dude".to_string())
+                    })
                 },
-                sender_business_bot: None,
-                sender_tag: None,
+                sender_business_bot:   None,
+                sender_tag:            None,
                 guest_bot_caller_user: None,
                 guest_bot_caller_chat: None,
-                guest_query_id: None,
-                kind: MessageKind::ChatShared(MessageChatShared {
+                guest_query_id:        None,
+                kind:                  MessageKind::ChatShared(MessageChatShared {
                     chat_shared: ChatShared {
                         request_id: RequestId(348349),
-                        chat_id: ChatId(384939),
-                        title: None,
-                        username: None,
-                        photo: None,
+                        chat_id:    ChatId(384939),
+                        title:      None,
+                        username:   None,
+                        photo:      None
                     }
                 }),
-                via_bot: None
+                via_bot:               None
             }
         );
     }
@@ -2877,15 +3059,15 @@ mod tests {
         let message: Message = serde_json::from_str(json).unwrap();
 
         let group = Chat {
-            id: ChatId(-1001160242915),
+            id:   ChatId(-1001160242915),
             kind: ChatKind::Public(ChatPublic {
                 title: Some("a".to_owned()),
-                kind: PublicChatKind::Supergroup(PublicChatSupergroup {
-                    username: None,
-                    is_forum: false,
-                    is_direct_messages: false,
-                }),
-            }),
+                kind:  PublicChatKind::Supergroup(PublicChatSupergroup {
+                    username:           None,
+                    is_forum:           false,
+                    is_direct_messages: false
+                })
+            })
         };
 
         assert!(message.from.as_ref().unwrap().is_anonymous());
@@ -2909,7 +3091,12 @@ mod tests {
         let message: Message = from_str(json).unwrap();
 
         assert_eq!(message.chat.id, old);
-        assert_eq!(message.chat_migration(), Some(&ChatMigration::To { chat_id: new }));
+        assert_eq!(
+            message.chat_migration(),
+            Some(&ChatMigration::To {
+                chat_id: new
+            })
+        );
         assert_eq!(message.migrate_to_chat_id(), Some(&new));
 
         // The user who initialized the migration
@@ -2920,7 +3107,12 @@ mod tests {
         let message: Message = from_str(json).unwrap();
 
         assert_eq!(message.chat.id, new);
-        assert_eq!(message.chat_migration(), Some(&ChatMigration::From { chat_id: old }));
+        assert_eq!(
+            message.chat_migration(),
+            Some(&ChatMigration::From {
+                chat_id: old
+            })
+        );
         assert_eq!(message.migrate_from_chat_id(), Some(&old));
 
         // Anonymous bot
@@ -2962,20 +3154,20 @@ mod tests {
         assert_eq!(
             message.venue().unwrap(),
             &Venue {
-                location: Location {
-                    longitude: 0.0,
-                    latitude: 0.0,
-                    horizontal_accuracy: None,
-                    live_period: Some(900.into()),
-                    heading: None,
+                location:          Location {
+                    longitude:              0.0,
+                    latitude:               0.0,
+                    horizontal_accuracy:    None,
+                    live_period:            Some(900.into()),
+                    heading:                None,
                     proximity_alert_radius: None
                 },
-                title: "Title".to_owned(),
-                address: "Address".to_owned(),
-                foursquare_id: Some("some_foursquare_id".to_owned()),
-                foursquare_type: None,
-                google_place_id: None,
-                google_place_type: None,
+                title:             "Title".to_owned(),
+                address:           "Address".to_owned(),
+                foursquare_id:     Some("some_foursquare_id".to_owned()),
+                foursquare_type:   None,
+                google_place_id:   None,
+                google_place_type: None
             }
         )
     }
@@ -3163,11 +3355,13 @@ mod tests {
             message.giveaway().unwrap(),
             &Giveaway {
                 chats: vec![Chat {
-                    id: ChatId(-1002236736395),
+                    id:   ChatId(-1002236736395),
                     kind: ChatKind::Public(ChatPublic {
                         title: Some("Test".to_owned()),
-                        kind: PublicChatKind::Channel(PublicChatChannel { username: None }),
-                    }),
+                        kind:  PublicChatKind::Channel(PublicChatChannel {
+                            username: None
+                        })
+                    })
                 }],
                 winners_selection_date: DateTime::from_timestamp(1721162701, 0).unwrap(),
                 winner_count: 1,
@@ -3199,7 +3393,12 @@ mod tests {
             "giveaway_created": {}
         }"#;
         let message: Message = from_str(json).unwrap();
-        assert_eq!(message.giveaway_created().unwrap(), &GiveawayCreated { prize_star_count: None })
+        assert_eq!(
+            message.giveaway_created().unwrap(),
+            &GiveawayCreated {
+                prize_star_count: None
+            }
+        )
     }
 
     #[test]
@@ -3253,47 +3452,51 @@ mod tests {
         assert_eq!(
             message.giveaway_completed().unwrap(),
             &GiveawayCompleted {
-                winner_count: 0,
+                winner_count:          0,
                 unclaimed_prize_count: Some(1),
-                giveaway_message: Some(Box::new(Message {
-                    id: MessageId(24),
-                    thread_id: None,
+                giveaway_message:      Some(Box::new(Message {
+                    id:                    MessageId(24),
+                    thread_id:             None,
                     direct_messages_topic: None,
-                    is_paid_post: false,
-                    from: None,
-                    sender_chat: Some(Chat {
-                        id: ChatId(-1002236736395),
+                    is_paid_post:          false,
+                    from:                  None,
+                    sender_chat:           Some(Chat {
+                        id:   ChatId(-1002236736395),
                         kind: ChatKind::Public(ChatPublic {
                             title: Some("Test".to_owned()),
-                            kind: PublicChatKind::Channel(PublicChatChannel { username: None }),
-                        }),
+                            kind:  PublicChatKind::Channel(PublicChatChannel {
+                                username: None
+                            })
+                        })
                     }),
-                    is_topic_message: false,
-                    date: DateTime::from_timestamp(1721161230, 0).unwrap(),
-                    chat: Chat {
-                        id: ChatId(-1002236736395),
+                    is_topic_message:      false,
+                    date:                  DateTime::from_timestamp(1721161230, 0).unwrap(),
+                    chat:                  Chat {
+                        id:   ChatId(-1002236736395),
                         kind: ChatKind::Public(ChatPublic {
                             title: Some("Test".to_owned()),
-                            kind: PublicChatKind::Channel(PublicChatChannel { username: None }),
-                        }),
+                            kind:  PublicChatKind::Channel(PublicChatChannel {
+                                username: None
+                            })
+                        })
                     },
-                    via_bot: None,
-                    sender_business_bot: None,
-                    sender_tag: None,
+                    via_bot:               None,
+                    sender_business_bot:   None,
+                    sender_tag:            None,
                     guest_bot_caller_user: None,
                     guest_bot_caller_chat: None,
-                    guest_query_id: None,
-                    suggested_post_info: None,
-                    kind: MessageKind::Giveaway(MessageGiveaway {
+                    guest_query_id:        None,
+                    suggested_post_info:   None,
+                    kind:                  MessageKind::Giveaway(MessageGiveaway {
                         giveaway: Giveaway {
                             chats: vec![Chat {
-                                id: ChatId(-1002236736395),
+                                id:   ChatId(-1002236736395),
                                 kind: ChatKind::Public(ChatPublic {
                                     title: Some("Test".to_owned()),
-                                    kind: PublicChatKind::Channel(PublicChatChannel {
-                                        username: None,
-                                    }),
-                                }),
+                                    kind:  PublicChatKind::Channel(PublicChatChannel {
+                                        username: None
+                                    })
+                                })
                             }],
                             winners_selection_date: DateTime::from_timestamp(1721162701, 0)
                                 .unwrap(),
@@ -3307,7 +3510,7 @@ mod tests {
                         }
                     })
                 })),
-                is_star_giveaway: false,
+                is_star_giveaway:      false
             }
         )
     }
@@ -3376,14 +3579,18 @@ mod tests {
         }"#;
         let message: Message = from_str(json).unwrap();
         assert_eq!(
-            message.giveaway_winners().expect("Failed to get GiveawayWinners from Message!"),
+            message
+                .giveaway_winners()
+                .expect("Failed to get GiveawayWinners from Message!"),
             &GiveawayWinners {
                 chat: Chat {
-                    id: ChatId(-1002236736395),
+                    id:   ChatId(-1002236736395),
                     kind: ChatKind::Public(ChatPublic {
                         title: Some("Test".to_owned()),
-                        kind: PublicChatKind::Channel(PublicChatChannel { username: None }),
-                    }),
+                        kind:  PublicChatKind::Channel(PublicChatChannel {
+                            username: None
+                        })
+                    })
                 },
                 giveaway_message_id: MessageId(27),
                 winners_selection_date: DateTime::from_timestamp(1721162701, 0).unwrap(),
@@ -3400,7 +3607,7 @@ mod tests {
                     can_manage_bots: false,
                     has_topics_enabled: false,
                     allows_users_to_create_topics: false,
-                    supports_guest_queries: false,
+                    supports_guest_queries: false
                 }],
                 additional_chat_count: None,
                 premium_subscription_month_count: Some(6),
@@ -3433,7 +3640,9 @@ mod tests {
         let message: Message = from_str(json).unwrap();
         assert_eq!(
             message.paid_message_price_changed().unwrap(),
-            &PaidMessagePriceChanged { paid_message_star_count: 1234 }
+            &PaidMessagePriceChanged {
+                paid_message_star_count: 1234
+            }
         )
     }
 
@@ -3465,8 +3674,11 @@ mod tests {
             message.suggested_post_approved().unwrap(),
             &SuggestedPostApproved {
                 suggested_post_message: None,
-                price: Some(SuggestedPostPrice { currency: "XTR".to_owned(), amount: 5 }),
-                send_date: DateTime::from_timestamp(0, 0).unwrap()
+                price:                  Some(SuggestedPostPrice {
+                    currency: "XTR".to_owned(),
+                    amount:   5
+                }),
+                send_date:              DateTime::from_timestamp(0, 0).unwrap()
             }
         )
     }
@@ -3498,7 +3710,10 @@ mod tests {
             message.suggested_post_approval_failed().unwrap(),
             &SuggestedPostApprovalFailed {
                 suggested_post_message: None,
-                price: SuggestedPostPrice { currency: "XTR".to_owned(), amount: 5 },
+                price:                  SuggestedPostPrice {
+                    currency: "XTR".to_owned(),
+                    amount:   5
+                }
             }
         )
     }
@@ -3527,7 +3742,7 @@ mod tests {
             message.suggested_post_declined().unwrap(),
             &SuggestedPostDeclined {
                 suggested_post_message: None,
-                comment: Some("Test".to_owned())
+                comment:                Some("Test".to_owned())
             }
         )
     }
@@ -3556,9 +3771,9 @@ mod tests {
             message.suggested_post_paid().unwrap(),
             &SuggestedPostPaid {
                 suggested_post_message: None,
-                currency: "XTR".to_string(),
-                amount: None,
-                star_amount: None,
+                currency:               "XTR".to_string(),
+                amount:                 None,
+                star_amount:            None
             }
         )
     }
@@ -3587,7 +3802,7 @@ mod tests {
             message.suggested_post_refunded().unwrap(),
             &SuggestedPostRefunded {
                 suggested_post_message: None,
-                reason: SuggestedPostRefundReason::PostDeleted
+                reason:                 SuggestedPostRefundReason::PostDeleted
             }
         )
     }
@@ -3705,9 +3920,20 @@ mod tests {
             }
         }"#;
         let message: Message = from_str(json).unwrap();
-        assert_eq!(message.unique_gift_info().unwrap().origin, UniqueGiftOrigin::Resale);
+        assert_eq!(
+            message.unique_gift_info().unwrap().origin,
+            UniqueGiftOrigin::Resale
+        );
         assert_eq!(message.unique_gift_info().unwrap().gift.name, "name");
-        assert_eq!(message.unique_gift_info().unwrap().gift.backdrop.rarity_per_mille, 123);
+        assert_eq!(
+            message
+                .unique_gift_info()
+                .unwrap()
+                .gift
+                .backdrop
+                .rarity_per_mille,
+            123
+        );
     }
 
     #[test]
@@ -3770,8 +3996,12 @@ mod tests {
         }"#;
         let message: Message = from_str(json).unwrap();
         assert_eq!(
-            message.boost_added().expect("Failed to get ChatBoostAdded from Message!"),
-            &ChatBoostAdded { boost_count: 4 }
+            message
+                .boost_added()
+                .expect("Failed to get ChatBoostAdded from Message!"),
+            &ChatBoostAdded {
+                boost_count: 4
+            }
         )
     }
 
@@ -3798,7 +4028,10 @@ mod tests {
             "effect_id": "5123233223429587601"
         }"#;
         let message: Message = from_str(json).unwrap();
-        assert_eq!(message.effect_id().unwrap().to_string(), "5123233223429587601")
+        assert_eq!(
+            message.effect_id().unwrap().to_string(),
+            "5123233223429587601"
+        )
     }
 
     #[test]

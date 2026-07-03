@@ -15,19 +15,19 @@ mod serializers;
 
 use std::future::Future;
 
+use error::Error;
 use reqwest::multipart::Form;
 use serde::Serialize;
+use serializers::MultipartSerializer;
 
 use crate::requests::MultipartPayload;
-use error::Error;
-use serializers::MultipartSerializer;
 
 /// Serializes given value into [`Form`] **taking all input files out**.
 ///
 /// [`Form`]:  reqwest::multipart::Form
 pub(crate) fn to_form<T>(val: &mut T) -> Result<impl Future<Output = Form> + use<T>, Error>
 where
-    T: Serialize + MultipartPayload,
+    T: Serialize + MultipartPayload
 {
     let mut form = val.serialize(MultipartSerializer::new())?;
 
@@ -56,7 +56,7 @@ where
 /// [`Form`]:  reqwest::multipart::Form
 pub(crate) fn to_form_ref<T: ?Sized>(val: &T) -> Result<impl Future<Output = Form> + use<T>, Error>
 where
-    T: Serialize + MultipartPayload,
+    T: Serialize + MultipartPayload
 {
     let mut form = val.serialize(MultipartSerializer::new())?;
     let mut vec = Vec::with_capacity(1);
@@ -92,8 +92,8 @@ mod tests {
             InputMediaAudio, InputMediaDocument, InputMediaPhoto, InputMediaVideo, InputPollMedia,
             InputPollOption, InputPollOptionMedia, InputProfilePhoto, InputProfilePhotoStatic,
             InputSticker, InputStoryContent, InputStoryContentPhoto, MessageEntity,
-            MessageEntityKind, ParseMode, StickerFormat, UserId,
-        },
+            MessageEntityKind, ParseMode, StickerFormat, UserId
+        }
     };
 
     // https://github.com/teloxide/teloxide/issues/473
@@ -101,8 +101,12 @@ mod tests {
     async fn issue_473() {
         to_form_ref(
             &payloads::SendPhoto::new(ChatId(0), InputFile::file_id("0".into())).caption_entities(
-                [MessageEntity { kind: MessageEntityKind::Url, offset: 0, length: 0 }],
-            ),
+                [MessageEntity {
+                    kind:   MessageEntityKind::Url,
+                    offset: 0,
+                    length: 0
+                }]
+            )
         )
         .unwrap()
         .await;
@@ -119,28 +123,30 @@ mod tests {
                     InputMediaPhoto::new(InputFile::file("../../media/teloxide-core-logo.png"))
                         .caption(CAPTION)
                         .parse_mode(ParseMode::MarkdownV2)
-                        .caption_entities(entities()),
+                        .caption_entities(entities())
                 ),
                 InputMedia::Video(
-                    InputMediaVideo::new(InputFile::file_id("17".into())).supports_streaming(true),
+                    InputMediaVideo::new(InputFile::file_id("17".into())).supports_streaming(true)
                 ),
                 InputMedia::Animation(
                     InputMediaAnimation::new(InputFile::read(
-                        File::open("../../media/example.gif").await.unwrap(),
+                        File::open("../../media/example.gif").await.unwrap()
                     ))
                     .thumbnail(InputFile::read(
-                        File::open("../../media/teloxide-core-logo.png").await.unwrap(),
+                        File::open("../../media/teloxide-core-logo.png")
+                            .await
+                            .unwrap()
                     ))
-                    .duration(17),
+                    .duration(17)
                 ),
                 InputMedia::Audio(
                     InputMediaAudio::new(InputFile::url("https://example.com".parse().unwrap()))
-                        .performer("a"),
+                        .performer("a")
                 ),
                 InputMedia::Document(InputMediaDocument::new(InputFile::memory(
-                    &b"Hello world!"[..],
-                ))),
-            ],
+                    &b"Hello world!"[..]
+                )))
+            ]
         ))
         .unwrap()
         .await;
@@ -152,15 +158,15 @@ mod tests {
             UserId(0),
             "name",
             InputSticker {
-                sticker: InputFile::file(
+                sticker:       InputFile::file(
                     "../../media/
-                teloxide-core-logo.png",
+                teloxide-core-logo.png"
                 ),
-                emoji_list: vec!["✈️⚙️".to_owned()],
-                keywords: vec![],
+                emoji_list:    vec!["✈️⚙️".to_owned()],
+                keywords:      vec![],
                 mask_position: None,
-                format: StickerFormat::Static,
-            },
+                format:        StickerFormat::Static
+            }
         ))
         .unwrap()
         .await;
@@ -171,12 +177,14 @@ mod tests {
         to_form_ref(
             &payloads::SendAnimation::new(
                 ChatId(0),
-                InputFile::file("../../media/teloxide-core-logo.png"),
+                InputFile::file("../../media/teloxide-core-logo.png")
             )
             .caption_entities(entities())
             .thumbnail(InputFile::read(
-                File::open("../../media/teloxide-core-logo.png").await.unwrap(),
-            )),
+                File::open("../../media/teloxide-core-logo.png")
+                    .await
+                    .unwrap()
+            ))
         )
         .unwrap()
         .await;
@@ -195,19 +203,21 @@ mod tests {
                 "Pick one",
                 [
                     InputPollOption::new("File on disk").media(InputPollOptionMedia::Photo(
-                        InputMediaPhoto::new(InputFile::file("../../media/teloxide-core-logo.png")),
+                        InputMediaPhoto::new(InputFile::file(
+                            "../../media/teloxide-core-logo.png"
+                        ))
                     )),
                     InputPollOption::new("File id").media(InputPollOptionMedia::Video(
-                        InputMediaVideo::new(InputFile::file_id("17".into())),
-                    )),
-                ],
+                        InputMediaVideo::new(InputFile::file_id("17".into()))
+                    ))
+                ]
             )
-            .media(InputPollMedia::Photo(InputMediaPhoto::new(InputFile::file(
-                "../../media/teloxide-core-logo.png",
-            ))))
+            .media(InputPollMedia::Photo(InputMediaPhoto::new(
+                InputFile::file("../../media/teloxide-core-logo.png")
+            )))
             .explanation_media(InputPollMedia::Audio(InputMediaAudio::new(
-                InputFile::memory(&b"audio-bytes"[..]),
-            ))),
+                InputFile::memory(&b"audio-bytes"[..])
+            )))
         )
         .unwrap()
         .await;
@@ -221,9 +231,9 @@ mod tests {
         to_form_ref(&payloads::PostStory::new(
             BusinessConnectionId("conn-id".to_owned()),
             InputStoryContent::Photo(InputStoryContentPhoto {
-                photo: InputFile::file("../../media/teloxide-core-logo.png"),
+                photo: InputFile::file("../../media/teloxide-core-logo.png")
             }),
-            crate::types::Seconds::from_seconds(86400),
+            crate::types::Seconds::from_seconds(86400)
         ))
         .unwrap()
         .await;
@@ -237,8 +247,8 @@ mod tests {
         to_form_ref(&payloads::SetBusinessAccountProfilePhoto::new(
             BusinessConnectionId("conn-id".to_owned()),
             InputProfilePhoto::Static(InputProfilePhotoStatic {
-                photo: InputFile::file("../../media/teloxide-core-logo.png"),
-            }),
+                photo: InputFile::file("../../media/teloxide-core-logo.png")
+            })
         ))
         .unwrap()
         .await;
@@ -247,14 +257,28 @@ mod tests {
     fn entities() -> impl Iterator<Item = MessageEntity> {
         <_>::into_iter([
             MessageEntity::new(MessageEntityKind::Url, 0, 0),
-            MessageEntity::new(MessageEntityKind::Pre { language: None }, 0, 0),
-            MessageEntity::new(MessageEntityKind::Pre { language: Some(String::new()) }, 0, 0),
+            MessageEntity::new(
+                MessageEntityKind::Pre {
+                    language: None
+                },
+                0,
+                0
+            ),
+            MessageEntity::new(
+                MessageEntityKind::Pre {
+                    language: Some(String::new())
+                },
+                0,
+                0
+            ),
             MessageEntity::new(MessageEntityKind::Url, 0, 0),
             MessageEntity::new(
-                MessageEntityKind::TextLink { url: "https://example.com".parse().unwrap() },
+                MessageEntityKind::TextLink {
+                    url: "https://example.com".parse().unwrap()
+                },
                 0,
-                0,
-            ),
+                0
+            )
         ])
     }
 }

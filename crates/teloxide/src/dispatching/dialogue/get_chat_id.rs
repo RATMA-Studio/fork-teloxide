@@ -1,5 +1,5 @@
 use crate::types::{
-    CallbackQuery, Chat, ChatId, ChatJoinRequest, ChatMemberUpdated, Message, Update,
+    CallbackQuery, Chat, ChatId, ChatJoinRequest, ChatMemberUpdated, Message, Update
 };
 
 /// Something that may have a chat ID.

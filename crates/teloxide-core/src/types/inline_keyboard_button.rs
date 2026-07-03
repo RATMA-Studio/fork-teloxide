@@ -1,7 +1,8 @@
-use crate::types::{
-    CallbackGame, CopyTextButton, LoginUrl, SwitchInlineQueryChosenChat, True, WebAppInfo,
-};
 use serde::{Deserialize, Serialize};
+
+use crate::types::{
+    CallbackGame, CopyTextButton, LoginUrl, SwitchInlineQueryChosenChat, True, WebAppInfo
+};
 
 /// This object represents one button of an inline keyboard.
 ///
@@ -28,7 +29,7 @@ pub struct InlineKeyboardButton {
     pub style: Option<String>,
 
     #[serde(flatten)]
-    pub kind: InlineKeyboardButtonKind,
+    pub kind: InlineKeyboardButtonKind
 }
 
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Serialize, Deserialize)]
@@ -119,16 +120,21 @@ pub enum InlineKeyboardButtonKind {
     /// row.
     ///
     /// [Pay button]: https://core.telegram.org/bots/api#payments
-    Pay(True),
+    Pay(True)
 }
 
 impl InlineKeyboardButton {
     /// Creates a new `InlineKeyboardButton`.
     pub fn new<S>(text: S, kind: InlineKeyboardButtonKind) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
-        Self { text: text.into(), icon_custom_emoji_id: None, style: None, kind }
+        Self {
+            text: text.into(),
+            icon_custom_emoji_id: None,
+            style: None,
+            kind
+        }
     }
 
     pub fn icon_custom_emoji_id<S: Into<String>>(mut self, id: S) -> Self {
@@ -146,7 +152,7 @@ impl InlineKeyboardButton {
     /// [`Url`]: InlineKeyboardButtonKind::Url
     pub fn url<T>(text: T, url: reqwest::Url) -> Self
     where
-        T: Into<String>,
+        T: Into<String>
     {
         Self::new(text, InlineKeyboardButtonKind::Url(url))
     }
@@ -156,7 +162,7 @@ impl InlineKeyboardButton {
     /// [`LoginUrl`]: InlineKeyboardButtonKind::LoginUrl
     pub fn login<T>(text: T, url: LoginUrl) -> Self
     where
-        T: Into<String>,
+        T: Into<String>
     {
         Self::new(text, InlineKeyboardButtonKind::LoginUrl(url))
     }
@@ -167,9 +173,12 @@ impl InlineKeyboardButton {
     pub fn callback<T, C>(text: T, callback_data: C) -> Self
     where
         T: Into<String>,
-        C: Into<String>,
+        C: Into<String>
     {
-        Self::new(text, InlineKeyboardButtonKind::CallbackData(callback_data.into()))
+        Self::new(
+            text,
+            InlineKeyboardButtonKind::CallbackData(callback_data.into())
+        )
     }
 
     /// Constructor for `InlineKeyboardButton` with [`WebApp`] kind.
@@ -177,7 +186,7 @@ impl InlineKeyboardButton {
     /// [`WebApp`]: InlineKeyboardButtonKind::WebApp
     pub fn web_app<T>(text: T, info: WebAppInfo) -> Self
     where
-        T: Into<String>,
+        T: Into<String>
     {
         Self::new(text, InlineKeyboardButtonKind::WebApp(info))
     }
@@ -188,9 +197,12 @@ impl InlineKeyboardButton {
     pub fn switch_inline_query<T, Q>(text: T, switch_inline_query: Q) -> Self
     where
         T: Into<String>,
-        Q: Into<String>,
+        Q: Into<String>
     {
-        Self::new(text, InlineKeyboardButtonKind::SwitchInlineQuery(switch_inline_query.into()))
+        Self::new(
+            text,
+            InlineKeyboardButtonKind::SwitchInlineQuery(switch_inline_query.into())
+        )
     }
 
     /// Constructor for `InlineKeyboardButton` with
@@ -199,17 +211,17 @@ impl InlineKeyboardButton {
     /// [`SwitchInlineQueryCurrentChat`]: InlineKeyboardButtonKind::SwitchInlineQueryCurrentChat
     pub fn switch_inline_query_current_chat<T, Q>(
         text: T,
-        switch_inline_query_current_chat: Q,
+        switch_inline_query_current_chat: Q
     ) -> Self
     where
         T: Into<String>,
-        Q: Into<String>,
+        Q: Into<String>
     {
         Self::new(
             text,
             InlineKeyboardButtonKind::SwitchInlineQueryCurrentChat(
-                switch_inline_query_current_chat.into(),
-            ),
+                switch_inline_query_current_chat.into()
+            )
         )
     }
 
@@ -219,7 +231,7 @@ impl InlineKeyboardButton {
     /// [`CopyText`]: InlineKeyboardButtonKind::CopyText
     pub fn copy_text_button<T>(text: T, copy_text_button: CopyTextButton) -> Self
     where
-        T: Into<String>,
+        T: Into<String>
     {
         Self::new(text, InlineKeyboardButtonKind::CopyText(copy_text_button))
     }
@@ -229,7 +241,7 @@ impl InlineKeyboardButton {
     /// [`CallbackGame`]: InlineKeyboardButtonKind::CallbackGame
     pub fn callback_game<T>(text: T, game: CallbackGame) -> Self
     where
-        T: Into<String>,
+        T: Into<String>
     {
         Self::new(text, InlineKeyboardButtonKind::CallbackGame(game))
     }
@@ -239,7 +251,7 @@ impl InlineKeyboardButton {
     /// [`Pay`]: InlineKeyboardButtonKind::Pay
     pub fn pay<T>(text: T) -> Self
     where
-        T: Into<String>,
+        T: Into<String>
     {
         Self::new(text, InlineKeyboardButtonKind::Pay(True))
     }

@@ -57,7 +57,7 @@ pub struct KeyboardMarkup {
     ///
     /// [`Message`]: crate::types::Message
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
-    pub selective: bool,
+    pub selective: bool
 }
 
 impl KeyboardMarkup {
@@ -65,21 +65,25 @@ impl KeyboardMarkup {
     pub fn new<K>(keyboard: K) -> Self
     where
         K: IntoIterator,
-        K::Item: IntoIterator<Item = KeyboardButton>,
+        K::Item: IntoIterator<Item = KeyboardButton>
     {
         Self {
-            keyboard: keyboard.into_iter().map(<_>::into_iter).map(<_>::collect).collect(),
-            is_persistent: false,
-            resize_keyboard: false,
-            one_time_keyboard: false,
+            keyboard:                keyboard
+                .into_iter()
+                .map(<_>::into_iter)
+                .map(<_>::collect)
+                .collect(),
+            is_persistent:           false,
+            resize_keyboard:         false,
+            one_time_keyboard:       false,
             input_field_placeholder: String::new(),
-            selective: false,
+            selective:               false
         }
     }
 
     pub fn append_row<R>(mut self, buttons: R) -> Self
     where
-        R: IntoIterator<Item = KeyboardButton>,
+        R: IntoIterator<Item = KeyboardButton>
     {
         self.keyboard.push(buttons.into_iter().collect());
         self
@@ -89,7 +93,7 @@ impl KeyboardMarkup {
     pub fn append_to_row(mut self, index: usize, button: KeyboardButton) -> Self {
         match self.keyboard.get_mut(index) {
             Some(buttons) => buttons.push(button),
-            None => self.keyboard.push(vec![button]),
+            None => self.keyboard.push(vec![button])
         };
         self
     }
@@ -98,36 +102,51 @@ impl KeyboardMarkup {
     ///
     /// [`is_persistent`]: KeyboardMarkup::is_persistent
     pub fn persistent(self) -> Self {
-        Self { is_persistent: true, ..self }
+        Self {
+            is_persistent: true,
+            ..self
+        }
     }
 
     /// Sets [`resize_keyboard`] to `true`.
     ///
     /// [`resize_keyboard`]: KeyboardMarkup::resize_keyboard
     pub fn resize_keyboard(self) -> Self {
-        Self { resize_keyboard: true, ..self }
+        Self {
+            resize_keyboard: true,
+            ..self
+        }
     }
 
     /// Sets [`one_time_keyboard`] to `true`.
     ///
     /// [`one_time_keyboard`]: KeyboardMarkup::one_time_keyboard
     pub fn one_time_keyboard(self) -> Self {
-        Self { one_time_keyboard: true, ..self }
+        Self {
+            one_time_keyboard: true,
+            ..self
+        }
     }
 
     // FIXME: document
     pub fn input_field_placeholder<T>(self, val: T) -> Self
     where
-        T: Into<String>,
+        T: Into<String>
     {
-        Self { input_field_placeholder: val.into(), ..self }
+        Self {
+            input_field_placeholder: val.into(),
+            ..self
+        }
     }
 
     /// Sets [`selective`] to `true`.
     ///
     /// [`selective`]: KeyboardMarkup::selective
     pub fn selective(self) -> Self {
-        Self { selective: true, ..self }
+        Self {
+            selective: true,
+            ..self
+        }
     }
 }
 

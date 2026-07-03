@@ -12,5 +12,5 @@ use crate::types::User;
 pub struct ManagedBotCreated {
     /// Information about the bot. The bot's token can be fetched using the
     /// method `getManagedBotToken`.
-    pub bot: User,
+    pub bot: User
 }

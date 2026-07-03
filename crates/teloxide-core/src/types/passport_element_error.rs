@@ -12,20 +12,23 @@ pub struct PassportElementError {
     pub message: String,
 
     #[serde(flatten)]
-    pub kind: PassportElementErrorKind,
+    pub kind: PassportElementErrorKind
 }
 
 impl PassportElementError {
     pub fn new<S>(message: S, kind: PassportElementErrorKind) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
-        Self { message: message.into(), kind }
+        Self {
+            message: message.into(),
+            kind
+        }
     }
 
     pub fn message<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.message = val.into();
         self
@@ -53,7 +56,7 @@ pub enum PassportElementErrorKind {
     Files(PassportElementErrorFiles),
     TranslationFile(PassportElementErrorTranslationFile),
     TranslationFiles(PassportElementErrorTranslationFiles),
-    Unspecified(PassportElementErrorUnspecified),
+    Unspecified(PassportElementErrorUnspecified)
 }
 
 /// Represents an issue in one of the data fields that was provided by the
@@ -73,20 +76,24 @@ pub struct PassportElementErrorDataField {
     pub field_name: String,
 
     /// Base64-encoded data hash.
-    pub data_hash: String,
+    pub data_hash: String
 }
 
 impl PassportElementErrorDataField {
     pub fn new<S1, S2>(
         r#type: PassportElementErrorDataFieldType,
         field_name: S1,
-        data_hash: S2,
+        data_hash: S2
     ) -> Self
     where
         S1: Into<String>,
-        S2: Into<String>,
+        S2: Into<String>
     {
-        Self { r#type, field_name: field_name.into(), data_hash: data_hash.into() }
+        Self {
+            r#type,
+            field_name: field_name.into(),
+            data_hash: data_hash.into()
+        }
     }
 
     #[must_use]
@@ -97,7 +104,7 @@ impl PassportElementErrorDataField {
 
     pub fn field_name<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.field_name = val.into();
         self
@@ -105,7 +112,7 @@ impl PassportElementErrorDataField {
 
     pub fn data_hash<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.data_hash = val.into();
         self
@@ -127,15 +134,18 @@ pub struct PassportElementErrorFrontSide {
 
     /// Base64-encoded hash of the file with the front side of the
     /// document.
-    pub file_hash: String,
+    pub file_hash: String
 }
 
 impl PassportElementErrorFrontSide {
     pub fn new<S>(r#type: PassportElementErrorFrontSideType, file_hash: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
-        Self { r#type, file_hash: file_hash.into() }
+        Self {
+            r#type,
+            file_hash: file_hash.into()
+        }
     }
 
     #[must_use]
@@ -146,7 +156,7 @@ impl PassportElementErrorFrontSide {
 
     pub fn file_hash<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.file_hash = val.into();
         self
@@ -168,15 +178,18 @@ pub struct PassportElementErrorReverseSide {
 
     //// Base64-encoded hash of the file with the reverse side of the
     //// document.
-    pub file_hash: String,
+    pub file_hash: String
 }
 
 impl PassportElementErrorReverseSide {
     pub fn new<S>(r#type: PassportElementErrorReverseSideType, file_hash: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
-        Self { r#type, file_hash: file_hash.into() }
+        Self {
+            r#type,
+            file_hash: file_hash.into()
+        }
     }
 
     #[must_use]
@@ -187,7 +200,7 @@ impl PassportElementErrorReverseSide {
 
     pub fn file_hash<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.file_hash = val.into();
         self
@@ -207,15 +220,18 @@ pub struct PassportElementErrorSelfie {
     pub r#type: PassportElementErrorSelfieType,
 
     /// Base64-encoded hash of the file with the selfie.
-    pub file_hash: String,
+    pub file_hash: String
 }
 
 impl PassportElementErrorSelfie {
     pub fn new<S>(r#type: PassportElementErrorSelfieType, file_hash: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
-        Self { r#type, file_hash: file_hash.into() }
+        Self {
+            r#type,
+            file_hash: file_hash.into()
+        }
     }
 
     #[must_use]
@@ -226,7 +242,7 @@ impl PassportElementErrorSelfie {
 
     pub fn file_hash<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.file_hash = val.into();
         self
@@ -247,15 +263,18 @@ pub struct PassportElementErrorFile {
     pub r#type: PassportElementErrorFileType,
 
     /// Base64-encoded file hash.
-    pub file_hash: String,
+    pub file_hash: String
 }
 
 impl PassportElementErrorFile {
     pub fn new<S>(r#type: PassportElementErrorFileType, file_hash: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
-        Self { r#type, file_hash: file_hash.into() }
+        Self {
+            r#type,
+            file_hash: file_hash.into()
+        }
     }
 
     #[must_use]
@@ -266,7 +285,7 @@ impl PassportElementErrorFile {
 
     pub fn file_hash<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.file_hash = val.into();
         self
@@ -287,15 +306,18 @@ pub struct PassportElementErrorFiles {
     pub r#type: PassportElementErrorFilesType,
 
     /// List of base64-encoded file hashes.
-    pub file_hashes: Vec<String>,
+    pub file_hashes: Vec<String>
 }
 
 impl PassportElementErrorFiles {
     pub fn new<S>(r#type: PassportElementErrorFilesType, file_hashes: S) -> Self
     where
-        S: IntoIterator<Item = String>,
+        S: IntoIterator<Item = String>
     {
-        Self { r#type, file_hashes: file_hashes.into_iter().collect() }
+        Self {
+            r#type,
+            file_hashes: file_hashes.into_iter().collect()
+        }
     }
 
     #[must_use]
@@ -306,7 +328,7 @@ impl PassportElementErrorFiles {
 
     pub fn file_hashes<S>(mut self, val: S) -> Self
     where
-        S: IntoIterator<Item = String>,
+        S: IntoIterator<Item = String>
     {
         self.file_hashes = val.into_iter().collect();
         self
@@ -328,15 +350,18 @@ pub struct PassportElementErrorTranslationFile {
     pub r#type: PassportElementErrorTranslationFileType,
 
     /// Base64-encoded file hash.
-    pub file_hash: String,
+    pub file_hash: String
 }
 
 impl PassportElementErrorTranslationFile {
     pub fn new<S>(r#type: PassportElementErrorTranslationFileType, file_hash: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
-        Self { r#type, file_hash: file_hash.into() }
+        Self {
+            r#type,
+            file_hash: file_hash.into()
+        }
     }
 
     #[must_use]
@@ -347,7 +372,7 @@ impl PassportElementErrorTranslationFile {
 
     pub fn file_hash<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.file_hash = val.into();
         self
@@ -368,15 +393,18 @@ pub struct PassportElementErrorTranslationFiles {
     pub r#type: PassportElementErrorTranslationFilesType,
 
     /// List of base64-encoded file hashes
-    pub file_hashes: Vec<String>,
+    pub file_hashes: Vec<String>
 }
 
 impl PassportElementErrorTranslationFiles {
     pub fn new<S>(r#type: PassportElementErrorTranslationFilesType, file_hashes: S) -> Self
     where
-        S: IntoIterator<Item = String>,
+        S: IntoIterator<Item = String>
     {
-        Self { r#type, file_hashes: file_hashes.into_iter().collect() }
+        Self {
+            r#type,
+            file_hashes: file_hashes.into_iter().collect()
+        }
     }
 
     #[must_use]
@@ -387,7 +415,7 @@ impl PassportElementErrorTranslationFiles {
 
     pub fn file_hashes<S>(mut self, val: S) -> Self
     where
-        S: IntoIterator<Item = String>,
+        S: IntoIterator<Item = String>
     {
         self.file_hashes = val.into_iter().collect();
         self
@@ -408,15 +436,18 @@ pub struct PassportElementErrorUnspecified {
     pub r#type: PassportElementErrorUnspecifiedType,
 
     /// Base64-encoded element hash.
-    pub element_hash: String,
+    pub element_hash: String
 }
 
 impl PassportElementErrorUnspecified {
     pub fn new<S>(r#type: PassportElementErrorUnspecifiedType, file_hash: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
-        Self { r#type, element_hash: file_hash.into() }
+        Self {
+            r#type,
+            element_hash: file_hash.into()
+        }
     }
 
     #[must_use]
@@ -427,7 +458,7 @@ impl PassportElementErrorUnspecified {
 
     pub fn element_hash<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.element_hash = val.into();
         self
@@ -444,7 +475,7 @@ pub enum PassportElementErrorDataFieldType {
     DriverLicense,
     IdentityCard,
     InternalPassport,
-    Address,
+    Address
 }
 
 #[derive(Clone, Copy, Debug, Hash, Eq, PartialEq, Serialize, Deserialize)]
@@ -455,7 +486,7 @@ pub enum PassportElementErrorFrontSideType {
     Passport,
     DriverLicense,
     IdentityCard,
-    InternalPassport,
+    InternalPassport
 }
 
 #[derive(Clone, Copy, Debug, Hash, Eq, PartialEq, Serialize, Deserialize)]
@@ -464,7 +495,7 @@ pub enum PassportElementErrorFrontSideType {
 #[non_exhaustive]
 pub enum PassportElementErrorReverseSideType {
     DriverLicense,
-    IdentityCard,
+    IdentityCard
 }
 
 #[derive(Clone, Copy, Debug, Hash, Eq, PartialEq, Serialize, Deserialize)]
@@ -475,7 +506,7 @@ pub enum PassportElementErrorSelfieType {
     Passport,
     DriverLicense,
     IdentityCard,
-    InternalPassport,
+    InternalPassport
 }
 
 #[derive(Clone, Copy, Debug, Hash, Eq, PartialEq, Serialize, Deserialize)]
@@ -487,7 +518,7 @@ pub enum PassportElementErrorFileType {
     BankStatement,
     RentalAgreement,
     PassportRegistration,
-    TemporaryRegistration,
+    TemporaryRegistration
 }
 
 #[derive(Clone, Copy, Debug, Hash, Eq, PartialEq, Serialize, Deserialize)]
@@ -499,7 +530,7 @@ pub enum PassportElementErrorFilesType {
     BankStatement,
     RentalAgreement,
     PassportRegistration,
-    TemporaryRegistration,
+    TemporaryRegistration
 }
 
 #[derive(Clone, Copy, Debug, Hash, Eq, PartialEq, Serialize, Deserialize)]
@@ -515,7 +546,7 @@ pub enum PassportElementErrorTranslationFileType {
     BankStatement,
     RentalAgreement,
     PassportRegistration,
-    TemporaryRegistration,
+    TemporaryRegistration
 }
 
 #[derive(Clone, Copy, Debug, Hash, Eq, PartialEq, Serialize, Deserialize)]
@@ -531,7 +562,7 @@ pub enum PassportElementErrorTranslationFilesType {
     BankStatement,
     RentalAgreement,
     PassportRegistration,
-    TemporaryRegistration,
+    TemporaryRegistration
 }
 
 #[derive(Clone, Copy, Debug, Hash, Eq, PartialEq, Serialize, Deserialize)]
@@ -547,7 +578,7 @@ pub enum PassportElementErrorUnspecifiedType {
     Files,
     TranslationFile,
     TranslationFiles,
-    Unspecified,
+    Unspecified
 }
 
 #[cfg(test)]
@@ -558,11 +589,11 @@ mod tests {
     fn serialize_data_field() {
         let data = PassportElementError {
             message: "This is an error message!".to_owned(),
-            kind: PassportElementErrorKind::DataField(PassportElementErrorDataField {
-                r#type: PassportElementErrorDataFieldType::InternalPassport,
+            kind:    PassportElementErrorKind::DataField(PassportElementErrorDataField {
+                r#type:     PassportElementErrorDataFieldType::InternalPassport,
                 field_name: "The field name".to_owned(),
-                data_hash: "This is a data hash".to_owned(),
-            }),
+                data_hash:  "This is a data hash".to_owned()
+            })
         };
 
         assert_eq!(

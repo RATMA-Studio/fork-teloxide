@@ -3,7 +3,7 @@ use std::{future::IntoFuture, pin::Pin, sync::Arc};
 use futures::{
     Future, future,
     future::{Ready, ok},
-    task::{Context, Poll},
+    task::{Context, Poll}
 };
 use once_cell::sync::OnceCell;
 use url::Url;
@@ -11,7 +11,7 @@ use url::Url;
 use crate::{
     payloads::GetMe,
     requests::{HasPayload, Request, Requester},
-    types::*,
+    types::*
 };
 
 /// `get_me` cache.
@@ -21,7 +21,7 @@ use crate::{
 #[derive(Clone, Debug)]
 pub struct CacheMe<B> {
     bot: B,
-    me: Arc<OnceCell<Me>>,
+    me:  Arc<OnceCell<Me>>
 }
 
 impl<B> CacheMe<B> {
@@ -31,7 +31,10 @@ impl<B> CacheMe<B> {
     ///
     /// [`RequesterExt::cache_me`]: crate::requests::RequesterExt::cache_me
     pub fn new(bot: B) -> CacheMe<B> {
-        Self { bot, me: Arc::new(OnceCell::new()) }
+        Self {
+            bot,
+            me: Arc::new(OnceCell::new())
+        }
     }
 
     /// Allows to access inner bot
@@ -69,7 +72,7 @@ macro_rules! fty {
 
 impl<B> Requester for CacheMe<B>
 where
-    B: Requester,
+    B: Requester
 {
     type Err = B::Err;
 
@@ -80,8 +83,8 @@ where
             Some(me) => CachedMeRequest(Inner::Ready(me.clone()), GetMe::new()),
             None => CachedMeRequest(
                 Inner::Pending(self.bot.get_me(), Arc::clone(&self.me)),
-                GetMe::new(),
-            ),
+                GetMe::new()
+            )
         }
     }
 
@@ -286,12 +289,12 @@ pub struct CachedMeRequest<R: Request<Payload = GetMe>>(Inner<R>, GetMe);
 
 enum Inner<R: Request<Payload = GetMe>> {
     Ready(Me),
-    Pending(R, Arc<OnceCell<Me>>),
+    Pending(R, Arc<OnceCell<Me>>)
 }
 
 impl<R> Request for CachedMeRequest<R>
 where
-    R: Request<Payload = GetMe>,
+    R: Request<Payload = GetMe>
 {
     type Err = R::Err;
     type Send = Send<R>;
@@ -300,7 +303,7 @@ where
     fn send(self) -> Self::Send {
         let fut = match self.0 {
             Inner::Ready(me) => future::Either::Left(ok(me)),
-            Inner::Pending(req, cell) => future::Either::Right(Init(req.send(), cell)),
+            Inner::Pending(req, cell) => future::Either::Right(Init(req.send(), cell))
         };
         Send(fut)
     }
@@ -341,7 +344,7 @@ type ReadyMe<Err> = Ready<Result<Me, Err>>;
 
 #[pin_project::pin_project]
 pub struct Send<R: Request<Payload = GetMe>>(
-    #[pin] future::Either<ReadyMe<R::Err>, Init<R::Send, Me>>,
+    #[pin] future::Either<ReadyMe<R::Err>, Init<R::Send, Me>>
 );
 
 impl<R: Request<Payload = GetMe>> Future for Send<R> {
@@ -355,7 +358,7 @@ impl<R: Request<Payload = GetMe>> Future for Send<R> {
 
 #[pin_project::pin_project]
 pub struct SendRef<R: Request<Payload = GetMe>>(
-    #[pin] future::Either<ReadyMe<R::Err>, Init<R::SendRef, Me>>,
+    #[pin] future::Either<ReadyMe<R::Err>, Init<R::SendRef, Me>>
 );
 
 impl<R: Request<Payload = GetMe>> Future for SendRef<R> {
@@ -377,7 +380,7 @@ impl<F: Future<Output = Result<T, E>>, T: Clone, E> Future for Init<F, T> {
         let this = self.project();
         match this.0.poll(cx) {
             Poll::Ready(Ok(ok)) => Poll::Ready(Ok(this.1.get_or_init(|| ok).clone())),
-            poll @ Poll::Ready(_) | poll @ Poll::Pending => poll,
+            poll @ Poll::Ready(_) | poll @ Poll::Pending => poll
         }
     }
 }

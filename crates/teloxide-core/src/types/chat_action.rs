@@ -13,5 +13,5 @@ pub enum ChatAction {
     UploadDocument,
     FindLocation,
     RecordVideoNote,
-    UploadVideoNote,
+    UploadVideoNote
 }

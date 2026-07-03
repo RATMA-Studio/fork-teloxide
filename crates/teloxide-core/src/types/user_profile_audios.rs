@@ -13,5 +13,5 @@ pub struct UserProfileAudios {
     pub total_count: u32,
 
     /// Requested profile audios.
-    pub audios: Vec<Audio>,
+    pub audios: Vec<Audio>
 }

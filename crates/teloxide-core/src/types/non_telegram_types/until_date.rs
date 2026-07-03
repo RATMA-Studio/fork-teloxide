@@ -13,13 +13,13 @@ pub enum UntilDate {
     /// The range is bound by a given date and time.
     Date(DateTime<Utc>),
     /// There is no end date, the range is unbounded.
-    Forever,
+    Forever
 }
 
 impl<'de> Deserialize<'de> for UntilDate {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
-        D: serde::Deserializer<'de>,
+        D: serde::Deserializer<'de>
     {
         struct UntilDateVisitor;
 
@@ -32,17 +32,17 @@ impl<'de> Deserialize<'de> for UntilDate {
 
             fn visit_i64<E>(self, v: i64) -> Result<Self::Value, E>
             where
-                E: serde::de::Error,
+                E: serde::de::Error
             {
                 match v {
                     0 => Ok(UntilDate::Forever),
-                    timestamp => serde_timestamp(timestamp).map(UntilDate::Date),
+                    timestamp => serde_timestamp(timestamp).map(UntilDate::Date)
                 }
             }
 
             fn visit_u64<E>(self, v: u64) -> Result<Self::Value, E>
             where
-                E: serde::de::Error,
+                E: serde::de::Error
             {
                 self.visit_i64(v as _)
             }
@@ -55,11 +55,11 @@ impl<'de> Deserialize<'de> for UntilDate {
 impl Serialize for UntilDate {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
-        S: serde::Serializer,
+        S: serde::Serializer
     {
         serializer.serialize_i64(match self {
             UntilDate::Date(dt) => dt.timestamp(),
-            UntilDate::Forever => 0,
+            UntilDate::Forever => 0
         })
     }
 }

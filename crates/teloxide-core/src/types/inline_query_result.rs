@@ -10,7 +10,7 @@ use crate::types::{
     InlineQueryResultCachedVoice, InlineQueryResultContact, InlineQueryResultDocument,
     InlineQueryResultGame, InlineQueryResultGif, InlineQueryResultLocation,
     InlineQueryResultMpeg4Gif, InlineQueryResultPhoto, InlineQueryResultVenue,
-    InlineQueryResultVideo, InlineQueryResultVoice,
+    InlineQueryResultVideo, InlineQueryResultVoice
 };
 
 /// This object represents one result of an inline query.
@@ -52,7 +52,7 @@ pub enum InlineQueryResult {
     Photo(InlineQueryResultPhoto),
     Venue(InlineQueryResultVenue),
     Video(InlineQueryResultVideo),
-    Voice(InlineQueryResultVoice),
+    Voice(InlineQueryResultVoice)
 }
 
 mod raw {
@@ -63,7 +63,7 @@ mod raw {
     #[serde(untagged)]
     pub(super) enum AudioKind {
         Cached(InlineQueryResultCachedAudio),
-        NonCached(InlineQueryResultAudio),
+        NonCached(InlineQueryResultAudio)
     }
 
     #[derive(Serialize, Deserialize)]
@@ -71,7 +71,7 @@ mod raw {
     #[serde(untagged)]
     pub(super) enum DocumentKind {
         Cached(InlineQueryResultCachedDocument),
-        NonCached(InlineQueryResultDocument),
+        NonCached(InlineQueryResultDocument)
     }
 
     #[derive(Serialize, Deserialize)]
@@ -79,7 +79,7 @@ mod raw {
     #[serde(untagged)]
     pub(super) enum GifKind {
         Cached(InlineQueryResultCachedGif),
-        NonCached(InlineQueryResultGif),
+        NonCached(InlineQueryResultGif)
     }
 
     #[derive(Serialize, Deserialize)]
@@ -87,7 +87,7 @@ mod raw {
     #[serde(untagged)]
     pub(super) enum Mpeg4GifKind {
         Cached(InlineQueryResultCachedMpeg4Gif),
-        NonCached(InlineQueryResultMpeg4Gif),
+        NonCached(InlineQueryResultMpeg4Gif)
     }
 
     #[derive(Serialize, Deserialize)]
@@ -95,7 +95,7 @@ mod raw {
     #[serde(untagged)]
     pub(super) enum PhotoKind {
         Cached(InlineQueryResultCachedPhoto),
-        NonCached(InlineQueryResultPhoto),
+        NonCached(InlineQueryResultPhoto)
     }
 
     #[derive(Serialize, Deserialize)]
@@ -103,7 +103,7 @@ mod raw {
     #[serde(untagged)]
     pub(super) enum VideoKind {
         Cached(InlineQueryResultCachedVideo),
-        NonCached(InlineQueryResultVideo),
+        NonCached(InlineQueryResultVideo)
     }
 
     #[derive(Serialize, Deserialize)]
@@ -111,7 +111,7 @@ mod raw {
     #[serde(untagged)]
     pub(super) enum VoiceKind {
         Cached(InlineQueryResultCachedVoice),
-        NonCached(InlineQueryResultVoice),
+        NonCached(InlineQueryResultVoice)
     }
 
     #[derive(Serialize, Deserialize)]
@@ -138,7 +138,7 @@ mod raw {
         Contact(InlineQueryResultContact),
         Game(InlineQueryResultGame),
         Location(InlineQueryResultLocation),
-        Venue(InlineQueryResultVenue),
+        Venue(InlineQueryResultVenue)
     }
 
     impl From<InlineQueryResult> for super::InlineQueryResult {
@@ -197,7 +197,7 @@ mod raw {
                 InlineQueryResult::Location(location) => {
                     super::InlineQueryResult::Location(location)
                 }
-                InlineQueryResult::Venue(venue) => super::InlineQueryResult::Venue(venue),
+                InlineQueryResult::Venue(venue) => super::InlineQueryResult::Venue(venue)
             }
         }
     }
@@ -258,7 +258,7 @@ mod raw {
                 super::InlineQueryResult::Location(location) => {
                     InlineQueryResult::Location(location)
                 }
-                super::InlineQueryResult::Venue(venue) => InlineQueryResult::Venue(venue),
+                super::InlineQueryResult::Venue(venue) => InlineQueryResult::Venue(venue)
             }
         }
     }
@@ -266,33 +266,34 @@ mod raw {
 
 #[cfg(test)]
 mod tests {
+    use std::str::FromStr as _;
+
+    use mime::Mime;
+    use url::Url;
+
     use crate::types::{
         InlineQueryResult, InlineQueryResultArticle, InlineQueryResultAudio,
         InlineQueryResultCachedAudio, InlineQueryResultCachedDocument, InlineQueryResultCachedGif,
         InlineQueryResultCachedMpeg4Gif, InlineQueryResultCachedPhoto,
-        InlineQueryResultCachedSticker, InlineQueryResultCachedVideo, InlineQueryResultCachedVoice,
-        InlineQueryResultContact, InlineQueryResultDocument, InlineQueryResultGame,
-        InlineQueryResultGif, InlineQueryResultLocation, InlineQueryResultMpeg4Gif,
-        InlineQueryResultPhoto, InlineQueryResultVenue, InlineQueryResultVideo,
-        InlineQueryResultVoice, InputMessageContent, InputMessageContentLocation,
-        InputMessageContentText, LinkPreviewOptions, Seconds,
-        inline_keyboard_markup::InlineKeyboardMarkup, parse_mode::ParseMode,
+        InlineQueryResultCachedSticker, InlineQueryResultCachedVideo,
+        InlineQueryResultCachedVoice, InlineQueryResultContact, InlineQueryResultDocument,
+        InlineQueryResultGame, InlineQueryResultGif, InlineQueryResultLocation,
+        InlineQueryResultMpeg4Gif, InlineQueryResultPhoto, InlineQueryResultVenue,
+        InlineQueryResultVideo, InlineQueryResultVoice, InputMessageContent,
+        InputMessageContentLocation, InputMessageContentText, LinkPreviewOptions, Seconds,
+        inline_keyboard_markup::InlineKeyboardMarkup, parse_mode::ParseMode
     };
-
-    use mime::Mime;
-    use std::str::FromStr as _;
-    use url::Url;
 
     #[test]
     fn cached_audio_min() {
         let structure = InlineQueryResult::CachedAudio(InlineQueryResultCachedAudio {
-            id: String::from("id"),
-            audio_file_id: "audio_file_id".into(),
-            caption: None,
-            parse_mode: None,
-            caption_entities: None,
-            reply_markup: None,
-            input_message_content: None,
+            id:                    String::from("id"),
+            audio_file_id:         "audio_file_id".into(),
+            caption:               None,
+            parse_mode:            None,
+            caption_entities:      None,
+            reply_markup:          None,
+            input_message_content: None
         });
 
         let expected_json = r#"{"type":"audio","id":"id","audio_file_id":"audio_file_id"}"#;
@@ -305,24 +306,24 @@ mod tests {
     #[test]
     fn cached_audio_full() {
         let structure = InlineQueryResult::CachedAudio(InlineQueryResultCachedAudio {
-            id: String::from("id"),
-            audio_file_id: "audio_file_id".into(),
-            caption: Some(String::from("caption")),
-            parse_mode: Some(ParseMode::Html),
-            reply_markup: Some(InlineKeyboardMarkup::default()),
+            id:                    String::from("id"),
+            audio_file_id:         "audio_file_id".into(),
+            caption:               Some(String::from("caption")),
+            parse_mode:            Some(ParseMode::Html),
+            reply_markup:          Some(InlineKeyboardMarkup::default()),
             input_message_content: Some(InputMessageContent::Text(InputMessageContentText {
-                message_text: String::from("message_text"),
-                parse_mode: Some(ParseMode::MarkdownV2),
-                entities: None,
+                message_text:         String::from("message_text"),
+                parse_mode:           Some(ParseMode::MarkdownV2),
+                entities:             None,
                 link_preview_options: Some(LinkPreviewOptions {
-                    is_disabled: true,
-                    url: None,
+                    is_disabled:        true,
+                    url:                None,
                     prefer_small_media: false,
                     prefer_large_media: false,
-                    show_above_text: false,
-                }),
+                    show_above_text:    false
+                })
             })),
-            caption_entities: None,
+            caption_entities:      None
         });
 
         let expected_json = r#"{"type":"audio","id":"id","audio_file_id":"audio_file_id","caption":"caption","parse_mode":"HTML","reply_markup":{"inline_keyboard":[]},"input_message_content":{"message_text":"message_text","parse_mode":"MarkdownV2","link_preview_options":{"is_disabled":true}}}"#;
@@ -335,16 +336,16 @@ mod tests {
     #[test]
     fn audio_min() {
         let structure = InlineQueryResult::Audio(InlineQueryResultAudio {
-            id: String::from("id"),
-            audio_url: reqwest::Url::parse("http://audio_url/").unwrap(),
-            title: String::from("title"),
-            caption: None,
-            parse_mode: None,
-            caption_entities: None,
-            performer: None,
-            audio_duration: None,
-            reply_markup: None,
-            input_message_content: None,
+            id:                    String::from("id"),
+            audio_url:             reqwest::Url::parse("http://audio_url/").unwrap(),
+            title:                 String::from("title"),
+            caption:               None,
+            parse_mode:            None,
+            caption_entities:      None,
+            performer:             None,
+            audio_duration:        None,
+            reply_markup:          None,
+            input_message_content: None
         });
 
         let expected_json =
@@ -358,27 +359,27 @@ mod tests {
     #[test]
     fn audio_full() {
         let structure = InlineQueryResult::Audio(InlineQueryResultAudio {
-            id: String::from("id"),
-            audio_url: reqwest::Url::parse("http://audio_url/").unwrap(),
-            title: String::from("title"),
-            caption: Some(String::from("caption")),
-            parse_mode: Some(ParseMode::Html),
-            reply_markup: Some(InlineKeyboardMarkup::default()),
+            id:                    String::from("id"),
+            audio_url:             reqwest::Url::parse("http://audio_url/").unwrap(),
+            title:                 String::from("title"),
+            caption:               Some(String::from("caption")),
+            parse_mode:            Some(ParseMode::Html),
+            reply_markup:          Some(InlineKeyboardMarkup::default()),
             input_message_content: Some(InputMessageContent::Text(InputMessageContentText {
-                message_text: String::from("message_text"),
-                parse_mode: Some(ParseMode::MarkdownV2),
-                entities: None,
+                message_text:         String::from("message_text"),
+                parse_mode:           Some(ParseMode::MarkdownV2),
+                entities:             None,
                 link_preview_options: Some(LinkPreviewOptions {
-                    is_disabled: true,
-                    url: None,
+                    is_disabled:        true,
+                    url:                None,
                     prefer_small_media: false,
                     prefer_large_media: false,
-                    show_above_text: false,
-                }),
+                    show_above_text:    false
+                })
             })),
-            caption_entities: None,
-            performer: Some(String::from("performer")),
-            audio_duration: Some(Seconds::from_seconds(1)),
+            caption_entities:      None,
+            performer:             Some(String::from("performer")),
+            audio_duration:        Some(Seconds::from_seconds(1))
         });
 
         let expected_json = r#"{"type":"audio","id":"id","audio_url":"http://audio_url/","title":"title","caption":"caption","parse_mode":"HTML","performer":"performer","audio_duration":1,"reply_markup":{"inline_keyboard":[]},"input_message_content":{"message_text":"message_text","parse_mode":"MarkdownV2","link_preview_options":{"is_disabled":true}}}"#;
@@ -391,15 +392,15 @@ mod tests {
     #[test]
     fn cached_document_min() {
         let structure = InlineQueryResult::CachedDocument(InlineQueryResultCachedDocument {
-            id: String::from("id"),
-            title: String::from("title"),
-            document_file_id: "document_file_id".into(),
-            description: None,
-            caption: None,
-            parse_mode: None,
-            caption_entities: None,
-            reply_markup: None,
-            input_message_content: None,
+            id:                    String::from("id"),
+            title:                 String::from("title"),
+            document_file_id:      "document_file_id".into(),
+            description:           None,
+            caption:               None,
+            parse_mode:            None,
+            caption_entities:      None,
+            reply_markup:          None,
+            input_message_content: None
         });
 
         let expected_json = r#"{"type":"document","id":"id","title":"title","document_file_id":"document_file_id"}"#;
@@ -412,26 +413,26 @@ mod tests {
     #[test]
     fn cached_document_full() {
         let structure = InlineQueryResult::CachedDocument(InlineQueryResultCachedDocument {
-            id: String::from("id"),
-            title: String::from("title"),
-            document_file_id: "document_file_id".into(),
-            description: Some(String::from("description")),
-            caption: Some(String::from("caption")),
-            parse_mode: Some(ParseMode::Html),
-            reply_markup: Some(InlineKeyboardMarkup::default()),
+            id:                    String::from("id"),
+            title:                 String::from("title"),
+            document_file_id:      "document_file_id".into(),
+            description:           Some(String::from("description")),
+            caption:               Some(String::from("caption")),
+            parse_mode:            Some(ParseMode::Html),
+            reply_markup:          Some(InlineKeyboardMarkup::default()),
             input_message_content: Some(InputMessageContent::Text(InputMessageContentText {
-                message_text: String::from("message_text"),
-                parse_mode: Some(ParseMode::MarkdownV2),
-                entities: None,
+                message_text:         String::from("message_text"),
+                parse_mode:           Some(ParseMode::MarkdownV2),
+                entities:             None,
                 link_preview_options: Some(LinkPreviewOptions {
-                    is_disabled: true,
-                    url: None,
+                    is_disabled:        true,
+                    url:                None,
                     prefer_small_media: false,
                     prefer_large_media: false,
-                    show_above_text: false,
-                }),
+                    show_above_text:    false
+                })
             })),
-            caption_entities: None,
+            caption_entities:      None
         });
 
         let expected_json = r#"{"type":"document","id":"id","title":"title","document_file_id":"document_file_id","description":"description","caption":"caption","parse_mode":"HTML","reply_markup":{"inline_keyboard":[]},"input_message_content":{"message_text":"message_text","parse_mode":"MarkdownV2","link_preview_options":{"is_disabled":true}}}"#;
@@ -444,19 +445,19 @@ mod tests {
     #[test]
     fn document_min() {
         let structure = InlineQueryResult::Document(InlineQueryResultDocument {
-            id: String::from("id"),
-            title: String::from("title"),
-            caption: None,
-            parse_mode: None,
-            caption_entities: None,
-            document_url: reqwest::Url::parse("http://document_url/").unwrap(),
-            mime_type: Mime::from_str("application/pdf").unwrap(),
-            description: None,
-            reply_markup: None,
+            id:                    String::from("id"),
+            title:                 String::from("title"),
+            caption:               None,
+            parse_mode:            None,
+            caption_entities:      None,
+            document_url:          reqwest::Url::parse("http://document_url/").unwrap(),
+            mime_type:             Mime::from_str("application/pdf").unwrap(),
+            description:           None,
+            reply_markup:          None,
             input_message_content: None,
-            thumbnail_url: None,
-            thumbnail_width: None,
-            thumbnail_height: None,
+            thumbnail_url:         None,
+            thumbnail_width:       None,
+            thumbnail_height:      None
         });
 
         let expected_json = r#"{"type":"document","id":"id","title":"title","document_url":"http://document_url/","mime_type":"application/pdf"}"#;
@@ -469,30 +470,30 @@ mod tests {
     #[test]
     fn document_full() {
         let structure = InlineQueryResult::Document(InlineQueryResultDocument {
-            id: String::from("id"),
-            title: String::from("title"),
-            caption: Some(String::from("caption")),
-            parse_mode: Some(ParseMode::Html),
-            caption_entities: None,
-            document_url: reqwest::Url::parse("http://document_url/").unwrap(),
-            mime_type: Mime::from_str("application/pdf").unwrap(),
-            description: Some(String::from("description")),
-            reply_markup: Some(InlineKeyboardMarkup::default()),
+            id:                    String::from("id"),
+            title:                 String::from("title"),
+            caption:               Some(String::from("caption")),
+            parse_mode:            Some(ParseMode::Html),
+            caption_entities:      None,
+            document_url:          reqwest::Url::parse("http://document_url/").unwrap(),
+            mime_type:             Mime::from_str("application/pdf").unwrap(),
+            description:           Some(String::from("description")),
+            reply_markup:          Some(InlineKeyboardMarkup::default()),
             input_message_content: Some(InputMessageContent::Text(InputMessageContentText {
-                message_text: String::from("message_text"),
-                parse_mode: Some(ParseMode::MarkdownV2),
-                entities: None,
+                message_text:         String::from("message_text"),
+                parse_mode:           Some(ParseMode::MarkdownV2),
+                entities:             None,
                 link_preview_options: Some(LinkPreviewOptions {
-                    is_disabled: true,
-                    url: None,
+                    is_disabled:        true,
+                    url:                None,
                     prefer_small_media: false,
                     prefer_large_media: false,
-                    show_above_text: false,
-                }),
+                    show_above_text:    false
+                })
             })),
-            thumbnail_url: Some(reqwest::Url::parse("http://thumb_url/").unwrap()),
-            thumbnail_width: Some(1),
-            thumbnail_height: Some(1),
+            thumbnail_url:         Some(reqwest::Url::parse("http://thumb_url/").unwrap()),
+            thumbnail_width:       Some(1),
+            thumbnail_height:      Some(1)
         });
 
         let expected_json = r#"{"type":"document","id":"id","title":"title","caption":"caption","parse_mode":"HTML","document_url":"http://document_url/","mime_type":"application/pdf","description":"description","reply_markup":{"inline_keyboard":[]},"input_message_content":{"message_text":"message_text","parse_mode":"MarkdownV2","link_preview_options":{"is_disabled":true}},"thumbnail_url":"http://thumb_url/","thumbnail_width":1,"thumbnail_height":1}"#;
@@ -513,7 +514,7 @@ mod tests {
             caption_entities: None,
             show_caption_above_media: false,
             reply_markup: None,
-            input_message_content: None,
+            input_message_content: None
         });
 
         let expected_json = r#"{"type":"gif","id":"id","gif_file_id":"gif_file_id"}"#;
@@ -535,17 +536,17 @@ mod tests {
             show_caption_above_media: false,
             reply_markup: Some(InlineKeyboardMarkup::default()),
             input_message_content: Some(InputMessageContent::Text(InputMessageContentText {
-                message_text: String::from("message_text"),
-                parse_mode: Some(ParseMode::MarkdownV2),
-                entities: None,
+                message_text:         String::from("message_text"),
+                parse_mode:           Some(ParseMode::MarkdownV2),
+                entities:             None,
                 link_preview_options: Some(LinkPreviewOptions {
-                    is_disabled: true,
-                    url: None,
+                    is_disabled:        true,
+                    url:                None,
                     prefer_small_media: false,
                     prefer_large_media: false,
-                    show_above_text: false,
-                }),
-            })),
+                    show_above_text:    false
+                })
+            }))
         });
 
         let expected_json = r#"{"type":"gif","id":"id","gif_file_id":"gif_file_id","title":"title","caption":"caption","parse_mode":"HTML","reply_markup":{"inline_keyboard":[]},"input_message_content":{"message_text":"message_text","parse_mode":"MarkdownV2","link_preview_options":{"is_disabled":true}}}"#;
@@ -571,7 +572,7 @@ mod tests {
             caption_entities: None,
             show_caption_above_media: false,
             reply_markup: None,
-            input_message_content: None,
+            input_message_content: None
         });
 
         let expected_json = r#"{"type":"gif","id":"id","gif_url":"http://gif_url/","thumbnail_url":"http://thumb_url/"}"#;
@@ -598,17 +599,17 @@ mod tests {
             show_caption_above_media: false,
             reply_markup: Some(InlineKeyboardMarkup::default()),
             input_message_content: Some(InputMessageContent::Text(InputMessageContentText {
-                message_text: String::from("message_text"),
-                parse_mode: Some(ParseMode::MarkdownV2),
-                entities: None,
+                message_text:         String::from("message_text"),
+                parse_mode:           Some(ParseMode::MarkdownV2),
+                entities:             None,
                 link_preview_options: Some(LinkPreviewOptions {
-                    is_disabled: true,
-                    url: None,
+                    is_disabled:        true,
+                    url:                None,
                     prefer_small_media: false,
                     prefer_large_media: false,
-                    show_above_text: false,
-                }),
-            })),
+                    show_above_text:    false
+                })
+            }))
         });
 
         let expected_json = r#"{"type":"gif","id":"id","gif_url":"http://gif_url/","gif_width":1,"gif_height":1,"gif_duration":1,"thumbnail_url":"http://thumb_url/","title":"title","caption":"caption","parse_mode":"HTML","reply_markup":{"inline_keyboard":[]},"input_message_content":{"message_text":"message_text","parse_mode":"MarkdownV2","link_preview_options":{"is_disabled":true}}}"#;
@@ -629,7 +630,7 @@ mod tests {
             caption_entities: None,
             show_caption_above_media: false,
             reply_markup: None,
-            input_message_content: None,
+            input_message_content: None
         });
 
         let expected_json = r#"{"type":"mpeg4_gif","id":"id","mpeg4_file_id":"mpeg4_file_id"}"#;
@@ -651,17 +652,17 @@ mod tests {
             show_caption_above_media: false,
             reply_markup: Some(InlineKeyboardMarkup::default()),
             input_message_content: Some(InputMessageContent::Text(InputMessageContentText {
-                message_text: String::from("message_text"),
-                parse_mode: Some(ParseMode::MarkdownV2),
-                entities: None,
+                message_text:         String::from("message_text"),
+                parse_mode:           Some(ParseMode::MarkdownV2),
+                entities:             None,
                 link_preview_options: Some(LinkPreviewOptions {
-                    is_disabled: true,
-                    url: None,
+                    is_disabled:        true,
+                    url:                None,
                     prefer_small_media: false,
                     prefer_large_media: false,
-                    show_above_text: false,
-                }),
-            })),
+                    show_above_text:    false
+                })
+            }))
         });
 
         let expected_json = r#"{"type":"mpeg4_gif","id":"id","mpeg4_file_id":"mpeg4_file_id","title":"title","caption":"caption","parse_mode":"HTML","reply_markup":{"inline_keyboard":[]},"input_message_content":{"message_text":"message_text","parse_mode":"MarkdownV2","link_preview_options":{"is_disabled":true}}}"#;
@@ -687,7 +688,7 @@ mod tests {
             caption_entities: None,
             show_caption_above_media: false,
             reply_markup: None,
-            input_message_content: None,
+            input_message_content: None
         });
 
         let expected_json = r#"{"type":"mpeg4_gif","id":"id","mpeg4_url":"http://mpeg4_url/","thumbnail_url":"http://thumb_url/"}"#;
@@ -714,17 +715,17 @@ mod tests {
             show_caption_above_media: false,
             reply_markup: Some(InlineKeyboardMarkup::default()),
             input_message_content: Some(InputMessageContent::Text(InputMessageContentText {
-                message_text: String::from("message_text"),
-                parse_mode: Some(ParseMode::MarkdownV2),
-                entities: None,
+                message_text:         String::from("message_text"),
+                parse_mode:           Some(ParseMode::MarkdownV2),
+                entities:             None,
                 link_preview_options: Some(LinkPreviewOptions {
-                    is_disabled: true,
-                    url: None,
+                    is_disabled:        true,
+                    url:                None,
                     prefer_small_media: false,
                     prefer_large_media: false,
-                    show_above_text: false,
-                }),
-            })),
+                    show_above_text:    false
+                })
+            }))
         });
 
         let expected_json = r#"{"type":"mpeg4_gif","id":"id","mpeg4_url":"http://mpeg4_url/","mpeg4_width":1,"mpeg4_height":1,"mpeg4_duration":1,"thumbnail_url":"http://thumb_url/","title":"title","caption":"caption","parse_mode":"HTML","reply_markup":{"inline_keyboard":[]},"input_message_content":{"message_text":"message_text","parse_mode":"MarkdownV2","link_preview_options":{"is_disabled":true}}}"#;
@@ -746,7 +747,7 @@ mod tests {
             caption_entities: None,
             show_caption_above_media: false,
             reply_markup: None,
-            input_message_content: None,
+            input_message_content: None
         });
 
         let expected_json = r#"{"type":"photo","id":"id","photo_file_id":"photo_file_id"}"#;
@@ -769,17 +770,17 @@ mod tests {
             show_caption_above_media: false,
             reply_markup: Some(InlineKeyboardMarkup::default()),
             input_message_content: Some(InputMessageContent::Text(InputMessageContentText {
-                message_text: String::from("message_text"),
-                parse_mode: Some(ParseMode::MarkdownV2),
-                entities: None,
+                message_text:         String::from("message_text"),
+                parse_mode:           Some(ParseMode::MarkdownV2),
+                entities:             None,
                 link_preview_options: Some(LinkPreviewOptions {
-                    is_disabled: true,
-                    url: None,
+                    is_disabled:        true,
+                    url:                None,
                     prefer_small_media: false,
                     prefer_large_media: false,
-                    show_above_text: false,
-                }),
-            })),
+                    show_above_text:    false
+                })
+            }))
         });
 
         let expected_json = r#"{"type":"photo","id":"id","photo_file_id":"photo_file_id","title":"title","description":"description","caption":"caption","parse_mode":"HTML","reply_markup":{"inline_keyboard":[]},"input_message_content":{"message_text":"message_text","parse_mode":"MarkdownV2","link_preview_options":{"is_disabled":true}}}"#;
@@ -804,7 +805,7 @@ mod tests {
             caption_entities: None,
             show_caption_above_media: false,
             reply_markup: None,
-            input_message_content: None,
+            input_message_content: None
         });
 
         let expected_json = r#"{"type":"photo","id":"id","photo_url":"http://photo_url/","thumbnail_url":"http://thumb_url/"}"#;
@@ -830,17 +831,17 @@ mod tests {
             show_caption_above_media: false,
             reply_markup: Some(InlineKeyboardMarkup::default()),
             input_message_content: Some(InputMessageContent::Text(InputMessageContentText {
-                message_text: String::from("message_text"),
-                parse_mode: Some(ParseMode::MarkdownV2),
-                entities: None,
+                message_text:         String::from("message_text"),
+                parse_mode:           Some(ParseMode::MarkdownV2),
+                entities:             None,
                 link_preview_options: Some(LinkPreviewOptions {
-                    is_disabled: true,
-                    url: None,
+                    is_disabled:        true,
+                    url:                None,
                     prefer_small_media: false,
                     prefer_large_media: false,
-                    show_above_text: false,
-                }),
-            })),
+                    show_above_text:    false
+                })
+            }))
         });
 
         let expected_json = r#"{"type":"photo","id":"id","photo_url":"http://photo_url/","thumbnail_url":"http://thumb_url/","photo_width":1,"photo_height":1,"title":"title","description":"description","caption":"caption","parse_mode":"HTML","reply_markup":{"inline_keyboard":[]},"input_message_content":{"message_text":"message_text","parse_mode":"MarkdownV2","link_preview_options":{"is_disabled":true}}}"#;
@@ -853,10 +854,10 @@ mod tests {
     #[test]
     fn cached_sticker_min() {
         let structure = InlineQueryResult::CachedSticker(InlineQueryResultCachedSticker {
-            id: String::from("id"),
-            sticker_file_id: "sticker_file_id".into(),
-            reply_markup: None,
-            input_message_content: None,
+            id:                    String::from("id"),
+            sticker_file_id:       "sticker_file_id".into(),
+            reply_markup:          None,
+            input_message_content: None
         });
 
         let expected_json = r#"{"type":"sticker","id":"id","sticker_file_id":"sticker_file_id"}"#;
@@ -869,21 +870,21 @@ mod tests {
     #[test]
     fn cached_sticker_full() {
         let structure = InlineQueryResult::CachedSticker(InlineQueryResultCachedSticker {
-            id: String::from("id"),
-            sticker_file_id: "sticker_file_id".into(),
-            reply_markup: Some(InlineKeyboardMarkup::default()),
+            id:                    String::from("id"),
+            sticker_file_id:       "sticker_file_id".into(),
+            reply_markup:          Some(InlineKeyboardMarkup::default()),
             input_message_content: Some(InputMessageContent::Text(InputMessageContentText {
-                message_text: String::from("message_text"),
-                entities: None,
-                parse_mode: Some(ParseMode::MarkdownV2),
+                message_text:         String::from("message_text"),
+                entities:             None,
+                parse_mode:           Some(ParseMode::MarkdownV2),
                 link_preview_options: Some(LinkPreviewOptions {
-                    is_disabled: true,
-                    url: None,
+                    is_disabled:        true,
+                    url:                None,
                     prefer_small_media: false,
                     prefer_large_media: false,
-                    show_above_text: false,
-                }),
-            })),
+                    show_above_text:    false
+                })
+            }))
         });
 
         let expected_json = r#"{"type":"sticker","id":"id","sticker_file_id":"sticker_file_id","reply_markup":{"inline_keyboard":[]},"input_message_content":{"message_text":"message_text","parse_mode":"MarkdownV2","link_preview_options":{"is_disabled":true}}}"#;
@@ -905,7 +906,7 @@ mod tests {
             caption_entities: None,
             show_caption_above_media: false,
             reply_markup: None,
-            input_message_content: None,
+            input_message_content: None
         });
 
         let expected_json =
@@ -930,14 +931,14 @@ mod tests {
             reply_markup: Some(InlineKeyboardMarkup::default()),
             input_message_content: Some(InputMessageContent::Location(
                 InputMessageContentLocation {
-                    latitude: 1.0,
-                    longitude: 1.0,
-                    horizontal_accuracy: None,
-                    live_period: None,
-                    heading: None,
-                    proximity_alert_radius: None,
-                },
-            )),
+                    latitude:               1.0,
+                    longitude:              1.0,
+                    horizontal_accuracy:    None,
+                    live_period:            None,
+                    heading:                None,
+                    proximity_alert_radius: None
+                }
+            ))
         });
 
         let expected_json = r#"{"type":"video","id":"id","video_file_id":"video_file_id","title":"title","description":"description","caption":"caption","parse_mode":"HTML","reply_markup":{"inline_keyboard":[]},"input_message_content":{"latitude":1.0,"longitude":1.0}}"#;
@@ -964,7 +965,7 @@ mod tests {
             video_duration: None,
             description: None,
             reply_markup: None,
-            input_message_content: None,
+            input_message_content: None
         });
 
         let expected_json = r#"{"type":"video","id":"id","video_url":"http://video_url/","mime_type":"video/mp4","thumbnail_url":"http://thumb_url/","title":"title"}"#;
@@ -993,14 +994,14 @@ mod tests {
             reply_markup: Some(InlineKeyboardMarkup::default()),
             input_message_content: Some(InputMessageContent::Location(
                 InputMessageContentLocation {
-                    latitude: 1.0,
-                    longitude: 1.0,
-                    horizontal_accuracy: None,
-                    live_period: None,
-                    heading: None,
-                    proximity_alert_radius: None,
-                },
-            )),
+                    latitude:               1.0,
+                    longitude:              1.0,
+                    horizontal_accuracy:    None,
+                    live_period:            None,
+                    heading:                None,
+                    proximity_alert_radius: None
+                }
+            ))
         });
 
         let expected_json = r#"{"type":"video","id":"id","video_url":"http://video_url/","mime_type":"video/mp4","thumbnail_url":"http://thumb_url/","title":"title","caption":"caption","parse_mode":"HTML","video_width":1,"video_height":1,"video_duration":1,"description":"description","reply_markup":{"inline_keyboard":[]},"input_message_content":{"latitude":1.0,"longitude":1.0}}"#;
@@ -1013,14 +1014,14 @@ mod tests {
     #[test]
     fn cached_voice_min() {
         let structure = InlineQueryResult::CachedVoice(InlineQueryResultCachedVoice {
-            id: String::from("id"),
-            voice_file_id: "voice_file_id".into(),
-            title: String::from("title"),
-            caption: None,
-            parse_mode: None,
-            caption_entities: None,
-            reply_markup: None,
-            input_message_content: None,
+            id:                    String::from("id"),
+            voice_file_id:         "voice_file_id".into(),
+            title:                 String::from("title"),
+            caption:               None,
+            parse_mode:            None,
+            caption_entities:      None,
+            reply_markup:          None,
+            input_message_content: None
         });
 
         let expected_json =
@@ -1034,23 +1035,23 @@ mod tests {
     #[test]
     fn cached_voice_full() {
         let structure = InlineQueryResult::CachedVoice(InlineQueryResultCachedVoice {
-            id: String::from("id"),
-            voice_file_id: "voice_file_id".into(),
-            title: String::from("title"),
-            caption: Some(String::from("caption")),
-            parse_mode: Some(ParseMode::Html),
-            caption_entities: None,
-            reply_markup: Some(InlineKeyboardMarkup::default()),
+            id:                    String::from("id"),
+            voice_file_id:         "voice_file_id".into(),
+            title:                 String::from("title"),
+            caption:               Some(String::from("caption")),
+            parse_mode:            Some(ParseMode::Html),
+            caption_entities:      None,
+            reply_markup:          Some(InlineKeyboardMarkup::default()),
             input_message_content: Some(InputMessageContent::Location(
                 InputMessageContentLocation {
-                    latitude: 1.0,
-                    longitude: 1.0,
-                    horizontal_accuracy: None,
-                    live_period: None,
-                    heading: None,
-                    proximity_alert_radius: None,
-                },
-            )),
+                    latitude:               1.0,
+                    longitude:              1.0,
+                    horizontal_accuracy:    None,
+                    live_period:            None,
+                    heading:                None,
+                    proximity_alert_radius: None
+                }
+            ))
         });
 
         let expected_json = r#"{"type":"voice","id":"id","voice_file_id":"voice_file_id","title":"title","caption":"caption","parse_mode":"HTML","reply_markup":{"inline_keyboard":[]},"input_message_content":{"latitude":1.0,"longitude":1.0}}"#;
@@ -1063,15 +1064,15 @@ mod tests {
     #[test]
     fn voice_min() {
         let structure = InlineQueryResult::Voice(InlineQueryResultVoice {
-            id: String::from("id"),
-            voice_url: Url::parse("http://voice_url/").unwrap(),
-            title: String::from("title"),
-            caption: None,
-            parse_mode: None,
-            caption_entities: None,
-            voice_duration: None,
-            reply_markup: None,
-            input_message_content: None,
+            id:                    String::from("id"),
+            voice_url:             Url::parse("http://voice_url/").unwrap(),
+            title:                 String::from("title"),
+            caption:               None,
+            parse_mode:            None,
+            caption_entities:      None,
+            voice_duration:        None,
+            reply_markup:          None,
+            input_message_content: None
         });
 
         let expected_json =
@@ -1085,24 +1086,24 @@ mod tests {
     #[test]
     fn voice_full() {
         let structure = InlineQueryResult::Voice(InlineQueryResultVoice {
-            id: String::from("id"),
-            voice_url: Url::parse("http://voice_url/").unwrap(),
-            title: String::from("title"),
-            caption: Some(String::from("caption")),
-            parse_mode: Some(ParseMode::Html),
-            caption_entities: None,
-            voice_duration: Some(Seconds::from_seconds(1)),
-            reply_markup: Some(InlineKeyboardMarkup::default()),
+            id:                    String::from("id"),
+            voice_url:             Url::parse("http://voice_url/").unwrap(),
+            title:                 String::from("title"),
+            caption:               Some(String::from("caption")),
+            parse_mode:            Some(ParseMode::Html),
+            caption_entities:      None,
+            voice_duration:        Some(Seconds::from_seconds(1)),
+            reply_markup:          Some(InlineKeyboardMarkup::default()),
             input_message_content: Some(InputMessageContent::Location(
                 InputMessageContentLocation {
-                    latitude: 1.0,
-                    longitude: 1.0,
-                    horizontal_accuracy: None,
-                    live_period: None,
-                    heading: None,
-                    proximity_alert_radius: None,
-                },
-            )),
+                    latitude:               1.0,
+                    longitude:              1.0,
+                    horizontal_accuracy:    None,
+                    live_period:            None,
+                    heading:                None,
+                    proximity_alert_radius: None
+                }
+            ))
         });
 
         let expected_json = r#"{"type":"voice","id":"id","voice_url":"http://voice_url/","title":"title","caption":"caption","parse_mode":"HTML","voice_duration":1,"reply_markup":{"inline_keyboard":[]},"input_message_content":{"latitude":1.0,"longitude":1.0}}"#;
@@ -1115,26 +1116,26 @@ mod tests {
     #[test]
     fn article_min() {
         let structure = InlineQueryResult::Article(InlineQueryResultArticle {
-            id: String::from("id"),
-            title: String::from("title"),
+            id:                    String::from("id"),
+            title:                 String::from("title"),
             input_message_content: InputMessageContent::Text(InputMessageContentText {
-                message_text: String::from("message_text"),
-                entities: None,
+                message_text:         String::from("message_text"),
+                entities:             None,
                 link_preview_options: Some(LinkPreviewOptions {
-                    is_disabled: true,
-                    url: None,
+                    is_disabled:        true,
+                    url:                None,
                     prefer_small_media: false,
                     prefer_large_media: false,
-                    show_above_text: false,
+                    show_above_text:    false
                 }),
-                parse_mode: None,
+                parse_mode:           None
             }),
-            reply_markup: None,
-            url: None,
-            description: None,
-            thumbnail_url: None,
-            thumbnail_width: None,
-            thumbnail_height: None,
+            reply_markup:          None,
+            url:                   None,
+            description:           None,
+            thumbnail_url:         None,
+            thumbnail_width:       None,
+            thumbnail_height:      None
         });
 
         let expected_json = r#"{"type":"article","id":"id","title":"title","input_message_content":{"message_text":"message_text","link_preview_options":{"is_disabled":true}}}"#;
@@ -1147,26 +1148,26 @@ mod tests {
     #[test]
     fn article_full() {
         let structure = InlineQueryResult::Article(InlineQueryResultArticle {
-            id: String::from("id"),
-            title: String::from("title"),
+            id:                    String::from("id"),
+            title:                 String::from("title"),
             input_message_content: InputMessageContent::Text(InputMessageContentText {
-                message_text: String::from("message_text"),
-                entities: None,
-                parse_mode: None,
+                message_text:         String::from("message_text"),
+                entities:             None,
+                parse_mode:           None,
                 link_preview_options: Some(LinkPreviewOptions {
-                    is_disabled: true,
-                    url: None,
+                    is_disabled:        true,
+                    url:                None,
                     prefer_small_media: false,
                     prefer_large_media: false,
-                    show_above_text: false,
-                }),
+                    show_above_text:    false
+                })
             }),
-            reply_markup: Some(InlineKeyboardMarkup::default()),
-            url: Some(Url::parse("http://url/").unwrap()),
-            description: Some(String::from("description")),
-            thumbnail_url: Some(Url::parse("http://thumb_url/").unwrap()),
-            thumbnail_width: Some(1),
-            thumbnail_height: Some(1),
+            reply_markup:          Some(InlineKeyboardMarkup::default()),
+            url:                   Some(Url::parse("http://url/").unwrap()),
+            description:           Some(String::from("description")),
+            thumbnail_url:         Some(Url::parse("http://thumb_url/").unwrap()),
+            thumbnail_width:       Some(1),
+            thumbnail_height:      Some(1)
         });
 
         let expected_json = r#"{"type":"article","id":"id","title":"title","input_message_content":{"message_text":"message_text","link_preview_options":{"is_disabled":true}},"reply_markup":{"inline_keyboard":[]},"url":"http://url/","description":"description","thumbnail_url":"http://thumb_url/","thumbnail_width":1,"thumbnail_height":1}"#;
@@ -1179,16 +1180,16 @@ mod tests {
     #[test]
     fn contact_min() {
         let structure = InlineQueryResult::Contact(InlineQueryResultContact {
-            id: String::from("id"),
-            phone_number: String::from("phone_number"),
-            first_name: String::from("first_name"),
-            last_name: None,
-            vcard: None,
-            reply_markup: None,
+            id:                    String::from("id"),
+            phone_number:          String::from("phone_number"),
+            first_name:            String::from("first_name"),
+            last_name:             None,
+            vcard:                 None,
+            reply_markup:          None,
             input_message_content: None,
-            thumbnail_url: None,
-            thumbnail_width: None,
-            thumbnail_height: None,
+            thumbnail_url:         None,
+            thumbnail_width:       None,
+            thumbnail_height:      None
         });
 
         let expected_json = r#"{"type":"contact","id":"id","phone_number":"phone_number","first_name":"first_name"}"#;
@@ -1201,27 +1202,27 @@ mod tests {
     #[test]
     fn contact_full() {
         let structure = InlineQueryResult::Contact(InlineQueryResultContact {
-            id: String::from("id"),
-            phone_number: String::from("phone_number"),
-            first_name: String::from("first_name"),
-            last_name: Some(String::from("last_name")),
-            vcard: Some(String::from("vcard")),
-            reply_markup: Some(InlineKeyboardMarkup::default()),
+            id:                    String::from("id"),
+            phone_number:          String::from("phone_number"),
+            first_name:            String::from("first_name"),
+            last_name:             Some(String::from("last_name")),
+            vcard:                 Some(String::from("vcard")),
+            reply_markup:          Some(InlineKeyboardMarkup::default()),
             input_message_content: Some(InputMessageContent::Text(InputMessageContentText {
-                message_text: String::from("message_text"),
-                entities: None,
-                parse_mode: None,
+                message_text:         String::from("message_text"),
+                entities:             None,
+                parse_mode:           None,
                 link_preview_options: Some(LinkPreviewOptions {
-                    is_disabled: true,
-                    url: None,
+                    is_disabled:        true,
+                    url:                None,
                     prefer_small_media: false,
                     prefer_large_media: false,
-                    show_above_text: false,
-                }),
+                    show_above_text:    false
+                })
             })),
-            thumbnail_url: Some(Url::parse("http://thumb_url/").unwrap()),
-            thumbnail_width: Some(1),
-            thumbnail_height: Some(1),
+            thumbnail_url:         Some(Url::parse("http://thumb_url/").unwrap()),
+            thumbnail_width:       Some(1),
+            thumbnail_height:      Some(1)
         });
 
         let expected_json = r#"{"type":"contact","id":"id","phone_number":"phone_number","first_name":"first_name","last_name":"last_name","vcard":"vcard","reply_markup":{"inline_keyboard":[]},"input_message_content":{"message_text":"message_text","link_preview_options":{"is_disabled":true}},"thumbnail_url":"http://thumb_url/","thumbnail_width":1,"thumbnail_height":1}"#;
@@ -1234,9 +1235,9 @@ mod tests {
     #[test]
     fn game_min() {
         let structure = InlineQueryResult::Game(InlineQueryResultGame {
-            id: String::from("id"),
+            id:              String::from("id"),
             game_short_name: String::from("game_short_name"),
-            reply_markup: None,
+            reply_markup:    None
         });
 
         let expected_json = r#"{"type":"game","id":"id","game_short_name":"game_short_name"}"#;
@@ -1249,9 +1250,9 @@ mod tests {
     #[test]
     fn game_full() {
         let structure = InlineQueryResult::Game(InlineQueryResultGame {
-            id: String::from("id"),
+            id:              String::from("id"),
             game_short_name: String::from("game_short_name"),
-            reply_markup: Some(InlineKeyboardMarkup::default()),
+            reply_markup:    Some(InlineKeyboardMarkup::default())
         });
 
         let expected_json = r#"{"type":"game","id":"id","game_short_name":"game_short_name","reply_markup":{"inline_keyboard":[]}}"#;
@@ -1264,19 +1265,19 @@ mod tests {
     #[test]
     fn location_min() {
         let structure = InlineQueryResult::Location(InlineQueryResultLocation {
-            id: String::from("id"),
-            latitude: 1.0,
-            longitude: 1.0,
-            title: String::from("title"),
-            horizontal_accuracy: None,
-            live_period: None,
-            heading: None,
+            id:                     String::from("id"),
+            latitude:               1.0,
+            longitude:              1.0,
+            title:                  String::from("title"),
+            horizontal_accuracy:    None,
+            live_period:            None,
+            heading:                None,
             proximity_alert_radius: None,
-            reply_markup: None,
-            input_message_content: None,
-            thumbnail_url: None,
-            thumbnail_width: None,
-            thumbnail_height: None,
+            reply_markup:           None,
+            input_message_content:  None,
+            thumbnail_url:          None,
+            thumbnail_width:        None,
+            thumbnail_height:       None
         });
 
         let expected_json =
@@ -1290,30 +1291,30 @@ mod tests {
     #[test]
     fn location_full() {
         let structure = InlineQueryResult::Location(InlineQueryResultLocation {
-            id: String::from("id"),
-            latitude: 1.0,
-            longitude: 1.0,
-            title: String::from("title"),
-            horizontal_accuracy: Some(1.0),
-            live_period: Some(1.into()),
-            heading: Some(1),
+            id:                     String::from("id"),
+            latitude:               1.0,
+            longitude:              1.0,
+            title:                  String::from("title"),
+            horizontal_accuracy:    Some(1.0),
+            live_period:            Some(1.into()),
+            heading:                Some(1),
             proximity_alert_radius: Some(1),
-            reply_markup: Some(InlineKeyboardMarkup::default()),
-            input_message_content: Some(InputMessageContent::Text(InputMessageContentText {
-                message_text: String::from("message_text"),
-                entities: None,
-                parse_mode: None,
+            reply_markup:           Some(InlineKeyboardMarkup::default()),
+            input_message_content:  Some(InputMessageContent::Text(InputMessageContentText {
+                message_text:         String::from("message_text"),
+                entities:             None,
+                parse_mode:           None,
                 link_preview_options: Some(LinkPreviewOptions {
-                    is_disabled: true,
-                    url: None,
+                    is_disabled:        true,
+                    url:                None,
                     prefer_small_media: false,
                     prefer_large_media: false,
-                    show_above_text: false,
-                }),
+                    show_above_text:    false
+                })
             })),
-            thumbnail_url: Some(Url::parse("http://thumb_url/").unwrap()),
-            thumbnail_width: Some(1),
-            thumbnail_height: Some(1),
+            thumbnail_url:          Some(Url::parse("http://thumb_url/").unwrap()),
+            thumbnail_width:        Some(1),
+            thumbnail_height:       Some(1)
         });
 
         let expected_json = r#"{"type":"location","id":"id","latitude":1.0,"longitude":1.0,"title":"title","horizontal_accuracy":1.0,"live_period":1,"heading":1,"proximity_alert_radius":1,"reply_markup":{"inline_keyboard":[]},"input_message_content":{"message_text":"message_text","link_preview_options":{"is_disabled":true}},"thumbnail_url":"http://thumb_url/","thumbnail_width":1,"thumbnail_height":1}"#;
@@ -1326,20 +1327,20 @@ mod tests {
     #[test]
     fn venue_min() {
         let structure = InlineQueryResult::Venue(InlineQueryResultVenue {
-            id: String::from("id"),
-            latitude: 1.0,
-            longitude: 1.0,
-            title: String::from("title"),
-            address: String::from("address"),
-            foursquare_id: None,
-            foursquare_type: None,
-            google_place_id: None,
-            google_place_type: None,
-            reply_markup: None,
+            id:                    String::from("id"),
+            latitude:              1.0,
+            longitude:             1.0,
+            title:                 String::from("title"),
+            address:               String::from("address"),
+            foursquare_id:         None,
+            foursquare_type:       None,
+            google_place_id:       None,
+            google_place_type:     None,
+            reply_markup:          None,
             input_message_content: None,
-            thumbnail_url: None,
-            thumbnail_width: None,
-            thumbnail_height: None,
+            thumbnail_url:         None,
+            thumbnail_width:       None,
+            thumbnail_height:      None
         });
 
         let expected_json = r#"{"type":"venue","id":"id","latitude":1.0,"longitude":1.0,"title":"title","address":"address"}"#;
@@ -1352,31 +1353,31 @@ mod tests {
     #[test]
     fn venue_full() {
         let structure = InlineQueryResult::Venue(InlineQueryResultVenue {
-            id: String::from("id"),
-            latitude: 1.0,
-            longitude: 1.0,
-            title: String::from("title"),
-            address: String::from("address"),
-            foursquare_id: Some(String::from("foursquare_id")),
-            foursquare_type: Some(String::from("foursquare_type")),
-            google_place_id: Some(String::from("google_place_id")),
-            google_place_type: Some(String::from("google_place_type")),
-            reply_markup: Some(InlineKeyboardMarkup::default()),
+            id:                    String::from("id"),
+            latitude:              1.0,
+            longitude:             1.0,
+            title:                 String::from("title"),
+            address:               String::from("address"),
+            foursquare_id:         Some(String::from("foursquare_id")),
+            foursquare_type:       Some(String::from("foursquare_type")),
+            google_place_id:       Some(String::from("google_place_id")),
+            google_place_type:     Some(String::from("google_place_type")),
+            reply_markup:          Some(InlineKeyboardMarkup::default()),
             input_message_content: Some(InputMessageContent::Text(InputMessageContentText {
-                message_text: String::from("message_text"),
-                entities: None,
-                parse_mode: None,
+                message_text:         String::from("message_text"),
+                entities:             None,
+                parse_mode:           None,
                 link_preview_options: Some(LinkPreviewOptions {
-                    is_disabled: true,
-                    url: None,
+                    is_disabled:        true,
+                    url:                None,
                     prefer_small_media: false,
                     prefer_large_media: false,
-                    show_above_text: false,
-                }),
+                    show_above_text:    false
+                })
             })),
-            thumbnail_url: Some(Url::parse("http://thumb_url/").unwrap()),
-            thumbnail_width: Some(1),
-            thumbnail_height: Some(1),
+            thumbnail_url:         Some(Url::parse("http://thumb_url/").unwrap()),
+            thumbnail_width:       Some(1),
+            thumbnail_height:      Some(1)
         });
 
         let expected_json = r#"{"type":"venue","id":"id","latitude":1.0,"longitude":1.0,"title":"title","address":"address","foursquare_id":"foursquare_id","foursquare_type":"foursquare_type","google_place_id":"google_place_id","google_place_type":"google_place_type","reply_markup":{"inline_keyboard":[]},"input_message_content":{"message_text":"message_text","link_preview_options":{"is_disabled":true}},"thumbnail_url":"http://thumb_url/","thumbnail_width":1,"thumbnail_height":1}"#;

@@ -2,11 +2,11 @@ use std::pin::Pin;
 
 use futures::{
     Future,
-    task::{Context, Poll},
+    task::{Context, Poll}
 };
 use tokio::sync::{
     mpsc,
-    oneshot::{self, Receiver, Sender},
+    oneshot::{self, Receiver, Sender}
 };
 
 use crate::adaptors::throttle::FreezeUntil;
@@ -43,7 +43,7 @@ impl Future for RequestWaiter {
         match this.0.poll(cx) {
             Poll::Ready(Ok(ret)) => Poll::Ready(Some(ret)),
             Poll::Ready(Err(_)) => Poll::Ready(None),
-            Poll::Pending => Poll::Pending,
+            Poll::Pending => Poll::Pending
         }
     }
 }

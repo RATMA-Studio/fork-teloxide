@@ -1,10 +1,10 @@
-use crate::serde_multipart::error::Error;
-
 use reqwest::multipart::{Form, Part};
 use serde::{
     Serialize, Serializer,
-    ser::{Impossible, SerializeMap, SerializeSeq, SerializeStruct},
+    ser::{Impossible, SerializeMap, SerializeSeq, SerializeStruct}
 };
+
+use crate::serde_multipart::error::Error;
 
 /// The main serializer that serializes top-level and structures
 pub(super) struct MultipartSerializer(Form);
@@ -12,7 +12,7 @@ pub(super) struct MultipartSerializer(Form);
 /// Serializer for maps (support for `#[serde(flatten)]`)
 pub(super) struct MultipartMapSerializer {
     form: Form,
-    key: Option<String>,
+    key:  Option<String>
 }
 
 /// Serializer for single "fields" that are serialized as multipart "part"s.
@@ -25,8 +25,8 @@ struct PartSerializer;
 
 /// Struct or Seq -> Json -> Part serializer
 struct JsonPartSerializer {
-    buf: String,
-    state: PartSerializerStructState,
+    buf:   String,
+    state: PartSerializerStructState
 }
 
 /// State for `PartSerializerStruct`
@@ -35,7 +35,7 @@ struct JsonPartSerializer {
 /// serialized something and need to add a comma before next field
 enum PartSerializerStructState {
     Empty,
-    Rest,
+    Rest
 }
 
 impl MultipartSerializer {
@@ -62,13 +62,16 @@ impl Serializer for MultipartSerializer {
     type SerializeStructVariant = Impossible<Self::Ok, Self::Error>;
 
     fn serialize_map(self, _: Option<usize>) -> Result<Self::SerializeMap, Self::Error> {
-        Ok(MultipartMapSerializer { form: Form::new(), key: None })
+        Ok(MultipartMapSerializer {
+            form: Form::new(),
+            key:  None
+        })
     }
 
     fn serialize_struct(
         self,
         _: &'static str,
-        _: usize,
+        _: usize
     ) -> Result<Self::SerializeStruct, Self::Error> {
         Ok(self)
     }
@@ -138,7 +141,7 @@ impl Serializer for MultipartSerializer {
 
     fn serialize_some<T: ?Sized>(self, _: &T) -> Result<Self::Ok, Self::Error>
     where
-        T: Serialize,
+        T: Serialize
     {
         Err(Error::TopLevelNotStruct)
     }
@@ -155,7 +158,7 @@ impl Serializer for MultipartSerializer {
         self,
         _: &'static str,
         _: u32,
-        _: &'static str,
+        _: &'static str
     ) -> Result<Self::Ok, Self::Error> {
         Err(Error::TopLevelNotStruct)
     }
@@ -163,10 +166,10 @@ impl Serializer for MultipartSerializer {
     fn serialize_newtype_struct<T: ?Sized>(
         self,
         _: &'static str,
-        _: &T,
+        _: &T
     ) -> Result<Self::Ok, Self::Error>
     where
-        T: Serialize,
+        T: Serialize
     {
         Err(Error::TopLevelNotStruct)
     }
@@ -176,10 +179,10 @@ impl Serializer for MultipartSerializer {
         _: &'static str,
         _: u32,
         _: &'static str,
-        _: &T,
+        _: &T
     ) -> Result<Self::Ok, Self::Error>
     where
-        T: Serialize,
+        T: Serialize
     {
         Err(Error::TopLevelNotStruct)
     }
@@ -195,7 +198,7 @@ impl Serializer for MultipartSerializer {
     fn serialize_tuple_struct(
         self,
         _: &'static str,
-        _: usize,
+        _: usize
     ) -> Result<Self::SerializeTupleStruct, Self::Error> {
         Err(Error::TopLevelNotStruct)
     }
@@ -205,7 +208,7 @@ impl Serializer for MultipartSerializer {
         _: &'static str,
         _: u32,
         _: &'static str,
-        _: usize,
+        _: usize
     ) -> Result<Self::SerializeTupleVariant, Self::Error> {
         Err(Error::TopLevelNotStruct)
     }
@@ -215,7 +218,7 @@ impl Serializer for MultipartSerializer {
         _: &'static str,
         _: u32,
         _: &'static str,
-        _: usize,
+        _: usize
     ) -> Result<Self::SerializeStructVariant, Self::Error> {
         Err(Error::TopLevelNotStruct)
     }
@@ -228,10 +231,10 @@ impl SerializeStruct for MultipartSerializer {
     fn serialize_field<T: ?Sized>(
         &mut self,
         key: &'static str,
-        value: &T,
+        value: &T
     ) -> Result<(), Self::Error>
     where
-        T: Serialize,
+        T: Serialize
     {
         let part = value.serialize(PartSerializer {})?;
         take_mut::take(&mut self.0, |f| f.part(key, part));
@@ -250,7 +253,7 @@ impl SerializeMap for MultipartMapSerializer {
 
     fn serialize_key<T: ?Sized>(&mut self, key: &T) -> Result<(), Self::Error>
     where
-        T: Serialize,
+        T: Serialize
     {
         if let Ok(serde_json::Value::String(s)) = serde_json::to_value(key) {
             self.key = Some(s);
@@ -261,9 +264,12 @@ impl SerializeMap for MultipartMapSerializer {
 
     fn serialize_value<T: ?Sized>(&mut self, value: &T) -> Result<(), Self::Error>
     where
-        T: Serialize,
+        T: Serialize
     {
-        let key = self.key.take().expect("Value serialized before key or key is not string");
+        let key = self
+            .key
+            .take()
+            .expect("Value serialized before key or key is not string");
 
         let part = value.serialize(PartSerializer {})?;
 
@@ -348,7 +354,7 @@ impl Serializer for PartSerializer {
 
     fn serialize_some<T: ?Sized>(self, value: &T) -> Result<Self::Ok, Self::Error>
     where
-        T: Serialize,
+        T: Serialize
     {
         value.serialize(self)
     }
@@ -357,7 +363,7 @@ impl Serializer for PartSerializer {
         self,
         _: &'static str,
         _: u32,
-        variant_name: &'static str,
+        variant_name: &'static str
     ) -> Result<Self::Ok, Self::Error> {
         Ok(Part::text(variant_name))
     }
@@ -365,22 +371,28 @@ impl Serializer for PartSerializer {
     fn serialize_struct(
         self,
         _: &'static str,
-        _: usize,
+        _: usize
     ) -> Result<Self::SerializeStruct, Self::Error> {
-        Ok(JsonPartSerializer { buf: String::new(), state: PartSerializerStructState::Empty })
+        Ok(JsonPartSerializer {
+            buf:   String::new(),
+            state: PartSerializerStructState::Empty
+        })
     }
 
     fn serialize_seq(self, _: Option<usize>) -> Result<Self::SerializeSeq, Self::Error> {
-        Ok(JsonPartSerializer { buf: String::new(), state: PartSerializerStructState::Empty })
+        Ok(JsonPartSerializer {
+            buf:   String::new(),
+            state: PartSerializerStructState::Empty
+        })
     }
 
     fn serialize_newtype_struct<T: ?Sized>(
         self,
         _: &'static str,
-        value: &T,
+        value: &T
     ) -> Result<Self::Ok, Self::Error>
     where
-        T: Serialize,
+        T: Serialize
     {
         value.serialize(self)
     }
@@ -407,10 +419,10 @@ impl Serializer for PartSerializer {
         _name: &'static str,
         _variant_index: u32,
         _variant: &'static str,
-        _value: &T,
+        _value: &T
     ) -> Result<Self::Ok, Self::Error>
     where
-        T: Serialize,
+        T: Serialize
     {
         unimplemented!()
     }
@@ -422,7 +434,7 @@ impl Serializer for PartSerializer {
     fn serialize_tuple_struct(
         self,
         _: &'static str,
-        _: usize,
+        _: usize
     ) -> Result<Self::SerializeTupleStruct, Self::Error> {
         unimplemented!()
     }
@@ -432,7 +444,7 @@ impl Serializer for PartSerializer {
         _: &'static str,
         _: u32,
         _: &'static str,
-        _: usize,
+        _: usize
     ) -> Result<Self::SerializeTupleVariant, Self::Error> {
         unimplemented!()
     }
@@ -446,7 +458,7 @@ impl Serializer for PartSerializer {
         _name: &'static str,
         _variant_index: u32,
         _variant: &'static str,
-        _len: usize,
+        _len: usize
     ) -> Result<Self::SerializeStructVariant, Self::Error> {
         unimplemented!()
     }
@@ -459,13 +471,14 @@ impl SerializeStruct for JsonPartSerializer {
     fn serialize_field<T: ?Sized>(
         &mut self,
         key: &'static str,
-        value: &T,
+        value: &T
     ) -> Result<(), Self::Error>
     where
-        T: Serialize,
+        T: Serialize
     {
-        use PartSerializerStructState::*;
         use std::fmt::Write;
+
+        use PartSerializerStructState::*;
 
         let value = serde_json::to_string(value)?;
         match self.state {
@@ -474,7 +487,7 @@ impl SerializeStruct for JsonPartSerializer {
 
                 write!(&mut self.buf, "{{\"{key}\":{value}")?
             }
-            Rest => write!(&mut self.buf, ",\"{key}\":{value}")?,
+            Rest => write!(&mut self.buf, ",\"{key}\":{value}")?
         }
 
         Ok(())
@@ -501,10 +514,11 @@ impl SerializeSeq for JsonPartSerializer {
 
     fn serialize_element<T: ?Sized>(&mut self, value: &T) -> Result<(), Self::Error>
     where
-        T: Serialize,
+        T: Serialize
     {
-        use PartSerializerStructState::*;
         use std::fmt::Write;
+
+        use PartSerializerStructState::*;
 
         let value = serde_json::to_string(value)?;
         match self.state {
@@ -513,7 +527,7 @@ impl SerializeSeq for JsonPartSerializer {
 
                 write!(&mut self.buf, "[{value}")?
             }
-            Rest => write!(&mut self.buf, ",{value}")?,
+            Rest => write!(&mut self.buf, ",{value}")?
         }
 
         Ok(())

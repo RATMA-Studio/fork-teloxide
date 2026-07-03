@@ -6,30 +6,40 @@ mod trace_storage;
 #[cfg(feature = "redis-storage")]
 mod redis_storage;
 
-#[cfg(any(feature = "sqlite-storage-nativetls", feature = "sqlite-storage-rustls"))]
+#[cfg(any(
+    feature = "sqlite-storage-nativetls",
+    feature = "sqlite-storage-rustls"
+))]
 mod sqlite_storage;
 
-#[cfg(any(feature = "postgres-storage-nativetls", feature = "postgres-storage-rustls"))]
+#[cfg(any(
+    feature = "postgres-storage-nativetls",
+    feature = "postgres-storage-rustls"
+))]
 mod postgres_storage;
 
+use std::sync::Arc;
+
 use futures::future::BoxFuture;
+#[cfg(any(
+    feature = "postgres-storage-nativetls",
+    feature = "postgres-storage-rustls"
+))]
+pub use postgres_storage::{PostgresStorage, PostgresStorageError};
+#[cfg(feature = "redis-storage")]
+pub use redis_storage::{RedisStorage, RedisStorageError};
+pub use serializer::Serializer;
+#[cfg(any(
+    feature = "sqlite-storage-nativetls",
+    feature = "sqlite-storage-rustls"
+))]
+pub use sqlite_storage::{SqliteStorage, SqliteStorageError};
 use teloxide_core::types::ChatId;
 
 pub use self::{
     in_mem_storage::{InMemStorage, InMemStorageError},
-    trace_storage::TraceStorage,
+    trace_storage::TraceStorage
 };
-
-#[cfg(feature = "redis-storage")]
-pub use redis_storage::{RedisStorage, RedisStorageError};
-pub use serializer::Serializer;
-use std::sync::Arc;
-
-#[cfg(any(feature = "sqlite-storage-nativetls", feature = "sqlite-storage-rustls"))]
-pub use sqlite_storage::{SqliteStorage, SqliteStorageError};
-
-#[cfg(any(feature = "postgres-storage-nativetls", feature = "postgres-storage-rustls"))]
-pub use postgres_storage::{PostgresStorage, PostgresStorageError};
 
 /// A storage with an erased error type.
 pub type ErasedStorage<D> =
@@ -62,7 +72,7 @@ pub trait Storage<D> {
     #[must_use = "Futures are lazy and do nothing unless polled with .await"]
     fn remove_dialogue(
         self: Arc<Self>,
-        chat_id: ChatId,
+        chat_id: ChatId
     ) -> BoxFuture<'static, Result<(), Self::Error>>
     where
         D: Send + 'static;
@@ -72,7 +82,7 @@ pub trait Storage<D> {
     fn update_dialogue(
         self: Arc<Self>,
         chat_id: ChatId,
-        dialogue: D,
+        dialogue: D
     ) -> BoxFuture<'static, Result<(), Self::Error>>
     where
         D: Send + 'static;
@@ -81,7 +91,7 @@ pub trait Storage<D> {
     #[must_use = "Futures are lazy and do nothing unless polled with .await"]
     fn get_dialogue(
         self: Arc<Self>,
-        chat_id: ChatId,
+        chat_id: ChatId
     ) -> BoxFuture<'static, Result<Option<D>, Self::Error>>;
 
     /// Erases [`Self::Error`] to [`std::error::Error`].
@@ -89,7 +99,7 @@ pub trait Storage<D> {
     fn erase(self: Arc<Self>) -> Arc<ErasedStorage<D>>
     where
         Self: Sized + Send + Sync + 'static,
-        Self::Error: std::error::Error + Send + Sync + 'static,
+        Self::Error: std::error::Error + Send + Sync + 'static
     {
         Arc::new(Eraser(self))
     }
@@ -100,42 +110,51 @@ struct Eraser<S>(Arc<S>);
 impl<D, S> Storage<D> for Eraser<S>
 where
     S: Storage<D> + Send + Sync + 'static,
-    S::Error: std::error::Error + Send + Sync + 'static,
+    S::Error: std::error::Error + Send + Sync + 'static
 {
     type Error = Box<dyn std::error::Error + Send + Sync>;
 
     fn remove_dialogue(
         self: Arc<Self>,
-        chat_id: ChatId,
+        chat_id: ChatId
     ) -> BoxFuture<'static, Result<(), Self::Error>>
     where
-        D: Send + 'static,
+        D: Send + 'static
     {
-        Box::pin(
-            async move { Arc::clone(&self.0).remove_dialogue(chat_id).await.map_err(|e| e.into()) },
-        )
+        Box::pin(async move {
+            Arc::clone(&self.0)
+                .remove_dialogue(chat_id)
+                .await
+                .map_err(|e| e.into())
+        })
     }
 
     fn update_dialogue(
         self: Arc<Self>,
         chat_id: ChatId,
-        dialogue: D,
+        dialogue: D
     ) -> BoxFuture<'static, Result<(), Self::Error>>
     where
-        D: Send + 'static,
+        D: Send + 'static
     {
         Box::pin(async move {
-            Arc::clone(&self.0).update_dialogue(chat_id, dialogue).await.map_err(|e| e.into())
+            Arc::clone(&self.0)
+                .update_dialogue(chat_id, dialogue)
+                .await
+                .map_err(|e| e.into())
         })
     }
 
     fn get_dialogue(
         self: Arc<Self>,
-        chat_id: ChatId,
+        chat_id: ChatId
     ) -> BoxFuture<'static, Result<Option<D>, Self::Error>> {
-        Box::pin(
-            async move { Arc::clone(&self.0).get_dialogue(chat_id).await.map_err(|e| e.into()) },
-        )
+        Box::pin(async move {
+            Arc::clone(&self.0)
+                .get_dialogue(chat_id)
+                .await
+                .map_err(|e| e.into())
+        })
     }
 }
 
@@ -148,9 +167,22 @@ mod tests {
         let chat_id = ChatId(123);
 
         let erased = InMemStorage::new().erase();
-        Arc::clone(&erased).update_dialogue(chat_id, 1).await.unwrap();
-        assert_eq!(Arc::clone(&erased).get_dialogue(chat_id).await.unwrap().unwrap(), 1);
+        Arc::clone(&erased)
+            .update_dialogue(chat_id, 1)
+            .await
+            .unwrap();
+        assert_eq!(
+            Arc::clone(&erased)
+                .get_dialogue(chat_id)
+                .await
+                .unwrap()
+                .unwrap(),
+            1
+        );
         Arc::clone(&erased).remove_dialogue(chat_id).await.unwrap();
-        assert_eq!(Arc::clone(&erased).get_dialogue(chat_id).await.unwrap(), None);
+        assert_eq!(
+            Arc::clone(&erased).get_dialogue(chat_id).await.unwrap(),
+            None
+        );
     }
 }

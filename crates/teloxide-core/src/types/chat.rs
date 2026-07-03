@@ -13,7 +13,7 @@ pub struct Chat {
     pub id: ChatId,
 
     #[serde(flatten)]
-    pub kind: ChatKind,
+    pub kind: ChatKind
 }
 
 #[serde_with::skip_serializing_none]
@@ -23,7 +23,7 @@ pub struct Chat {
 #[non_exhaustive]
 pub enum ChatKind {
     Public(ChatPublic),
-    Private(ChatPrivate),
+    Private(ChatPrivate)
 }
 
 #[serde_with::skip_serializing_none]
@@ -34,7 +34,7 @@ pub struct ChatPublic {
     pub title: Option<String>,
 
     #[serde(flatten)]
-    pub kind: PublicChatKind,
+    pub kind: PublicChatKind
 }
 
 #[serde_with::skip_serializing_none]
@@ -50,7 +50,7 @@ pub struct ChatPrivate {
     pub first_name: Option<String>,
 
     /// A last name of the other party in a private chat.
-    pub last_name: Option<String>,
+    pub last_name: Option<String>
 }
 
 #[serde_with::skip_serializing_none]
@@ -62,7 +62,7 @@ pub struct ChatPrivate {
 pub enum PublicChatKind {
     Channel(PublicChatChannel),
     Group,
-    Supergroup(PublicChatSupergroup),
+    Supergroup(PublicChatSupergroup)
 }
 
 #[serde_with::skip_serializing_none]
@@ -70,7 +70,7 @@ pub enum PublicChatKind {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct PublicChatChannel {
     /// A username, for private chats, supergroups and channels if available.
-    pub username: Option<String>,
+    pub username: Option<String>
 }
 
 #[serde_with::skip_serializing_none]
@@ -87,7 +87,7 @@ pub struct PublicChatSupergroup {
 
     /// `true`, if the chat is the direct messages chat of a channel
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
-    pub is_direct_messages: bool,
+    pub is_direct_messages: bool
 }
 
 impl Chat {
@@ -99,7 +99,13 @@ impl Chat {
     #[must_use]
     pub fn is_group(&self) -> bool {
         if let ChatKind::Public(chat_pub) = &self.kind {
-            matches!(*chat_pub, ChatPublic { kind: PublicChatKind::Group, .. })
+            matches!(
+                *chat_pub,
+                ChatPublic {
+                    kind: PublicChatKind::Group,
+                    ..
+                }
+            )
         } else {
             false
         }
@@ -108,7 +114,13 @@ impl Chat {
     #[must_use]
     pub fn is_supergroup(&self) -> bool {
         if let ChatKind::Public(chat_pub) = &self.kind {
-            matches!(*chat_pub, ChatPublic { kind: PublicChatKind::Supergroup(_), .. })
+            matches!(
+                *chat_pub,
+                ChatPublic {
+                    kind: PublicChatKind::Supergroup(_),
+                    ..
+                }
+            )
         } else {
             false
         }
@@ -117,7 +129,13 @@ impl Chat {
     #[must_use]
     pub fn is_channel(&self) -> bool {
         if let ChatKind::Public(chat_pub) = &self.kind {
-            matches!(*chat_pub, ChatPublic { kind: PublicChatKind::Channel(_), .. })
+            matches!(
+                *chat_pub,
+                ChatPublic {
+                    kind: PublicChatKind::Channel(_),
+                    ..
+                }
+            )
         } else {
             false
         }
@@ -136,7 +154,7 @@ impl Chat {
     pub fn title(&self) -> Option<&str> {
         match &self.kind {
             ChatKind::Public(this) => this.title.as_deref(),
-            _ => None,
+            _ => None
         }
     }
 
@@ -145,13 +163,15 @@ impl Chat {
     pub fn username(&self) -> Option<&str> {
         match &self.kind {
             ChatKind::Public(this) => match &this.kind {
-                PublicChatKind::Channel(PublicChatChannel { username, .. })
-                | PublicChatKind::Supergroup(PublicChatSupergroup { username, .. }) => {
-                    username.as_deref()
-                }
-                PublicChatKind::Group => None,
+                PublicChatKind::Channel(PublicChatChannel {
+                    username, ..
+                })
+                | PublicChatKind::Supergroup(PublicChatSupergroup {
+                    username, ..
+                }) => username.as_deref(),
+                PublicChatKind::Group => None
             },
-            ChatKind::Private(this) => this.username.as_deref(),
+            ChatKind::Private(this) => this.username.as_deref()
         }
     }
 
@@ -160,7 +180,7 @@ impl Chat {
     pub fn first_name(&self) -> Option<&str> {
         match &self.kind {
             ChatKind::Private(this) => this.first_name.as_deref(),
-            _ => None,
+            _ => None
         }
     }
 
@@ -169,7 +189,7 @@ impl Chat {
     pub fn last_name(&self) -> Option<&str> {
         match &self.kind {
             ChatKind::Private(this) => this.last_name.as_deref(),
-            _ => None,
+            _ => None
         }
     }
 }
@@ -181,7 +201,7 @@ mod serde_helper {
     #[cfg_attr(test, derive(schemars::JsonSchema))]
     enum Type {
         #[allow(non_camel_case_types)]
-        private,
+        private
     }
 
     #[derive(Serialize, Deserialize)]
@@ -191,22 +211,42 @@ mod serde_helper {
         /// `private`.
         r#type: Type,
 
-        username: Option<String>,
+        username:   Option<String>,
         first_name: Option<String>,
-        last_name: Option<String>,
+        last_name:  Option<String>
     }
 
     impl From<ChatPrivate> for super::ChatPrivate {
-        fn from(ChatPrivate { r#type: _, username, first_name, last_name }: ChatPrivate) -> Self {
-            Self { username, first_name, last_name }
+        fn from(
+            ChatPrivate {
+                r#type: _,
+                username,
+                first_name,
+                last_name
+            }: ChatPrivate
+        ) -> Self {
+            Self {
+                username,
+                first_name,
+                last_name
+            }
         }
     }
 
     impl From<super::ChatPrivate> for ChatPrivate {
         fn from(
-            super::ChatPrivate { username, first_name, last_name }: super::ChatPrivate,
+            super::ChatPrivate {
+                username,
+                first_name,
+                last_name
+            }: super::ChatPrivate
         ) -> Self {
-            Self { r#type: Type::private, username, first_name, last_name }
+            Self {
+                r#type: Type::private,
+                username,
+                first_name,
+                last_name
+            }
         }
     }
 }
@@ -220,20 +260,20 @@ mod tests {
     #[test]
     fn channel_de() {
         let expected = Chat {
-            id: ChatId(-1),
+            id:   ChatId(-1),
             kind: ChatKind::Public(ChatPublic {
                 title: None,
-                kind: PublicChatKind::Channel(PublicChatChannel {
-                    username: Some("channel_name".into()),
-                }),
-            }),
+                kind:  PublicChatKind::Channel(PublicChatChannel {
+                    username: Some("channel_name".into())
+                })
+            })
         };
         let actual = from_str(
             r#"{
                 "id": -1,
                 "type": "channel",
                 "username": "channel_name"
-            }"#,
+            }"#
         )
         .unwrap();
         assert_eq!(expected, actual);
@@ -243,12 +283,12 @@ mod tests {
     fn private_chat_de() {
         assert_eq!(
             Chat {
-                id: ChatId(0),
+                id:   ChatId(0),
                 kind: ChatKind::Private(ChatPrivate {
-                    username: Some("username".into()),
+                    username:   Some("username".into()),
                     first_name: Some("Anon".into()),
-                    last_name: None,
-                }),
+                    last_name:  None
+                })
             },
             from_str(
                 r#"{
@@ -265,12 +305,12 @@ mod tests {
     #[test]
     fn private_roundtrip() {
         let chat = Chat {
-            id: ChatId(0),
+            id:   ChatId(0),
             kind: ChatKind::Private(ChatPrivate {
-                username: Some("username".into()),
+                username:   Some("username".into()),
                 first_name: Some("Anon".into()),
-                last_name: None,
-            }),
+                last_name:  None
+            })
         };
 
         let json = to_string(&chat).unwrap();

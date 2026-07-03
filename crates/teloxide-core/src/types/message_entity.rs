@@ -20,7 +20,7 @@ pub struct MessageEntity {
     pub offset: usize,
 
     /// Length of the entity in UTF-16 code units.
-    pub length: usize,
+    pub length: usize
 }
 
 /// A "parsed" [`MessageEntity`].
@@ -40,8 +40,8 @@ pub struct MessageEntity {
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub struct MessageEntityRef<'a> {
     message: &'a str,
-    range: Range<usize>,
-    kind: &'a MessageEntityKind,
+    range:   Range<usize>,
+    kind:    &'a MessageEntityKind
 }
 
 // There is no Cashtag or Hashtag builder because we can't influence them in any
@@ -49,55 +49,95 @@ pub struct MessageEntityRef<'a> {
 impl MessageEntity {
     #[must_use]
     pub const fn new(kind: MessageEntityKind, offset: usize, length: usize) -> Self {
-        Self { kind, offset, length }
+        Self {
+            kind,
+            offset,
+            length
+        }
     }
 
     /// Create a message entity representing a bold text.
     #[must_use]
     pub const fn bold(offset: usize, length: usize) -> Self {
-        Self { kind: MessageEntityKind::Bold, offset, length }
+        Self {
+            kind: MessageEntityKind::Bold,
+            offset,
+            length
+        }
     }
 
     /// Create a message entity representing an italic text.
     #[must_use]
     pub const fn italic(offset: usize, length: usize) -> Self {
-        Self { kind: MessageEntityKind::Italic, offset, length }
+        Self {
+            kind: MessageEntityKind::Italic,
+            offset,
+            length
+        }
     }
 
     /// Create a message entity representing an underline text.
     #[must_use]
     pub const fn underline(offset: usize, length: usize) -> Self {
-        Self { kind: MessageEntityKind::Underline, offset, length }
+        Self {
+            kind: MessageEntityKind::Underline,
+            offset,
+            length
+        }
     }
 
     /// Create a message entity representing a strikethrough text.
     #[must_use]
     pub const fn strikethrough(offset: usize, length: usize) -> Self {
-        Self { kind: MessageEntityKind::Strikethrough, offset, length }
+        Self {
+            kind: MessageEntityKind::Strikethrough,
+            offset,
+            length
+        }
     }
 
     /// Create a message entity representing a spoiler text.
     #[must_use]
     pub const fn spoiler(offset: usize, length: usize) -> Self {
-        Self { kind: MessageEntityKind::Spoiler, offset, length }
+        Self {
+            kind: MessageEntityKind::Spoiler,
+            offset,
+            length
+        }
     }
 
     /// Create a message entity representing a monowidth text.
     #[must_use]
     pub const fn code(offset: usize, length: usize) -> Self {
-        Self { kind: MessageEntityKind::Code, offset, length }
+        Self {
+            kind: MessageEntityKind::Code,
+            offset,
+            length
+        }
     }
 
     /// Create a message entity representing a monowidth block.
     #[must_use]
     pub const fn pre(language: Option<String>, offset: usize, length: usize) -> Self {
-        Self { kind: MessageEntityKind::Pre { language }, offset, length }
+        Self {
+            kind: MessageEntityKind::Pre {
+                language
+            },
+            offset,
+            length
+        }
     }
 
     /// Create a message entity representing a clickable text URL.
     #[must_use]
     pub const fn text_link(url: reqwest::Url, offset: usize, length: usize) -> Self {
-        Self { kind: MessageEntityKind::TextLink { url }, offset, length }
+        Self {
+            kind: MessageEntityKind::TextLink {
+                url
+            },
+            offset,
+            length
+        }
     }
 
     /// Create a message entity representing a text mention.
@@ -108,14 +148,26 @@ impl MessageEntity {
     /// [`MessageEntity::text_mention_id`] instead.
     #[must_use]
     pub const fn text_mention(user: User, offset: usize, length: usize) -> Self {
-        Self { kind: MessageEntityKind::TextMention { user }, offset, length }
+        Self {
+            kind: MessageEntityKind::TextMention {
+                user
+            },
+            offset,
+            length
+        }
     }
 
     /// Create a message entity representing a text link in the form of
     /// `tg://user/?id=...` that mentions user with `user_id`.
     #[must_use]
     pub fn text_mention_id(user_id: UserId, offset: usize, length: usize) -> Self {
-        Self { kind: MessageEntityKind::TextLink { url: user_id.url() }, offset, length }
+        Self {
+            kind: MessageEntityKind::TextLink {
+                url: user_id.url()
+            },
+            offset,
+            length
+        }
     }
 
     /// Create a message entity representing a custom emoji.
@@ -123,9 +175,15 @@ impl MessageEntity {
     pub const fn custom_emoji(
         custom_emoji_id: CustomEmojiId,
         offset: usize,
-        length: usize,
+        length: usize
     ) -> Self {
-        Self { kind: MessageEntityKind::CustomEmoji { custom_emoji_id }, offset, length }
+        Self {
+            kind: MessageEntityKind::CustomEmoji {
+                custom_emoji_id
+            },
+            offset,
+            length
+        }
     }
 
     #[must_use]
@@ -202,7 +260,11 @@ impl<'a> MessageEntityRef<'a> {
         // This creates entities with **wrong** offsets (UTF-16) that we later patch.
         let mut entities: Vec<_> = entities
             .iter()
-            .map(|e| Self { message: text, range: e.offset..e.offset + e.length, kind: &e.kind })
+            .map(|e| Self {
+                message: text,
+                range:   e.offset..e.offset + e.length,
+                kind:    &e.kind
+            })
             .collect();
 
         // Convert offsets
@@ -210,7 +272,16 @@ impl<'a> MessageEntityRef<'a> {
         // References to all offsets that need patching
         let mut offsets: Vec<&mut usize> = entities
             .iter_mut()
-            .flat_map(|Self { range: Range { start, end }, .. }| [start, end])
+            .flat_map(
+                |Self {
+                     range:
+                         Range {
+                             start,
+                             end
+                         },
+                     ..
+                 }| [start, end]
+            )
             .collect();
 
         // Sort in decreasing order, so the smallest elements are at the end and can be
@@ -227,7 +298,11 @@ impl<'a> MessageEntityRef<'a> {
                 }
 
                 // Patch all offsets that can be patched
-                while offsets.last().map(|&&mut offset| offset <= len_utf16).unwrap_or(false) {
+                while offsets
+                    .last()
+                    .map(|&&mut offset| offset <= len_utf16)
+                    .unwrap_or(false)
+                {
                     let offset = offsets.pop().unwrap();
                     assert_eq!(*offset, len_utf16, "Invalid utf-16 offset");
 
@@ -266,16 +341,16 @@ pub enum MessageEntityKind {
     Spoiler,
     Code,
     Pre {
-        language: Option<String>,
+        language: Option<String>
     },
     TextLink {
-        url: reqwest::Url,
+        url: reqwest::Url
     },
     TextMention {
-        user: User,
+        user: User
     },
     CustomEmoji {
-        custom_emoji_id: CustomEmojiId,
+        custom_emoji_id: CustomEmojiId
     },
     /// A formatted date and time entity. Allowed in message text and caption,
     /// poll question and option entities, checklist title and task text,
@@ -283,20 +358,21 @@ pub enum MessageEntityKind {
     /// `giftPremiumSubscription.text` entities.
     DateTime {
         /// The Unix time associated with the entity.
-        unix_time: i64,
+        unix_time:        i64,
         /// The string that defines the formatting of the date and time. See
         /// the [date-time entity formatting] section in the Bot API docs.
         ///
         /// [date-time entity formatting]: https://core.telegram.org/bots/api#date-time-entity-formatting
-        date_time_format: Option<String>,
-    },
+        date_time_format: Option<String>
+    }
 }
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use MessageEntityKind::*;
     use cool_asserts::assert_matches;
+
+    use super::*;
 
     #[test]
     fn recursive_kind() {
@@ -304,11 +380,11 @@ mod tests {
 
         assert_eq!(
             MessageEntity {
-                kind: MessageEntityKind::TextLink {
-                    url: reqwest::Url::parse("https://example.com").unwrap(),
+                kind:   MessageEntityKind::TextLink {
+                    url: reqwest::Url::parse("https://example.com").unwrap()
                 },
                 offset: 1,
-                length: 2,
+                length: 2
             },
             from_str::<MessageEntity>(
                 r#"{"type":"text_link","url":"https://example.com","offset":1,"length":2}"#
@@ -323,7 +399,11 @@ mod tests {
         use serde_json::from_str;
 
         assert_eq!(
-            MessageEntity { kind: MessageEntityKind::Blockquote, offset: 32, length: 92 },
+            MessageEntity {
+                kind:   MessageEntityKind::Blockquote,
+                offset: 32,
+                length: 92
+            },
             from_str::<MessageEntity>(r#"{"type": "blockquote", "offset": 32, "length": 92}"#)
                 .unwrap()
         );
@@ -335,7 +415,7 @@ mod tests {
 
         assert_eq!(
             MessageEntity {
-                kind: MessageEntityKind::ExpandableBlockquote,
+                kind:   MessageEntityKind::ExpandableBlockquote,
                 offset: 69,
                 length: 420
             },
@@ -352,9 +432,11 @@ mod tests {
 
         assert_eq!(
             MessageEntity {
-                kind: MessageEntityKind::Pre { language: Some("rust".to_string()) },
+                kind:   MessageEntityKind::Pre {
+                    language: Some("rust".to_string())
+                },
                 offset: 1,
-                length: 2,
+                length: 2
             },
             from_str::<MessageEntity>(r#"{"type":"pre","offset":1,"length":2,"language":"rust"}"#)
                 .unwrap()
@@ -368,9 +450,11 @@ mod tests {
 
         assert_eq!(
             to_string(&MessageEntity {
-                kind: MessageEntityKind::Pre { language: None },
+                kind:   MessageEntityKind::Pre {
+                    language: None
+                },
                 offset: 1,
-                length: 2,
+                length: 2
             })
             .unwrap()
             .find("language"),
@@ -383,11 +467,27 @@ mod tests {
         let parsed = MessageEntityRef::parse(
             "быба",
             &[
-                MessageEntity { kind: Strikethrough, offset: 0, length: 1 },
-                MessageEntity { kind: Bold, offset: 1, length: 1 },
-                MessageEntity { kind: Italic, offset: 2, length: 1 },
-                MessageEntity { kind: Code, offset: 3, length: 1 },
-            ],
+                MessageEntity {
+                    kind:   Strikethrough,
+                    offset: 0,
+                    length: 1
+                },
+                MessageEntity {
+                    kind:   Bold,
+                    offset: 1,
+                    length: 1
+                },
+                MessageEntity {
+                    kind:   Italic,
+                    offset: 2,
+                    length: 1
+                },
+                MessageEntity {
+                    kind:   Code,
+                    offset: 3,
+                    length: 1
+                }
+            ]
         );
 
         assert_matches!(
@@ -396,7 +496,7 @@ mod tests {
                 entity if entity.text() == "б" && entity.kind() == &Strikethrough,
                 entity if entity.text() == "ы" && entity.kind() == &Bold,
                 entity if entity.text() == "б" && entity.kind() == &Italic,
-                entity if entity.text() == "а" && entity.kind() == &Code,
+                entity if entity.text() == "а" && entity.kind() == &Code
             ]
         );
     }
@@ -405,10 +505,17 @@ mod tests {
     fn parse_symbol_24bit() {
         let parsed = MessageEntityRef::parse(
             "xx আ #tt",
-            &[MessageEntity { kind: Hashtag, offset: 5, length: 3 }],
+            &[MessageEntity {
+                kind:   Hashtag,
+                offset: 5,
+                length: 3
+            }]
         );
 
-        assert_matches!(parsed, [entity if entity.text() == "#tt" && entity.kind() == &Hashtag]);
+        assert_matches!(
+            parsed,
+            [entity if entity.text() == "#tt" && entity.kind() == &Hashtag]
+        );
     }
 
     #[test]
@@ -417,10 +524,22 @@ mod tests {
             "b i b",
             // For some reason this is how telegram encodes <b>b <i>i<i/> b<b/>
             &[
-                MessageEntity { kind: Bold, offset: 0, length: 2 },
-                MessageEntity { kind: Bold, offset: 2, length: 3 },
-                MessageEntity { kind: Italic, offset: 2, length: 1 },
-            ],
+                MessageEntity {
+                    kind:   Bold,
+                    offset: 0,
+                    length: 2
+                },
+                MessageEntity {
+                    kind:   Bold,
+                    offset: 2,
+                    length: 3
+                },
+                MessageEntity {
+                    kind:   Italic,
+                    offset: 2,
+                    length: 1
+                }
+            ]
         );
 
         assert_matches!(
@@ -428,7 +547,7 @@ mod tests {
             [
                 entity if entity.text() == "b " && entity.kind() == &Bold,
                 entity if entity.text() == "i b" && entity.kind() == &Bold,
-                entity if entity.text() == "i" && entity.kind() == &Italic,
+                entity if entity.text() == "i" && entity.kind() == &Italic
             ]
         );
     }
@@ -446,16 +565,24 @@ mod tests {
         let parsed = MessageEntityRef::parse(
             "",
             &[
-                MessageEntity { kind: Bold, offset: 0, length: 0 },
-                MessageEntity { kind: Italic, offset: 0, length: 0 },
-            ],
+                MessageEntity {
+                    kind:   Bold,
+                    offset: 0,
+                    length: 0
+                },
+                MessageEntity {
+                    kind:   Italic,
+                    offset: 0,
+                    length: 0
+                }
+            ]
         );
 
         assert_matches!(
             parsed,
             [
                 entity if entity.text() == "" && entity.kind() == &Bold,
-                entity if entity.text() == "" && entity.kind() == &Italic,
+                entity if entity.text() == "" && entity.kind() == &Italic
             ]
         );
     }

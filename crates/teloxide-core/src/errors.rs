@@ -39,12 +39,12 @@ pub enum RequestError {
         #[source]
         source: Arc<serde_json::Error>,
         /// The raw string JSON that couldn't been parsed
-        raw: Box<str>,
+        raw:    Box<str>
     },
 
     /// Occurs when trying to send a file to Telegram.
     #[error("An I/O error: {0}")]
-    Io(#[from] Arc<io::Error>),
+    Io(#[from] Arc<io::Error>)
 }
 
 /// An error caused by downloading a file.
@@ -57,7 +57,7 @@ pub enum DownloadError {
 
     /// An I/O error while writing a file to destination.
     #[error("An I/O error: {0}")]
-    Io(#[from] Arc<std::io::Error>),
+    Io(#[from] Arc<std::io::Error>)
 }
 
 pub trait AsResponseParameters {
@@ -66,14 +66,14 @@ pub trait AsResponseParameters {
     fn retry_after(&self) -> Option<Seconds> {
         self.response_parameters().and_then(|rp| match rp {
             ResponseParameters::RetryAfter(n) => Some(n),
-            _ => None,
+            _ => None
         })
     }
 
     fn migrate_to_chat_id(&self) -> Option<ChatId> {
         self.response_parameters().and_then(|rp| match rp {
             ResponseParameters::MigrateToChatId(id) => Some(id),
-            _ => None,
+            _ => None
         })
     }
 }
@@ -83,7 +83,7 @@ impl AsResponseParameters for crate::RequestError {
         match *self {
             Self::RetryAfter(n) => Some(ResponseParameters::RetryAfter(n)),
             Self::MigrateToChatId(id) => Some(ResponseParameters::MigrateToChatId(id)),
-            _ => None,
+            _ => None
         }
     }
 }
@@ -751,7 +751,7 @@ impl From<DownloadError> for RequestError {
     fn from(download_err: DownloadError) -> Self {
         match download_err {
             DownloadError::Network(err) => RequestError::Network(err),
-            DownloadError::Io(err) => RequestError::Io(err),
+            DownloadError::Io(err) => RequestError::Io(err)
         }
     }
 }
@@ -778,14 +778,14 @@ impl From<reqwest::Error> for RequestError {
 pub(crate) fn hide_token(mut error: reqwest::Error) -> reqwest::Error {
     let url = match error.url_mut() {
         Some(url) => url,
-        None => return error,
+        None => return error
     };
 
     if let Some(mut segments) = url.path_segments() {
         // Usually the url looks like "bot<token>/..." or "file/bot<token>/...".
         let (beginning, segment) = match segments.next() {
             Some("file") => ("file/", segments.next()),
-            segment => ("", segment),
+            segment => ("", segment)
         };
 
         if let Some(token) = segment.and_then(|s| s.strip_prefix("bot")) {
@@ -828,216 +828,292 @@ pub(crate) fn hide_token(mut error: reqwest::Error) -> reqwest::Error {
 mod tests {
     #[test]
     fn custom_result() {
-        use super::ApiError;
         use serde::Deserialize;
 
+        use super::ApiError;
+
         let cases = &[
-            ("{\"data\": \"Forbidden: bot was blocked by the user\"}", ApiError::BotBlocked),
+            (
+                "{\"data\": \"Forbidden: bot was blocked by the user\"}",
+                ApiError::BotBlocked
+            ),
             ("{\"data\": \"Unauthorized\"}", ApiError::InvalidToken),
             ("{\"data\": \"Not Found\"}", ApiError::InvalidToken),
             (
                 "{\"data\": \"Bad Request: message is not modified: specified new message content \
                  and reply markup are exactly the same as a current content and reply markup of \
                  the message\"}",
-                ApiError::MessageNotModified,
+                ApiError::MessageNotModified
             ),
-            ("{\"data\": \"Bad Request: MESSAGE_ID_INVALID\"}", ApiError::MessageIdInvalid),
+            (
+                "{\"data\": \"Bad Request: MESSAGE_ID_INVALID\"}",
+                ApiError::MessageIdInvalid
+            ),
             (
                 "{\"data\": \"Bad Request: message to forward not found\"}",
-                ApiError::MessageToForwardNotFound,
+                ApiError::MessageToForwardNotFound
             ),
             (
                 "{\"data\": \"Bad Request: message to delete not found\"}",
-                ApiError::MessageToDeleteNotFound,
+                ApiError::MessageToDeleteNotFound
             ),
             (
                 "{\"data\": \"Bad Request: message to copy not found\"}",
-                ApiError::MessageToCopyNotFound,
+                ApiError::MessageToCopyNotFound
             ),
-            ("{\"data\": \"Bad Request: message text is empty\"}", ApiError::MessageTextIsEmpty),
-            ("{\"data\": \"Bad Request: message can't be edited\"}", ApiError::MessageCantBeEdited),
+            (
+                "{\"data\": \"Bad Request: message text is empty\"}",
+                ApiError::MessageTextIsEmpty
+            ),
+            (
+                "{\"data\": \"Bad Request: message can't be edited\"}",
+                ApiError::MessageCantBeEdited
+            ),
             (
                 "{\"data\": \"Bad Request: message can't be deleted\"}",
-                ApiError::MessageCantBeDeleted,
+                ApiError::MessageCantBeDeleted
             ),
             (
                 "{\"data\": \"Bad Request: message to edit not found\"}",
-                ApiError::MessageToEditNotFound,
+                ApiError::MessageToEditNotFound
             ),
             (
                 "{\"data\": \"Bad Request: message to be replied not found\"}",
-                ApiError::MessageToReplyNotFound,
+                ApiError::MessageToReplyNotFound
             ),
             (
                 "{\"data\": \"Bad Request: message identifier is not specified\"}",
-                ApiError::MessageIdentifierNotSpecified,
+                ApiError::MessageIdentifierNotSpecified
             ),
-            ("{\"data\": \"Bad Request: message is too long\"}", ApiError::MessageIsTooLong),
-            ("{\"data\": \"Bad Request: MESSAGE_TOO_LONG\"}", ApiError::EditedMessageIsTooLong),
+            (
+                "{\"data\": \"Bad Request: message is too long\"}",
+                ApiError::MessageIsTooLong
+            ),
+            (
+                "{\"data\": \"Bad Request: MESSAGE_TOO_LONG\"}",
+                ApiError::EditedMessageIsTooLong
+            ),
             (
                 "{\"data\": \"Bad Request: Too much messages to send as an album\"}",
-                ApiError::TooMuchMessages,
+                ApiError::TooMuchMessages
             ),
-            ("{\"data\": \"Bad Request: RESULTS_TOO_MUCH\"}", ApiError::TooMuchInlineQueryResults),
+            (
+                "{\"data\": \"Bad Request: RESULTS_TOO_MUCH\"}",
+                ApiError::TooMuchInlineQueryResults
+            ),
             (
                 "{\"data\": \"Bad Request: poll has already been closed\"}",
-                ApiError::PollHasAlreadyClosed,
+                ApiError::PollHasAlreadyClosed
             ),
             (
                 "{\"data\": \"Bad Request: poll must have at least 2 option\"}",
-                ApiError::PollMustHaveMoreOptions,
+                ApiError::PollMustHaveMoreOptions
             ),
             (
                 "{\"data\": \"Bad Request: poll can't have more than 12 options\"}",
-                ApiError::PollCantHaveMoreOptions,
+                ApiError::PollCantHaveMoreOptions
             ),
             (
                 "{\"data\": \"Bad Request: poll options must be non-empty\"}",
-                ApiError::PollOptionsMustBeNonEmpty,
+                ApiError::PollOptionsMustBeNonEmpty
             ),
             (
                 "{\"data\": \"Bad Request: poll question must be non-empty\"}",
-                ApiError::PollQuestionMustBeNonEmpty,
+                ApiError::PollQuestionMustBeNonEmpty
             ),
             (
                 "{\"data\": \"Bad Request: poll options length must not exceed 100\"}",
-                ApiError::PollOptionsLengthTooLong,
+                ApiError::PollOptionsLengthTooLong
             ),
             (
                 "{\"data\": \"Bad Request: poll question length must not exceed 255\"}",
-                ApiError::PollQuestionLengthTooLong,
+                ApiError::PollQuestionLengthTooLong
             ),
             (
                 "{\"data\": \"Bad Request: message with poll to stop not found\"}",
-                ApiError::MessageWithPollNotFound,
+                ApiError::MessageWithPollNotFound
             ),
-            ("{\"data\": \"Bad Request: message is not a poll\"}", ApiError::MessageIsNotAPoll),
-            ("{\"data\": \"Bad Request: chat not found\"}", ApiError::ChatNotFound),
-            ("{\"data\": \"Bad Request: user not found\"}", ApiError::UserNotFound),
+            (
+                "{\"data\": \"Bad Request: message is not a poll\"}",
+                ApiError::MessageIsNotAPoll
+            ),
+            (
+                "{\"data\": \"Bad Request: chat not found\"}",
+                ApiError::ChatNotFound
+            ),
+            (
+                "{\"data\": \"Bad Request: user not found\"}",
+                ApiError::UserNotFound
+            ),
             (
                 "{\"data\": \"Bad Request: chat description is not modified\"}",
-                ApiError::ChatDescriptionIsNotModified,
+                ApiError::ChatDescriptionIsNotModified
             ),
             (
                 "{\"data\": \"Bad Request: query is too old and response timeout expired or query \
                  id is invalid\"}",
-                ApiError::InvalidQueryId,
+                ApiError::InvalidQueryId
             ),
-            ("{\"data\": \"Bad Request: BUTTON_URL_INVALID\"}", ApiError::ButtonUrlInvalid),
-            ("{\"data\": \"Bad Request: BUTTON_DATA_INVALID\"}", ApiError::ButtonDataInvalid),
+            (
+                "{\"data\": \"Bad Request: BUTTON_URL_INVALID\"}",
+                ApiError::ButtonUrlInvalid
+            ),
+            (
+                "{\"data\": \"Bad Request: BUTTON_DATA_INVALID\"}",
+                ApiError::ButtonDataInvalid
+            ),
             (
                 "{\"data\": \"Bad Request: can't parse inline keyboard button: Text buttons are \
                  unallowed in the inline keyboard\"}",
-                ApiError::TextButtonsAreUnallowed,
+                ApiError::TextButtonsAreUnallowed
             ),
-            ("{\"data\": \"Bad Request: wrong file id\"}", ApiError::WrongFileId),
+            (
+                "{\"data\": \"Bad Request: wrong file id\"}",
+                ApiError::WrongFileId
+            ),
             (
                 "{\"data\": \"Bad Request: wrong file identifier/HTTP URL specified\"}",
-                ApiError::WrongFileIdOrUrl,
+                ApiError::WrongFileIdOrUrl
             ),
             (
                 "{\"data\": \"Bad Request: failed to get HTTP URL content\"}",
-                ApiError::FailedToGetUrlContent,
+                ApiError::FailedToGetUrlContent
             ),
-            ("{\"data\": \"Bad Request: group is deactivated\"}", ApiError::GroupDeactivated),
-            ("{\"data\": \"Bad Request: IMAGE_PROCESS_FAILED\"}", ApiError::ImageProcessFailed),
+            (
+                "{\"data\": \"Bad Request: group is deactivated\"}",
+                ApiError::GroupDeactivated
+            ),
+            (
+                "{\"data\": \"Bad Request: IMAGE_PROCESS_FAILED\"}",
+                ApiError::ImageProcessFailed
+            ),
             (
                 "{\"data\": \"Bad Request: Photo should be uploaded as an InputFile\"}",
-                ApiError::PhotoAsInputFileRequired,
+                ApiError::PhotoAsInputFileRequired
             ),
-            ("{\"data\": \"Bad Request: STICKERSET_INVALID\"}", ApiError::InvalidStickersSet),
+            (
+                "{\"data\": \"Bad Request: STICKERSET_INVALID\"}",
+                ApiError::InvalidStickersSet
+            ),
             (
                 "{\"data\": \"Bad Request: sticker set name is already occupied\"}",
-                ApiError::StickerSetNameOccupied,
+                ApiError::StickerSetNameOccupied
             ),
-            ("{\"data\": \"Bad Request: USER_IS_BOT\"}", ApiError::StickerSetOwnerIsBot),
+            (
+                "{\"data\": \"Bad Request: USER_IS_BOT\"}",
+                ApiError::StickerSetOwnerIsBot
+            ),
             (
                 "{\"data\": \"Bad Request: invalid sticker set name is specified\"}",
-                ApiError::InvalidStickerName,
+                ApiError::InvalidStickerName
             ),
             (
                 "{\"data\": \"Bad Request: not enough rights to pin a message\"}",
-                ApiError::NotEnoughRightsToPinMessage,
+                ApiError::NotEnoughRightsToPinMessage
             ),
             (
                 "{\"data\": \"Bad Request: not enough rights to manage pinned messages in the \
                  chat\"}",
-                ApiError::NotEnoughRightsToManagePins,
+                ApiError::NotEnoughRightsToManagePins
             ),
             (
                 "{\"data\": \"Bad Request: not enough rights to change chat permissions\"}",
-                ApiError::NotEnoughRightsToChangeChatPermissions,
+                ApiError::NotEnoughRightsToChangeChatPermissions
             ),
             (
                 "{\"data\": \"Bad Request: method is available only for supergroups and channel\"}",
-                ApiError::MethodNotAvailableInPrivateChats,
+                ApiError::MethodNotAvailableInPrivateChats
             ),
             (
                 "{\"data\": \"Bad Request: can't demote chat creator\"}",
-                ApiError::CantDemoteChatCreator,
+                ApiError::CantDemoteChatCreator
             ),
-            ("{\"data\": \"Bad Request: can't restrict self\"}", ApiError::CantRestrictSelf),
+            (
+                "{\"data\": \"Bad Request: can't restrict self\"}",
+                ApiError::CantRestrictSelf
+            ),
             (
                 "{\"data\": \"Bad Request: not enough rights to restrict/unrestrict chat member\"}",
-                ApiError::NotEnoughRightsToRestrict,
+                ApiError::NotEnoughRightsToRestrict
             ),
             (
                 "{\"data\": \"Bad Request: need administrator rights in the channel chat\"}",
-                ApiError::NotEnoughRightsToPostMessages,
+                ApiError::NotEnoughRightsToPostMessages
             ),
             (
                 "{\"data\": \"Bad Request: bad webhook: HTTPS url must be provided for webhook\"}",
-                ApiError::WebhookRequireHttps,
+                ApiError::WebhookRequireHttps
             ),
             (
                 "{\"data\": \"Bad Request: bad webhook: Webhook can be set up only on ports 80, \
                  88, 443 or 8443\"}",
-                ApiError::BadWebhookPort,
+                ApiError::BadWebhookPort
             ),
             (
                 "{\"data\": \"Bad Request: bad webhook: Failed to resolve host: Name or service \
                  not known\"}",
-                ApiError::UnknownHost,
+                ApiError::UnknownHost
             ),
-            ("{\"data\": \"Bad Request: can't parse URL\"}", ApiError::CantParseUrl),
+            (
+                "{\"data\": \"Bad Request: can't parse URL\"}",
+                ApiError::CantParseUrl
+            ),
             (
                 "{\"data\": \"Bad Request: can't parse entities: SomeRandomString\"}",
                 ApiError::CantParseEntities(
-                    "Bad Request: can't parse entities: SomeRandomString".to_owned(),
-                ),
+                    "Bad Request: can't parse entities: SomeRandomString".to_owned()
+                )
             ),
             (
                 "{\"data\": \"can't use getUpdates method while webhook is active\"}",
-                ApiError::CantGetUpdates,
+                ApiError::CantGetUpdates
             ),
-            ("{\"data\": \"Unauthorized: bot was kicked from a chat\"}", ApiError::BotKicked),
+            (
+                "{\"data\": \"Unauthorized: bot was kicked from a chat\"}",
+                ApiError::BotKicked
+            ),
             (
                 "{\"data\": \"Forbidden: bot was kicked from the supergroup chat\"}",
-                ApiError::BotKickedFromSupergroup,
+                ApiError::BotKickedFromSupergroup
             ),
-            ("{\"data\": \"Forbidden: user is deactivated\"}", ApiError::UserDeactivated),
+            (
+                "{\"data\": \"Forbidden: user is deactivated\"}",
+                ApiError::UserDeactivated
+            ),
             (
                 "{\"data\": \"Unauthorized: bot can't initiate conversation with a user\"}",
-                ApiError::CantInitiateConversation,
+                ApiError::CantInitiateConversation
             ),
             (
                 "{\"data\": \"Unauthorized: bot can't send messages to bots\"}",
-                ApiError::CantTalkWithBots,
+                ApiError::CantTalkWithBots
             ),
-            ("{\"data\": \"Bad Request: wrong HTTP URL\"}", ApiError::WrongHttpUrl),
+            (
+                "{\"data\": \"Bad Request: wrong HTTP URL\"}",
+                ApiError::WrongHttpUrl
+            ),
             (
                 "{\"data\": \"Conflict: terminated by other getUpdates request; make sure that \
                  only one bot instance is running\"}",
-                ApiError::TerminatedByOtherGetUpdates,
+                ApiError::TerminatedByOtherGetUpdates
             ),
-            ("{\"data\": \"Bad Request: invalid file id\"}", ApiError::FileIdInvalid),
-            ("{\"data\": \"Request Entity Too Large\"}", ApiError::RequestEntityTooLarge),
-            ("{\"data\": \"RandomError\"}", ApiError::Unknown("RandomError".to_string())),
+            (
+                "{\"data\": \"Bad Request: invalid file id\"}",
+                ApiError::FileIdInvalid
+            ),
+            (
+                "{\"data\": \"Request Entity Too Large\"}",
+                ApiError::RequestEntityTooLarge
+            ),
+            (
+                "{\"data\": \"RandomError\"}",
+                ApiError::Unknown("RandomError".to_string())
+            )
         ];
 
         #[derive(Deserialize, Debug)]
         struct Res<T> {
-            data: T,
+            data: T
         }
 
         for (data, expected) in cases {
@@ -1050,7 +1126,7 @@ mod tests {
                     format!("Unknown error: \"{raw}\"")
                 }
                 ApiError::InvalidToken => "Invalid bot token".to_owned(),
-                _ => raw,
+                _ => raw
             };
             assert_eq!(parsed.to_string(), expected_error_message);
         }

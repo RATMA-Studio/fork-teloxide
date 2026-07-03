@@ -19,5 +19,5 @@ pub struct AcceptedGiftTypes {
     pub premium_subscription: bool,
 
     /// `true`, if transfers of unique gifts from channels are accepted
-    pub gifts_from_channels: bool,
+    pub gifts_from_channels: bool
 }

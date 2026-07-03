@@ -1,5 +1,6 @@
-use crate::types::CountryCode;
 use serde::{Deserialize, Serialize};
+
+use crate::types::CountryCode;
 
 /// This object represents a shipping address.
 ///
@@ -24,5 +25,5 @@ pub struct ShippingAddress {
     pub street_line2: String,
 
     /// Address post code.
-    pub post_code: String,
+    pub post_code: String
 }

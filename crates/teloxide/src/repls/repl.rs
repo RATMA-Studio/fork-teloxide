@@ -1,12 +1,14 @@
+use std::fmt::Debug;
+
+use dptree::di::Injectable;
+
 use crate::{
     dispatching::UpdateFilterExt,
     error_handlers::LoggingErrorHandler,
     requests::{Requester, ResponseResult},
     types::Update,
-    update_listeners::{self, UpdateListener},
+    update_listeners::{self, UpdateListener}
 };
-use dptree::di::Injectable;
-use std::fmt::Debug;
 
 /// A [REPL] for messages.
 //
@@ -54,10 +56,15 @@ pub async fn repl<R, H, Args>(bot: R, handler: H)
 where
     R: Requester + Send + Sync + Clone + 'static,
     <R as Requester>::GetUpdates: Send,
-    H: Injectable<ResponseResult<()>, Args> + Send + Sync + 'static,
+    H: Injectable<ResponseResult<()>, Args> + Send + Sync + 'static
 {
     let cloned_bot = bot.clone();
-    repl_with_listener(bot, handler, update_listeners::polling_default(cloned_bot).await).await;
+    repl_with_listener(
+        bot,
+        handler,
+        update_listeners::polling_default(cloned_bot).await
+    )
+    .await;
 }
 
 /// A [REPL] for messages, with a custom [`UpdateListener`].
@@ -110,7 +117,7 @@ where
     R: Requester + Clone + Send + Sync + 'static,
     H: Injectable<ResponseResult<()>, Args> + Send + Sync + 'static,
     L: UpdateListener + Send,
-    L::Err: Debug,
+    L::Err: Debug
 {
     use crate::dispatching::Dispatcher;
 
@@ -124,7 +131,7 @@ where
         .build()
         .dispatch_with_listener(
             listener,
-            LoggingErrorHandler::with_custom_text("An error from the update listener"),
+            LoggingErrorHandler::with_custom_text("An error from the update listener")
         )
         .await;
 }

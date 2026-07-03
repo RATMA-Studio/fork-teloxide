@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::types::{
-    Animation, Audio, Document, LivePhoto, Location, PhotoSize, Sticker, Venue, Video,
+    Animation, Audio, Document, LivePhoto, Location, PhotoSize, Sticker, Venue, Video
 };
 
 /// Describes a media added to a poll, poll option, or quiz explanation.
@@ -41,5 +41,5 @@ pub struct PollMedia {
     pub venue: Option<Venue>,
 
     /// Media is a video, information about the video.
-    pub video: Option<Video>,
+    pub video: Option<Video>
 }

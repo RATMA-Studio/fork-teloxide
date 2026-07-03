@@ -24,10 +24,10 @@ type BoxedFuture = Pin<Box<dyn Future<Output = ()> + Send>>;
 #[must_use]
 #[non_exhaustive]
 pub struct Settings {
-    pub limits: Limits,
-    pub on_queue_full: BoxedFnMut<usize, BoxedFuture>,
-    pub retry: bool,
-    pub check_slow_mode: bool,
+    pub limits:          Limits,
+    pub on_queue_full:   BoxedFnMut<usize, BoxedFuture>,
+    pub retry:           bool,
+    pub check_slow_mode: bool
 }
 
 /// Telegram request limits.
@@ -51,7 +51,7 @@ pub struct Limits {
     pub messages_per_min_channel_or_supergroup: u32,
 
     /// Allowed messages per second.
-    pub messages_per_sec_overall: u32,
+    pub messages_per_sec_overall: u32
 }
 
 impl Settings {
@@ -63,7 +63,7 @@ impl Settings {
     pub fn on_queue_full<F, Fut>(mut self, mut val: F) -> Self
     where
         F: FnMut(usize) -> Fut + Send + 'static,
-        Fut: Future<Output = ()> + Send + 'static,
+        Fut: Future<Output = ()> + Send + 'static
     {
         self.on_queue_full = Box::new(move |pending| Box::pin(val(pending)));
         self
@@ -83,13 +83,13 @@ impl Settings {
 impl Default for Settings {
     fn default() -> Self {
         Self {
-            limits: <_>::default(),
-            on_queue_full: Box::new(|pending| {
+            limits:          <_>::default(),
+            on_queue_full:   Box::new(|pending| {
                 log::warn!("Throttle queue is full ({pending} pending requests)");
                 Box::pin(ready(()))
             }),
-            retry: true,
-            check_slow_mode: false,
+            retry:           true,
+            check_slow_mode: false
         }
     }
 }
@@ -101,10 +101,10 @@ impl Default for Settings {
 impl Default for Limits {
     fn default() -> Self {
         Self {
-            messages_per_sec_chat: 1,
-            messages_per_sec_overall: 30,
-            messages_per_min_chat: 20,
-            messages_per_min_channel_or_supergroup: 10,
+            messages_per_sec_chat:                  1,
+            messages_per_sec_overall:               30,
+            messages_per_min_chat:                  20,
+            messages_per_min_channel_or_supergroup: 10
         }
     }
 }

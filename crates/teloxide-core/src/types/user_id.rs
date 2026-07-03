@@ -3,10 +3,20 @@ use serde::{Deserialize, Serialize};
 use crate::types::{ChatId, MAX_USER_ID, MIN_USER_ID};
 
 /// Identifier of a user.
-#[derive(Clone, Copy, Default)]
-#[derive(Debug, derive_more::Display)]
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(
+    Clone,
+    Copy,
+    Default,
+    Debug,
+    derive_more::Display,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    Hash,
+    Serialize,
+    Deserialize,
+)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(transparent)]
 pub struct UserId(pub u64);
@@ -77,12 +87,14 @@ mod tests {
     /// Test that `UserId` is serialized as the underlying integer
     #[test]
     fn deser() {
-        let user_id = S { user_id: UserId(17) };
+        let user_id = S {
+            user_id: UserId(17)
+        };
         let json = r#"{"user_id":17}"#;
 
         #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
         struct S {
-            user_id: UserId,
+            user_id: UserId
         }
 
         assert_eq!(serde_json::to_string(&user_id).unwrap(), json);

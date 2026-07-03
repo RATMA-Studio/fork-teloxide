@@ -14,7 +14,7 @@
 //! # let chat_id = teloxide_core::types::ChatId(-1);
 //! use teloxide_core::{
 //!     prelude::*,
-//!     types::{DiceEmoji, ParseMode},
+//!     types::{DiceEmoji, ParseMode}
 //! };
 //!
 //! let bot = Bot::from_env().parse_mode(ParseMode::MarkdownV2);
@@ -22,7 +22,11 @@
 //! let me = bot.get_me().await?;
 //!
 //! bot.send_dice(chat_id).emoji(DiceEmoji::Dice).await?;
-//! bot.send_message(chat_id, format!("Hi, my name is **{}** 👋", me.user.first_name)).await?;
+//! bot.send_message(
+//!     chat_id,
+//!     format!("Hi, my name is **{}** 👋", me.user.first_name)
+//! )
+//! .await?;
 //! # Ok::<_, Box<dyn std::error::Error>>(()) };
 //! ```
 //!
@@ -71,7 +75,10 @@
 //
 // `dep_docsrs` is used for the same purpose, but when `teloxide-core` is built as a dependency
 // (see: `teloxide`). We can't use `docsrs` as it breaks tokio compilation in this case.
-#![cfg_attr(all(any(docsrs, dep_docsrs), feature = "nightly"), feature(doc_cfg, doc_notable_trait))]
+#![cfg_attr(
+    all(any(docsrs, dep_docsrs), feature = "nightly"),
+    feature(doc_cfg, doc_notable_trait)
+)]
 #![cfg_attr(feature = "nightly", feature(type_alias_impl_trait))]
 #![cfg_attr(all(feature = "full", docsrs), deny(rustdoc::broken_intra_doc_links))]
 //
@@ -109,7 +116,7 @@ mod local_macros;
 
 pub use self::{
     bot::Bot,
-    errors::{ApiError, DownloadError, RequestError},
+    errors::{ApiError, DownloadError, RequestError}
 };
 
 pub mod adaptors;

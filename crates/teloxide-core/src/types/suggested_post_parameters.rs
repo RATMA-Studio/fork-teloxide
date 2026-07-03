@@ -20,5 +20,5 @@ pub struct SuggestedPostParameters {
     /// days at the sole discretion of the user who approves it.
     #[serde(default, with = "crate::types::serde_opt_date_from_unix_timestamp")]
     #[cfg_attr(test, schemars(with = "Option<i64>"))]
-    pub send_date: Option<DateTime<Utc>>,
+    pub send_date: Option<DateTime<Utc>>
 }

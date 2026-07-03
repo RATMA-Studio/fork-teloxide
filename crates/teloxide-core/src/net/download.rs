@@ -4,7 +4,7 @@ use bytes::Bytes;
 use futures::{
     FutureExt, Stream, StreamExt,
     future::{Either, ready},
-    stream::{once, unfold},
+    stream::{once, unfold}
 };
 use reqwest::{Client, Response, Url};
 use tokio::io::{AsyncWrite, AsyncWriteExt};
@@ -40,7 +40,7 @@ pub trait Download {
     ///     Bot,
     ///     net::Download,
     ///     requests::{Request, Requester},
-    ///     types::{File, FileId},
+    ///     types::{File, FileId}
     /// };
     /// use tokio::fs;
     ///
@@ -58,7 +58,7 @@ pub trait Download {
     fn download_file<'dst>(
         &self,
         path: &'dst str,
-        destination: &'dst mut (dyn AsyncWrite + Unpin + Send),
+        destination: &'dst mut (dyn AsyncWrite + Unpin + Send)
     ) -> Self::Fut<'dst>;
 
     /// An error returned from
@@ -94,20 +94,23 @@ pub fn download_file<'o, D>(
     api_url: Url,
     token: &str,
     path: &str,
-    dst: &'o mut D,
+    dst: &'o mut D
 ) -> impl Future<Output = Result<(), DownloadError>> + 'o
 where
-    D: ?Sized + AsyncWrite + Unpin,
+    D: ?Sized + AsyncWrite + Unpin
 {
-    client.get(file_url(api_url, token, path)).send().then(move |r| async move {
-        let mut res = r?.error_for_status()?;
+    client
+        .get(file_url(api_url, token, path))
+        .send()
+        .then(move |r| async move {
+            let mut res = r?.error_for_status()?;
 
-        while let Some(chunk) = res.chunk().await? {
-            dst.write_all(&chunk).await.map_err(Arc::new)?;
-        }
+            while let Some(chunk) = res.chunk().await? {
+                dst.write_all(&chunk).await.map_err(Arc::new)?;
+            }
 
-        Ok(())
-    })
+            Ok(())
+        })
 }
 
 /// Download a file from Telegram as [`Stream`].
@@ -119,18 +122,20 @@ pub fn download_file_stream(
     client: &Client,
     api_url: Url,
     token: &str,
-    path: &str,
+    path: &str
 ) -> impl Stream<Item = reqwest::Result<Bytes>> + 'static {
-    client.get(file_url(api_url, token, path)).send().into_stream().flat_map(|res| {
-        match res.and_then(Response::error_for_status) {
+    client
+        .get(file_url(api_url, token, path))
+        .send()
+        .into_stream()
+        .flat_map(|res| match res.and_then(Response::error_for_status) {
             Ok(res) => Either::Left(unfold(res, |mut res| async {
                 match res.chunk().await {
                     Err(err) => Some((Err(err), res)),
                     Ok(Some(c)) => Some((Ok(c), res)),
-                    Ok(None) => None,
+                    Ok(None) => None
                 }
             })),
-            Err(err) => Either::Right(once(ready(Err(err)))),
-        }
-    })
+            Err(err) => Either::Right(once(ready(Err(err))))
+        })
 }

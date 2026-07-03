@@ -31,20 +31,27 @@ pub struct ForceReply {
     ///
     /// [`Message`]: crate::types::Message
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
-    pub selective: bool,
+    pub selective: bool
 }
 
 impl ForceReply {
     #[must_use]
     pub const fn new() -> Self {
-        Self { force_reply: True, input_field_placeholder: None, selective: false }
+        Self {
+            force_reply:             True,
+            input_field_placeholder: None,
+            selective:               false
+        }
     }
 
     pub fn input_field_placeholder<T>(self, val: T) -> Self
     where
-        T: Into<Option<String>>,
+        T: Into<Option<String>>
     {
-        Self { input_field_placeholder: val.into(), ..self }
+        Self {
+            input_field_placeholder: val.into(),
+            ..self
+        }
     }
 
     /// Sets [`selective`] to `true`.
@@ -52,7 +59,10 @@ impl ForceReply {
     /// [`selective`]: ForceReply::selective
     #[must_use]
     pub fn selective(self) -> Self {
-        Self { selective: true, ..self }
+        Self {
+            selective: true,
+            ..self
+        }
     }
 }
 

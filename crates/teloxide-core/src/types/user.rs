@@ -55,7 +55,7 @@ pub struct User {
     /// `true`, if the bot supports guest queries from chats it is not a member
     /// of.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
-    pub supports_guest_queries: bool,
+    pub supports_guest_queries: bool
 }
 
 impl User {
@@ -65,7 +65,7 @@ impl User {
     pub fn full_name(&self) -> String {
         match &self.last_name {
             Some(last_name) => format!("{0} {1}", self.first_name, last_name),
-            None => self.first_name.clone(),
+            None => self.first_name.clone()
         }
     }
 
@@ -87,7 +87,11 @@ impl User {
     /// Returns `None` if `self.username.is_none()`.
     #[must_use]
     pub fn tme_url(&self) -> Option<reqwest::Url> {
-        Some(format!("https://t.me/{}", self.username.as_ref()?).parse().unwrap())
+        Some(
+            format!("https://t.me/{}", self.username.as_ref()?)
+                .parse()
+                .unwrap()
+        )
     }
 
     /// Returns an URL that links to this user in the form of `t.me/<...>` or
@@ -175,7 +179,7 @@ mod tests {
             can_manage_bots: false,
             has_topics_enabled: false,
             allows_users_to_create_topics: false,
-            supports_guest_queries: false,
+            supports_guest_queries: false
         };
         let actual = serde_json::from_str::<User>(json).unwrap();
         assert_eq!(actual, expected)
@@ -195,7 +199,7 @@ mod tests {
             can_manage_bots: false,
             has_topics_enabled: false,
             allows_users_to_create_topics: false,
-            supports_guest_queries: false,
+            supports_guest_queries: false
         };
 
         let user_b = User {
@@ -210,7 +214,7 @@ mod tests {
             can_manage_bots: false,
             has_topics_enabled: false,
             allows_users_to_create_topics: false,
-            supports_guest_queries: false,
+            supports_guest_queries: false
         };
 
         assert_eq!(user_a.full_name(), "First Last");
@@ -219,10 +223,19 @@ mod tests {
         assert_eq!(user_a.mention(), Some("@aaaaaaaaaaaaaaaa".to_owned()));
         assert_eq!(user_b.mention(), None);
 
-        assert_eq!(user_a.tme_url(), Some("https://t.me/aaaaaaaaaaaaaaaa".parse().unwrap()));
+        assert_eq!(
+            user_a.tme_url(),
+            Some("https://t.me/aaaaaaaaaaaaaaaa".parse().unwrap())
+        );
         assert_eq!(user_b.tme_url(), None);
 
-        assert_eq!(user_a.preferably_tme_url(), "https://t.me/aaaaaaaaaaaaaaaa".parse().unwrap());
-        assert_eq!(user_b.preferably_tme_url(), "tg://user/?id=44".parse().unwrap());
+        assert_eq!(
+            user_a.preferably_tme_url(),
+            "https://t.me/aaaaaaaaaaaaaaaa".parse().unwrap()
+        );
+        assert_eq!(
+            user_b.preferably_tme_url(),
+            "tg://user/?id=44".parse().unwrap()
+        );
     }
 }

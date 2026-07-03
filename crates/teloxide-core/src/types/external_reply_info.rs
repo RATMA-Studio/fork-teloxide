@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use crate::types::{
     Animation, Audio, Chat, Checklist, Contact, Dice, Document, Game, Giveaway, GiveawayWinners,
     Invoice, LinkPreviewOptions, LivePhoto, Location, MessageId, MessageOrigin, PaidMediaInfo,
-    PhotoSize, Poll, Sticker, Story, Venue, Video, VideoNote, Voice,
+    PhotoSize, Poll, Sticker, Story, Venue, Video, VideoNote, Voice
 };
 
 /// This object contains information about a message that is being replied to,
@@ -12,24 +12,24 @@ use crate::types::{
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct ExternalReplyInfo {
     /// Origin of the message replied to by the given message.
-    pub origin: MessageOrigin,
+    pub origin:               MessageOrigin,
     /// Chat the original message belongs to. Available only if the chat is a
     /// supergroup or a channel.
-    pub chat: Option<Chat>,
+    pub chat:                 Option<Chat>,
     /// Unique message identifier inside the original chat. Available only if
     /// the original chat is a supergroup or a channel.
     #[serde(with = "crate::types::option_msg_id_as_int")]
     #[cfg_attr(test, schemars(with = "Option<i32>"))]
-    pub message_id: Option<MessageId>,
+    pub message_id:           Option<MessageId>,
     /// Options used for link preview generation for the original message, if it
     /// is a text message.
     pub link_preview_options: Option<LinkPreviewOptions>,
     /// _true_, if the message media is covered by a spoiler animation.
     #[serde(default)]
-    pub has_media_spoiler: bool,
+    pub has_media_spoiler:    bool,
 
     #[serde(flatten)]
-    pub kind: ExternalReplyInfoKind,
+    pub kind: ExternalReplyInfoKind
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -68,5 +68,5 @@ pub enum ExternalReplyInfoKind {
     LivePhoto(LivePhoto),
     VideoNote(VideoNote),
     Voice(Voice),
-    Invoice(Invoice),
+    Invoice(Invoice)
 }

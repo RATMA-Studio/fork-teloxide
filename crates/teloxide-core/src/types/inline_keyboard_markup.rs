@@ -19,7 +19,7 @@ pub struct InlineKeyboardMarkup {
     /// [`InlineKeyboardButton`] objects.
     ///
     /// [`InlineKeyboardButton`]: crate::types::InlineKeyboardButton
-    pub inline_keyboard: Vec<Vec<InlineKeyboardButton>>,
+    pub inline_keyboard: Vec<Vec<InlineKeyboardButton>>
 }
 
 /// Build `InlineKeyboardMarkup`.
@@ -36,29 +36,33 @@ impl InlineKeyboardMarkup {
     pub fn new<I>(inline_keyboard: I) -> Self
     where
         I: IntoIterator,
-        I::Item: IntoIterator<Item = InlineKeyboardButton>,
+        I::Item: IntoIterator<Item = InlineKeyboardButton>
     {
         Self {
             inline_keyboard: inline_keyboard
                 .into_iter()
                 .map(<_>::into_iter)
                 .map(<_>::collect)
-                .collect(),
+                .collect()
         }
     }
 
     pub fn inline_keyboard<I>(mut self, val: I) -> Self
     where
         I: IntoIterator,
-        I::Item: IntoIterator<Item = InlineKeyboardButton>,
+        I::Item: IntoIterator<Item = InlineKeyboardButton>
     {
-        self.inline_keyboard = val.into_iter().map(<_>::into_iter).map(<_>::collect).collect();
+        self.inline_keyboard = val
+            .into_iter()
+            .map(<_>::into_iter)
+            .map(<_>::collect)
+            .collect();
         self
     }
 
     pub fn append_row<R>(mut self, buttons: R) -> Self
     where
-        R: IntoIterator<Item = InlineKeyboardButton>,
+        R: IntoIterator<Item = InlineKeyboardButton>
     {
         self.inline_keyboard.push(buttons.into_iter().collect());
         self
@@ -68,7 +72,7 @@ impl InlineKeyboardMarkup {
     pub fn append_to_row(mut self, index: usize, button: InlineKeyboardButton) -> Self {
         match self.inline_keyboard.get_mut(index) {
             Some(buttons) => buttons.push(button),
-            None => self.inline_keyboard.push(vec![button]),
+            None => self.inline_keyboard.push(vec![button])
         };
         self
     }
@@ -90,7 +94,9 @@ mod tests {
         let markup =
             InlineKeyboardMarkup::default().append_row(vec![button1.clone(), button2.clone()]);
 
-        let expected = InlineKeyboardMarkup { inline_keyboard: vec![vec![button1, button2]] };
+        let expected = InlineKeyboardMarkup {
+            inline_keyboard: vec![vec![button1, button2]]
+        };
 
         assert_eq!(markup, expected);
     }
@@ -104,7 +110,9 @@ mod tests {
             .append_row(vec![button1.clone()])
             .append_to_row(0, button2.clone());
 
-        let expected = InlineKeyboardMarkup { inline_keyboard: vec![vec![button1, button2]] };
+        let expected = InlineKeyboardMarkup {
+            inline_keyboard: vec![vec![button1, button2]]
+        };
 
         assert_eq!(markup, expected);
     }
@@ -118,7 +126,9 @@ mod tests {
             .append_row(vec![button1.clone()])
             .append_to_row(1, button2.clone());
 
-        let expected = InlineKeyboardMarkup { inline_keyboard: vec![vec![button1], vec![button2]] };
+        let expected = InlineKeyboardMarkup {
+            inline_keyboard: vec![vec![button1], vec![button2]]
+        };
 
         assert_eq!(markup, expected);
     }

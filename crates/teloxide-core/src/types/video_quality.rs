@@ -21,5 +21,5 @@ pub struct VideoQuality {
 
     /// Codec that was used to encode the video, for example, `h264`, `h265`,
     /// or `av01`.
-    pub codec: String,
+    pub codec: String
 }

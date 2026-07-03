@@ -5,7 +5,7 @@ use serde::{Serialize, de::DeserializeOwned};
 use crate::{
     RequestError,
     bot::Bot,
-    requests::{HasPayload, MultipartPayload, Payload, Request, ResponseResult},
+    requests::{HasPayload, MultipartPayload, Payload, Request, ResponseResult}
 };
 
 /// A ready-to-send Telegram request whose payload is sent using
@@ -15,13 +15,16 @@ use crate::{
 #[must_use = "Requests are lazy and do nothing unless sent"]
 #[derive(Clone)]
 pub struct MultipartRequest<P> {
-    bot: Bot,
-    payload: P,
+    bot:     Bot,
+    payload: P
 }
 
 impl<P> MultipartRequest<P> {
     pub const fn new(bot: Bot, payload: P) -> Self {
-        Self { bot, payload }
+        Self {
+            bot,
+            payload
+        }
     }
 }
 
@@ -37,7 +40,7 @@ where
     // non-'static payloads)
     P: 'static,
     P: Payload + MultipartPayload + Serialize,
-    P::Output: DeserializeOwned,
+    P::Output: DeserializeOwned
 {
     type Err = RequestError;
     type Send = Send<P>;
@@ -56,7 +59,7 @@ impl<P> IntoFuture for MultipartRequest<P>
 where
     P: 'static,
     P: Payload + MultipartPayload + Serialize,
-    P::Output: DeserializeOwned,
+    P::Output: DeserializeOwned
 {
     type Output = Result<P::Output, RequestError>;
     type IntoFuture = <Self as Request>::Send;
@@ -68,7 +71,7 @@ where
 
 impl<P> HasPayload for MultipartRequest<P>
 where
-    P: Payload,
+    P: Payload
 {
     type Payload = P;
 
@@ -85,7 +88,7 @@ impl<P> core::ops::Deref for MultipartRequest<P>
 where
     P: 'static,
     P: Payload + MultipartPayload,
-    P::Output: DeserializeOwned,
+    P::Output: DeserializeOwned
 {
     type Target = P;
 
@@ -98,7 +101,7 @@ impl<P> core::ops::DerefMut for MultipartRequest<P>
 where
     P: 'static,
     P: Payload + MultipartPayload,
-    P::Output: DeserializeOwned,
+    P::Output: DeserializeOwned
 {
     fn deref_mut(&mut self) -> &mut Self::Target {
         self.payload_mut()

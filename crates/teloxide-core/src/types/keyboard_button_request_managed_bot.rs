@@ -18,5 +18,5 @@ pub struct KeyboardButtonRequestManagedBot {
     pub suggested_name: Option<String>,
 
     /// Suggested username for the bot.
-    pub suggested_username: Option<String>,
+    pub suggested_username: Option<String>
 }

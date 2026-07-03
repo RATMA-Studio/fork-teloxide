@@ -30,5 +30,5 @@ pub enum AllowedUpdate {
     ChatBoost,
     RemovedChatBoost,
     ManagedBot,
-    GuestMessage,
+    GuestMessage
 }

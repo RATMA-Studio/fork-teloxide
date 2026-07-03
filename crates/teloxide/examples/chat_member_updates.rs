@@ -31,18 +31,22 @@ async fn main() -> ResponseResult<()> {
                     dptree::filter(|m: ChatMemberUpdated| {
                         m.old_chat_member.is_left() && m.new_chat_member.is_present()
                     })
-                    .endpoint(new_chat_member),
+                    .endpoint(new_chat_member)
                 )
                 .branch(
                     dptree::filter(|m: ChatMemberUpdated| {
                         m.old_chat_member.is_present() && m.new_chat_member.is_left()
                     })
-                    .endpoint(left_chat_member),
-                ),
+                    .endpoint(left_chat_member)
+                )
         );
 
     // Create a dispatcher for our bot
-    Dispatcher::builder(bot, handler).enable_ctrlc_handler().build().dispatch().await;
+    Dispatcher::builder(bot, handler)
+        .enable_ctrlc_handler()
+        .build()
+        .dispatch()
+        .await;
 
     Ok(())
 }
@@ -56,11 +60,15 @@ async fn new_chat_member(bot: Bot, chat_member: ChatMemberUpdated) -> ResponseRe
     // We get a "@username" mention via `mention()` method if the user has a
     // username, otherwise we create a textual mention with "Full Name" as the
     // text linking to the user
-    let username =
-        user.mention().unwrap_or_else(|| html::user_mention(user.id, user.full_name().as_str()));
+    let username = user
+        .mention()
+        .unwrap_or_else(|| html::user_mention(user.id, user.full_name().as_str()));
 
-    bot.send_message(chat_member.chat.id, format!("Welcome to {telegram_group_name} {username}!"))
-        .await?;
+    bot.send_message(
+        chat_member.chat.id,
+        format!("Welcome to {telegram_group_name} {username}!")
+    )
+    .await?;
 
     Ok(())
 }
@@ -68,10 +76,12 @@ async fn new_chat_member(bot: Bot, chat_member: ChatMemberUpdated) -> ResponseRe
 async fn left_chat_member(bot: Bot, chat_member: ChatMemberUpdated) -> ResponseResult<()> {
     let user = chat_member.old_chat_member.user;
 
-    let username =
-        user.mention().unwrap_or_else(|| html::user_mention(user.id, user.full_name().as_str()));
+    let username = user
+        .mention()
+        .unwrap_or_else(|| html::user_mention(user.id, user.full_name().as_str()));
 
-    bot.send_message(chat_member.chat.id, format!("Goodbye {username}!")).await?;
+    bot.send_message(chat_member.chat.id, format!("Goodbye {username}!"))
+        .await?;
 
     Ok(())
 }

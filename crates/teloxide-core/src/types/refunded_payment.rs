@@ -4,9 +4,7 @@ use crate::types::TelegramTransactionId;
 
 /// This object contains basic information about a refunded payment.
 #[serde_with::skip_serializing_none]
-#[derive(Clone, Debug)]
-#[derive(PartialEq, Eq, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct RefundedPayment {
     /// Three-letter ISO 4217 [currency] code, or “XTR” for payments in
@@ -32,5 +30,5 @@ pub struct RefundedPayment {
     pub telegram_payment_charge_id: TelegramTransactionId,
 
     /// Provider payment identifier.
-    pub provider_payment_charge_id: Option<String>,
+    pub provider_payment_charge_id: Option<String>
 }

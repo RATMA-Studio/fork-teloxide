@@ -19,31 +19,35 @@ pub enum ReactionType {
         /// "👨‍💻", "👀", "🎃", "🙈", "😇", "😨", "🤝", "✍", "🤗", "🫡",
         /// "🎅", "🎄", "☃", "💅", "🤪", "🗿", "🆒", "💘", "🙉", "🦄", "😘",
         /// "💊", "🙊", "😎", "👾", "🤷‍♂", "🤷", "🤷‍♀", "😡"
-        emoji: String,
+        emoji: String
     },
     /// Custom emoji reaction.
     CustomEmoji {
         /// Custom emoji identifier.
-        custom_emoji_id: CustomEmojiId,
+        custom_emoji_id: CustomEmojiId
     },
     /// Paid reaction.
-    Paid,
+    Paid
 }
 
 impl ReactionType {
     #[must_use]
     pub fn emoji(&self) -> Option<&String> {
         match &self {
-            Self::Emoji { emoji } => Some(emoji),
-            _ => None,
+            Self::Emoji {
+                emoji
+            } => Some(emoji),
+            _ => None
         }
     }
 
     #[must_use]
     pub fn custom_emoji_id(&self) -> Option<&CustomEmojiId> {
         match &self {
-            Self::CustomEmoji { custom_emoji_id } => Some(custom_emoji_id),
-            _ => None,
+            Self::CustomEmoji {
+                custom_emoji_id
+            } => Some(custom_emoji_id),
+            _ => None
         }
     }
 }

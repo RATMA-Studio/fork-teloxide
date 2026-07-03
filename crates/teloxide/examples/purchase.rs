@@ -16,7 +16,7 @@ use teloxide::{
     dispatching::{UpdateHandler, dialogue, dialogue::InMemStorage},
     prelude::*,
     types::{InlineKeyboardButton, InlineKeyboardMarkup},
-    utils::command::BotCommands,
+    utils::command::BotCommands
 };
 
 type MyDialogue = Dialogue<State, InMemStorage<State>>;
@@ -28,8 +28,8 @@ pub enum State {
     Start,
     ReceiveFullName,
     ReceiveProductChoice {
-        full_name: String,
-    },
+        full_name: String
+    }
 }
 
 /// These commands are supported:
@@ -41,7 +41,7 @@ enum Command {
     /// Start the purchase procedure.
     Start,
     /// Cancel the purchase procedure.
-    Cancel,
+    Cancel
 }
 
 #[tokio::main]
@@ -66,7 +66,7 @@ fn schema() -> UpdateHandler<Box<dyn std::error::Error + Send + Sync + 'static>>
         .branch(
             case![State::Start]
                 .branch(case![Command::Help].endpoint(help))
-                .branch(case![Command::Start].endpoint(start)),
+                .branch(case![Command::Start].endpoint(start))
         )
         .branch(case![Command::Cancel].endpoint(cancel));
 
@@ -76,7 +76,10 @@ fn schema() -> UpdateHandler<Box<dyn std::error::Error + Send + Sync + 'static>>
         .branch(dptree::endpoint(invalid_state));
 
     let callback_query_handler = Update::filter_callback_query().branch(
-        case![State::ReceiveProductChoice { full_name }].endpoint(receive_product_selection),
+        case![State::ReceiveProductChoice {
+            full_name
+        }]
+        .endpoint(receive_product_selection)
     );
 
     dialogue::enter::<Update, InMemStorage<State>, State, _>()
@@ -85,25 +88,31 @@ fn schema() -> UpdateHandler<Box<dyn std::error::Error + Send + Sync + 'static>>
 }
 
 async fn start(bot: Bot, dialogue: MyDialogue, msg: Message) -> HandlerResult {
-    bot.send_message(msg.chat.id, "Let's start! What's your full name?").await?;
+    bot.send_message(msg.chat.id, "Let's start! What's your full name?")
+        .await?;
     dialogue.update(State::ReceiveFullName).await?;
     Ok(())
 }
 
 async fn help(bot: Bot, msg: Message) -> HandlerResult {
-    bot.send_message(msg.chat.id, Command::descriptions().to_string()).await?;
+    bot.send_message(msg.chat.id, Command::descriptions().to_string())
+        .await?;
     Ok(())
 }
 
 async fn cancel(bot: Bot, dialogue: MyDialogue, msg: Message) -> HandlerResult {
-    bot.send_message(msg.chat.id, "Cancelling the dialogue.").await?;
+    bot.send_message(msg.chat.id, "Cancelling the dialogue.")
+        .await?;
     dialogue.exit().await?;
     Ok(())
 }
 
 async fn invalid_state(bot: Bot, msg: Message) -> HandlerResult {
-    bot.send_message(msg.chat.id, "Unable to handle the message. Type /help to see the usage.")
-        .await?;
+    bot.send_message(
+        msg.chat.id,
+        "Unable to handle the message. Type /help to see the usage."
+    )
+    .await?;
     Ok(())
 }
 
@@ -116,10 +125,15 @@ async fn receive_full_name(bot: Bot, dialogue: MyDialogue, msg: Message) -> Hand
             bot.send_message(msg.chat.id, "Select a product:")
                 .reply_markup(InlineKeyboardMarkup::new([products]))
                 .await?;
-            dialogue.update(State::ReceiveProductChoice { full_name }).await?;
+            dialogue
+                .update(State::ReceiveProductChoice {
+                    full_name
+                })
+                .await?;
         }
         None => {
-            bot.send_message(msg.chat.id, "Please, send me your full name.").await?;
+            bot.send_message(msg.chat.id, "Please, send me your full name.")
+                .await?;
         }
     }
 
@@ -130,12 +144,12 @@ async fn receive_product_selection(
     bot: Bot,
     dialogue: MyDialogue,
     full_name: String, // Available from `State::ReceiveProductChoice`.
-    q: CallbackQuery,
+    q: CallbackQuery
 ) -> HandlerResult {
     if let Some(product) = &q.data {
         bot.send_message(
             dialogue.chat_id(),
-            format!("{full_name}, product '{product}' has been purchased successfully!"),
+            format!("{full_name}, product '{product}' has been purchased successfully!")
         )
         .await?;
         dialogue.exit().await?;

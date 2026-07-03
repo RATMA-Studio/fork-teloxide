@@ -11,17 +11,17 @@ use serde::{Deserialize, Serialize};
 pub struct SwitchInlineQueryChosenChat {
     /// The default inline query to be inserted in the input field. If left
     /// empty, only the bot's username will be inserted
-    pub query: Option<String>,
+    pub query:               Option<String>,
     /// True, if private chats with users can be chosen
     #[serde(default)]
-    pub allow_user_chats: bool,
+    pub allow_user_chats:    bool,
     /// True, if private chats with bots can be chosen
     #[serde(default)]
-    pub allow_bot_chats: bool,
+    pub allow_bot_chats:     bool,
     /// True, if group and supergroup chats can be chosen
     #[serde(default)]
-    pub allow_group_chats: bool,
+    pub allow_group_chats:   bool,
     /// True, if channel chats can be chosen
     #[serde(default)]
-    pub allow_channel_chats: bool,
+    pub allow_channel_chats: bool
 }

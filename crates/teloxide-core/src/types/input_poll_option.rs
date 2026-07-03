@@ -6,8 +6,7 @@ use crate::types::{InputPollOptionMedia, MessageEntity, ParseMode};
 ///
 /// [The official docs](https://core.telegram.org/bots/api#inputpolloption).
 #[serde_with::skip_serializing_none]
-#[derive(Clone, Debug)]
-#[derive(Serialize)]
+#[derive(Clone, Debug, Serialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct InputPollOption {
     /// Option text, 1-100 characters.
@@ -17,12 +16,10 @@ pub struct InputPollOption {
     pub formatting: Option<InputPollOptionFormatting>,
 
     /// Media added to the poll option.
-    pub media: Option<InputPollOptionMedia>,
+    pub media: Option<InputPollOptionMedia>
 }
 
-#[derive(Clone, Debug)]
-#[derive(PartialEq, Eq, Hash)]
-#[derive(Serialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 #[non_exhaustive]
@@ -35,15 +32,19 @@ pub enum InputPollOptionFormatting {
 
     /// A JSON-serialized list of special entities that appear in the poll
     /// option text. It can be specified instead of _text\_parse\_mode_.
-    TextEntities(Vec<MessageEntity>),
+    TextEntities(Vec<MessageEntity>)
 }
 
 impl InputPollOption {
     pub fn new<S>(text: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
-        Self { text: text.into(), formatting: None, media: None }
+        Self {
+            text:       text.into(),
+            formatting: None,
+            media:      None
+        }
     }
 
     pub fn media(mut self, media: InputPollOptionMedia) -> Self {
@@ -52,11 +53,17 @@ impl InputPollOption {
     }
 
     pub fn text_parse_mode(self, text_parse_mode: ParseMode) -> Self {
-        Self { formatting: Some(InputPollOptionFormatting::TextParseMode(text_parse_mode)), ..self }
+        Self {
+            formatting: Some(InputPollOptionFormatting::TextParseMode(text_parse_mode)),
+            ..self
+        }
     }
 
     pub fn text_entities(self, text_entities: Vec<MessageEntity>) -> Self {
-        Self { formatting: Some(InputPollOptionFormatting::TextEntities(text_entities)), ..self }
+        Self {
+            formatting: Some(InputPollOptionFormatting::TextEntities(text_entities)),
+            ..self
+        }
     }
 }
 
@@ -74,15 +81,14 @@ impl From<&str> for InputPollOption {
 
 #[cfg(test)]
 mod tests {
-    use crate::types::{CustomEmojiId, MessageEntityKind};
-
     use super::*;
+    use crate::types::{CustomEmojiId, MessageEntityKind};
 
     #[test]
     fn serialize_text_parse_mode() {
         let expected = r#"{"text":"Yay","text_parse_mode":"MarkdownV2"}"#;
         let actual = serde_json::to_string(
-            &InputPollOption::new("Yay").text_parse_mode(ParseMode::MarkdownV2),
+            &InputPollOption::new("Yay").text_parse_mode(ParseMode::MarkdownV2)
         )
         .unwrap();
 
@@ -95,10 +101,10 @@ mod tests {
         let actual = serde_json::to_string(&InputPollOption::new("Yay🐧").text_entities(vec![
             MessageEntity::new(
                 MessageEntityKind::CustomEmoji {
-                    custom_emoji_id: CustomEmojiId("5852631516261125005".to_owned()),
+                    custom_emoji_id: CustomEmojiId("5852631516261125005".to_owned())
                 },
                 3,
-                2,
+                2
             ),
         ]))
         .unwrap();

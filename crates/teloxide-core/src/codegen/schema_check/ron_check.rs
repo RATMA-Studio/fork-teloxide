@@ -1,5 +1,6 @@
-use crate::codegen::{patch::escape_kw, schema, schema_check::api_schema::*};
 use derive_more::derive::Display;
+
+use crate::codegen::{patch::escape_kw, schema, schema_check::api_schema::*};
 
 #[derive(Debug, Display)]
 enum ApiCheckError {
@@ -10,12 +11,19 @@ enum ApiCheckError {
     #[display(
         "Method `{method}` and sibling `{sibling}` have something different in `{param}` param."
     )]
-    SiblingParamsDontMatch { method: String, sibling: String, param: String },
+    SiblingParamsDontMatch {
+        method:  String,
+        sibling: String,
+        param:   String
+    },
     #[display(
         "Method `{method}` has a sibling `{fake_sibling}`, but `{fake_sibling}` doesn't have \
          `{method}` as a sibling."
     )]
-    SiblingsDontMatch { method: String, fake_sibling: String },
+    SiblingsDontMatch {
+        method:       String,
+        fake_sibling: String
+    },
     #[display("Method `{method}` has required `{param}` parameter, when it is not required")]
     ParamIsNotRequired { method: String, param: String },
     #[display("Method `{method}` has optional `{param}` parameter, when it is not optional")]
@@ -24,43 +32,76 @@ enum ApiCheckError {
         "`{param}` parameter of method `{method}` has a number type that can't fit all the \
          possible values. The limit is `{param_limit}`, but values go up to `{actual_limit}`"
     )]
-    ParamIsTooRestrictive { method: String, param: String, param_limit: i64, actual_limit: i64 }, /* Limit can't be higher than i64 ever */
+    ParamIsTooRestrictive {
+        method:       String,
+        param:        String,
+        param_limit:  i64,
+        actual_limit: i64
+    }, /* Limit can't be higher than i64 ever */
     #[display(
         "`{param}` parameter of method `{method}` is of type `{raw_type}`, but the actual type is \
          `{actual_type}`"
     )]
-    ParamRawTyDoesNotMatch { method: String, param: String, raw_type: String, actual_type: String },
+    ParamRawTyDoesNotMatch {
+        method:      String,
+        param:       String,
+        raw_type:    String,
+        actual_type: String
+    },
     #[display(
         "`{param}` parameter of method `{method}` is of type [{raw_type:?}], but the actual type \
          is [{actual_type:?}]"
     )]
-    ParamTyDoesNotMatch { method: String, param: String, raw_type: schema::Type, actual_type: Kind },
+    ParamTyDoesNotMatch {
+        method:      String,
+        param:       String,
+        raw_type:    schema::Type,
+        actual_type: Kind
+    },
     #[display(
         "Method `{method}` has a link to TBA {doc_link}, but the actual link is {actual_doc_link}"
     )]
-    MethodDocLinkDoesNotMatch { method: String, doc_link: String, actual_doc_link: String },
+    MethodDocLinkDoesNotMatch {
+        method:          String,
+        doc_link:        String,
+        actual_doc_link: String
+    },
     #[display(
         "Method `{method}` has two params `{param1}` and `{param2}` that are usually split up \
          into siblings"
     )]
-    ParamsShouldBeSiblings { method: String, param1: String, param2: String },
+    ParamsShouldBeSiblings {
+        method: String,
+        param1: String,
+        param2: String
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
 enum Exception {
-    MethodField { method: String, param: String },
-    FieldType { ron_raw_type: String, actual_type: String },
-    SiblingParam { param: String },
+    MethodField {
+        method: String,
+        param:  String
+    },
+    FieldType {
+        ron_raw_type: String,
+        actual_type:  String
+    },
+    SiblingParam {
+        param: String
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
 struct Exceptions {
-    exceptions: Vec<Exception>,
+    exceptions: Vec<Exception>
 }
 
 impl Exceptions {
     fn new(exceptions: Vec<Exception>) -> Self {
-        Self { exceptions }
+        Self {
+            exceptions
+        }
     }
 
     fn extend(&mut self, exceptions: Vec<Exception>) {
@@ -68,26 +109,36 @@ impl Exceptions {
     }
 
     fn is_method_field_exception(&self, method: String, param: String) -> bool {
-        self.exceptions.contains(&Exception::MethodField { method, param })
+        self.exceptions.contains(&Exception::MethodField {
+            method,
+            param
+        })
     }
 
     fn is_field_type_exception(&self, ron_raw_type: String, actual_type: String) -> bool {
-        self.exceptions.contains(&Exception::FieldType { ron_raw_type, actual_type })
+        self.exceptions.contains(&Exception::FieldType {
+            ron_raw_type,
+            actual_type
+        })
     }
 
     fn is_sibling_param_exception(&self, param: String) -> bool {
-        self.exceptions.contains(&Exception::SiblingParam { param })
+        self.exceptions.contains(&Exception::SiblingParam {
+            param
+        })
     }
 }
 
 #[derive(Debug, Clone, PartialEq)]
 struct UsuallySiblings {
-    params: Vec<(String, String)>,
+    params: Vec<(String, String)>
 }
 
 impl UsuallySiblings {
     fn new(params: Vec<(String, String)>) -> Self {
-        Self { params }
+        Self {
+            params
+        }
     }
 }
 
@@ -106,7 +157,7 @@ fn check_ron_siblings(
     ron_sibling_method: &schema::Method,
     method: &ApiMethod,
     errors: &mut Vec<ApiCheckError>,
-    exceptions: &Exceptions,
+    exceptions: &Exceptions
 ) {
     check_ron_method_meta(ron_method, method, errors, exceptions);
     check_ron_method_meta(ron_sibling_method, method, errors, exceptions);
@@ -128,7 +179,7 @@ fn check_ron_siblings(
                 &ron_sibling_param,
                 param,
                 errors,
-                exceptions,
+                exceptions
             ),
             (Some(ron_param), None) => check_ron_siblings_only_one_field(
                 &ron_param,
@@ -136,7 +187,7 @@ fn check_ron_siblings(
                 ron_sibling_method.names.0.clone(),
                 param,
                 errors,
-                exceptions,
+                exceptions
             ),
             (None, Some(ron_sibling_param)) => check_ron_siblings_only_one_field(
                 &ron_sibling_param,
@@ -144,13 +195,13 @@ fn check_ron_siblings(
                 ron_method.names.0.clone(),
                 param,
                 errors,
-                exceptions,
+                exceptions
             ),
             (None, None) => {
                 if !exceptions.is_method_field_exception(method.name.clone(), param_name) {
                     errors.push(ApiCheckError::ParamDoesNotExist {
                         method: method.name.clone(),
-                        param: param.name.clone(),
+                        param:  param.name.clone()
                     });
                 }
             }
@@ -165,17 +216,24 @@ fn check_ron_siblings_field(
     ron_sibling_param: &schema::Param,
     param: &Argument,
     errors: &mut Vec<ApiCheckError>,
-    exceptions: &Exceptions,
+    exceptions: &Exceptions
 ) {
     // Sibling parameters must match exactly, down to the docs
     if ron_param != ron_sibling_param {
         errors.push(ApiCheckError::SiblingParamsDontMatch {
-            method: ron_method.names.0.clone(),
+            method:  ron_method.names.0.clone(),
             sibling: ron_sibling_method.names.0.clone(),
-            param: param.name.clone(),
+            param:   param.name.clone()
         });
     } else {
-        check_param(ron_param, param, ron_method.names.0.clone(), false, errors, exceptions);
+        check_param(
+            ron_param,
+            param,
+            ron_method.names.0.clone(),
+            false,
+            errors,
+            exceptions
+        );
     }
 }
 
@@ -187,7 +245,7 @@ fn check_ron_siblings_only_one_field(
     ron_method_without_param_name: String,
     param: &Argument,
     errors: &mut Vec<ApiCheckError>,
-    exceptions: &Exceptions,
+    exceptions: &Exceptions
 ) {
     let mut param_name = param.name.clone();
     escape_kw(&mut param_name);
@@ -200,7 +258,7 @@ fn check_ron_siblings_only_one_field(
     {
         errors.push(ApiCheckError::ParamDoesNotExist {
             method: ron_method_without_param_name,
-            param: param.name.clone(),
+            param:  param.name.clone()
         });
     } else {
         // It is in some exceptions. We don't care about optional fields, since its an
@@ -214,7 +272,7 @@ fn check_ron_params(
     method: &ApiMethod,
     errors: &mut Vec<ApiCheckError>,
     usually_siblings: &UsuallySiblings,
-    exceptions: &Exceptions,
+    exceptions: &Exceptions
 ) {
     let all_params: Vec<&String> = ron_method.params.iter().map(|a| &a.name).collect();
     for (param1, param2) in &usually_siblings.params {
@@ -230,7 +288,7 @@ fn check_ron_params(
                 errors.push(ApiCheckError::ParamsShouldBeSiblings {
                     method: ron_method.names.0.clone(),
                     param1: param1.to_owned(),
-                    param2: param2.to_owned(),
+                    param2: param2.to_owned()
                 })
             }
         } // No need to error if they dont exist, it is checked next
@@ -241,11 +299,18 @@ fn check_ron_params(
         escape_kw(&mut param_name);
 
         if let Some(ron_param) = find_ron_param_by_name(&param_name, ron_method) {
-            check_param(&ron_param, param, method.name.clone(), false, errors, exceptions);
+            check_param(
+                &ron_param,
+                param,
+                method.name.clone(),
+                false,
+                errors,
+                exceptions
+            );
         } else if !exceptions.is_method_field_exception(method.name.clone(), param_name) {
             errors.push(ApiCheckError::ParamDoesNotExist {
                 method: ron_method.names.0.clone(),
-                param: param.name.clone(),
+                param:  param.name.clone()
             });
         }
     }
@@ -263,7 +328,7 @@ fn check_ron_method_meta(
     ron_method: &schema::Method,
     method: &ApiMethod,
     errors: &mut Vec<ApiCheckError>,
-    exceptions: &Exceptions,
+    exceptions: &Exceptions
 ) {
     check_type(
         &ron_method.return_ty,
@@ -271,7 +336,7 @@ fn check_ron_method_meta(
         "return_ty".to_owned(),
         method.name.clone(),
         errors,
-        exceptions,
+        exceptions
     );
 
     // Some docs are for some reason like api/#something, not api#something.
@@ -279,9 +344,9 @@ fn check_ron_method_meta(
         != extract_original_url(&method.documentation_link.replace("/#", "#"))
     {
         errors.push(ApiCheckError::MethodDocLinkDoesNotMatch {
-            method: ron_method.names.0.clone(),
-            doc_link: ron_method.tg_doc.clone(),
-            actual_doc_link: method.documentation_link.clone(),
+            method:          ron_method.names.0.clone(),
+            doc_link:        ron_method.tg_doc.clone(),
+            actual_doc_link: method.documentation_link.clone()
         });
     }
 }
@@ -291,7 +356,7 @@ fn check_ron_method(
     method: &ApiMethod,
     errors: &mut Vec<ApiCheckError>,
     usually_siblings: &UsuallySiblings,
-    exceptions: &Exceptions,
+    exceptions: &Exceptions
 ) {
     check_ron_method_meta(ron_method, method, errors, exceptions);
     check_ron_params(ron_method, method, errors, usually_siblings, exceptions);
@@ -305,7 +370,7 @@ fn check_param(
     // schema
     ignore_optional: bool,
     errors: &mut Vec<ApiCheckError>,
-    exceptions: &Exceptions,
+    exceptions: &Exceptions
 ) {
     let mut ron_param = ron_param.clone();
 
@@ -313,14 +378,14 @@ fn check_param(
         if param.required {
             errors.push(ApiCheckError::ParamIsNotOptional {
                 method: method_name.clone(),
-                param: param.name.clone(),
+                param:  param.name.clone()
             });
         }
         ron_param.ty = *ron_param_type.clone()
     } else if !param.required && !ignore_optional {
         errors.push(ApiCheckError::ParamIsNotRequired {
             method: method_name.clone(),
-            param: param.name.clone(),
+            param:  param.name.clone()
         });
     }
 
@@ -330,7 +395,7 @@ fn check_param(
         param.name.clone(),
         method_name.clone(),
         errors,
-        exceptions,
+        exceptions
     );
 }
 
@@ -340,15 +405,23 @@ fn check_type(
     param_name: String,
     method_name: String,
     errors: &mut Vec<ApiCheckError>,
-    exceptions: &Exceptions,
+    exceptions: &Exceptions
 ) {
     // Assumes that the ron_type is not Option, since api_type has `required` field
     // instead
-    assert!(!matches!(ron_type, &schema::Type::Option(_)), "ron_type can't be Option");
+    assert!(
+        !matches!(ron_type, &schema::Type::Option(_)),
+        "ron_type can't be Option"
+    );
 
     // If it matches, do nothing
     match (ron_type, api_type) {
-        (schema::Type::bool, Kind::Bool { default: _ }) => {}
+        (
+            schema::Type::bool,
+            Kind::Bool {
+                default: _
+            }
+        ) => {}
         (
             schema::Type::u8
             | schema::Type::u16
@@ -357,7 +430,12 @@ fn check_type(
             | schema::Type::i32
             | schema::Type::i64
             | schema::Type::DateTime, // DateTime is always an int timestamp in the TBA
-            Kind::Integer { default: _, min, max, enumeration: _ },
+            Kind::Integer {
+                default: _,
+                min,
+                max,
+                enumeration: _
+            }
         ) => {
             let (ron_min, ron_max) = match ron_type {
                 schema::Type::u8 => (u8::MIN as i64, u8::MAX as i64),
@@ -368,59 +446,97 @@ fn check_type(
                 schema::Type::i32 => (i32::MIN as i64, i32::MAX as i64),
                 schema::Type::i64 => (i64::MIN, i64::MAX),
                 schema::Type::DateTime => (i64::MIN, i64::MAX),
-                _ => unreachable!("Other types are not in the match statement"),
+                _ => unreachable!("Other types are not in the match statement")
             };
 
             if min.is_some() && ron_min > min.unwrap() {
                 errors.push(ApiCheckError::ParamIsTooRestrictive {
-                    method: method_name.clone(),
-                    param: param_name.clone(),
-                    param_limit: ron_min,
-                    actual_limit: min.unwrap(),
+                    method:       method_name.clone(),
+                    param:        param_name.clone(),
+                    param_limit:  ron_min,
+                    actual_limit: min.unwrap()
                 })
             }
             if max.is_some() && ron_max < max.unwrap() {
                 errors.push(ApiCheckError::ParamIsTooRestrictive {
-                    method: method_name.clone(),
-                    param: param_name.clone(),
-                    param_limit: ron_max,
-                    actual_limit: max.unwrap(),
+                    method:       method_name.clone(),
+                    param:        param_name.clone(),
+                    param_limit:  ron_max,
+                    actual_limit: max.unwrap()
                 })
             }
         }
         (
             schema::Type::String | schema::Type::Url,
-            Kind::String { default: _, min_len: _, max_len: _, enumeration: _ },
+            Kind::String {
+                default: _,
+                min_len: _,
+                max_len: _,
+                enumeration: _
+            }
         ) => {}
         (schema::Type::f64, Kind::Float) => {}
-        (schema::Type::True, Kind::Bool { default: Some(true) }) => {}
-        (schema::Type::ArrayOf(ron_type), Kind::Array { array: api_type }) => {
-            check_type(ron_type, &api_type.0, param_name, method_name, errors, exceptions);
+        (
+            schema::Type::True,
+            Kind::Bool {
+                default: Some(true)
+            }
+        ) => {}
+        (
+            schema::Type::ArrayOf(ron_type),
+            Kind::Array {
+                array: api_type
+            }
+        ) => {
+            check_type(
+                ron_type,
+                &api_type.0,
+                param_name,
+                method_name,
+                errors,
+                exceptions
+            );
         }
-        (schema::Type::RawTy(ron_raw_type), Kind::Reference { reference: raw_type }) => {
+        (
+            schema::Type::RawTy(ron_raw_type),
+            Kind::Reference {
+                reference: raw_type
+            }
+        ) => {
             if ron_raw_type != raw_type
-                && !exceptions.is_field_type_exception(ron_raw_type.to_owned(), raw_type.to_owned())
+                && !exceptions
+                    .is_field_type_exception(ron_raw_type.to_owned(), raw_type.to_owned())
             {
                 errors.push(ApiCheckError::ParamRawTyDoesNotMatch {
-                    method: method_name.clone(),
-                    param: param_name.clone(),
-                    raw_type: ron_raw_type.to_owned(),
-                    actual_type: raw_type.to_owned(),
+                    method:      method_name.clone(),
+                    param:       param_name.clone(),
+                    raw_type:    ron_raw_type.to_owned(),
+                    actual_type: raw_type.to_owned()
                 })
             }
         }
-        (schema::Type::RawTy(_), Kind::AnyOf { any_of: _ }) => {} // If it's AnyOf, we have to
+        (
+            schema::Type::RawTy(_),
+            Kind::AnyOf {
+                any_of: _
+            }
+        ) => {} // If it's AnyOf, we have to
         // have our own type like `Recipient`
-        (schema::Type::True, Kind::AnyOf { any_of: _ }) => {} // Or with AnyOf there could be
+        (
+            schema::Type::True,
+            Kind::AnyOf {
+                any_of: _
+            }
+        ) => {} // Or with AnyOf there could be
         // either `True` or `Message`, like with `editMessageMedia`
         (schema::Type::RawTy(_), _) => {} // Any other is fine, we can't check if
         // our type like `PollId` is actually String or Integer
         _ => errors.push(ApiCheckError::ParamTyDoesNotMatch {
-            method: method_name.clone(),
-            param: param_name.clone(),
-            raw_type: ron_type.clone(),
-            actual_type: api_type.clone(),
-        }),
+            method:      method_name.clone(),
+            param:       param_name.clone(),
+            raw_type:    ron_type.clone(),
+            actual_type: api_type.clone()
+        })
     }
 }
 
@@ -440,32 +556,32 @@ mod tests {
             // The Inline methods can't set these values
             Exception::MethodField {
                 method: "editMessageTextInline".to_owned(),
-                param: "link_preview_options".to_owned(),
+                param:  "link_preview_options".to_owned()
             },
             Exception::MethodField {
                 method: "editMessageCaptionInline".to_owned(),
-                param: "link_preview_options".to_owned(),
+                param:  "link_preview_options".to_owned()
             },
             Exception::MethodField {
                 method: "editMessageCaptionInline".to_owned(),
-                param: "show_caption_above_media".to_owned(),
+                param:  "show_caption_above_media".to_owned()
             },
             Exception::MethodField {
                 method: "editMessageLiveLocationInline".to_owned(),
-                param: "live_period".to_owned(),
+                param:  "live_period".to_owned()
             },
             // getGameHighScores has `target` field for that
             Exception::MethodField {
                 method: "getGameHighScores".to_owned(),
-                param: "chat_id".to_owned(),
+                param:  "chat_id".to_owned()
             },
             Exception::MethodField {
                 method: "getGameHighScores".to_owned(),
-                param: "message_id".to_owned(),
+                param:  "message_id".to_owned()
             },
             Exception::MethodField {
                 method: "getGameHighScores".to_owned(),
-                param: "inline_message_id".to_owned(),
+                param:  "inline_message_id".to_owned()
             },
             // Bot API 9.3: `exclude_limited` was replaced by
             // `exclude_limited_upgradable` and `exclude_limited_non_upgradable`.
@@ -473,7 +589,7 @@ mod tests {
             // the old field.
             Exception::MethodField {
                 method: "getBusinessAccountGifts".to_owned(),
-                param: "exclude_limited".to_owned(),
+                param:  "exclude_limited".to_owned()
             },
         ]);
 
@@ -481,19 +597,30 @@ mod tests {
         exceptions.extend(vec![
             Exception::FieldType {
                 ron_raw_type: "ReplyMarkup".to_owned(),
-                actual_type: "InlineKeyboardMarkup".to_owned(),
+                actual_type:  "InlineKeyboardMarkup".to_owned()
             },
-            Exception::FieldType { ron_raw_type: "Me".to_owned(), actual_type: "User".to_owned() },
+            Exception::FieldType {
+                ron_raw_type: "Me".to_owned(),
+                actual_type:  "User".to_owned()
+            },
         ]);
 
         // If checker finds that one sibling has that field name, while the other
         // doesn't, it will consider it normal. To add a one-time exception,
         // refer to `missing_field_exceptions` argument.
         exceptions.extend(vec![
-            Exception::SiblingParam { param: "inline_message_id".to_owned() },
-            Exception::SiblingParam { param: "user_id".to_owned() },
-            Exception::SiblingParam { param: "chat_id".to_owned() },
-            Exception::SiblingParam { param: "message_id".to_owned() },
+            Exception::SiblingParam {
+                param: "inline_message_id".to_owned()
+            },
+            Exception::SiblingParam {
+                param: "user_id".to_owned()
+            },
+            Exception::SiblingParam {
+                param: "chat_id".to_owned()
+            },
+            Exception::SiblingParam {
+                param: "message_id".to_owned()
+            },
         ]);
 
         // Some params are usually siblings, and if they are not, its an error.
@@ -524,8 +651,8 @@ mod tests {
 
                     if ron_sibling_method.sibling != Some(ron_method.names.0.clone()) {
                         errors.push(ApiCheckError::SiblingsDontMatch {
-                            method: ron_method.names.0.clone(),
-                            fake_sibling: ron_sibling_method.names.0.clone(),
+                            method:       ron_method.names.0.clone(),
+                            fake_sibling: ron_sibling_method.names.0.clone()
                         });
                         // No point in checking corrupt method
                         continue;
@@ -536,7 +663,7 @@ mod tests {
                         &ron_sibling_method,
                         &method,
                         &mut errors,
-                        &exceptions,
+                        &exceptions
                     );
                 } else {
                     check_ron_method(
@@ -544,11 +671,13 @@ mod tests {
                         &method,
                         &mut errors,
                         &usually_siblings,
-                        &exceptions,
+                        &exceptions
                     );
                 }
             } else {
-                errors.push(ApiCheckError::MethodDoesNotExist { method: method.name });
+                errors.push(ApiCheckError::MethodDoesNotExist {
+                    method: method.name
+                });
             };
         }
 

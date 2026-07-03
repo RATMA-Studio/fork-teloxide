@@ -8,5 +8,5 @@ use crate::types::Seconds;
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct VideoChatEnded {
     /// Video chat duration in seconds.
-    duration: Seconds,
+    duration: Seconds
 }

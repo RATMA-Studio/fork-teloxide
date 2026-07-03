@@ -1,6 +1,6 @@
-use crate::types::{MessageId, Recipient};
-
 use serde::{Deserialize, Serialize};
+
+use crate::types::{MessageId, Recipient};
 
 /// A message in chat or inline message.
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Serialize, Deserialize)]
@@ -8,17 +8,19 @@ use serde::{Deserialize, Serialize};
 #[non_exhaustive]
 pub enum TargetMessage {
     Common {
-        chat_id: Recipient,
+        chat_id:    Recipient,
         #[serde(flatten)]
-        message_id: MessageId,
+        message_id: MessageId
     },
     Inline {
-        inline_message_id: String,
-    },
+        inline_message_id: String
+    }
 }
 
 impl From<String> for TargetMessage {
     fn from(inline_message_id: String) -> Self {
-        Self::Inline { inline_message_id }
+        Self::Inline {
+            inline_message_id
+        }
     }
 }

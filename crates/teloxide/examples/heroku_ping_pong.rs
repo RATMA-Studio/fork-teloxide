@@ -51,7 +51,7 @@ async fn main() {
             bot.send_message(msg.chat.id, "pong").await?;
             Ok(())
         },
-        listener,
+        listener
     )
     .await;
 }

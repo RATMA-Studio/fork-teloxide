@@ -7,5 +7,5 @@ use serde::{Deserialize, Serialize};
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct SentGuestMessage {
     /// Identifier of the sent inline message.
-    pub inline_message_id: String,
+    pub inline_message_id: String
 }

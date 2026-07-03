@@ -13,21 +13,24 @@ pub struct BotCommand {
     pub command: String,
 
     /// Description of the command, 3-256 characters.
-    pub description: String,
+    pub description: String
 }
 
 impl BotCommand {
     pub fn new<S1, S2>(command: S1, description: S2) -> Self
     where
         S1: Into<String>,
-        S2: Into<String>,
+        S2: Into<String>
     {
-        Self { command: command.into(), description: description.into() }
+        Self {
+            command:     command.into(),
+            description: description.into()
+        }
     }
 
     pub fn command<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.command = val.into();
         self
@@ -35,7 +38,7 @@ impl BotCommand {
 
     pub fn description<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.description = val.into();
         self

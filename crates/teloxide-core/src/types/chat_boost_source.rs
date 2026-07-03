@@ -12,7 +12,7 @@ use crate::types::{MessageId, User};
 pub enum ChatBoostSource {
     Premium(ChatBoostSourcePremium),
     GiftCode(ChatBoostSourceGiftCode),
-    Giveaway(ChatBoostSourceGiveaway),
+    Giveaway(ChatBoostSourceGiveaway)
 }
 
 /// The boost was obtained by subscribing to Telegram Premium or by gifting a
@@ -22,7 +22,7 @@ pub enum ChatBoostSource {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct ChatBoostSourcePremium {
     /// User that boosted the chat.
-    pub user: User,
+    pub user: User
 }
 
 /// The boost was obtained by the creation of Telegram Premium gift codes to
@@ -33,7 +33,7 @@ pub struct ChatBoostSourcePremium {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct ChatBoostSourceGiftCode {
     /// User for which the gift code was created.
-    pub user: User,
+    pub user: User
 }
 
 /// The boost was obtained by the creation of a Telegram Premium giveaway. This
@@ -58,7 +58,7 @@ pub struct ChatBoostSourceGiveaway {
     /// `true`, if the giveaway was completed, but there was no user to win the
     /// prize.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
-    pub is_unclaimed: bool,
+    pub is_unclaimed: bool
 }
 
 impl ChatBoostSource {
@@ -67,7 +67,7 @@ impl ChatBoostSource {
         Some(match &self {
             Self::Premium(premium) => &premium.user,
             Self::GiftCode(gift_code) => &gift_code.user,
-            Self::Giveaway(giveaway) => return giveaway.user.as_ref(),
+            Self::Giveaway(giveaway) => return giveaway.user.as_ref()
         })
     }
 }

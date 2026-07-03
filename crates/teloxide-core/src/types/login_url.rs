@@ -29,9 +29,9 @@ pub struct LoginUrl {
     /// authorization].
     ///
     /// [Checking authorization]: https://core.telegram.org/widgets/login#checking-authorization
-    pub url: reqwest::Url,
+    pub url:                  reqwest::Url,
     /// New text of the button in forwarded messages.
-    pub forward_text: Option<String>,
+    pub forward_text:         Option<String>,
     /// Username of a bot, which will be used for user authorization. See
     /// [Setting up a bot] for more details. If not specified, the current bot's
     /// username will be assumed. The url's domain must be the same as the
@@ -40,10 +40,10 @@ pub struct LoginUrl {
     ///
     /// [Setting up a bot]: https://core.telegram.org/widgets/login#setting-up-a-bot
     /// [Linking your domain to the bot]: https://core.telegram.org/widgets/login#linking-your-domain-to-the-bot
-    pub bot_username: Option<String>,
+    pub bot_username:         Option<String>,
     /// Pass `true` to request the permission for your bot to send messages to
     /// the user.
-    pub request_write_access: Option<bool>,
+    pub request_write_access: Option<bool>
 }
 
 impl LoginUrl {
@@ -55,7 +55,7 @@ impl LoginUrl {
 
     pub fn forward_text<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.forward_text = Some(val.into());
         self
@@ -63,7 +63,7 @@ impl LoginUrl {
 
     pub fn bot_username<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.bot_username = Some(val.into());
         self

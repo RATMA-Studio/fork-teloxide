@@ -43,7 +43,7 @@ pub struct KeyboardButtonRequestUsers {
 
     /// Pass `true` to request the users' photos
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
-    pub request_photo: bool,
+    pub request_photo: bool
 }
 
 impl KeyboardButtonRequestUsers {
@@ -56,7 +56,7 @@ impl KeyboardButtonRequestUsers {
             max_quantity: 1,
             request_name: false,
             request_username: false,
-            request_photo: false,
+            request_photo: false
         }
     }
 

@@ -10,13 +10,13 @@ pub(crate) enum Error {
     TopLevelNotStruct,
     Fmt(std::fmt::Error),
     Io(std::io::Error),
-    Json(serde_json::Error),
+    Json(serde_json::Error)
 }
 
 impl ser::Error for Error {
     fn custom<T>(msg: T) -> Self
     where
-        T: fmt::Display,
+        T: fmt::Display
     {
         Self::Custom(msg.to_string())
     }
@@ -29,7 +29,7 @@ impl fmt::Display for Error {
             Self::TopLevelNotStruct => write!(f, "Multipart supports only structs at top level"),
             Self::Fmt(inner) => write!(f, "Formatting error: {inner}"),
             Self::Io(inner) => write!(f, "Io error: {inner}"),
-            Self::Json(inner) => write!(f, "Json (de)serialization error: {inner}"),
+            Self::Json(inner) => write!(f, "Json (de)serialization error: {inner}")
         }
     }
 }
@@ -47,7 +47,7 @@ impl From<Error> for RequestError {
                 "we don't create requests those fail to serialize (if you see this, open an issue \
                  :|): {}",
                 e
-            ),
+            )
         }
     }
 }

@@ -1,8 +1,7 @@
 use serde::Serialize;
 
-use crate::types::{InputFile, MaskPosition};
-
 use super::StickerFormat;
+use crate::types::{InputFile, MaskPosition};
 
 /// This object describes a sticker to be added to a sticker set.
 #[serde_with::skip_serializing_none]
@@ -33,5 +32,5 @@ pub struct InputSticker {
     /// List of 0-20 search keywords for the sticker with total length of up to
     /// 64 characters. For “regular” and “custom_emoji” stickers only.
     #[serde(default)]
-    pub keywords: Vec<String>,
+    pub keywords: Vec<String>
 }

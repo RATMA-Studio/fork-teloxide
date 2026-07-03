@@ -23,5 +23,5 @@ pub struct PassportFile {
     #[serde(with = "crate::types::serde_date_from_unix_timestamp")]
     #[serde(rename = "file_date")]
     #[cfg_attr(test, schemars(with = "i64"))]
-    pub date: DateTime<Utc>,
+    pub date: DateTime<Utc>
 }

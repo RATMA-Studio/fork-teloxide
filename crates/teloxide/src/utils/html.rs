@@ -126,7 +126,7 @@ pub fn escape(s: &str) -> String {
             '&' => s.push_str("&amp;"),
             '<' => s.push_str("&lt;"),
             '>' => s.push_str("&gt;"),
-            c => s.push(c),
+            c => s.push(c)
         }
         s
     })
@@ -137,7 +137,7 @@ pub fn escape(s: &str) -> String {
 pub fn user_mention_or_link(user: &User) -> String {
     match user.mention() {
         Some(mention) => mention,
-        None => link(user.url().as_str(), &user.full_name()),
+        None => link(user.url().as_str(), &user.full_name())
     }
 }
 
@@ -226,16 +226,25 @@ mod tests {
             escape("  <title>Foo & Bar</title>   "),
             "  &lt;title&gt;Foo &amp; Bar&lt;/title&gt;   "
         );
-        assert_eq!(escape("<p>你好 & 再見</p>"), "&lt;p&gt;你好 &amp; 再見&lt;/p&gt;");
+        assert_eq!(
+            escape("<p>你好 & 再見</p>"),
+            "&lt;p&gt;你好 &amp; 再見&lt;/p&gt;"
+        );
         assert_eq!(escape("'foo\""), "'foo\"");
     }
 
     #[test]
     fn user_mention_link() {
-        let user_with_username = User { username: Some("abcd".to_string()), ..Default::default() };
+        let user_with_username = User {
+            username: Some("abcd".to_string()),
+            ..Default::default()
+        };
         assert_eq!(user_mention_or_link(&user_with_username), "@abcd");
-        let user_without_username =
-            User { id: UserId(123_456_789), first_name: "Name".to_string(), ..Default::default() };
+        let user_without_username = User {
+            id: UserId(123_456_789),
+            first_name: "Name".to_string(),
+            ..Default::default()
+        };
         assert_eq!(
             user_mention_or_link(&user_without_username),
             r#"<a href="tg://user/?id=123456789">Name</a>"#

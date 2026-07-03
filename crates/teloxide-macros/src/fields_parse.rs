@@ -7,39 +7,44 @@ use crate::{attr::AttrValue, error::Result};
 pub(crate) enum ParserType {
     Default,
     Split { separator: Option<String> },
-    Custom(syn::Path),
+    Custom(syn::Path)
 }
 
 impl ParserType {
     pub fn parse(value: AttrValue) -> Result<Self> {
-        value.expect(r#""default", "split", or a path to a custom parser function"#, |v| match v {
-            AttrValue::Path(p) => Ok(ParserType::Custom(p)),
-            AttrValue::Lit(syn::Lit::Str(ref l)) => match &*l.value() {
-                "default" => Ok(ParserType::Default),
-                "split" => Ok(ParserType::Split { separator: None }),
-                _ => Err(v),
-            },
-            _ => Err(v),
-        })
+        value.expect(
+            r#""default", "split", or a path to a custom parser function"#,
+            |v| match v {
+                AttrValue::Path(p) => Ok(ParserType::Custom(p)),
+                AttrValue::Lit(syn::Lit::Str(ref l)) => match &*l.value() {
+                    "default" => Ok(ParserType::Default),
+                    "split" => Ok(ParserType::Split {
+                        separator: None
+                    }),
+                    _ => Err(v)
+                },
+                _ => Err(v)
+            }
+        )
     }
 }
 
 pub(crate) fn impl_parse_args(
     fields: &Fields,
     self_variant: proc_macro2::TokenStream,
-    parser: &ParserType,
+    parser: &ParserType
 ) -> proc_macro2::TokenStream {
     match fields {
         Fields::Unit => self_variant,
         Fields::Unnamed(fields) => impl_parse_args_unnamed(fields, self_variant, parser),
-        Fields::Named(named) => impl_parse_args_named(named, self_variant, parser),
+        Fields::Named(named) => impl_parse_args_named(named, self_variant, parser)
     }
 }
 
 pub(crate) fn impl_parse_args_unnamed(
     data: &FieldsUnnamed,
     variant: proc_macro2::TokenStream,
-    parser_type: &ParserType,
+    parser_type: &ParserType
 ) -> proc_macro2::TokenStream {
     let get_arguments = create_parser(parser_type, data.unnamed.iter().map(|f| &f.ty));
     let iter = (0..data.unnamed.len()).map(syn::Index::from);
@@ -59,7 +64,7 @@ pub(crate) fn impl_parse_args_unnamed(
 pub(crate) fn impl_parse_args_named(
     data: &FieldsNamed,
     variant: proc_macro2::TokenStream,
-    parser_type: &ParserType,
+    parser_type: &ParserType
 ) -> proc_macro2::TokenStream {
     let get_arguments = create_parser(parser_type, data.named.iter().map(|f| &f.ty));
     let i = (0..).map(syn::Index::from);
@@ -75,7 +80,7 @@ pub(crate) fn impl_parse_args_named(
 
 fn create_parser<'a>(
     parser_type: &ParserType,
-    mut types: impl ExactSizeIterator<Item = &'a Type>,
+    mut types: impl ExactSizeIterator<Item = &'a Type>
 ) -> proc_macro2::TokenStream {
     let function_to_parse = match parser_type {
         ParserType::Default => match types.len() {
@@ -96,10 +101,10 @@ fn create_parser<'a>(
                 quote! { ::std::compile_error!("Default parser works only with exactly 1 field") }
             }
         },
-        ParserType::Split { separator } => {
-            parser_with_separator(&separator.clone().unwrap_or_else(|| " ".to_owned()), types)
-        }
-        ParserType::Custom(path) => quote! { #path },
+        ParserType::Split {
+            separator
+        } => parser_with_separator(&separator.clone().unwrap_or_else(|| " ".to_owned()), types),
+        ParserType::Custom(path) => quote! { #path }
     };
 
     quote! {
@@ -109,7 +114,7 @@ fn create_parser<'a>(
 
 fn parser_with_separator<'a>(
     separator: &str,
-    types: impl ExactSizeIterator<Item = &'a Type>,
+    types: impl ExactSizeIterator<Item = &'a Type>
 ) -> proc_macro2::TokenStream {
     let expected = types.len();
     let res = {

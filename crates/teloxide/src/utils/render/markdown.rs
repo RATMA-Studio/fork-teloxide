@@ -1,25 +1,24 @@
 use std::fmt::Write;
 
+use super::{ComplexTag, Kind, NewLineRepeatedTag, Place, SimpleTag, Tag, TagWriter};
 use crate::utils::markdown::ESCAPE_CHARS;
 
-use super::{ComplexTag, Kind, NewLineRepeatedTag, Place, SimpleTag, Tag, TagWriter};
-
 pub static MARKDOWN: TagWriter = TagWriter {
-    bold: SimpleTag::new("*", "*"),
-    blockquote: NewLineRepeatedTag::new("**>", ">", ""),
+    bold:                  SimpleTag::new("*", "*"),
+    blockquote:            NewLineRepeatedTag::new("**>", ">", ""),
     expandable_blockquote: NewLineRepeatedTag::new("**>", ">", "||"),
-    italic: SimpleTag::new("_\r", "_\r"),
-    underline: SimpleTag::new("__\r", "__\r"),
-    strikethrough: SimpleTag::new("~", "~"),
-    spoiler: SimpleTag::new("||", "||"),
-    code: SimpleTag::new("`", "`"),
-    pre_no_lang: SimpleTag::new("```\n", "```\n"),
-    pre: ComplexTag::new("```", "\n", "```\n"),
-    text_link: ComplexTag::new("[", "](", ")"),
-    text_mention: ComplexTag::new("[", "](tg://user?id=", ")"),
-    custom_emoji: ComplexTag::new("[", "](tg://emoji?id=", ")"),
-    write_tag_fn: write_tag,
-    write_char_fn: write_char,
+    italic:                SimpleTag::new("_\r", "_\r"),
+    underline:             SimpleTag::new("__\r", "__\r"),
+    strikethrough:         SimpleTag::new("~", "~"),
+    spoiler:               SimpleTag::new("||", "||"),
+    code:                  SimpleTag::new("`", "`"),
+    pre_no_lang:           SimpleTag::new("```\n", "```\n"),
+    pre:                   ComplexTag::new("```", "\n", "```\n"),
+    text_link:             ComplexTag::new("[", "](", ")"),
+    text_mention:          ComplexTag::new("[", "](tg://user?id=", ")"),
+    custom_emoji:          ComplexTag::new("[", "](tg://emoji?id=", ")"),
+    write_tag_fn:          write_tag,
+    write_char_fn:         write_char
 };
 
 fn write_tag(tag: &Tag, buf: &mut String) {
@@ -28,12 +27,12 @@ fn write_tag(tag: &Tag, buf: &mut String) {
         Kind::Blockquote => match tag.place {
             Place::Start => buf.push_str(MARKDOWN.blockquote.start),
             Place::MidNewLine => buf.push_str(MARKDOWN.blockquote.repeat),
-            Place::End => buf.push_str(MARKDOWN.blockquote.end),
+            Place::End => buf.push_str(MARKDOWN.blockquote.end)
         },
         Kind::ExpandableBlockquote => match tag.place {
             Place::Start => buf.push_str(MARKDOWN.expandable_blockquote.start),
             Place::MidNewLine => buf.push_str(MARKDOWN.expandable_blockquote.repeat),
-            Place::End => buf.push_str(MARKDOWN.expandable_blockquote.end),
+            Place::End => buf.push_str(MARKDOWN.expandable_blockquote.end)
         },
         Kind::Italic => buf.push_str(MARKDOWN.italic.get_tag(tag.place)),
         Kind::Underline => buf.push_str(MARKDOWN.underline.get_tag(tag.place)),
@@ -45,26 +44,30 @@ fn write_tag(tag: &Tag, buf: &mut String) {
                 Some(lang) => {
                     write!(buf, "{}{}{}", MARKDOWN.pre.start, lang, MARKDOWN.pre.middle).unwrap()
                 }
-                None => buf.push_str(MARKDOWN.pre_no_lang.start),
+                None => buf.push_str(MARKDOWN.pre_no_lang.start)
             },
             Place::MidNewLine => unreachable!(),
-            Place::End => buf.push_str(lang.map_or(MARKDOWN.pre_no_lang.end, |_| MARKDOWN.pre.end)),
+            Place::End => buf.push_str(lang.map_or(MARKDOWN.pre_no_lang.end, |_| MARKDOWN.pre.end))
         },
         Kind::TextLink(url) => match tag.place {
             Place::Start => buf.push_str(MARKDOWN.text_link.start),
             Place::MidNewLine => unreachable!(),
-            Place::End => {
-                write!(buf, "{}{}{}", MARKDOWN.text_link.middle, url, MARKDOWN.text_link.end)
-                    .unwrap()
-            }
+            Place::End => write!(
+                buf,
+                "{}{}{}",
+                MARKDOWN.text_link.middle, url, MARKDOWN.text_link.end
+            )
+            .unwrap()
         },
         Kind::TextMention(id) => match tag.place {
             Place::Start => buf.push_str(MARKDOWN.text_mention.start),
             Place::MidNewLine => unreachable!(),
-            Place::End => {
-                write!(buf, "{}{}{}", MARKDOWN.text_mention.middle, id, MARKDOWN.text_mention.end)
-                    .unwrap()
-            }
+            Place::End => write!(
+                buf,
+                "{}{}{}",
+                MARKDOWN.text_mention.middle, id, MARKDOWN.text_mention.end
+            )
+            .unwrap()
         },
         Kind::CustomEmoji(custom_emoji_id) => match tag.place {
             Place::Start => buf.push_str(MARKDOWN.custom_emoji.start),
@@ -74,8 +77,8 @@ fn write_tag(tag: &Tag, buf: &mut String) {
                 "{}{}{}",
                 MARKDOWN.custom_emoji.middle, custom_emoji_id, MARKDOWN.custom_emoji.end
             )
-            .unwrap(),
-        },
+            .unwrap()
+        }
     }
 }
 

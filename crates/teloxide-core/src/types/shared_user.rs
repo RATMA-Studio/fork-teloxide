@@ -22,5 +22,5 @@ pub struct SharedUser {
     pub username: Option<String>,
 
     /// Available sizes of the chat photo, if it was requested
-    pub photo: Option<Vec<PhotoSize>>,
+    pub photo: Option<Vec<PhotoSize>>
 }

@@ -6,7 +6,7 @@ use crate::{
     adaptors::{Throttle, throttle::ThrottlingRequest},
     errors::AsResponseParameters,
     requests::{HasPayload, Requester},
-    types::*,
+    types::*
 };
 
 macro_rules! f {
@@ -63,7 +63,7 @@ where
     B::SendDice: Clone + Send + Sync + 'static,
     B::SendSticker: Clone + Send + Sync + 'static,
     B::SendInvoice: Clone + Send + Sync + 'static,
-    B::SendGame: Clone + Send + Sync + 'static,
+    B::SendGame: Clone + Send + Sync + 'static
 {
     type Err = B::Err;
 

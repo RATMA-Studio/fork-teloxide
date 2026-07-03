@@ -3,9 +3,7 @@ use std::ops::Deref;
 use serde::{Deserialize, Serialize};
 
 /// Percentage from 0 to 100
-#[derive(Clone, Copy)]
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[derive(Debug, derive_more::Display)]
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, derive_more::Display)]
 #[display("{_0}%")]
 #[derive(Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
@@ -58,13 +56,15 @@ mod tests {
 
     #[derive(Serialize, Deserialize)]
     struct S {
-        intensity: Percentage,
+        intensity: Percentage
     }
 
     #[test]
     fn deserialization() {
         let expected = Percentage::from_u8(69);
-        let S { intensity: actual } = serde_json::from_str(r#"{"intensity":69}"#).unwrap();
+        let S {
+            intensity: actual
+        } = serde_json::from_str(r#"{"intensity":69}"#).unwrap();
 
         assert_eq!(expected, actual);
         assert_eq!(actual.value(), 69);
@@ -73,7 +73,10 @@ mod tests {
     #[test]
     fn serialization() {
         let expected = r#"{"intensity":69}"#;
-        let actual = serde_json::to_string(&S { intensity: Percentage::from_u8(69) }).unwrap();
+        let actual = serde_json::to_string(&S {
+            intensity: Percentage::from_u8(69)
+        })
+        .unwrap();
 
         assert_eq!(expected, actual);
     }

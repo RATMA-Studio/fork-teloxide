@@ -15,5 +15,5 @@ pub struct ManagedBotUpdated {
 
     /// Information about the bot. Token of the bot can be fetched using the
     /// method `getManagedBotToken`.
-    pub bot: User,
+    pub bot: User
 }

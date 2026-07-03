@@ -3,7 +3,7 @@ use futures::Stream;
 use crate::{
     stop::StopToken,
     types::{AllowedUpdate, Update},
-    update_listeners::{AsUpdateStream, UpdateListener},
+    update_listeners::{AsUpdateStream, UpdateListener}
 };
 
 /// A listener created from functions.
@@ -33,7 +33,7 @@ pub struct StatefulListener<St, Assf, Sf, Hauf> {
     ///
     /// Must implement `FnMut(&mut St, &mut dyn Iterator<Item =
     /// AllowedUpdate>)`.
-    pub hint_allowed_updates: Option<Hauf>,
+    pub hint_allowed_updates: Option<Hauf>
 }
 
 type Haufn<State> = for<'a, 'b> fn(&'a mut State, &'b mut dyn Iterator<Item = AllowedUpdate>);
@@ -51,9 +51,14 @@ impl<St, Assf, Sf, Hauf> StatefulListener<St, Assf, Sf, Hauf> {
         state: St,
         stream: Assf,
         stop_token: Sf,
-        hint_allowed_updates: Option<Hauf>,
+        hint_allowed_updates: Option<Hauf>
     ) -> Self {
-        Self { state, stream, stop_token, hint_allowed_updates }
+        Self {
+            state,
+            stream,
+            stop_token,
+            hint_allowed_updates
+        }
     }
 }
 
@@ -62,7 +67,7 @@ where
     (St, Strm): 'a,
     Strm: Send,
     Assf: FnMut(&'a mut St) -> Strm,
-    Strm: Stream<Item = Result<Update, E>>,
+    Strm: Stream<Item = Result<Update, E>>
 {
     type StreamErr = E;
     type Stream = Strm;
@@ -76,7 +81,7 @@ impl<St, Assf, Sf, Hauf, E> UpdateListener for StatefulListener<St, Assf, Sf, Ha
 where
     Self: for<'a> AsUpdateStream<'a, StreamErr = E>,
     Sf: FnMut(&mut St) -> StopToken,
-    Hauf: FnMut(&mut St, &mut dyn Iterator<Item = AllowedUpdate>),
+    Hauf: FnMut(&mut St, &mut dyn Iterator<Item = AllowedUpdate>)
 {
     type Err = E;
 

@@ -1,11 +1,11 @@
-use crate::{
-    Result, command::Command, command_enum::CommandEnum, compile_error,
-    fields_parse::impl_parse_args, unzip::Unzip,
-};
-
 use proc_macro2::TokenStream;
 use quote::{quote, quote_spanned};
 use syn::DeriveInput;
+
+use crate::{
+    Result, command::Command, command_enum::CommandEnum, compile_error,
+    fields_parse::impl_parse_args, unzip::Unzip
+};
 
 pub(crate) fn bot_commands_impl(input: DeriveInput) -> Result<TokenStream> {
     let data_enum = get_enum_data(&input)?;
@@ -43,11 +43,14 @@ pub(crate) fn bot_commands_impl(input: DeriveInput) -> Result<TokenStream> {
 }
 
 fn impl_commands(infos: &[Command]) -> proc_macro2::TokenStream {
-    let commands = infos.iter().filter(|command| command.description_is_enabled()).map(|command| {
-        let c = command.get_prefixed_command();
-        let d = command.description().unwrap_or_default();
-        quote! { BotCommand::new(#c,#d) }
-    });
+    let commands = infos
+        .iter()
+        .filter(|command| command.description_is_enabled())
+        .map(|command| {
+            let c = command.get_prefixed_command();
+            let d = command.description().unwrap_or_default();
+            quote! { BotCommand::new(#c,#d) }
+        });
 
     quote! {
         fn bot_commands() -> ::std::vec::Vec<teloxide::types::BotCommand> {
@@ -79,7 +82,7 @@ fn impl_descriptions(infos: &[Command], global: &CommandEnum) -> proc_macro2::To
 
     let global_description = match global.description.as_ref().map(|(d, _)| d) {
         Some(gd) => quote! { .global_description(#gd) },
-        None => quote! {},
+        None => quote! {}
     };
 
     quote! {
@@ -100,10 +103,12 @@ fn impl_descriptions(infos: &[Command], global: &CommandEnum) -> proc_macro2::To
 fn impl_parse(
     infos: &[Command],
     variants_initialization: &[proc_macro2::TokenStream],
-    command_separator: &str,
+    command_separator: &str
 ) -> proc_macro2::TokenStream {
     let matching_values = infos.iter().map(|c| c.get_prefixed_command());
-    let aliases = infos.iter().map(|c| c.get_prefixed_aliases().unwrap_or_default());
+    let aliases = infos
+        .iter()
+        .map(|c| c.get_prefixed_aliases().unwrap_or_default());
 
     quote! {
          fn parse(s: &str, bot_name: &str) -> ::std::result::Result<Self, teloxide::utils::command::ParseError> {
@@ -143,6 +148,6 @@ fn impl_parse(
 fn get_enum_data(input: &DeriveInput) -> Result<&syn::DataEnum> {
     match &input.data {
         syn::Data::Enum(data) => Ok(data),
-        _ => Err(compile_error("`BotCommands` is only allowed for enums")),
+        _ => Err(compile_error("`BotCommands` is only allowed for enums"))
     }
 }

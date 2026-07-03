@@ -5,9 +5,7 @@ use serde::{Deserialize, Serialize};
 ///
 /// [The official docs](https://core.telegram.org/bots/api#userrating).
 #[serde_with::skip_serializing_none]
-#[derive(Clone, Copy, Debug)]
-#[derive(PartialEq, Eq, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct UserRating {
     /// Current level of the user, indicating their reliability when purchasing
@@ -24,7 +22,7 @@ pub struct UserRating {
 
     /// The rating value required to get to the next level; omitted if the
     /// maximum level was reached.
-    pub next_level_rating: Option<u32>,
+    pub next_level_rating: Option<u32>
 }
 
 #[cfg(test)]
@@ -44,10 +42,10 @@ mod tests {
         assert_eq!(
             r,
             UserRating {
-                level: 3,
-                rating: 1250,
+                level:                3,
+                rating:               1250,
                 current_level_rating: 1000,
-                next_level_rating: Some(2000)
+                next_level_rating:    Some(2000)
             }
         );
     }

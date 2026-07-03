@@ -18,7 +18,7 @@ pub enum InputMedia {
     Animation(InputMediaAnimation),
     Audio(InputMediaAudio),
     Document(InputMediaDocument),
-    LivePhoto(InputMediaLivePhoto),
+    LivePhoto(InputMediaLivePhoto)
 }
 
 /// Represents a photo to be sent.
@@ -52,7 +52,7 @@ pub struct InputMediaPhoto {
 
     /// Pass `true` if the photo needs to be covered with a spoiler animation.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
-    pub has_spoiler: bool,
+    pub has_spoiler: bool
 }
 
 impl InputMediaPhoto {
@@ -63,7 +63,7 @@ impl InputMediaPhoto {
             parse_mode: None,
             caption_entities: None,
             show_caption_above_media: false,
-            has_spoiler: false,
+            has_spoiler: false
         }
     }
 
@@ -74,7 +74,7 @@ impl InputMediaPhoto {
 
     pub fn caption<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.caption = Some(val.into());
         self
@@ -87,7 +87,7 @@ impl InputMediaPhoto {
 
     pub fn caption_entities<C>(mut self, val: C) -> Self
     where
-        C: IntoIterator<Item = MessageEntity>,
+        C: IntoIterator<Item = MessageEntity>
     {
         self.caption_entities = Some(val.into_iter().collect());
         self
@@ -167,7 +167,7 @@ pub struct InputMediaVideo {
 
     /// Pass `true` if the video needs to be covered with a spoiler animation.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
-    pub has_spoiler: bool,
+    pub has_spoiler: bool
 }
 
 impl InputMediaVideo {
@@ -185,7 +185,7 @@ impl InputMediaVideo {
             height: None,
             duration: None,
             supports_streaming: None,
-            has_spoiler: false,
+            has_spoiler: false
         }
     }
 
@@ -201,7 +201,7 @@ impl InputMediaVideo {
 
     pub fn caption<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.caption = Some(val.into());
         self
@@ -224,7 +224,7 @@ impl InputMediaVideo {
 
     pub fn caption_entities<C>(mut self, val: C) -> Self
     where
-        C: IntoIterator<Item = MessageEntity>,
+        C: IntoIterator<Item = MessageEntity>
     {
         self.caption_entities = Some(val.into_iter().collect());
         self
@@ -313,7 +313,7 @@ pub struct InputMediaAnimation {
     /// Pass `true` if the animation needs to be covered with a spoiler
     /// animation.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
-    pub has_spoiler: bool,
+    pub has_spoiler: bool
 }
 
 impl InputMediaAnimation {
@@ -328,7 +328,7 @@ impl InputMediaAnimation {
             duration: None,
             caption_entities: None,
             show_caption_above_media: false,
-            has_spoiler: false,
+            has_spoiler: false
         }
     }
 
@@ -344,7 +344,7 @@ impl InputMediaAnimation {
 
     pub fn caption<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.caption = Some(val.into());
         self
@@ -357,7 +357,7 @@ impl InputMediaAnimation {
 
     pub fn caption_entities<C>(mut self, val: C) -> Self
     where
-        C: IntoIterator<Item = MessageEntity>,
+        C: IntoIterator<Item = MessageEntity>
     {
         self.caption_entities = Some(val.into_iter().collect());
         self
@@ -431,7 +431,7 @@ pub struct InputMediaAudio {
     pub performer: Option<String>,
 
     /// Title of the audio.
-    pub title: Option<String>,
+    pub title: Option<String>
 }
 
 impl InputMediaAudio {
@@ -444,7 +444,7 @@ impl InputMediaAudio {
             performer: None,
             title: None,
             duration: None,
-            caption_entities: None,
+            caption_entities: None
         }
     }
 
@@ -460,7 +460,7 @@ impl InputMediaAudio {
 
     pub fn caption<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.caption = Some(val.into());
         self
@@ -473,7 +473,7 @@ impl InputMediaAudio {
 
     pub fn caption_entities<C>(mut self, val: C) -> Self
     where
-        C: IntoIterator<Item = MessageEntity>,
+        C: IntoIterator<Item = MessageEntity>
     {
         self.caption_entities = Some(val.into_iter().collect());
         self
@@ -486,7 +486,7 @@ impl InputMediaAudio {
 
     pub fn performer<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.performer = Some(val.into());
         self
@@ -494,7 +494,7 @@ impl InputMediaAudio {
 
     pub fn title<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.title = Some(val.into());
         self
@@ -536,7 +536,7 @@ pub struct InputMediaDocument {
     /// Disables automatic server-side content type detection for files uploaded
     /// using multipart/form-data. Always true, if the document is sent as part
     /// of an album.
-    pub disable_content_type_detection: Option<bool>,
+    pub disable_content_type_detection: Option<bool>
 }
 
 impl InputMediaDocument {
@@ -547,7 +547,7 @@ impl InputMediaDocument {
             caption: None,
             parse_mode: None,
             disable_content_type_detection: None,
-            caption_entities: None,
+            caption_entities: None
         }
     }
 
@@ -563,7 +563,7 @@ impl InputMediaDocument {
 
     pub fn caption<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.caption = Some(val.into());
         self
@@ -576,7 +576,7 @@ impl InputMediaDocument {
 
     pub fn caption_entities<C>(mut self, val: C) -> Self
     where
-        C: IntoIterator<Item = MessageEntity>,
+        C: IntoIterator<Item = MessageEntity>
     {
         self.caption_entities = Some(val.into_iter().collect());
         self
@@ -602,12 +602,15 @@ pub struct InputMediaSticker {
     pub media: InputFile,
 
     /// Emoji associated with the sticker; only for just uploaded stickers.
-    pub emoji: Option<String>,
+    pub emoji: Option<String>
 }
 
 impl InputMediaSticker {
     pub const fn new(media: InputFile) -> Self {
-        Self { media, emoji: None }
+        Self {
+            media,
+            emoji: None
+        }
     }
 
     pub fn media(mut self, val: InputFile) -> Self {
@@ -617,7 +620,7 @@ impl InputMediaSticker {
 
     pub fn emoji<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.emoji = Some(val.into());
         self
@@ -644,12 +647,16 @@ pub struct InputMediaLocation {
     pub longitude: f64,
 
     /// The radius of uncertainty for the location, measured in meters; 0-1500.
-    pub horizontal_accuracy: Option<f64>,
+    pub horizontal_accuracy: Option<f64>
 }
 
 impl InputMediaLocation {
     pub const fn new(latitude: f64, longitude: f64) -> Self {
-        Self { latitude, longitude, horizontal_accuracy: None }
+        Self {
+            latitude,
+            longitude,
+            horizontal_accuracy: None
+        }
     }
 
     pub const fn horizontal_accuracy(mut self, val: f64) -> Self {
@@ -693,14 +700,14 @@ pub struct InputMediaVenue {
     pub google_place_id: Option<String>,
 
     /// Google Places type of the venue.
-    pub google_place_type: Option<String>,
+    pub google_place_type: Option<String>
 }
 
 impl InputMediaVenue {
     pub fn new<T, A>(latitude: f64, longitude: f64, title: T, address: A) -> Self
     where
         T: Into<String>,
-        A: Into<String>,
+        A: Into<String>
     {
         Self {
             latitude,
@@ -710,7 +717,7 @@ impl InputMediaVenue {
             foursquare_id: None,
             foursquare_type: None,
             google_place_id: None,
-            google_place_type: None,
+            google_place_type: None
         }
     }
 }
@@ -754,7 +761,7 @@ pub struct InputMediaLivePhoto {
     /// Pass `true` if the live photo needs to be covered with a spoiler
     /// animation.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
-    pub has_spoiler: bool,
+    pub has_spoiler: bool
 }
 
 impl InputMediaLivePhoto {
@@ -766,7 +773,7 @@ impl InputMediaLivePhoto {
             parse_mode: None,
             caption_entities: None,
             show_caption_above_media: false,
-            has_spoiler: false,
+            has_spoiler: false
         }
     }
 
@@ -782,7 +789,7 @@ impl InputMediaLivePhoto {
 
     pub fn caption<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.caption = Some(val.into());
         self
@@ -795,7 +802,7 @@ impl InputMediaLivePhoto {
 
     pub fn caption_entities<C>(mut self, val: C) -> Self
     where
-        C: IntoIterator<Item = MessageEntity>,
+        C: IntoIterator<Item = MessageEntity>
     {
         self.caption_entities = Some(val.into_iter().collect());
         self
@@ -818,12 +825,24 @@ impl InputMediaLivePhoto {
 impl From<InputMedia> for InputFile {
     fn from(media: InputMedia) -> InputFile {
         match media {
-            InputMedia::Photo(InputMediaPhoto { media, .. })
-            | InputMedia::Document(InputMediaDocument { media, .. })
-            | InputMedia::Audio(InputMediaAudio { media, .. })
-            | InputMedia::Animation(InputMediaAnimation { media, .. })
-            | InputMedia::Video(InputMediaVideo { media, .. })
-            | InputMedia::LivePhoto(InputMediaLivePhoto { media, .. }) => media,
+            InputMedia::Photo(InputMediaPhoto {
+                media, ..
+            })
+            | InputMedia::Document(InputMediaDocument {
+                media, ..
+            })
+            | InputMedia::Audio(InputMediaAudio {
+                media, ..
+            })
+            | InputMedia::Animation(InputMediaAnimation {
+                media, ..
+            })
+            | InputMedia::Video(InputMediaVideo {
+                media, ..
+            })
+            | InputMedia::LivePhoto(InputMediaLivePhoto {
+                media, ..
+            }) => media
         }
     }
 }
@@ -834,12 +853,34 @@ impl InputMedia {
         use InputMedia::*;
 
         let (media, extra) = match self {
-            Photo(InputMediaPhoto { media, .. }) => (media, None),
-            Document(InputMediaDocument { media, thumbnail, .. })
-            | Audio(InputMediaAudio { media, thumbnail, .. })
-            | Animation(InputMediaAnimation { media, thumbnail, .. })
-            | Video(InputMediaVideo { media, thumbnail, .. }) => (media, thumbnail.as_ref()),
-            LivePhoto(InputMediaLivePhoto { media, photo, .. }) => (media, Some(photo)),
+            Photo(InputMediaPhoto {
+                media, ..
+            }) => (media, None),
+            Document(InputMediaDocument {
+                media,
+                thumbnail,
+                ..
+            })
+            | Audio(InputMediaAudio {
+                media,
+                thumbnail,
+                ..
+            })
+            | Animation(InputMediaAnimation {
+                media,
+                thumbnail,
+                ..
+            })
+            | Video(InputMediaVideo {
+                media,
+                thumbnail,
+                ..
+            }) => (media, thumbnail.as_ref()),
+            LivePhoto(InputMediaLivePhoto {
+                media,
+                photo,
+                ..
+            }) => (media, Some(photo))
         };
 
         iter::once(media).chain(extra)
@@ -850,12 +891,34 @@ impl InputMedia {
         use InputMedia::*;
 
         let (media, extra) = match self {
-            Photo(InputMediaPhoto { media, .. }) => (media, None),
-            Document(InputMediaDocument { media, thumbnail, .. })
-            | Audio(InputMediaAudio { media, thumbnail, .. })
-            | Animation(InputMediaAnimation { media, thumbnail, .. })
-            | Video(InputMediaVideo { media, thumbnail, .. }) => (media, thumbnail.as_mut()),
-            LivePhoto(InputMediaLivePhoto { media, photo, .. }) => (media, Some(photo)),
+            Photo(InputMediaPhoto {
+                media, ..
+            }) => (media, None),
+            Document(InputMediaDocument {
+                media,
+                thumbnail,
+                ..
+            })
+            | Audio(InputMediaAudio {
+                media,
+                thumbnail,
+                ..
+            })
+            | Animation(InputMediaAnimation {
+                media,
+                thumbnail,
+                ..
+            })
+            | Video(InputMediaVideo {
+                media,
+                thumbnail,
+                ..
+            }) => (media, thumbnail.as_mut()),
+            LivePhoto(InputMediaLivePhoto {
+                media,
+                photo,
+                ..
+            }) => (media, Some(photo))
         };
 
         iter::once(media).chain(extra)
@@ -870,12 +933,12 @@ mod tests {
     fn photo_serialize() {
         let expected_json = r#"{"type":"photo","media":"123456"}"#;
         let photo = InputMedia::Photo(InputMediaPhoto {
-            media: InputFile::file_id("123456".into()),
-            caption: None,
-            parse_mode: None,
-            caption_entities: None,
+            media:                    InputFile::file_id("123456".into()),
+            caption:                  None,
+            parse_mode:               None,
+            caption_entities:         None,
             show_caption_above_media: false,
-            has_spoiler: false,
+            has_spoiler:              false
         });
 
         let actual_json = serde_json::to_string(&photo).unwrap();
@@ -886,19 +949,19 @@ mod tests {
     fn video_serialize() {
         let expected_json = r#"{"type":"video","media":"123456"}"#;
         let video = InputMedia::Video(InputMediaVideo {
-            media: InputFile::file_id("123456".into()),
-            thumbnail: None,
-            cover: None,
-            start_timestamp: None,
-            caption: None,
-            parse_mode: None,
-            width: None,
-            height: None,
-            duration: None,
-            supports_streaming: None,
-            caption_entities: None,
+            media:                    InputFile::file_id("123456".into()),
+            thumbnail:                None,
+            cover:                    None,
+            start_timestamp:          None,
+            caption:                  None,
+            parse_mode:               None,
+            width:                    None,
+            height:                   None,
+            duration:                 None,
+            supports_streaming:       None,
+            caption_entities:         None,
             show_caption_above_media: false,
-            has_spoiler: false,
+            has_spoiler:              false
         });
 
         let actual_json = serde_json::to_string(&video).unwrap();
@@ -909,16 +972,16 @@ mod tests {
     fn animation_serialize() {
         let expected_json = r#"{"type":"animation","media":"123456"}"#;
         let video = InputMedia::Animation(InputMediaAnimation {
-            media: InputFile::file_id("123456".into()),
-            thumbnail: None,
-            caption: None,
-            parse_mode: None,
-            width: None,
-            height: None,
-            duration: None,
-            caption_entities: None,
+            media:                    InputFile::file_id("123456".into()),
+            thumbnail:                None,
+            caption:                  None,
+            parse_mode:               None,
+            width:                    None,
+            height:                   None,
+            duration:                 None,
+            caption_entities:         None,
             show_caption_above_media: false,
-            has_spoiler: false,
+            has_spoiler:              false
         });
 
         let actual_json = serde_json::to_string(&video).unwrap();
@@ -929,14 +992,14 @@ mod tests {
     fn audio_serialize() {
         let expected_json = r#"{"type":"audio","media":"123456"}"#;
         let video = InputMedia::Audio(InputMediaAudio {
-            media: InputFile::file_id("123456".into()),
-            thumbnail: None,
-            caption: None,
-            parse_mode: None,
-            duration: None,
-            performer: None,
-            title: None,
-            caption_entities: None,
+            media:            InputFile::file_id("123456".into()),
+            thumbnail:        None,
+            caption:          None,
+            parse_mode:       None,
+            duration:         None,
+            performer:        None,
+            title:            None,
+            caption_entities: None
         });
 
         let actual_json = serde_json::to_string(&video).unwrap();
@@ -952,7 +1015,7 @@ mod tests {
             caption: None,
             parse_mode: None,
             caption_entities: None,
-            disable_content_type_detection: None,
+            disable_content_type_detection: None
         });
 
         let actual_json = serde_json::to_string(&video).unwrap();

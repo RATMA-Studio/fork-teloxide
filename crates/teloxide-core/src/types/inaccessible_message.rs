@@ -8,8 +8,8 @@ use crate::types::{Chat, MessageId};
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct InaccessibleMessage {
     /// Chat the message belonged to
-    pub chat: Chat,
+    pub chat:       Chat,
     /// Unique message identifier inside the chat
     #[serde(flatten)]
-    pub message_id: MessageId,
+    pub message_id: MessageId
 }

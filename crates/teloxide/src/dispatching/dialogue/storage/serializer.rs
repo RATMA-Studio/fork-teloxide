@@ -15,7 +15,7 @@ pub struct Json;
 
 impl<D> Serializer<D> for Json
 where
-    D: Serialize + DeserializeOwned,
+    D: Serialize + DeserializeOwned
 {
     type Error = serde_json::Error;
 
@@ -37,7 +37,7 @@ pub struct Cbor;
 #[cfg(feature = "cbor-serializer")]
 impl<D> Serializer<D> for Cbor
 where
-    D: Serialize + DeserializeOwned,
+    D: Serialize + DeserializeOwned
 {
     type Error = serde_cbor::Error;
 
@@ -70,13 +70,13 @@ pub enum BincodeError {
     #[error(transparent)]
     Encode(#[from] bincode_next::error::EncodeError),
     #[error(transparent)]
-    Decode(#[from] bincode_next::error::DecodeError),
+    Decode(#[from] bincode_next::error::DecodeError)
 }
 
 #[cfg(feature = "bincode-serializer")]
 impl<D> Serializer<D> for Bincode
 where
-    D: Serialize + DeserializeOwned,
+    D: Serialize + DeserializeOwned
 {
     type Error = BincodeError;
 
@@ -87,6 +87,8 @@ where
 
     fn deserialize(&self, data: &[u8]) -> Result<D, Self::Error> {
         let config = bincode_next::config::standard();
-        bincode_next::serde::decode_from_slice(data, config).map(|(d, _)| d).map_err(Into::into)
+        bincode_next::serde::decode_from_slice(data, config)
+            .map(|(d, _)| d)
+            .map_err(Into::into)
     }
 }

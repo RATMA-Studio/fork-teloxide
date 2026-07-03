@@ -15,5 +15,5 @@ pub struct SuggestedPostDeclined {
     pub suggested_post_message: Option<Box<Message>>,
 
     /// Comment with which the post was declined
-    pub comment: Option<String>,
+    pub comment: Option<String>
 }

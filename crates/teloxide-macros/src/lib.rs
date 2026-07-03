@@ -11,10 +11,10 @@ mod rename_rules;
 mod unzip;
 
 pub(crate) use error::{Result, compile_error};
+use proc_macro::TokenStream;
 use syn::{DeriveInput, parse_macro_input};
 
 use crate::bot_commands::bot_commands_impl;
-use proc_macro::TokenStream;
 
 #[proc_macro_derive(BotCommands, attributes(command))]
 pub fn bot_commands_derive(tokens: TokenStream) -> TokenStream {

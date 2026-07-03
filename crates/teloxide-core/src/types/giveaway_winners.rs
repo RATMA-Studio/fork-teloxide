@@ -54,7 +54,7 @@ pub struct GiveawayWinners {
     pub was_refunded: bool,
 
     /// Description of additional giveaway prize
-    pub prize_description: Option<String>,
+    pub prize_description: Option<String>
 }
 
 #[cfg(test)]

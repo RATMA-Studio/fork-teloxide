@@ -6,16 +6,7 @@ use crate::types::ChatBoostSource;
 
 /// Unique identifier of the boost
 #[derive(
-    Default,
-    Clone,
-    Debug,
-    derive_more::Display,
-    PartialEq,
-    Eq,
-    Hash,
-    Serialize,
-    Deserialize,
-    From
+    Default, Clone, Debug, derive_more::Display, PartialEq, Eq, Hash, Serialize, Deserialize, From,
 )]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(transparent)]
@@ -42,7 +33,7 @@ pub struct ChatBoost {
     pub expiration_date: DateTime<Utc>,
 
     /// Source of the added boost.
-    pub source: ChatBoostSource,
+    pub source: ChatBoostSource
 }
 
 #[cfg(test)]

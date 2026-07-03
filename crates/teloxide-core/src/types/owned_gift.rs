@@ -4,23 +4,19 @@ use serde::{Deserialize, Serialize};
 use crate::types::{Gift, MessageEntity, OwnedGiftId, UniqueGift, User};
 
 /// This object describes a gift received and owned by a user or a chat.
-#[derive(Clone, Debug)]
-#[derive(PartialEq, Eq, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type")]
 #[non_exhaustive]
 pub enum OwnedGift {
     Regular(Box<OwnedGiftRegular>),
-    Unique(Box<OwnedGiftUnique>),
+    Unique(Box<OwnedGiftUnique>)
 }
 
 /// Contains the list of gifts received and owned by a user or a chat.
 #[serde_with::skip_serializing_none]
-#[derive(Clone, Debug)]
-#[derive(PartialEq, Eq, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct OwnedGifts {
     /// The total number of gifts owned by the user or the chat
@@ -30,14 +26,12 @@ pub struct OwnedGifts {
     pub gifts: Vec<OwnedGift>,
 
     /// Offset for the next request. If empty, then there are no more results
-    pub next_offset: Option<String>,
+    pub next_offset: Option<String>
 }
 
 /// Describes a regular gift owned by a user or a chat.
 #[serde_with::skip_serializing_none]
-#[derive(Clone, Debug)]
-#[derive(PartialEq, Eq, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct OwnedGiftRegular {
     /// Information about the regular gift
@@ -95,14 +89,12 @@ pub struct OwnedGiftRegular {
 
     /// Unique number reserved for this gift when upgraded. See the
     /// [`UniqueGift::number`] field.
-    pub unique_gift_number: Option<u32>,
+    pub unique_gift_number: Option<u32>
 }
 
 /// Describes a unique gift received and owned by a user or a chat.
 #[serde_with::skip_serializing_none]
-#[derive(Clone, Debug)]
-#[derive(PartialEq, Eq, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct OwnedGiftUnique {
     /// Information about the unique gift
@@ -138,5 +130,5 @@ pub struct OwnedGiftUnique {
     /// is in the past, then the gift can be transferred now
     #[serde(default, with = "crate::types::serde_opt_date_from_unix_timestamp")]
     #[cfg_attr(test, schemars(with = "Option<i64>"))]
-    pub next_transfer_date: Option<DateTime<Utc>>,
+    pub next_transfer_date: Option<DateTime<Utc>>
 }

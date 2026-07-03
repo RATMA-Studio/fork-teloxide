@@ -26,5 +26,5 @@ pub enum DiceEmoji {
 
     /// "🎰" emoji. Values 1-64
     #[serde(rename = "🎰")]
-    SlotMachine,
+    SlotMachine
 }

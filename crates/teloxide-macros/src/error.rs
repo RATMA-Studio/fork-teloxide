@@ -8,7 +8,7 @@ pub(crate) struct Error(TokenStream);
 
 pub(crate) fn compile_error<T>(data: T) -> Error
 where
-    T: ToTokens,
+    T: ToTokens
 {
     Error(quote! { ::std::compile_error! { #data } })
 }

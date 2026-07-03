@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::types::{
     ForceReply, InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, KeyboardMarkup,
-    KeyboardRemove,
+    KeyboardRemove
 };
 
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Serialize, Deserialize, From)]
@@ -14,7 +14,7 @@ pub enum ReplyMarkup {
     InlineKeyboard(InlineKeyboardMarkup),
     Keyboard(KeyboardMarkup),
     KeyboardRemove(KeyboardRemove),
-    ForceReply(ForceReply),
+    ForceReply(ForceReply)
 }
 
 impl ReplyMarkup {
@@ -27,7 +27,7 @@ impl ReplyMarkup {
     pub fn inline_kb<I>(inline_keyboard: I) -> Self
     where
         I: IntoIterator,
-        I::Item: IntoIterator<Item = InlineKeyboardButton>,
+        I::Item: IntoIterator<Item = InlineKeyboardButton>
     {
         Self::InlineKeyboard(InlineKeyboardMarkup::new(inline_keyboard))
     }
@@ -41,7 +41,7 @@ impl ReplyMarkup {
     pub fn keyboard<K>(keyboard: K) -> Self
     where
         K: IntoIterator,
-        K::Item: IntoIterator<Item = KeyboardButton>,
+        K::Item: IntoIterator<Item = KeyboardButton>
     {
         Self::Keyboard(KeyboardMarkup::new(keyboard))
     }

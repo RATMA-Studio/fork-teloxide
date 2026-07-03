@@ -3,9 +3,7 @@ use serde::{Deserialize, Serialize};
 
 /// Describes an inline message to be sent by a user of a Mini App.
 #[serde_with::skip_serializing_none]
-#[derive(Clone, Debug)]
-#[derive(PartialEq, Eq, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct PreparedInlineMessage {
     /// Unique identifier of the prepared message
@@ -15,5 +13,5 @@ pub struct PreparedInlineMessage {
     /// messages can no longer be used
     #[serde(with = "crate::types::serde_date_from_unix_timestamp")]
     #[cfg_attr(test, schemars(with = "i64"))]
-    pub expiration_date: DateTime<Utc>,
+    pub expiration_date: DateTime<Utc>
 }

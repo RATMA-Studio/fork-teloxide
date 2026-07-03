@@ -3,9 +3,7 @@ use reqwest::Url;
 use serde::{Deserialize, Serialize};
 
 /// This object describes the state of a revenue withdrawal operation.
-#[derive(Clone, Debug)]
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type")]
@@ -13,13 +11,11 @@ use serde::{Deserialize, Serialize};
 pub enum RevenueWithdrawalState {
     Pending,
     Succeeded(RevenueWithdrawalStateSucceeded),
-    Failed,
+    Failed
 }
 
 /// The withdrawal succeeded.
-#[derive(Clone, Debug)]
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct RevenueWithdrawalStateSucceeded {
     /// Date the withdrawal was completed in Unix time.
@@ -28,5 +24,5 @@ pub struct RevenueWithdrawalStateSucceeded {
     pub date: DateTime<Utc>,
 
     /// An HTTPS URL that can be used to see transaction details.
-    pub url: Url,
+    pub url: Url
 }

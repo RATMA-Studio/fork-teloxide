@@ -25,5 +25,5 @@ pub struct ForumTopic {
     /// `true`, if the name of the topic wasn't specified explicitly by its
     /// creator and likely needs to be changed by the bot.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
-    pub is_name_implicit: bool,
+    pub is_name_implicit: bool
 }

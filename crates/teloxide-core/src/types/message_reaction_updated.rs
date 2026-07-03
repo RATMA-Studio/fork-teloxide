@@ -31,7 +31,7 @@ pub struct MessageReactionUpdated {
     pub old_reaction: Vec<ReactionType>,
 
     /// New list of reaction types that have been set by the user
-    pub new_reaction: Vec<ReactionType>,
+    pub new_reaction: Vec<ReactionType>
 }
 
 impl MessageReactionUpdated {
@@ -49,16 +49,22 @@ impl MessageReactionUpdated {
 #[derive(Deserialize)]
 struct ActorDe {
     /// The user that changed the reaction, if the user isn't anonymous
-    user: Option<User>,
+    user:       Option<User>,
     /// The chat on behalf of which the reaction was changed, if the user is
     /// anonymous
-    actor_chat: Option<Chat>,
+    actor_chat: Option<Chat>
 }
 
 fn deserialize_actor<'d, D: Deserializer<'d>>(d: D) -> Result<MaybeAnonymousUser, D::Error> {
-    let ActorDe { user, actor_chat } = ActorDe::deserialize(d)?;
+    let ActorDe {
+        user,
+        actor_chat
+    } = ActorDe::deserialize(d)?;
 
-    Ok(actor_chat.map(MaybeAnonymousUser::Chat).or(user.map(MaybeAnonymousUser::User)).unwrap())
+    Ok(actor_chat
+        .map(MaybeAnonymousUser::Chat)
+        .or(user.map(MaybeAnonymousUser::User))
+        .unwrap())
 }
 
 #[cfg(test)]
@@ -93,7 +99,8 @@ mod tests {
             ]
         }
         "#;
-        let message_reaction_update = serde_json::from_str::<MessageReactionUpdated>(data).unwrap();
+        let message_reaction_update =
+            serde_json::from_str::<MessageReactionUpdated>(data).unwrap();
 
         assert!(message_reaction_update.actor.is_user());
     }
@@ -122,7 +129,8 @@ mod tests {
             "new_reaction": []
         }"#;
 
-        let message_reaction_update = serde_json::from_str::<MessageReactionUpdated>(data).unwrap();
+        let message_reaction_update =
+            serde_json::from_str::<MessageReactionUpdated>(data).unwrap();
 
         assert!(message_reaction_update.actor.is_chat())
     }

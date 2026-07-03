@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 pub struct PaidMessagePriceChanged {
     /// The new number of Telegram Stars that must be paid by non-administrator
     /// users of the supergroup chat for each sent message
-    pub paid_message_star_count: u32,
+    pub paid_message_star_count: u32
 }
 
 #[cfg(test)]
@@ -20,7 +20,9 @@ mod tests {
         let data = r#"{"paid_message_star_count": 1234}"#;
         assert_eq!(
             serde_json::from_str::<PaidMessagePriceChanged>(data).unwrap(),
-            PaidMessagePriceChanged { paid_message_star_count: 1234 }
+            PaidMessagePriceChanged {
+                paid_message_star_count: 1234
+            }
         );
     }
 }

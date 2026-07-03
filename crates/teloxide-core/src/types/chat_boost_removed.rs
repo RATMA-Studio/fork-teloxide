@@ -20,7 +20,7 @@ pub struct ChatBoostRemoved {
     pub remove_date: DateTime<Utc>,
 
     /// Source of the removed boost
-    pub source: ChatBoostSource,
+    pub source: ChatBoostSource
 }
 
 #[cfg(test)]

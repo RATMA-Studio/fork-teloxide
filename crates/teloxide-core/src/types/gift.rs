@@ -6,19 +6,17 @@ use crate::types::{Chat, GiftBackground, Sticker};
 /// This object represent a list of gifts.
 ///
 /// [The official docs](https://core.telegram.org/bots/api#gifts).
-#[derive(Clone, Debug)]
-#[derive(PartialEq, Eq, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct Gifts {
     /// The list of gifts
-    pub gifts: Vec<Gift>,
+    pub gifts: Vec<Gift>
 }
 
 /// A unique identifier of the gift.
-#[derive(Clone, Debug, derive_more::Display)]
-#[derive(PartialEq, Eq, Hash)]
-#[derive(Serialize, Deserialize, From)]
+#[derive(
+    Clone, Debug, derive_more::Display, PartialEq, Eq, Hash, Serialize, Deserialize, From,
+)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(transparent)]
 #[from(&'static str, String)]
@@ -28,9 +26,7 @@ pub struct GiftId(pub String);
 ///
 /// [The official docs](https://core.telegram.org/bots/api#gift).
 #[serde_with::skip_serializing_none]
-#[derive(Clone, Debug)]
-#[derive(PartialEq, Eq, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct Gift {
     /// Unique identifier of the gift
@@ -80,7 +76,7 @@ pub struct Gift {
     pub unique_gift_variant_count: Option<u32>,
 
     /// Information about the chat that published the gift
-    pub publisher_chat: Option<Chat>,
+    pub publisher_chat: Option<Chat>
 }
 
 impl Gift {
@@ -93,7 +89,7 @@ impl Gift {
     pub fn limited_count(&self) -> Option<(u32, u32)> {
         match (self.remaining_count, self.total_count) {
             (Some(remaining_count), Some(total_count)) => Some((remaining_count, total_count)),
-            _ => None,
+            _ => None
         }
     }
 }
@@ -104,12 +100,14 @@ mod tests {
 
     #[test]
     fn deser() {
-        let gift_id = S { gift_id: GiftId("id".to_owned()) };
+        let gift_id = S {
+            gift_id: GiftId("id".to_owned())
+        };
         let json = r#"{"gift_id":"id"}"#;
 
         #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
         struct S {
-            gift_id: GiftId,
+            gift_id: GiftId
         }
 
         assert_eq!(serde_json::to_string(&gift_id).unwrap(), json);

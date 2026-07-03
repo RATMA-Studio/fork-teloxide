@@ -19,5 +19,5 @@ pub struct OrderInfo {
     pub email: Option<String>,
 
     /// User's shipping address.
-    pub shipping_address: Option<ShippingAddress>,
+    pub shipping_address: Option<ShippingAddress>
 }

@@ -7,28 +7,28 @@ use crate::{
         AnswerGuestQuery, AnswerInlineQuery, AnswerWebAppQuery, CopyMessage, EditMessageCaption,
         EditMessageCaptionInline, EditMessageChecklist, EditMessageMedia, EditMessageMediaInline,
         EditMessageText, EditMessageTextInline, EditStory, GiftPremiumSubscription, PostStory,
-        SavePreparedInlineMessage, SendAnimation, SendAudio, SendChecklist, SendDocument, SendGift,
-        SendGiftChat, SendLivePhoto, SendMediaGroup, SendMessage, SendPaidMedia, SendPhoto,
-        SendPoll, SendVideo, SendVoice,
+        SavePreparedInlineMessage, SendAnimation, SendAudio, SendChecklist, SendDocument,
+        SendGift, SendGiftChat, SendLivePhoto, SendMediaGroup, SendMessage, SendPaidMedia,
+        SendPhoto, SendPoll, SendVideo, SendVoice
     },
     prelude::Requester,
     requests::{HasPayload, Output, Request},
-    types::*,
+    types::*
 };
 
 /// Default parse mode adaptor, see
 /// [`RequesterExt::parse_mode`](crate::requests::RequesterExt::parse_mode).
 #[derive(Clone, Debug)]
 pub struct DefaultParseMode<B> {
-    bot: B,
-    mode: ParseMode,
+    bot:  B,
+    mode: ParseMode
 }
 
 /// Request returned by [`DefaultParseMode`] methods.
 #[derive(Clone)]
 pub struct DefaultParseModeRequest<R> {
-    req: R,
-    mode: ParseMode,
+    req:  R,
+    mode: ParseMode
 }
 
 impl<B> DefaultParseMode<B> {
@@ -38,7 +38,10 @@ impl<B> DefaultParseMode<B> {
     ///
     /// [`RequesterExt::parse_mode`]: crate::requests::RequesterExt::parse_mode
     pub fn new(bot: B, parse_mode: ParseMode) -> Self {
-        Self { bot, mode: parse_mode }
+        Self {
+            bot,
+            mode: parse_mode
+        }
     }
 
     /// Allows to access the inner bot.
@@ -60,7 +63,7 @@ impl<B> DefaultParseMode<B> {
 impl<R> Request for DefaultParseModeRequest<R>
 where
     R: Request + Clone,
-    R::Payload: VisitParseModes,
+    R::Payload: VisitParseModes
 {
     type Err = R::Err;
     type Send = R::Send;
@@ -68,7 +71,9 @@ where
 
     // Required methods
     fn send(mut self) -> Self::Send {
-        self.req.payload_mut().visit_parse_modes(|mode| _ = mode.get_or_insert(self.mode));
+        self.req
+            .payload_mut()
+            .visit_parse_modes(|mode| _ = mode.get_or_insert(self.mode));
         self.req.send()
     }
 
@@ -80,7 +85,7 @@ where
 
 impl<R> IntoFuture for DefaultParseModeRequest<R>
 where
-    Self: Request,
+    Self: Request
 {
     type Output = Result<Output<Self>, <Self as Request>::Err>;
     type IntoFuture = <Self as Request>::Send;
@@ -92,7 +97,7 @@ where
 
 impl<R> HasPayload for DefaultParseModeRequest<R>
 where
-    R: Request,
+    R: Request
 {
     type Payload = R::Payload;
 
@@ -163,7 +168,7 @@ where
     B::SendMediaGroup: Clone,
     B::GiftPremiumSubscription: Clone,
     B::SendGift: Clone,
-    B::SendGiftChat: Clone,
+    B::SendGiftChat: Clone
 {
     type Err = B::Err;
 
@@ -480,7 +485,7 @@ impl VisitParseModes for SendChecklist {
 
 fn visit_parse_modes_in_inline_query_result(
     result: &mut InlineQueryResult,
-    visitor: &mut impl FnMut(&mut Option<ParseMode>),
+    visitor: &mut impl FnMut(&mut Option<ParseMode>)
 ) {
     use InlineQueryResult::*;
 
@@ -504,27 +509,27 @@ fn visit_parse_modes_in_inline_query_result(
         // Can contain parse mode if `InputMessageContent::Text`
         CachedSticker(r) => match &mut r.input_message_content {
             Some(InputMessageContent::Text(t)) => &mut t.parse_mode,
-            _ => return,
+            _ => return
         },
         Article(r) => match &mut r.input_message_content {
             InputMessageContent::Text(t) => &mut t.parse_mode,
-            _ => return,
+            _ => return
         },
         Contact(r) => match &mut r.input_message_content {
             Some(InputMessageContent::Text(t)) => &mut t.parse_mode,
-            _ => return,
+            _ => return
         },
         Location(r) => match &mut r.input_message_content {
             Some(InputMessageContent::Text(t)) => &mut t.parse_mode,
-            _ => return,
+            _ => return
         },
         Venue(r) => match &mut r.input_message_content {
             Some(InputMessageContent::Text(t)) => &mut t.parse_mode,
-            _ => return,
+            _ => return
         },
 
         // Can't contain `parse_mode` at all
-        Game(_r) => return,
+        Game(_r) => return
     };
 
     visitor(parse_mode);
@@ -532,7 +537,7 @@ fn visit_parse_modes_in_inline_query_result(
 
 fn visit_parse_modes_in_input_media(
     media: &mut InputMedia,
-    visitor: &mut impl FnMut(&mut Option<ParseMode>),
+    visitor: &mut impl FnMut(&mut Option<ParseMode>)
 ) {
     use InputMedia::*;
 
@@ -542,7 +547,7 @@ fn visit_parse_modes_in_input_media(
         Animation(m) => &mut m.parse_mode,
         Audio(m) => &mut m.parse_mode,
         Document(m) => &mut m.parse_mode,
-        LivePhoto(m) => &mut m.parse_mode,
+        LivePhoto(m) => &mut m.parse_mode
     };
 
     visitor(parse_mode);

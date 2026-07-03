@@ -65,13 +65,13 @@ pub struct InlineQueryResultGif {
     pub reply_markup: Option<InlineKeyboardMarkup>,
 
     /// Content of the message to be sent instead of the GIF animation.
-    pub input_message_content: Option<InputMessageContent>,
+    pub input_message_content: Option<InputMessageContent>
 }
 
 impl InlineQueryResultGif {
     pub fn new<S>(id: S, gif_url: reqwest::Url, thumbnail_url: reqwest::Url) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         Self {
             id: id.into(),
@@ -87,13 +87,13 @@ impl InlineQueryResultGif {
             reply_markup: None,
             input_message_content: None,
             caption_entities: None,
-            show_caption_above_media: false,
+            show_caption_above_media: false
         }
     }
 
     pub fn id<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.id = val.into();
         self
@@ -131,7 +131,7 @@ impl InlineQueryResultGif {
 
     pub fn title<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.title = Some(val.into());
         self
@@ -139,7 +139,7 @@ impl InlineQueryResultGif {
 
     pub fn caption<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.caption = Some(val.into());
         self
@@ -153,7 +153,7 @@ impl InlineQueryResultGif {
 
     pub fn caption_entities<C>(mut self, val: C) -> Self
     where
-        C: IntoIterator<Item = MessageEntity>,
+        C: IntoIterator<Item = MessageEntity>
     {
         self.caption_entities = Some(val.into_iter().collect());
         self

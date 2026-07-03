@@ -16,7 +16,7 @@ pub struct ShippingOption {
     pub title: String,
 
     /// List of price portions.
-    pub prices: Vec<LabeledPrice>,
+    pub prices: Vec<LabeledPrice>
 }
 
 impl ShippingOption {
@@ -24,14 +24,18 @@ impl ShippingOption {
     where
         S1: Into<String>,
         S2: Into<String>,
-        P: IntoIterator<Item = LabeledPrice>,
+        P: IntoIterator<Item = LabeledPrice>
     {
-        Self { id: id.into(), title: title.into(), prices: prices.into_iter().collect() }
+        Self {
+            id:     id.into(),
+            title:  title.into(),
+            prices: prices.into_iter().collect()
+        }
     }
 
     pub fn id<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.id = val.into();
         self
@@ -39,7 +43,7 @@ impl ShippingOption {
 
     pub fn title<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.title = val.into();
         self
@@ -47,7 +51,7 @@ impl ShippingOption {
 
     pub fn prices<P>(mut self, val: P) -> Self
     where
-        P: IntoIterator<Item = LabeledPrice>,
+        P: IntoIterator<Item = LabeledPrice>
     {
         self.prices = val.into_iter().collect();
         self
@@ -61,9 +65,12 @@ mod tests {
     #[test]
     fn serialize() {
         let shipping_option = ShippingOption {
-            id: "0".to_string(),
-            title: "Option".to_string(),
-            prices: vec![LabeledPrice { label: "Label".to_string(), amount: 60 }],
+            id:     "0".to_string(),
+            title:  "Option".to_string(),
+            prices: vec![LabeledPrice {
+                label:  "Label".to_string(),
+                amount: 60
+            }]
         };
         let expected = r#"{"id":"0","title":"Option","prices":[{"label":"Label","amount":60}]}"#;
         let actual = serde_json::to_string(&shipping_option).unwrap();

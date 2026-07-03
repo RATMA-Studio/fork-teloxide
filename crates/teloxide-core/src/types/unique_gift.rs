@@ -1,11 +1,10 @@
-use crate::types::{Chat, GiftId, Rgb, Sticker, UniqueGiftColors};
 use serde::{Deserialize, Serialize};
+
+use crate::types::{Chat, GiftId, Rgb, Sticker, UniqueGiftColors};
 
 /// This object describes a unique gift that was upgraded from a regular gift.
 #[serde_with::skip_serializing_none]
-#[derive(Clone, Debug)]
-#[derive(PartialEq, Eq, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct UniqueGift {
     /// Identifier of the regular gift from which the gift was upgraded
@@ -52,14 +51,12 @@ pub struct UniqueGift {
     pub colors: Option<UniqueGiftColors>,
 
     /// Information about the chat that published the gift
-    pub publisher_chat: Option<Chat>,
+    pub publisher_chat: Option<Chat>
 }
 
 /// This object describes the model of a unique gift.
 #[serde_with::skip_serializing_none]
-#[derive(Clone, Debug)]
-#[derive(PartialEq, Eq, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct UniqueGiftModel {
     /// Name of the model
@@ -74,14 +71,12 @@ pub struct UniqueGiftModel {
 
     /// Rarity of the model if it is a crafted model. Currently, can be
     /// `uncommon`, `rare`, `epic`, or `legendary`.
-    pub rarity: Option<String>,
+    pub rarity: Option<String>
 }
 
 /// This object describes the symbol shown on the pattern of a unique gift.
 #[serde_with::skip_serializing_none]
-#[derive(Clone, Debug)]
-#[derive(PartialEq, Eq, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct UniqueGiftSymbol {
     /// Name of the symbol
@@ -92,14 +87,12 @@ pub struct UniqueGiftSymbol {
 
     /// The number of unique gifts that receive this model for every 1000 gifts
     /// upgraded
-    pub rarity_per_mille: u32,
+    pub rarity_per_mille: u32
 }
 
 /// This object describes the backdrop of a unique gift.
 #[serde_with::skip_serializing_none]
-#[derive(Clone, Debug)]
-#[derive(PartialEq, Eq, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct UniqueGiftBackdrop {
     /// Name of the backdrop
@@ -110,14 +103,12 @@ pub struct UniqueGiftBackdrop {
 
     /// The number of unique gifts that receive this backdrop for every 1000
     /// gifts upgraded
-    pub rarity_per_mille: u32,
+    pub rarity_per_mille: u32
 }
 
 /// This object describes the colors of the backdrop of a unique gift.
 #[serde_with::skip_serializing_none]
-#[derive(Clone, Debug)]
-#[derive(PartialEq, Eq, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct UniqueGiftBackdropColors {
     /// The color in the center of the backdrop in RGB format
@@ -130,64 +121,85 @@ pub struct UniqueGiftBackdropColors {
     pub symbol_color: Rgb,
 
     /// The color for the text on the backdrop in RGB format
-    pub text_color: Rgb,
+    pub text_color: Rgb
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-
     use crate::types::{FileMeta, StickerFormatFlags, StickerKind};
 
     #[test]
     fn deserialize() {
         let sticker = Sticker {
-            file: FileMeta {
-                id: "CAACAgIAAxUAAWMwcTidRlq7bai-xUkcHQLa6vgJAALZBwACwRieC1FFIeQlHsPdKQQ".into(),
+            file:             FileMeta {
+                id:        "CAACAgIAAxUAAWMwcTidRlq7bai-xUkcHQLa6vgJAALZBwACwRieC1FFIeQlHsPdKQQ"
+                    .into(),
                 unique_id: "AgAD2QcAAsEYngs".into(),
-                size: 25734,
+                size:      25734
             },
-            width: 463,
-            height: 512,
-            kind: StickerKind::Regular { premium_animation: None },
-            flags: StickerFormatFlags { is_animated: false, is_video: false },
-            thumbnail: None,
-            emoji: None,
-            set_name: None,
-            needs_repainting: false,
+            width:            463,
+            height:           512,
+            kind:             StickerKind::Regular {
+                premium_animation: None
+            },
+            flags:            StickerFormatFlags {
+                is_animated: false,
+                is_video:    false
+            },
+            thumbnail:        None,
+            emoji:            None,
+            set_name:         None,
+            needs_repainting: false
         };
 
         let unique_gift = UniqueGift {
-            gift_id: GiftId("1234".to_owned()),
-            base_name: "name".to_owned(),
-            name: "name".to_owned(),
-            number: 123,
-            model: UniqueGiftModel {
-                name: "name".to_owned(),
-                sticker: sticker.clone(),
+            gift_id:            GiftId("1234".to_owned()),
+            base_name:          "name".to_owned(),
+            name:               "name".to_owned(),
+            number:             123,
+            model:              UniqueGiftModel {
+                name:             "name".to_owned(),
+                sticker:          sticker.clone(),
                 rarity_per_mille: 123,
-                rarity: None,
+                rarity:           None
             },
-            symbol: UniqueGiftSymbol {
-                name: "name".to_owned(),
-                sticker: sticker.clone(),
-                rarity_per_mille: 123,
+            symbol:             UniqueGiftSymbol {
+                name:             "name".to_owned(),
+                sticker:          sticker.clone(),
+                rarity_per_mille: 123
             },
-            backdrop: UniqueGiftBackdrop {
-                name: "name".to_owned(),
-                colors: UniqueGiftBackdropColors {
-                    center_color: Rgb { r: 255, g: 255, b: 0 },
-                    edge_color: Rgb { r: 255, g: 255, b: 0 },
-                    symbol_color: Rgb { r: 255, g: 255, b: 0 },
-                    text_color: Rgb { r: 255, g: 255, b: 0 },
+            backdrop:           UniqueGiftBackdrop {
+                name:             "name".to_owned(),
+                colors:           UniqueGiftBackdropColors {
+                    center_color: Rgb {
+                        r: 255,
+                        g: 255,
+                        b: 0
+                    },
+                    edge_color:   Rgb {
+                        r: 255,
+                        g: 255,
+                        b: 0
+                    },
+                    symbol_color: Rgb {
+                        r: 255,
+                        g: 255,
+                        b: 0
+                    },
+                    text_color:   Rgb {
+                        r: 255,
+                        g: 255,
+                        b: 0
+                    }
                 },
-                rarity_per_mille: 123,
+                rarity_per_mille: 123
             },
-            is_premium: false,
-            is_burned: false,
+            is_premium:         false,
+            is_burned:          false,
             is_from_blockchain: false,
-            colors: None,
-            publisher_chat: None,
+            colors:             None,
+            publisher_chat:     None
         };
 
         let unique_gift_json = r#"{
@@ -239,6 +251,9 @@ mod tests {
             }
         }"#;
 
-        assert_eq!(serde_json::from_str::<UniqueGift>(unique_gift_json).unwrap(), unique_gift);
+        assert_eq!(
+            serde_json::from_str::<UniqueGift>(unique_gift_json).unwrap(),
+            unique_gift
+        );
     }
 }

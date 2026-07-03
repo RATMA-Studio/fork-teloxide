@@ -18,20 +18,23 @@ pub struct LabeledPrice {
     ///
     /// [currency]: https://core.telegram.org/bots/payments#supported-currencies
     /// [`currencies.json`]: https://core.telegram.org/bots/payments/currencies.json
-    pub amount: u32,
+    pub amount: u32
 }
 
 impl LabeledPrice {
     pub fn new<S>(label: S, amount: u32) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
-        Self { label: label.into(), amount }
+        Self {
+            label: label.into(),
+            amount
+        }
     }
 
     pub fn label<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.label = val.into();
         self
@@ -50,7 +53,10 @@ mod tests {
 
     #[test]
     fn serialize() {
-        let labeled_price = LabeledPrice { label: "Label".to_string(), amount: 60 };
+        let labeled_price = LabeledPrice {
+            label:  "Label".to_string(),
+            amount: 60
+        };
         let expected = r#"{"label":"Label","amount":60}"#;
         let actual = serde_json::to_string(&labeled_price).unwrap();
         assert_eq!(actual, expected);

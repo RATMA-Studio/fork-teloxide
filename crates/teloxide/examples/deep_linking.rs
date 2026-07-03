@@ -15,7 +15,7 @@ use teloxide::{
     dispatching::dialogue::{self, InMemStorage},
     macros::BotCommands,
     prelude::*,
-    types::{Me, ParseMode},
+    types::{Me, ParseMode}
 };
 
 pub type MyDialogue = Dialogue<State, InMemStorage<State>>;
@@ -26,14 +26,14 @@ pub enum State {
     #[default]
     Start,
     WriteToSomeone {
-        id: ChatId,
-    },
+        id: ChatId
+    }
 }
 
 #[derive(BotCommands, Clone, Debug)]
 #[command(rename_rule = "lowercase")]
 pub enum StartCommand {
-    Start(String),
+    Start(String)
 }
 
 #[tokio::main]
@@ -47,11 +47,15 @@ async fn main() {
         .branch(
             Update::filter_message()
                 .filter_command::<StartCommand>()
-                .branch(case![StartCommand::Start(start)].endpoint(start)),
+                .branch(case![StartCommand::Start(start)].endpoint(start))
         )
         .branch(
-            Update::filter_message()
-                .branch(case![State::WriteToSomeone { id }].endpoint(send_message)),
+            Update::filter_message().branch(
+                case![State::WriteToSomeone {
+                    id
+                }]
+                .endpoint(send_message)
+            )
         );
 
     Dispatcher::builder(bot, handler)
@@ -67,7 +71,7 @@ pub async fn start(
     dialogue: MyDialogue,
     msg: Message,
     start: String, // Available from `case![StartCommand::Start(start)]`
-    me: Me,
+    me: Me
 ) -> HandlerResult {
     if start.is_empty() {
         // This means that it is just a regular link like https://t.me/some_bot, or a /start command
@@ -77,7 +81,7 @@ pub async fn start(
                 "Hello!\n\nThis link allows anyone to message you secretly: {}?start={}",
                 me.tme_url(),
                 msg.chat.id
-            ),
+            )
         )
         .await?;
         dialogue.exit().await?;
@@ -87,7 +91,11 @@ pub async fn start(
         match start.parse::<i64>() {
             Ok(id) => {
                 bot.send_message(msg.chat.id, "Send your message:").await?;
-                dialogue.update(State::WriteToSomeone { id: ChatId(id) }).await?;
+                dialogue
+                    .update(State::WriteToSomeone {
+                        id: ChatId(id)
+                    })
+                    .await?;
             }
             Err(_) => {
                 bot.send_message(msg.chat.id, "Bad link!").await?;
@@ -103,7 +111,7 @@ pub async fn send_message(
     id: ChatId, // Available from `State::WriteToSomeone`
     msg: Message,
     dialogue: MyDialogue,
-    me: Me,
+    me: Me
 ) -> HandlerResult {
     match msg.text() {
         Some(text) => {
@@ -121,17 +129,21 @@ pub async fn send_message(
                         "Message sent!\n\nYour link is: {}?start={}",
                         me.tme_url(),
                         msg.chat.id
-                    ),
+                    )
                 )
                 .await?;
             } else {
-                bot.send_message(msg.chat.id, "Error sending message! Maybe user blocked the bot?")
-                    .await?;
+                bot.send_message(
+                    msg.chat.id,
+                    "Error sending message! Maybe user blocked the bot?"
+                )
+                .await?;
             }
             dialogue.exit().await?;
         }
         None => {
-            bot.send_message(msg.chat.id, "This bot can send only text.").await?;
+            bot.send_message(msg.chat.id, "This bot can send only text.")
+                .await?;
         }
     };
     Ok(())

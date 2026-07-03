@@ -32,9 +32,9 @@ pub enum MenuButton {
         /// link.
         ///
         /// [`AnswerWebAppQuery`]: crate::payloads::AnswerWebAppQuery
-        web_app: WebAppInfo,
+        web_app: WebAppInfo
     },
 
     /// Describes that no specific value for the menu button was set.
-    Default,
+    Default
 }

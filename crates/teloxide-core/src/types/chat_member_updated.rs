@@ -38,7 +38,7 @@ pub struct ChatMemberUpdated {
 
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     /// True, if the user joined the chat via a chat folder invite link
-    pub via_chat_folder_invite_link: bool,
+    pub via_chat_folder_invite_link: bool
 }
 
 impl ChatMemberUpdated {
@@ -58,7 +58,7 @@ impl ChatMemberUpdated {
         [
             &self.from,
             /* ignore `old_chat_member.user`, it should always be the same as the new one */
-            &self.new_chat_member.user,
+            &self.new_chat_member.user
         ]
         .into_iter()
     }

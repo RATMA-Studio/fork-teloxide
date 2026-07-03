@@ -10,5 +10,5 @@ pub struct BusinessLocation {
     pub address: String,
 
     /// Location of the business.
-    pub location: Option<Location>,
+    pub location: Option<Location>
 }

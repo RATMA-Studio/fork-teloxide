@@ -10,7 +10,7 @@ use crate::types::InputFile;
 #[non_exhaustive]
 pub enum InputStoryContent {
     Photo(InputStoryContentPhoto),
-    Video(InputStoryContentVideo),
+    Video(InputStoryContentVideo)
 }
 
 impl InputStoryContent {
@@ -20,7 +20,7 @@ impl InputStoryContent {
     pub(crate) fn files(&self) -> impl Iterator<Item = &InputFile> {
         let f = match self {
             InputStoryContent::Photo(p) => &p.photo,
-            InputStoryContent::Video(v) => &v.video,
+            InputStoryContent::Video(v) => &v.video
         };
         std::iter::once(f)
     }
@@ -30,7 +30,7 @@ impl InputStoryContent {
     pub(crate) fn files_mut(&mut self) -> impl Iterator<Item = &mut InputFile> {
         let f = match self {
             InputStoryContent::Photo(p) => &mut p.photo,
-            InputStoryContent::Video(v) => &mut v.video,
+            InputStoryContent::Video(v) => &mut v.video
         };
         std::iter::once(f)
     }
@@ -47,7 +47,7 @@ pub struct InputStoryContentPhoto {
     /// <file_attach_name>. [More information on Sending Files »]
     ///
     /// [More information on Sending Files »]: https://core.telegram.org/bots/api#sending-files
-    pub photo: InputFile,
+    pub photo: InputFile
 }
 
 /// Describes a unique gift received and owned by a user or a chat.
@@ -74,5 +74,5 @@ pub struct InputStoryContentVideo {
     pub cover_frame_timestamp: Option<f64>,
 
     /// Pass _true_ if the video has no sound
-    pub is_animation: Option<bool>,
+    pub is_animation: Option<bool>
 }

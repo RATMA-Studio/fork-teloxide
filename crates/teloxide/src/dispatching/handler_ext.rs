@@ -1,14 +1,15 @@
+use std::fmt::Debug;
+
+use dptree::Handler;
+
 use crate::{
     dispatching::{
         DpHandlerDescription,
-        dialogue::{GetChatId, Storage},
+        dialogue::{GetChatId, Storage}
     },
     types::{Me, Message},
-    utils::command::BotCommands,
+    utils::command::BotCommands
 };
-use dptree::Handler;
-
-use std::fmt::Debug;
 
 /// Extension methods for working with `dptree` handlers.
 pub trait HandlerExt<Output> {
@@ -69,18 +70,18 @@ pub trait HandlerExt<Output> {
 
 impl<Output> HandlerExt<Output> for Handler<'static, Output, DpHandlerDescription>
 where
-    Output: Send + Sync + 'static,
+    Output: Send + Sync + 'static
 {
     fn filter_command<C>(self) -> Self
     where
-        C: BotCommands + Send + Sync + 'static,
+        C: BotCommands + Send + Sync + 'static
     {
         self.chain(filter_command::<C, Output>())
     }
 
     fn filter_mention_command<C>(self) -> Self
     where
-        C: BotCommands + Send + Sync + 'static,
+        C: BotCommands + Send + Sync + 'static
     {
         self.chain(filter_mention_command::<C, Output>())
     }
@@ -90,7 +91,7 @@ where
         S: Storage<D> + ?Sized + Send + Sync + 'static,
         <S as Storage<D>>::Error: Debug + Send,
         D: Default + Clone + Send + Sync + 'static,
-        Upd: GetChatId + Clone + Send + Sync + 'static,
+        Upd: GetChatId + Clone + Send + Sync + 'static
     {
         self.chain(super::dialogue::enter::<Upd, S, D, Output>())
     }
@@ -110,11 +111,14 @@ where
 pub fn filter_command<C, Output>() -> Handler<'static, Output, DpHandlerDescription>
 where
     C: BotCommands + Send + Sync + 'static,
-    Output: Send + Sync + 'static,
+    Output: Send + Sync + 'static
 {
     dptree::filter_map(move |message: Message, me: Me| {
         let bot_name = me.user.username.expect("Bots must have a username");
-        message.text().or_else(|| message.caption()).and_then(|text| C::parse(text, &bot_name).ok())
+        message
+            .text()
+            .or_else(|| message.caption())
+            .and_then(|text| C::parse(text, &bot_name).ok())
     })
 }
 
@@ -134,7 +138,7 @@ where
 pub fn filter_mention_command<C, Output>() -> Handler<'static, Output, DpHandlerDescription>
 where
     C: BotCommands + Send + Sync + 'static,
-    Output: Send + Sync + 'static,
+    Output: Send + Sync + 'static
 {
     dptree::filter_map(move |message: Message, me: Me| {
         let bot_name = me.user.username.expect("Bots must have a username");
@@ -143,8 +147,9 @@ where
         let command = text_or_caption.and_then(|text| C::parse(text, &bot_name).ok());
         // If the parsing succeeds with a bot_name,
         // but fails without - there is a mention
-        let is_username_required =
-            text_or_caption.and_then(|text| C::parse(text, "").ok()).is_none();
+        let is_username_required = text_or_caption
+            .and_then(|text| C::parse(text, "").ok())
+            .is_none();
 
         if !is_username_required {
             return None;
@@ -156,27 +161,28 @@ where
 #[cfg(test)]
 #[cfg(feature = "macros")]
 mod tests {
-    use crate::{self as teloxide, dispatching::UpdateFilterExt, utils::command::BotCommands};
     use chrono::DateTime;
     use dptree::deps;
     use teloxide_core::types::{
-        Chat, ChatId, ChatKind, ChatPrivate, LinkPreviewOptions, Me, MediaKind, MediaText, Message,
-        MessageCommon, MessageId, MessageKind, Update, UpdateId, UpdateKind, User, UserId,
+        Chat, ChatId, ChatKind, ChatPrivate, LinkPreviewOptions, Me, MediaKind, MediaText,
+        Message, MessageCommon, MessageId, MessageKind, Update, UpdateId, UpdateKind, User,
+        UserId
     };
 
     use super::HandlerExt;
+    use crate::{self as teloxide, dispatching::UpdateFilterExt, utils::command::BotCommands};
 
     #[derive(BotCommands, Clone)]
     #[command(rename_rule = "lowercase")]
     enum Cmd {
-        Test,
+        Test
     }
 
     fn make_update(text: String) -> Update {
         let timestamp = 1_569_518_829;
         let date = DateTime::from_timestamp(timestamp, 0).unwrap();
         Update {
-            id: UpdateId(326_170_274),
+            id:   UpdateId(326_170_274),
             kind: UpdateKind::Message(Message {
                 via_bot: None,
                 id: MessageId(5042),
@@ -199,12 +205,12 @@ mod tests {
                 sender_business_bot: None,
                 date,
                 chat: Chat {
-                    id: ChatId(109_998_024),
+                    id:   ChatId(109_998_024),
                     kind: ChatKind::Private(ChatPrivate {
-                        username: Some(String::from("Laster")),
+                        username:   Some(String::from("Laster")),
                         first_name: Some(String::from("laster_alex")),
-                        last_name: None,
-                    }),
+                        last_name:  None
+                    })
                 },
                 direct_messages_topic: None,
                 kind: MessageKind::Common(MessageCommon {
@@ -218,12 +224,12 @@ mod tests {
                         text,
                         entities: vec![],
                         link_preview_options: Some(LinkPreviewOptions {
-                            is_disabled: true,
-                            url: None,
+                            is_disabled:        true,
+                            url:                None,
                             prefer_small_media: false,
                             prefer_large_media: false,
-                            show_above_text: false,
-                        }),
+                            show_above_text:    false
+                        })
                     }),
                     reply_markup: None,
                     author_signature: None,
@@ -235,9 +241,9 @@ mod tests {
                     reply_to_story: None,
                     sender_boost_count: None,
                     is_from_offline: false,
-                    business_connection_id: None,
-                }),
-            }),
+                    business_connection_id: None
+                })
+            })
         }
     }
 
@@ -256,8 +262,11 @@ mod tests {
 
     #[tokio::test]
     async fn test_filter_command() {
-        let h = dptree::entry()
-            .branch(Update::filter_message().filter_command::<Cmd>().endpoint(|| async {}));
+        let h = dptree::entry().branch(
+            Update::filter_message()
+                .filter_command::<Cmd>()
+                .endpoint(|| async {})
+        );
         let me = make_me();
 
         let update = make_update("/test@".to_owned() + me.username());
@@ -275,8 +284,11 @@ mod tests {
 
     #[tokio::test]
     async fn test_filter_mention_command() {
-        let h = dptree::entry()
-            .branch(Update::filter_message().filter_mention_command::<Cmd>().endpoint(|| async {}));
+        let h = dptree::entry().branch(
+            Update::filter_message()
+                .filter_mention_command::<Cmd>()
+                .endpoint(|| async {})
+        );
         let me = make_me();
 
         let update = make_update("/test@".to_owned() + me.username());

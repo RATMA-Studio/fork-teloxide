@@ -1,6 +1,6 @@
-use crate::types::MessageId;
-
 use serde::{Deserialize, Serialize};
+
+use crate::types::MessageId;
 
 /// Reply thread identifier.
 ///
@@ -39,16 +39,7 @@ use serde::{Deserialize, Serialize};
 ///
 /// [`thread_id`]: crate::types::Message::thread_id
 #[derive(
-    Clone,
-    Copy,
-    Debug,
-    Default,
-    derive_more::Display,
-    PartialEq,
-    Eq,
-    Hash,
-    Serialize,
-    Deserialize
+    Clone, Copy, Debug, Default, derive_more::Display, PartialEq, Eq, Hash, Serialize, Deserialize,
 )]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(from = "ThreadIdRaw", into = "ThreadIdRaw")]

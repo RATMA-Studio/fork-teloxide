@@ -4,20 +4,16 @@ use serde::{Deserialize, Serialize};
 use crate::types::{TelegramTransactionId, TransactionPartner};
 
 /// Contains a list of Telegram Star transactions.
-#[derive(Clone, Debug)]
-#[derive(PartialEq, Eq, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct StarTransactions {
     /// The list of transactions.
-    pub transactions: Vec<StarTransaction>,
+    pub transactions: Vec<StarTransaction>
 }
 
 /// Describes a Telegram Star transaction.
 #[serde_with::skip_serializing_none]
-#[derive(Clone, Debug)]
-#[derive(PartialEq, Eq, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct StarTransaction {
     /// Unique identifier of the transaction. Coincides with the identifer of
@@ -47,5 +43,5 @@ pub struct StarTransaction {
 
     /// Receiver of an outgoing transaction (e.g., a user for a purchase refund,
     /// Fragment for a withdrawal). Only for outgoing transactions.
-    pub receiver: Option<TransactionPartner>,
+    pub receiver: Option<TransactionPartner>
 }

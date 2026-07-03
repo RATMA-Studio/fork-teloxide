@@ -1,11 +1,12 @@
-use crate::types::{Gift, MessageEntity};
 use derive_more::From;
 use serde::{Deserialize, Serialize};
 
+use crate::types::{Gift, MessageEntity};
+
 /// A unique incremental identifier of the owned gift provided by TBA.
-#[derive(Clone, Debug, derive_more::Display)]
-#[derive(PartialEq, Eq, Hash)]
-#[derive(Serialize, Deserialize, From)]
+#[derive(
+    Clone, Debug, derive_more::Display, PartialEq, Eq, Hash, Serialize, Deserialize, From,
+)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(transparent)]
 #[from(&'static str, String)]
@@ -53,7 +54,7 @@ pub struct GiftInfo {
 
     /// Unique number reserved for this gift when upgraded. See the
     /// [`UniqueGift::number`](crate::types::UniqueGift::number) field.
-    pub unique_gift_number: Option<u32>,
+    pub unique_gift_number: Option<u32>
 }
 
 #[cfg(test)]

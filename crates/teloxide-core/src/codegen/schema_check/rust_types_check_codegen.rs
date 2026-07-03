@@ -1,68 +1,110 @@
-use crate::codegen::schema_check::api_schema::*;
 use derive_more::derive::Display;
 use serde_json::{Map, Value};
 
+use crate::codegen::schema_check::api_schema::*;
+
 // In schemars if an object references itself its named `#`
 fn convert_reference_string(reference: String, initial_object_name: String) -> String {
-    reference.trim_start_matches("#/$defs/").replace("#", &initial_object_name).to_string()
+    reference
+        .trim_start_matches("#/$defs/")
+        .replace("#", &initial_object_name)
+        .to_string()
 }
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Exception {
-    RemoveObjectFromChecking { object: String },
-    RenameCheckingObject { api_object_name: String, rust_object_name: String },
-    IgnoreFieldName { field_name: String },
-    IgnoreObjectField { object: String, field_name: String },
-    ExpandTelegramReference { reference: String },
-    IgnoreFieldRequiredName { field_name: String },
-    IgnoreFieldRequiredObjectName { object: String, field_name: String },
+    RemoveObjectFromChecking {
+        object: String
+    },
+    RenameCheckingObject {
+        api_object_name:  String,
+        rust_object_name: String
+    },
+    IgnoreFieldName {
+        field_name: String
+    },
+    IgnoreObjectField {
+        object:     String,
+        field_name: String
+    },
+    ExpandTelegramReference {
+        reference: String
+    },
+    IgnoreFieldRequiredName {
+        field_name: String
+    },
+    IgnoreFieldRequiredObjectName {
+        object:     String,
+        field_name: String
+    }
 }
 
 impl Exception {
     fn to_eval_rust(&self) -> String {
         match self {
-            Self::RemoveObjectFromChecking { object } => {
-                format!("Exception::RemoveObjectFromChecking {{ object: \"{object}\".to_owned() }}")
+            Self::RemoveObjectFromChecking {
+                object
+            } => {
+                format!(
+                    "Exception::RemoveObjectFromChecking {{ object: \"{object}\".to_owned() }}"
+                )
             }
-            Self::RenameCheckingObject { api_object_name, rust_object_name } => {
+            Self::RenameCheckingObject {
+                api_object_name,
+                rust_object_name
+            } => {
                 format!(
                     "Exception::RenameCheckingObject {{ api_object_name: \
                      \"{api_object_name}\".to_owned(), rust_object_name: \
                      \"{rust_object_name}\".to_owned() }}"
                 )
             }
-            Self::IgnoreFieldName { field_name } => {
+            Self::IgnoreFieldName {
+                field_name
+            } => {
                 format!("Exception::IgnoreFieldName {{ field_name: \"{field_name}\".to_owned() }}")
             }
-            Self::IgnoreObjectField { object, field_name } => format!(
+            Self::IgnoreObjectField {
+                object,
+                field_name
+            } => format!(
                 "Exception::IgnoreObjectField {{ object: \"{object}\".to_owned(), field_name: \
                  \"{field_name}\".to_owned() }}"
             ),
-            Self::ExpandTelegramReference { reference } => {
+            Self::ExpandTelegramReference {
+                reference
+            } => {
                 format!(
                     "Exception::ExpandTelegramReference {{ reference: \"{reference}\".to_owned() \
                      }}"
                 )
             }
-            Self::IgnoreFieldRequiredName { field_name } => format!(
+            Self::IgnoreFieldRequiredName {
+                field_name
+            } => format!(
                 "Exception::IgnoreFieldRequiredName {{ field_name: \"{field_name}\".to_owned() }}"
             ),
-            Self::IgnoreFieldRequiredObjectName { object, field_name } => format!(
+            Self::IgnoreFieldRequiredObjectName {
+                object,
+                field_name
+            } => format!(
                 "Exception::IgnoreFieldRequiredObjectName {{ object: \"{object}\".to_owned(), \
                  field_name: \"{field_name}\".to_owned() }}"
-            ),
+            )
         }
     }
 }
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Exceptions {
-    exceptions: Vec<Exception>,
+    exceptions: Vec<Exception>
 }
 
 impl Exceptions {
     pub fn new(exceptions: Vec<Exception>) -> Self {
-        Self { exceptions }
+        Self {
+            exceptions
+        }
     }
 
     fn extend(&mut self, exceptions: Vec<Exception>) {
@@ -70,32 +112,53 @@ impl Exceptions {
     }
 
     fn is_field_ignored(&self, field_name: String) -> bool {
-        self.exceptions.contains(&Exception::IgnoreFieldName { field_name })
+        self.exceptions.contains(&Exception::IgnoreFieldName {
+            field_name
+        })
     }
 
     fn is_object_field_ignored(&self, object: String, field_name: String) -> bool {
-        self.exceptions.contains(&Exception::IgnoreObjectField { object, field_name })
+        self.exceptions.contains(&Exception::IgnoreObjectField {
+            object,
+            field_name
+        })
     }
 
     fn is_object_field_required_ignored(&self, object: String, field_name: String) -> bool {
-        self.exceptions.contains(&Exception::IgnoreFieldRequiredObjectName { object, field_name })
+        self.exceptions
+            .contains(&Exception::IgnoreFieldRequiredObjectName {
+                object,
+                field_name
+            })
     }
 
     fn is_field_required_ignored(&self, field_name: String) -> bool {
-        self.exceptions.contains(&Exception::IgnoreFieldRequiredName { field_name })
+        self.exceptions
+            .contains(&Exception::IgnoreFieldRequiredName {
+                field_name
+            })
     }
 
     fn is_expand_reference(&self, reference: String) -> bool {
-        self.exceptions.contains(&Exception::ExpandTelegramReference { reference })
+        self.exceptions
+            .contains(&Exception::ExpandTelegramReference {
+                reference
+            })
     }
 
     fn is_object_removed_from_checking(&self, object: String) -> bool {
-        self.exceptions.contains(&Exception::RemoveObjectFromChecking { object })
+        self.exceptions
+            .contains(&Exception::RemoveObjectFromChecking {
+                object
+            })
     }
 
     fn get_renamed(&self, api_object: String) -> Option<String> {
         for exception in self.exceptions.iter() {
-            if let Exception::RenameCheckingObject { api_object_name, rust_object_name } = exception
+            if let Exception::RenameCheckingObject {
+                api_object_name,
+                rust_object_name
+            } = exception
                 && *api_object_name == api_object
             {
                 return Some(rust_object_name.to_owned());
@@ -119,26 +182,31 @@ pub enum ApiCheckError {
          `{actual_type}`"
     )]
     FieldReferenceTyDoesNotMatch {
-        object: String,
-        field: String,
-        raw_type: String,
-        actual_type: String,
+        object:      String,
+        field:       String,
+        raw_type:    String,
+        actual_type: String
     },
     #[display(
         "`{field}` field of object `{object}` is of type [{raw_type:?}], but the actual type is \
          [{actual_type:?}]"
     )]
-    FieldTyDoesNotMatch { object: String, field: String, raw_type: Kind, actual_type: Kind },
+    FieldTyDoesNotMatch {
+        object:      String,
+        field:       String,
+        raw_type:    Kind,
+        actual_type: Kind
+    },
     #[display(
         "`{field}` field of object `{object}` has enum {raw_enum:?}, but the actual enum is \
          {actual_enum:?}"
     )]
     EnumsDoNotMatch {
-        object: String,
-        field: String,
-        raw_enum: Vec<String>,
-        actual_enum: Vec<String>,
-    },
+        object:      String,
+        field:       String,
+        raw_enum:    Vec<String>,
+        actual_enum: Vec<String>
+    }
 }
 
 // Helper enum for parsing
@@ -152,7 +220,7 @@ pub enum Type {
     Object,
     Null,
     Reference { reference: String },
-    Unknown,
+    Unknown
 }
 
 // Returns if the value is required and its type
@@ -172,9 +240,19 @@ fn get_type(prop: &Value, initial_object_name: String) -> (bool, Kind) {
 
             // This is most likely Recipient with string/int type
             if types_array.len() == 2
-                && types_array.contains(&Kind::Reference { reference: "ChatId".to_owned() })
+                && types_array.contains(&Kind::Reference {
+                    reference: "ChatId".to_owned()
+                })
                 && types_array.iter().any(|x| {
-                    matches!(x, Kind::String { default: _, min_len: _, max_len: _, enumeration: _ })
+                    matches!(
+                        x,
+                        Kind::String {
+                            default:     _,
+                            min_len:     _,
+                            max_len:     _,
+                            enumeration: _
+                        }
+                    )
                 })
             {
                 // Further checking is pointless, we already know its Recipient
@@ -183,31 +261,35 @@ fn get_type(prop: &Value, initial_object_name: String) -> (bool, Kind) {
                     Kind::AnyOf {
                         any_of: vec![
                             KindWrapper(Kind::Integer {
-                                default: None,
-                                min: None,
-                                max: None,
-                                enumeration: vec![],
+                                default:     None,
+                                min:         None,
+                                max:         None,
+                                enumeration: vec![]
                             }),
                             KindWrapper(Kind::String {
-                                default: None,
-                                min_len: None,
-                                max_len: None,
-                                enumeration: vec![],
+                                default:     None,
+                                min_len:     None,
+                                max_len:     None,
+                                enumeration: vec![]
                             }),
-                        ],
-                    },
+                        ]
+                    }
                 );
             } else {
                 for variant_type in types_array.clone() {
                     match variant_type {
                         Kind::Null => required = false,
-                        Kind::Reference { reference } => {
-                            prop_type = Some(Type::Reference { reference })
+                        Kind::Reference {
+                            reference
+                        } => {
+                            prop_type = Some(Type::Reference {
+                                reference
+                            })
                         }
                         unreachable_type => unreachable!(
                             "Object `{initial_object_name}`: Nothing else should be in anyOf, the \
                              type is {unreachable_type:?}, all types are: {types_array:?}"
-                        ),
+                        )
                     }
                 }
             }
@@ -216,7 +298,7 @@ fn get_type(prop: &Value, initial_object_name: String) -> (bool, Kind) {
         if let Some(s) = r.as_str() {
             required = true;
             prop_type = Some(Type::Reference {
-                reference: convert_reference_string(s.to_owned(), initial_object_name.clone()),
+                reference: convert_reference_string(s.to_owned(), initial_object_name.clone())
             });
         }
     } else if let Some(ty) = prop.get("type") {
@@ -254,8 +336,12 @@ fn get_type(prop: &Value, initial_object_name: String) -> (bool, Kind) {
                 }
 
                 // Saves all string enum variants to check later
-                if let Kind::String { default: _, min_len: _, max_len: _, enumeration } =
-                    variant_type
+                if let Kind::String {
+                    default: _,
+                    min_len: _,
+                    max_len: _,
+                    enumeration
+                } = variant_type
                 {
                     string_enumeration.extend(enumeration);
                 }
@@ -265,8 +351,12 @@ fn get_type(prop: &Value, initial_object_name: String) -> (bool, Kind) {
                 panic!("Object `{initial_object_name}`: oneOf variants has no type");
             }
 
-            if let Some(Kind::String { default: _, min_len: _, max_len: _, enumeration }) =
-                &mut all_variant_type
+            if let Some(Kind::String {
+                default: _,
+                min_len: _,
+                max_len: _,
+                enumeration
+            }) = &mut all_variant_type
             {
                 *enumeration = string_enumeration
             }
@@ -289,7 +379,7 @@ fn get_type(prop: &Value, initial_object_name: String) -> (bool, Kind) {
                 enumeration
                     .iter()
                     .map(|x| x.as_str().expect("enum variant is not a string").to_owned())
-                    .collect::<Vec<String>>(),
+                    .collect::<Vec<String>>()
             );
         } else if let Some(one_variant) = prop.get("const").and_then(|x| x.as_str()) {
             string_enumeration.push(one_variant.to_owned());
@@ -297,26 +387,38 @@ fn get_type(prop: &Value, initial_object_name: String) -> (bool, Kind) {
     }
 
     let prop_kind = match (prop_type, item_kind) {
-        (Some(Type::Integer), None) => {
-            Kind::Integer { default: None, min: None, max: None, enumeration: vec![] }
-        }
+        (Some(Type::Integer), None) => Kind::Integer {
+            default:     None,
+            min:         None,
+            max:         None,
+            enumeration: vec![]
+        },
         (Some(Type::String), None) => Kind::String {
-            default: None,
-            min_len: None,
-            max_len: None,
-            enumeration: string_enumeration,
+            default:     None,
+            min_len:     None,
+            max_len:     None,
+            enumeration: string_enumeration
         },
         (Some(Type::Number), None) => Kind::Float,
         (Some(Type::Null), None) => Kind::Null,
-        (Some(Type::Boolean), None) => Kind::Bool { default: None },
-        (Some(Type::Reference { reference }), None) => Kind::Reference { reference },
-        (Some(Type::Array), Some(array_type)) => {
-            Kind::Array { array: Box::new(KindWrapper(array_type)) }
-        }
+        (Some(Type::Boolean), None) => Kind::Bool {
+            default: None
+        },
+        (
+            Some(Type::Reference {
+                reference
+            }),
+            None
+        ) => Kind::Reference {
+            reference
+        },
+        (Some(Type::Array), Some(array_type)) => Kind::Array {
+            array: Box::new(KindWrapper(array_type))
+        },
         (prop_type, item_kind) => unreachable!(
             "Object `{initial_object_name}`: Any other doesn't make sense. Prop type: \
              {prop_type:?}; Item kind: {item_kind:?}"
-        ),
+        )
     };
 
     (required, prop_kind)
@@ -331,7 +433,7 @@ fn parse_type(val: &Value) -> Type {
         Some("array") => Type::Array,
         Some("object") => Type::Object,
         Some("null") => Type::Null,
-        _ => Type::Unknown,
+        _ => Type::Unknown
     }
 }
 
@@ -343,9 +445,10 @@ fn extract_fields_from_references_array(
     references: &Value,
     initial_object_name: String,
     most_fields_are_optional: bool,
-    all_fields_are_optional: bool, // The difference between them is that if code detects that some
+    all_fields_are_optional: bool, /* The difference between them is that if code detects that
+                                    * some */
     // field exists in all references, all_fields_are_optional will still make them optional
-    exceptions: &Exceptions,
+    exceptions: &Exceptions
 ) -> Vec<Property> {
     let mut fields = vec![];
 
@@ -357,7 +460,7 @@ fn extract_fields_from_references_array(
                 references,
                 initial_object_name.clone(),
                 false,
-                exceptions,
+                exceptions
             );
             fields.extend(x);
             continue;
@@ -370,7 +473,7 @@ fn extract_fields_from_references_array(
                 references,
                 initial_object_name.clone(),
                 false,
-                exceptions,
+                exceptions
             ));
             continue;
         }
@@ -381,7 +484,10 @@ fn extract_fields_from_references_array(
 
         let (required, field_type) = get_type(&value, initial_object_name.clone());
 
-        if let Kind::Reference { reference } = field_type {
+        if let Kind::Reference {
+            reference
+        } = field_type
+        {
             let reference_object = references.get(reference).unwrap();
 
             fields.extend(get_fields_of_rust_object(
@@ -390,7 +496,7 @@ fn extract_fields_from_references_array(
                 references,
                 initial_object_name.clone(),
                 !required,
-                exceptions,
+                exceptions
             ));
         } else {
             continue;
@@ -427,7 +533,7 @@ fn expand_reference(
     references: &Value,
     reference: String,
     field_name: String,
-    initial_object_name: String,
+    initial_object_name: String
 ) -> Option<Kind> {
     let reference_object = references
         .get(&reference)
@@ -456,7 +562,7 @@ fn extract_fields_from_properties_object(
     references: &Value,
     initial_object_name: String,
     all_fields_are_optional: bool,
-    exceptions: &Exceptions,
+    exceptions: &Exceptions
 ) -> Vec<Property> {
     let mut fields = vec![];
 
@@ -464,7 +570,10 @@ fn extract_fields_from_properties_object(
         let (required, mut kind) = get_type(prop, initial_object_name.clone());
 
         // Here we flatten the types like ChatId and others
-        if let Kind::Reference { ref reference } = kind {
+        if let Kind::Reference {
+            ref reference
+        } = kind
+        {
             // If its a reference that isnt in official types, its probably a wrapper for a
             // type
             if (!official_types.contains(reference)
@@ -474,34 +583,40 @@ fn extract_fields_from_properties_object(
                     references,
                     reference.to_owned(),
                     name.to_owned(),
-                    initial_object_name.clone(),
+                    initial_object_name.clone()
                 )
             {
                 kind = reference_kind
             }
-        } else if let Kind::Array { ref array } = kind
-            && let Kind::Reference { ref reference } = array.0
+        } else if let Kind::Array {
+            ref array
+        } = kind
+            && let Kind::Reference {
+                ref reference
+            } = array.0
             && (!official_types.contains(reference)
                 || exceptions.is_expand_reference(reference.to_owned()))
             && let Some(reference_kind) = expand_reference(
                 references,
                 reference.to_owned(),
                 name.to_owned(),
-                initial_object_name.clone(),
+                initial_object_name.clone()
             )
         {
-            kind = Kind::Array { array: Box::new(KindWrapper(reference_kind)) }
+            kind = Kind::Array {
+                array: Box::new(KindWrapper(reference_kind))
+            }
         }
         fields.push(Property {
-            name: name.to_owned(),
+            name:        name.to_owned(),
             description: prop
                 .get("description")
                 .unwrap_or(&Value::String(String::new()))
                 .as_str()
                 .unwrap_or("")
                 .to_owned(),
-            required: required && !all_fields_are_optional,
-            kind: KindWrapper(kind),
+            required:    required && !all_fields_are_optional,
+            kind:        KindWrapper(kind)
         });
     }
 
@@ -525,13 +640,17 @@ fn get_fields_of_rust_object(
     references: &Value,
     initial_object_name: String,
     all_fields_are_optional: bool,
-    exceptions: &Exceptions,
+    exceptions: &Exceptions
 ) -> Vec<Property> {
     let mut fields = vec![];
     let empty_array = Value::Array(vec![]);
     let empty_obj = Value::Null;
 
-    if let Some(props) = rust_object.get("properties").unwrap_or(&empty_obj).as_object() {
+    if let Some(props) = rust_object
+        .get("properties")
+        .unwrap_or(&empty_obj)
+        .as_object()
+    {
         extend_fields(
             &mut fields,
             extract_fields_from_properties_object(
@@ -540,8 +659,8 @@ fn get_fields_of_rust_object(
                 references,
                 initial_object_name.clone(),
                 all_fields_are_optional,
-                exceptions,
-            ),
+                exceptions
+            )
         );
     }
 
@@ -555,8 +674,8 @@ fn get_fields_of_rust_object(
                 initial_object_name.clone(),
                 true,
                 all_fields_are_optional,
-                exceptions,
-            ),
+                exceptions
+            )
         );
     }
 
@@ -570,14 +689,17 @@ fn get_fields_of_rust_object(
                 initial_object_name.clone(),
                 true,
                 all_fields_are_optional,
-                exceptions,
-            ),
+                exceptions
+            )
         );
     }
 
     if let Some(ref_string) = rust_object.get("$ref").unwrap_or(&empty_obj).as_str() {
         let reference_object = references
-            .get(convert_reference_string(ref_string.to_owned(), initial_object_name.clone()))
+            .get(convert_reference_string(
+                ref_string.to_owned(),
+                initial_object_name.clone()
+            ))
             .unwrap();
         extend_fields(
             &mut fields,
@@ -587,8 +709,8 @@ fn get_fields_of_rust_object(
                 references,
                 initial_object_name.clone(),
                 all_fields_are_optional,
-                exceptions,
-            ),
+                exceptions
+            )
         );
     }
 
@@ -600,37 +722,57 @@ fn check_struct_kind(
     api_kind: &Kind,
     field_name: String,
     object_name: String,
-    errors: &mut Vec<ApiCheckError>,
+    errors: &mut Vec<ApiCheckError>
 ) {
     // Basic check so that if one field is Bool, but is supposed to be an Integer it
     // is caught
     if std::mem::discriminant(rust_kind) != std::mem::discriminant(api_kind) {
         errors.push(ApiCheckError::FieldTyDoesNotMatch {
-            object: object_name,
-            field: field_name,
-            raw_type: rust_kind.clone(),
-            actual_type: api_kind.clone(),
+            object:      object_name,
+            field:       field_name,
+            raw_type:    rust_kind.clone(),
+            actual_type: api_kind.clone()
         });
     } else if let (
-        Kind::Reference { reference: rust_reference },
-        Kind::Reference { reference: api_reference },
+        Kind::Reference {
+            reference: rust_reference
+        },
+        Kind::Reference {
+            reference: api_reference
+        }
     ) = (rust_kind, api_kind)
     {
         if rust_reference != api_reference {
             errors.push(ApiCheckError::FieldReferenceTyDoesNotMatch {
-                object: object_name,
-                field: field_name,
-                raw_type: rust_reference.to_owned(),
-                actual_type: api_reference.to_owned(),
+                object:      object_name,
+                field:       field_name,
+                raw_type:    rust_reference.to_owned(),
+                actual_type: api_reference.to_owned()
             });
         }
-    } else if let (Kind::Array { array: rust_array }, Kind::Array { array: api_array }) =
-        (rust_kind, api_kind)
+    } else if let (
+        Kind::Array {
+            array: rust_array
+        },
+        Kind::Array {
+            array: api_array
+        }
+    ) = (rust_kind, api_kind)
     {
         check_struct_kind(&rust_array.0, &api_array.0, field_name, object_name, errors);
     } else if let (
-        Kind::String { default: _, min_len: _, max_len: _, enumeration: mut rust_enum },
-        Kind::String { default: _, min_len: _, max_len: _, enumeration: mut api_enum },
+        Kind::String {
+            default: _,
+            min_len: _,
+            max_len: _,
+            enumeration: mut rust_enum
+        },
+        Kind::String {
+            default: _,
+            min_len: _,
+            max_len: _,
+            enumeration: mut api_enum
+        }
     ) = (rust_kind.clone(), api_kind.clone())
     {
         // We check only if the existing enums are all good, if any one of these is
@@ -640,10 +782,10 @@ fn check_struct_kind(
             api_enum.sort();
             if rust_enum != api_enum {
                 errors.push(ApiCheckError::EnumsDoNotMatch {
-                    object: object_name,
-                    field: field_name,
-                    raw_enum: rust_enum.to_vec(),
-                    actual_enum: api_enum.to_vec(),
+                    object:      object_name,
+                    field:       field_name,
+                    raw_enum:    rust_enum.to_vec(),
+                    actual_enum: api_enum.to_vec()
                 });
             }
         }
@@ -656,7 +798,7 @@ fn check_struct_field(
     field_name: String,
     object_name: String,
     errors: &mut Vec<ApiCheckError>,
-    exceptions: &Exceptions,
+    exceptions: &Exceptions
 ) {
     if exceptions.is_field_ignored(field_name.clone())
         || exceptions.is_object_field_ignored(object_name.clone(), field_name.clone())
@@ -667,7 +809,13 @@ fn check_struct_field(
     let rust_kind = rust_field.kind.0.clone();
     let api_kind = api_field.kind.0.clone();
 
-    check_struct_kind(&rust_kind, &api_kind, field_name.clone(), object_name.clone(), errors);
+    check_struct_kind(
+        &rust_kind,
+        &api_kind,
+        field_name.clone(),
+        object_name.clone(),
+        errors
+    );
 
     if exceptions.is_field_required_ignored(field_name.clone())
         || exceptions.is_object_field_required_ignored(object_name.clone(), field_name.clone())
@@ -676,13 +824,22 @@ fn check_struct_field(
     }
 
     // We have a lot skip_serializing_if for bools
-    if !matches!(rust_kind, Kind::Bool { default: _ }) {
+    if !matches!(
+        rust_kind,
+        Kind::Bool {
+            default: _
+        }
+    ) {
         if rust_field.required && !api_field.required {
-            errors
-                .push(ApiCheckError::FieldIsNotRequired { object: object_name, field: field_name });
+            errors.push(ApiCheckError::FieldIsNotRequired {
+                object: object_name,
+                field:  field_name
+            });
         } else if !rust_field.required && api_field.required {
-            errors
-                .push(ApiCheckError::FieldIsNotOptional { object: object_name, field: field_name });
+            errors.push(ApiCheckError::FieldIsNotOptional {
+                object: object_name,
+                field:  field_name
+            });
         }
     }
 }
@@ -692,15 +849,25 @@ fn get_fields_of_api_object(api_schema: ApiSchema, api_object: Object) -> Vec<Pr
     let mut fields = vec![];
 
     match api_object.data.clone() {
-        ObjectData::Properties { properties } => fields.extend(properties),
-        ObjectData::AnyOf { any_of } => {
+        ObjectData::Properties {
+            properties
+        } => fields.extend(properties),
+        ObjectData::AnyOf {
+            any_of
+        } => {
             let mut reference_fields_arrays = vec![];
 
             // First, we convert an array of references into an array of their fields
             for value in any_of {
-                if let Kind::Reference { reference } = value.0 {
-                    let reference_object =
-                        api_schema.objects.iter().find(|x| x.name == reference).unwrap();
+                if let Kind::Reference {
+                    reference
+                } = value.0
+                {
+                    let reference_object = api_schema
+                        .objects
+                        .iter()
+                        .find(|x| x.name == reference)
+                        .unwrap();
                     let reference_fields =
                         get_fields_of_api_object(api_schema.clone(), reference_object.clone());
 
@@ -744,13 +911,21 @@ pub fn check_object(
     rust_object: schemars::Schema,
     api_object_name: String,
     errors: &mut Vec<ApiCheckError>,
-    exceptions: &Exceptions,
+    exceptions: &Exceptions
 ) {
     let official_types: Vec<String> = api_schema.objects.iter().map(|x| x.name.clone()).collect();
-    let initial_object_name = rust_object.get("title").unwrap().as_str().unwrap().to_owned();
+    let initial_object_name = rust_object
+        .get("title")
+        .unwrap()
+        .as_str()
+        .unwrap()
+        .to_owned();
 
     let api_objects = api_schema.objects.clone();
-    let api_object = api_objects.iter().find(|x| x.name == api_object_name).unwrap();
+    let api_object = api_objects
+        .iter()
+        .find(|x| x.name == api_object_name)
+        .unwrap();
 
     let empty_object = Value::Object(serde_json::Map::new());
     let references = rust_object.get("$defs").unwrap_or(&empty_object);
@@ -761,7 +936,7 @@ pub fn check_object(
         references,
         initial_object_name.clone(),
         false,
-        exceptions,
+        exceptions
     );
 
     let api_fields = get_fields_of_api_object(api_schema, api_object.clone());
@@ -774,7 +949,7 @@ pub fn check_object(
                 api_field.name.clone(),
                 initial_object_name.clone(),
                 errors,
-                exceptions,
+                exceptions
             );
         } else if !exceptions.is_field_ignored(api_field.name.clone())
             && !exceptions
@@ -782,7 +957,7 @@ pub fn check_object(
         {
             errors.push(ApiCheckError::FieldDoesNotExist {
                 object: initial_object_name.clone(),
-                field: api_field.name.clone(),
+                field:  api_field.name.clone()
             });
         }
     }
@@ -790,12 +965,13 @@ pub fn check_object(
 
 #[cfg(test)]
 mod tests {
+    use schemars::schema_for;
+
     use super::*;
     use crate::{
         codegen::{ensure_file_contents, project_root, reformat},
-        types::Message,
+        types::Message
     };
-    use schemars::schema_for;
 
     // Purely for manual testing
     #[test]
@@ -804,88 +980,100 @@ mod tests {
 
         // Fields that are usually problematic are better to skip completely
         let exceptions = Exceptions::new(vec![
-            Exception::ExpandTelegramReference { reference: "InputFile".to_owned() },
-            Exception::IgnoreObjectField {
-                object: "ChatMember".to_owned(),
-                field_name: "status".to_owned(),
+            Exception::ExpandTelegramReference {
+                reference: "InputFile".to_owned()
             },
             Exception::IgnoreObjectField {
-                object: "MessageReactionUpdated".to_owned(),
-                field_name: "user".to_owned(),
+                object:     "ChatMember".to_owned(),
+                field_name: "status".to_owned()
             },
             Exception::IgnoreObjectField {
-                object: "MessageReactionUpdated".to_owned(),
-                field_name: "actor_chat".to_owned(),
+                object:     "MessageReactionUpdated".to_owned(),
+                field_name: "user".to_owned()
             },
             Exception::IgnoreObjectField {
-                object: "PollAnswer".to_owned(),
-                field_name: "user".to_owned(),
+                object:     "MessageReactionUpdated".to_owned(),
+                field_name: "actor_chat".to_owned()
             },
             Exception::IgnoreObjectField {
-                object: "PollAnswer".to_owned(),
-                field_name: "voter_chat".to_owned(),
+                object:     "PollAnswer".to_owned(),
+                field_name: "user".to_owned()
             },
             Exception::IgnoreObjectField {
-                object: "InaccessibleMessage".to_owned(),
-                field_name: "date".to_owned(),
+                object:     "PollAnswer".to_owned(),
+                field_name: "voter_chat".to_owned()
             },
             Exception::IgnoreObjectField {
-                object: "User".to_owned(),
-                field_name: "supports_inline_queries".to_owned(),
+                object:     "InaccessibleMessage".to_owned(),
+                field_name: "date".to_owned()
             },
             Exception::IgnoreObjectField {
-                object: "User".to_owned(),
-                field_name: "has_main_web_app".to_owned(),
+                object:     "User".to_owned(),
+                field_name: "supports_inline_queries".to_owned()
             },
             Exception::IgnoreObjectField {
-                object: "User".to_owned(),
-                field_name: "can_connect_to_business".to_owned(),
+                object:     "User".to_owned(),
+                field_name: "has_main_web_app".to_owned()
             },
             Exception::IgnoreObjectField {
-                object: "User".to_owned(),
-                field_name: "can_read_all_group_messages".to_owned(),
+                object:     "User".to_owned(),
+                field_name: "can_connect_to_business".to_owned()
             },
             Exception::IgnoreObjectField {
-                object: "User".to_owned(),
-                field_name: "can_join_groups".to_owned(),
+                object:     "User".to_owned(),
+                field_name: "can_read_all_group_messages".to_owned()
+            },
+            Exception::IgnoreObjectField {
+                object:     "User".to_owned(),
+                field_name: "can_join_groups".to_owned()
             },
             Exception::IgnoreFieldRequiredObjectName {
-                object: "File".to_owned(),
-                field_name: "file_path".to_owned(),
+                object:     "File".to_owned(),
+                field_name: "file_path".to_owned()
             },
             Exception::IgnoreFieldRequiredObjectName {
-                object: "InputSticker".to_owned(),
-                field_name: "keywords".to_owned(),
+                object:     "InputSticker".to_owned(),
+                field_name: "keywords".to_owned()
             },
             Exception::IgnoreFieldRequiredObjectName {
-                object: "TextQuote".to_owned(),
-                field_name: "entities".to_owned(),
+                object:     "TextQuote".to_owned(),
+                field_name: "entities".to_owned()
             },
             Exception::IgnoreFieldRequiredObjectName {
-                object: "KeyboardMarkup".to_owned(),
-                field_name: "input_field_placeholder".to_owned(),
+                object:     "KeyboardMarkup".to_owned(),
+                field_name: "input_field_placeholder".to_owned()
             },
             Exception::IgnoreFieldRequiredObjectName {
-                object: "KeyboardButtonRequestUsers".to_owned(),
-                field_name: "max_quantity".to_owned(),
+                object:     "KeyboardButtonRequestUsers".to_owned(),
+                field_name: "max_quantity".to_owned()
             },
             Exception::IgnoreFieldRequiredObjectName {
-                object: "SuccessfulPayment".to_owned(),
-                field_name: "order_info".to_owned(),
+                object:     "SuccessfulPayment".to_owned(),
+                field_name: "order_info".to_owned()
             },
             Exception::IgnoreFieldRequiredObjectName {
-                object: "PreCheckoutQuery".to_owned(),
-                field_name: "order_info".to_owned(),
+                object:     "PreCheckoutQuery".to_owned(),
+                field_name: "order_info".to_owned()
             },
             Exception::IgnoreFieldRequiredObjectName {
-                object: "MaybeInaccessibleMessage".to_owned(),
-                field_name: "date".to_owned(),
+                object:     "MaybeInaccessibleMessage".to_owned(),
+                field_name: "date".to_owned()
             },
-            Exception::IgnoreFieldRequiredName { field_name: "file_size".to_owned() },
-            Exception::IgnoreFieldName { field_name: "source".to_owned() },
-            Exception::IgnoreFieldName { field_name: "sticker_type".to_owned() },
-            Exception::IgnoreFieldName { field_name: "transaction_type".to_owned() },
-            Exception::IgnoreFieldName { field_name: "type".to_owned() },
+            Exception::IgnoreFieldRequiredName {
+                field_name: "file_size".to_owned()
+            },
+            Exception::IgnoreFieldName {
+                field_name: "source".to_owned()
+            },
+            Exception::IgnoreFieldName {
+                field_name: "sticker_type".to_owned()
+            },
+            Exception::IgnoreFieldName {
+                field_name: "transaction_type".to_owned()
+            },
+            Exception::IgnoreFieldName {
+                field_name: "type".to_owned()
+            },
         ]);
 
         let mut errors = vec![];
@@ -895,7 +1083,7 @@ mod tests {
             schema_for!(Message),
             "Message".to_owned(),
             &mut errors,
-            &exceptions,
+            &exceptions
         );
 
         if !errors.is_empty() {
@@ -919,49 +1107,59 @@ mod tests {
         // Fields that are usually problematic are better to skip completely
         let mut exceptions = Exceptions::new(vec![
             // The `type` fields is usually a serde tag, and its messy
-            Exception::IgnoreFieldName { field_name: "type".to_owned() },
-            Exception::IgnoreFieldName { field_name: "transaction_type".to_owned() },
-            Exception::IgnoreFieldName { field_name: "sticker_type".to_owned() },
-            Exception::IgnoreFieldName { field_name: "source".to_owned() },
+            Exception::IgnoreFieldName {
+                field_name: "type".to_owned()
+            },
+            Exception::IgnoreFieldName {
+                field_name: "transaction_type".to_owned()
+            },
+            Exception::IgnoreFieldName {
+                field_name: "sticker_type".to_owned()
+            },
+            Exception::IgnoreFieldName {
+                field_name: "source".to_owned()
+            },
         ]);
 
         // Fields that usually have something different with Option<>
         exceptions.extend(vec![
             // file_size has a fallback
-            Exception::IgnoreFieldRequiredName { field_name: "file_size".to_owned() },
+            Exception::IgnoreFieldRequiredName {
+                field_name: "file_size".to_owned()
+            },
             // It doesn't exist in InaccessibleMessage because its always 0
             Exception::IgnoreFieldRequiredObjectName {
-                object: "MaybeInaccessibleMessage".to_owned(),
-                field_name: "date".to_owned(),
+                object:     "MaybeInaccessibleMessage".to_owned(),
+                field_name: "date".to_owned()
             },
             // They have a default
             Exception::IgnoreFieldRequiredObjectName {
-                object: "PreCheckoutQuery".to_owned(),
-                field_name: "order_info".to_owned(),
+                object:     "PreCheckoutQuery".to_owned(),
+                field_name: "order_info".to_owned()
             },
             Exception::IgnoreFieldRequiredObjectName {
-                object: "SuccessfulPayment".to_owned(),
-                field_name: "order_info".to_owned(),
+                object:     "SuccessfulPayment".to_owned(),
+                field_name: "order_info".to_owned()
             },
             Exception::IgnoreFieldRequiredObjectName {
-                object: "KeyboardButtonRequestUsers".to_owned(),
-                field_name: "max_quantity".to_owned(),
+                object:     "KeyboardButtonRequestUsers".to_owned(),
+                field_name: "max_quantity".to_owned()
             },
             Exception::IgnoreFieldRequiredObjectName {
-                object: "KeyboardMarkup".to_owned(),
-                field_name: "input_field_placeholder".to_owned(),
+                object:     "KeyboardMarkup".to_owned(),
+                field_name: "input_field_placeholder".to_owned()
             },
             Exception::IgnoreFieldRequiredObjectName {
-                object: "TextQuote".to_owned(),
-                field_name: "entities".to_owned(),
+                object:     "TextQuote".to_owned(),
+                field_name: "entities".to_owned()
             },
             Exception::IgnoreFieldRequiredObjectName {
-                object: "InputSticker".to_owned(),
-                field_name: "keywords".to_owned(),
+                object:     "InputSticker".to_owned(),
+                field_name: "keywords".to_owned()
             },
             Exception::IgnoreFieldRequiredObjectName {
-                object: "File".to_owned(),
-                field_name: "file_path".to_owned(),
+                object:     "File".to_owned(),
+                field_name: "file_path".to_owned()
             },
         ]);
 
@@ -969,177 +1167,226 @@ mod tests {
         exceptions.extend(vec![
             // `User` has a separation with `Me`
             Exception::IgnoreObjectField {
-                object: "User".to_owned(),
-                field_name: "can_join_groups".to_owned(),
+                object:     "User".to_owned(),
+                field_name: "can_join_groups".to_owned()
             },
             Exception::IgnoreObjectField {
-                object: "User".to_owned(),
-                field_name: "can_read_all_group_messages".to_owned(),
+                object:     "User".to_owned(),
+                field_name: "can_read_all_group_messages".to_owned()
             },
             Exception::IgnoreObjectField {
-                object: "User".to_owned(),
-                field_name: "can_connect_to_business".to_owned(),
+                object:     "User".to_owned(),
+                field_name: "can_connect_to_business".to_owned()
             },
             Exception::IgnoreObjectField {
-                object: "User".to_owned(),
-                field_name: "has_main_web_app".to_owned(),
+                object:     "User".to_owned(),
+                field_name: "has_main_web_app".to_owned()
             },
             Exception::IgnoreObjectField {
-                object: "User".to_owned(),
-                field_name: "supports_inline_queries".to_owned(),
+                object:     "User".to_owned(),
+                field_name: "supports_inline_queries".to_owned()
             },
             // Date is always 0, so we omit it
             Exception::IgnoreObjectField {
-                object: "InaccessibleMessage".to_owned(),
-                field_name: "date".to_owned(),
+                object:     "InaccessibleMessage".to_owned(),
+                field_name: "date".to_owned()
             },
             // It has custom deser
             Exception::IgnoreObjectField {
-                object: "PollAnswer".to_owned(),
-                field_name: "voter_chat".to_owned(),
+                object:     "PollAnswer".to_owned(),
+                field_name: "voter_chat".to_owned()
             },
             Exception::IgnoreObjectField {
-                object: "PollAnswer".to_owned(),
-                field_name: "user".to_owned(),
+                object:     "PollAnswer".to_owned(),
+                field_name: "user".to_owned()
             },
             // Also a custom deser
             Exception::IgnoreObjectField {
-                object: "MessageReactionUpdated".to_owned(),
-                field_name: "actor_chat".to_owned(),
+                object:     "MessageReactionUpdated".to_owned(),
+                field_name: "actor_chat".to_owned()
             },
             Exception::IgnoreObjectField {
-                object: "MessageReactionUpdated".to_owned(),
-                field_name: "user".to_owned(),
+                object:     "MessageReactionUpdated".to_owned(),
+                field_name: "user".to_owned()
             },
             // Its a tag
             Exception::IgnoreObjectField {
-                object: "ChatMember".to_owned(),
-                field_name: "status".to_owned(),
+                object:     "ChatMember".to_owned(),
+                field_name: "status".to_owned()
             },
             // Bot API 9.3: `last_resale_star_count` was replaced by
             // `last_resale_currency` + `last_resale_amount`. The check schema
             // (`custom_v2.json`) is still at 9.2 and expects the old field.
             Exception::IgnoreObjectField {
-                object: "UniqueGiftInfo".to_owned(),
-                field_name: "last_resale_star_count".to_owned(),
+                object:     "UniqueGiftInfo".to_owned(),
+                field_name: "last_resale_star_count".to_owned()
             },
             // Bot API 9.3: `origin` enum gained `gifted_upgrade` and `offer`
             // variants; the check schema still has the 9.2 set of three values.
             Exception::IgnoreObjectField {
-                object: "UniqueGiftInfo".to_owned(),
-                field_name: "origin".to_owned(),
+                object:     "UniqueGiftInfo".to_owned(),
+                field_name: "origin".to_owned()
             },
         ]);
 
         // Some TBA types exist, but don't actually do anything
-        exceptions
-            .extend(vec![Exception::ExpandTelegramReference { reference: "InputFile".to_owned() }]);
+        exceptions.extend(vec![Exception::ExpandTelegramReference {
+            reference: "InputFile".to_owned()
+        }]);
 
         // These are exceptions that apply to codegen
         let mut objects_exceptions = Exceptions::new(vec![
             // Update has custom serialization, and it probably won't be wrong any time soon
-            Exception::RemoveObjectFromChecking { object: "Update".to_owned() },
+            Exception::RemoveObjectFromChecking {
+                object: "Update".to_owned()
+            },
             // They are in a single struct
-            Exception::RemoveObjectFromChecking { object: "MessageOriginUser".to_owned() },
-            Exception::RemoveObjectFromChecking { object: "MessageOriginHiddenUser".to_owned() },
-            Exception::RemoveObjectFromChecking { object: "MessageOriginChat".to_owned() },
-            Exception::RemoveObjectFromChecking { object: "MessageOriginChannel".to_owned() },
+            Exception::RemoveObjectFromChecking {
+                object: "MessageOriginUser".to_owned()
+            },
+            Exception::RemoveObjectFromChecking {
+                object: "MessageOriginHiddenUser".to_owned()
+            },
+            Exception::RemoveObjectFromChecking {
+                object: "MessageOriginChat".to_owned()
+            },
+            Exception::RemoveObjectFromChecking {
+                object: "MessageOriginChannel".to_owned()
+            },
             // They are checked in ChatMember
-            Exception::RemoveObjectFromChecking { object: "ChatMemberOwner".to_owned() },
-            Exception::RemoveObjectFromChecking { object: "ChatMemberAdministrator".to_owned() },
-            Exception::RemoveObjectFromChecking { object: "ChatMemberMember".to_owned() },
-            Exception::RemoveObjectFromChecking { object: "ChatMemberRestricted".to_owned() },
-            Exception::RemoveObjectFromChecking { object: "ChatMemberLeft".to_owned() },
-            Exception::RemoveObjectFromChecking { object: "ChatMemberBanned".to_owned() },
+            Exception::RemoveObjectFromChecking {
+                object: "ChatMemberOwner".to_owned()
+            },
+            Exception::RemoveObjectFromChecking {
+                object: "ChatMemberAdministrator".to_owned()
+            },
+            Exception::RemoveObjectFromChecking {
+                object: "ChatMemberMember".to_owned()
+            },
+            Exception::RemoveObjectFromChecking {
+                object: "ChatMemberRestricted".to_owned()
+            },
+            Exception::RemoveObjectFromChecking {
+                object: "ChatMemberLeft".to_owned()
+            },
+            Exception::RemoveObjectFromChecking {
+                object: "ChatMemberBanned".to_owned()
+            },
             // They are a part of ReactionType
-            Exception::RemoveObjectFromChecking { object: "ReactionTypeEmoji".to_owned() },
-            Exception::RemoveObjectFromChecking { object: "ReactionTypeCustomEmoji".to_owned() },
-            Exception::RemoveObjectFromChecking { object: "ReactionTypePaid".to_owned() },
+            Exception::RemoveObjectFromChecking {
+                object: "ReactionTypeEmoji".to_owned()
+            },
+            Exception::RemoveObjectFromChecking {
+                object: "ReactionTypeCustomEmoji".to_owned()
+            },
+            Exception::RemoveObjectFromChecking {
+                object: "ReactionTypePaid".to_owned()
+            },
             // They are a part of BotCommandScope
-            Exception::RemoveObjectFromChecking { object: "BotCommandScopeDefault".to_owned() },
             Exception::RemoveObjectFromChecking {
-                object: "BotCommandScopeAllPrivateChats".to_owned(),
+                object: "BotCommandScopeDefault".to_owned()
             },
             Exception::RemoveObjectFromChecking {
-                object: "BotCommandScopeAllGroupChats".to_owned(),
+                object: "BotCommandScopeAllPrivateChats".to_owned()
             },
             Exception::RemoveObjectFromChecking {
-                object: "BotCommandScopeAllChatAdministrators".to_owned(),
+                object: "BotCommandScopeAllGroupChats".to_owned()
             },
-            Exception::RemoveObjectFromChecking { object: "BotCommandScopeChat".to_owned() },
             Exception::RemoveObjectFromChecking {
-                object: "BotCommandScopeChatAdministrators".to_owned(),
+                object: "BotCommandScopeAllChatAdministrators".to_owned()
             },
-            Exception::RemoveObjectFromChecking { object: "BotCommandScopeChatMember".to_owned() },
+            Exception::RemoveObjectFromChecking {
+                object: "BotCommandScopeChat".to_owned()
+            },
+            Exception::RemoveObjectFromChecking {
+                object: "BotCommandScopeChatAdministrators".to_owned()
+            },
+            Exception::RemoveObjectFromChecking {
+                object: "BotCommandScopeChatMember".to_owned()
+            },
             // They are a part of MenuButton
-            Exception::RemoveObjectFromChecking { object: "MenuButtonCommands".to_owned() },
-            Exception::RemoveObjectFromChecking { object: "MenuButtonWebApp".to_owned() },
-            Exception::RemoveObjectFromChecking { object: "MenuButtonDefault".to_owned() },
+            Exception::RemoveObjectFromChecking {
+                object: "MenuButtonCommands".to_owned()
+            },
+            Exception::RemoveObjectFromChecking {
+                object: "MenuButtonWebApp".to_owned()
+            },
+            Exception::RemoveObjectFromChecking {
+                object: "MenuButtonDefault".to_owned()
+            },
             // They are a part of RevenueWithdrawalState
             Exception::RemoveObjectFromChecking {
-                object: "RevenueWithdrawalStatePending".to_owned(),
+                object: "RevenueWithdrawalStatePending".to_owned()
             },
             Exception::RemoveObjectFromChecking {
-                object: "RevenueWithdrawalStateFailed".to_owned(),
+                object: "RevenueWithdrawalStateFailed".to_owned()
             },
             // They are a part of TransactionPartner
             Exception::RemoveObjectFromChecking {
-                object: "TransactionPartnerTelegramAds".to_owned(),
+                object: "TransactionPartnerTelegramAds".to_owned()
             },
-            Exception::RemoveObjectFromChecking { object: "TransactionPartnerOther".to_owned() },
+            Exception::RemoveObjectFromChecking {
+                object: "TransactionPartnerOther".to_owned()
+            },
             // They are checked with PassportElementError, and they don't have a `message` field,
             // which PassportElementError has
             Exception::RemoveObjectFromChecking {
-                object: "PassportElementErrorDataField".to_owned(),
+                object: "PassportElementErrorDataField".to_owned()
             },
             Exception::RemoveObjectFromChecking {
-                object: "PassportElementErrorFrontSide".to_owned(),
+                object: "PassportElementErrorFrontSide".to_owned()
             },
             Exception::RemoveObjectFromChecking {
-                object: "PassportElementErrorReverseSide".to_owned(),
-            },
-            Exception::RemoveObjectFromChecking { object: "PassportElementErrorSelfie".to_owned() },
-            Exception::RemoveObjectFromChecking { object: "PassportElementErrorFile".to_owned() },
-            Exception::RemoveObjectFromChecking { object: "PassportElementErrorFiles".to_owned() },
-            Exception::RemoveObjectFromChecking {
-                object: "PassportElementErrorTranslationFile".to_owned(),
+                object: "PassportElementErrorReverseSide".to_owned()
             },
             Exception::RemoveObjectFromChecking {
-                object: "PassportElementErrorTranslationFiles".to_owned(),
+                object: "PassportElementErrorSelfie".to_owned()
             },
             Exception::RemoveObjectFromChecking {
-                object: "PassportElementErrorUnspecified".to_owned(),
+                object: "PassportElementErrorFile".to_owned()
+            },
+            Exception::RemoveObjectFromChecking {
+                object: "PassportElementErrorFiles".to_owned()
+            },
+            Exception::RemoveObjectFromChecking {
+                object: "PassportElementErrorTranslationFile".to_owned()
+            },
+            Exception::RemoveObjectFromChecking {
+                object: "PassportElementErrorTranslationFiles".to_owned()
+            },
+            Exception::RemoveObjectFromChecking {
+                object: "PassportElementErrorUnspecified".to_owned()
             },
         ]);
 
         objects_exceptions.extend(vec![
             Exception::RenameCheckingObject {
-                api_object_name: "ReplyKeyboardMarkup".to_owned(),
-                rust_object_name: "KeyboardMarkup".to_owned(),
+                api_object_name:  "ReplyKeyboardMarkup".to_owned(),
+                rust_object_name: "KeyboardMarkup".to_owned()
             },
             Exception::RenameCheckingObject {
-                api_object_name: "ReplyKeyboardRemove".to_owned(),
-                rust_object_name: "KeyboardRemove".to_owned(),
+                api_object_name:  "ReplyKeyboardRemove".to_owned(),
+                rust_object_name: "KeyboardRemove".to_owned()
             },
             Exception::RenameCheckingObject {
-                api_object_name: "InputTextMessageContent".to_owned(),
-                rust_object_name: "InputMessageContentText".to_owned(),
+                api_object_name:  "InputTextMessageContent".to_owned(),
+                rust_object_name: "InputMessageContentText".to_owned()
             },
             Exception::RenameCheckingObject {
-                api_object_name: "InputLocationMessageContent".to_owned(),
-                rust_object_name: "InputMessageContentLocation".to_owned(),
+                api_object_name:  "InputLocationMessageContent".to_owned(),
+                rust_object_name: "InputMessageContentLocation".to_owned()
             },
             Exception::RenameCheckingObject {
-                api_object_name: "InputVenueMessageContent".to_owned(),
-                rust_object_name: "InputMessageContentVenue".to_owned(),
+                api_object_name:  "InputVenueMessageContent".to_owned(),
+                rust_object_name: "InputMessageContentVenue".to_owned()
             },
             Exception::RenameCheckingObject {
-                api_object_name: "InputContactMessageContent".to_owned(),
-                rust_object_name: "InputMessageContentContact".to_owned(),
+                api_object_name:  "InputContactMessageContent".to_owned(),
+                rust_object_name: "InputMessageContentContact".to_owned()
             },
             Exception::RenameCheckingObject {
-                api_object_name: "InputInvoiceMessageContent".to_owned(),
-                rust_object_name: "InputMessageContentInvoice".to_owned(),
+                api_object_name:  "InputInvoiceMessageContent".to_owned(),
+                rust_object_name: "InputMessageContentInvoice".to_owned()
             },
         ]);
 

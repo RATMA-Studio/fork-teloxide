@@ -11,5 +11,5 @@ use crate::types::User;
 pub struct ChatOwnerLeft {
     /// The user who will become the new owner of the chat if the previous
     /// owner does not return to the chat.
-    pub new_owner: Option<User>,
+    pub new_owner: Option<User>
 }

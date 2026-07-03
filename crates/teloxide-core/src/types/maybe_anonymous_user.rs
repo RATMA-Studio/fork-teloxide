@@ -10,7 +10,7 @@ use crate::types::{Chat, User};
 #[non_exhaustive]
 pub enum MaybeAnonymousUser {
     User(User),
-    Chat(Chat),
+    Chat(Chat)
 }
 
 impl MaybeAnonymousUser {
@@ -26,7 +26,7 @@ impl MaybeAnonymousUser {
     pub fn chat(&self) -> Option<&Chat> {
         match self {
             Self::Chat(chat) => Some(chat),
-            _ => None,
+            _ => None
         }
     }
 
@@ -34,7 +34,7 @@ impl MaybeAnonymousUser {
     pub fn user(&self) -> Option<&User> {
         match self {
             Self::User(user) => Some(user),
-            _ => None,
+            _ => None
         }
     }
 }

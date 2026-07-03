@@ -9,9 +9,9 @@ use crate::types::{Chat, ChatId, ChatInviteLink, User};
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct ChatJoinRequest {
     /// Chat to which the request was sent
-    pub chat: Chat,
+    pub chat:         Chat,
     /// User that sent the join request
-    pub from: User,
+    pub from:         User,
     /// Identifier of a private chat with the user who sent the join request.
     /// The bot can use this identifier for 5 minutes to send messages until
     /// the join request is processed, assuming no other administrator
@@ -20,9 +20,9 @@ pub struct ChatJoinRequest {
     /// Date the request was sent in Unix time
     #[serde(with = "crate::types::serde_date_from_unix_timestamp")]
     #[cfg_attr(test, schemars(with = "i64"))]
-    pub date: DateTime<Utc>,
+    pub date:         DateTime<Utc>,
     /// Bio of the user.
-    pub bio: Option<String>,
+    pub bio:          Option<String>,
     /// Chat invite link that was used by the user to send the join request
-    pub invite_link: Option<ChatInviteLink>,
+    pub invite_link:  Option<ChatInviteLink>
 }

@@ -4,10 +4,10 @@
 use teloxide::{
     dispatching::dialogue::{
         ErasedStorage, RedisStorage, SqliteStorage, Storage,
-        serializer::{Bincode, Json},
+        serializer::{Bincode, Json}
     },
     prelude::*,
-    utils::command::BotCommands,
+    utils::command::BotCommands
 };
 
 type MyDialogue = Dialogue<State, ErasedStorage<State>>;
@@ -18,7 +18,7 @@ type HandlerResult = Result<(), Box<dyn std::error::Error + Send + Sync>>;
 pub enum State {
     #[default]
     Start,
-    GotNumber(i32),
+    GotNumber(i32)
 }
 
 /// These commands are supported:
@@ -28,7 +28,7 @@ pub enum Command {
     /// Get your number.
     Get,
     /// Reset your number.
-    Reset,
+    Reset
 }
 
 #[tokio::main]
@@ -39,9 +39,15 @@ async fn main() {
     let bot = Bot::from_env();
 
     let storage: MyStorage = if std::env::var("DB_REMEMBER_REDIS").is_ok() {
-        RedisStorage::open("redis://127.0.0.1:6379", Bincode).await.unwrap().erase()
+        RedisStorage::open("redis://127.0.0.1:6379", Bincode)
+            .await
+            .unwrap()
+            .erase()
     } else {
-        SqliteStorage::open("db.sqlite", Json).await.unwrap().erase()
+        SqliteStorage::open("db.sqlite", Json)
+            .await
+            .unwrap()
+            .erase()
     };
 
     let handler = Update::filter_message()
@@ -49,8 +55,12 @@ async fn main() {
         .branch(dptree::case![State::Start].endpoint(start))
         .branch(
             dptree::case![State::GotNumber(n)]
-                .branch(dptree::entry().filter_command::<Command>().endpoint(got_number))
-                .branch(dptree::endpoint(invalid_command)),
+                .branch(
+                    dptree::entry()
+                        .filter_command::<Command>()
+                        .endpoint(got_number)
+                )
+                .branch(dptree::endpoint(invalid_command))
         );
 
     Dispatcher::builder(bot, handler)
@@ -67,12 +77,13 @@ async fn start(bot: Bot, dialogue: MyDialogue, msg: Message) -> HandlerResult {
             dialogue.update(State::GotNumber(n)).await?;
             bot.send_message(
                 msg.chat.id,
-                format!("Remembered number {n}. Now use /get or /reset."),
+                format!("Remembered number {n}. Now use /get or /reset.")
             )
             .await?;
         }
         _ => {
-            bot.send_message(msg.chat.id, "Please, send me a number.").await?;
+            bot.send_message(msg.chat.id, "Please, send me a number.")
+                .await?;
         }
     }
 
@@ -84,11 +95,12 @@ async fn got_number(
     dialogue: MyDialogue,
     num: i32, // Available from `State::GotNumber`.
     msg: Message,
-    cmd: Command,
+    cmd: Command
 ) -> HandlerResult {
     match cmd {
         Command::Get => {
-            bot.send_message(msg.chat.id, format!("Here is your number: {num}.")).await?;
+            bot.send_message(msg.chat.id, format!("Here is your number: {num}."))
+                .await?;
         }
         Command::Reset => {
             dialogue.reset().await?;
@@ -99,6 +111,7 @@ async fn got_number(
 }
 
 async fn invalid_command(bot: Bot, msg: Message) -> HandlerResult {
-    bot.send_message(msg.chat.id, "Please, send /get or /reset.").await?;
+    bot.send_message(msg.chat.id, "Please, send /get or /reset.")
+        .await?;
     Ok(())
 }

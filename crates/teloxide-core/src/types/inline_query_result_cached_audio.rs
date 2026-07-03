@@ -40,13 +40,13 @@ pub struct InlineQueryResultCachedAudio {
     pub reply_markup: Option<InlineKeyboardMarkup>,
 
     /// Content of the message to be sent instead of the audio.
-    pub input_message_content: Option<InputMessageContent>,
+    pub input_message_content: Option<InputMessageContent>
 }
 
 impl InlineQueryResultCachedAudio {
     pub fn new<S1>(id: S1, audio_file_id: FileId) -> Self
     where
-        S1: Into<String>,
+        S1: Into<String>
     {
         Self {
             id: id.into(),
@@ -55,13 +55,13 @@ impl InlineQueryResultCachedAudio {
             parse_mode: None,
             reply_markup: None,
             caption_entities: None,
-            input_message_content: None,
+            input_message_content: None
         }
     }
 
     pub fn id<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.id = val.into();
         self
@@ -74,7 +74,7 @@ impl InlineQueryResultCachedAudio {
 
     pub fn caption<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.caption = Some(val.into());
         self
@@ -88,7 +88,7 @@ impl InlineQueryResultCachedAudio {
 
     pub fn caption_entities<C>(mut self, val: C) -> Self
     where
-        C: IntoIterator<Item = MessageEntity>,
+        C: IntoIterator<Item = MessageEntity>
     {
         self.caption_entities = Some(val.into_iter().collect());
         self

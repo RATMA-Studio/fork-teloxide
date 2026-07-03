@@ -2,7 +2,7 @@ use std::{any::TypeId, sync::Arc, time::Duration};
 
 use reqwest::{
     Client, Response,
-    header::{CONTENT_TYPE, HeaderValue},
+    header::{CONTENT_TYPE, HeaderValue}
 };
 use serde::de::DeserializeOwned;
 
@@ -22,10 +22,10 @@ pub async fn request_multipart<T>(
     api_url: reqwest::Url,
     method_name: &str,
     params: reqwest::multipart::Form,
-    _timeout_hint: Option<Duration>,
+    _timeout_hint: Option<Duration>
 ) -> ResponseResult<T>
 where
-    T: DeserializeOwned + 'static,
+    T: DeserializeOwned + 'static
 {
     // Workaround for [#460]
     //
@@ -61,10 +61,10 @@ pub async fn request_json<T>(
     api_url: reqwest::Url,
     method_name: &str,
     params: Vec<u8>,
-    _timeout_hint: Option<Duration>,
+    _timeout_hint: Option<Duration>
 ) -> ResponseResult<T>
 where
-    T: DeserializeOwned + 'static,
+    T: DeserializeOwned + 'static
 {
     // Workaround for [#460]
     //
@@ -97,7 +97,7 @@ where
 
 async fn process_response<T>(response: Response) -> ResponseResult<T>
 where
-    T: DeserializeOwned + 'static,
+    T: DeserializeOwned + 'static
 {
     if response.status().is_server_error() {
         tokio::time::sleep(DELAY_ON_SERVER_ERROR).await;
@@ -113,12 +113,13 @@ where
 
 fn deserialize_response<T>(body: &[u8]) -> Result<T, RequestError>
 where
-    T: DeserializeOwned + 'static,
+    T: DeserializeOwned + 'static
 {
     serde_json::from_slice::<TelegramResponse<T>>(body)
         .map(|mut response| {
-            use crate::types::{Update, UpdateKind};
             use std::{any::Any, iter::zip};
+
+            use crate::types::{Update, UpdateKind};
 
             // HACK: Fill-in error information into `UpdateKind::Error`.
             //
@@ -144,14 +145,21 @@ where
             //       We specifically handle `Vec<Update>` here, because that's the return
             //       type of the only method that returns updates.
             if TypeId::of::<T>() == TypeId::of::<Vec<Update>>()
-                && let TelegramResponse::Ok { response, .. } = &mut response
+                && let TelegramResponse::Ok {
+                    response, ..
+                } = &mut response
                 && let Some(updates) =
                     (response as &mut T as &mut dyn Any).downcast_mut::<Vec<Update>>()
-                && updates.iter().any(|u| matches!(u.kind, UpdateKind::Error(_)))
+                && updates
+                    .iter()
+                    .any(|u| matches!(u.kind, UpdateKind::Error(_)))
             {
                 let re_parsed = serde_json::from_slice(body);
 
-                if let Ok(TelegramResponse::Ok { response: values, .. }) = re_parsed {
+                if let Ok(TelegramResponse::Ok {
+                    response: values, ..
+                }) = re_parsed
+                {
                     for (update, value) in zip::<_, Vec<_>>(updates, values) {
                         if let UpdateKind::Error(dest) = &mut update.kind {
                             *dest = value;
@@ -168,7 +176,7 @@ where
             // response (e.g. an HTML 502 page from a proxy). `from_utf8_lossy`
             // keeps something showable for the error message rather than
             // dropping the body entirely.
-            raw: String::from_utf8_lossy(body).into_owned().into_boxed_str(),
+            raw:    String::from_utf8_lossy(body).into_owned().into_boxed_str()
         })?
         .into()
 }
@@ -180,7 +188,7 @@ mod tests {
     use crate::{
         ApiError, RequestError,
         net::request::deserialize_response,
-        types::{ChatId, Seconds, True, Update, UpdateId, UpdateKind},
+        types::{ChatId, Seconds, True, Update, UpdateId, UpdateKind}
     };
 
     #[test]
@@ -233,7 +241,13 @@ mod tests {
         }"#;
 
         let res = deserialize_response::<Vec<Update>>(json.as_bytes()).unwrap();
-        assert_matches!(res, [Update { id: UpdateId(0), kind: UpdateKind::PollAnswer(_) }]);
+        assert_matches!(
+            res,
+            [Update {
+                id:   UpdateId(0),
+                kind: UpdateKind::PollAnswer(_)
+            }]
+        );
     }
 
     /// Check that `get_updates` can work with malformed updates.
@@ -275,10 +289,16 @@ mod tests {
         assert_matches!(
             res,
             [
-                Update { id: UpdateId(0), kind: UpdateKind::PollAnswer(_) },
+                Update {
+                    id: UpdateId(0),
+                    kind: UpdateKind::PollAnswer(_)
+                },
                 Update { id: UpdateId(1), kind: UpdateKind::Error(v) } if v.is_object(),
-                Update { id: UpdateId(2), kind: UpdateKind::PollAnswer(_) },
-                Update { id: UpdateId(3), kind: UpdateKind::Error(v) } if v.is_object(),
+                Update {
+                    id: UpdateId(2),
+                    kind: UpdateKind::PollAnswer(_)
+                },
+                Update { id: UpdateId(3), kind: UpdateKind::Error(v) } if v.is_object()
             ]
         );
     }

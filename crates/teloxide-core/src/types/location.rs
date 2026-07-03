@@ -26,5 +26,5 @@ pub struct Location {
 
     /// Maximum distance for proximity alerts about approaching another chat
     /// member, in meters. For sent live locations only.
-    pub proximity_alert_radius: Option<u32>,
+    pub proximity_alert_radius: Option<u32>
 }

@@ -11,19 +11,19 @@ pub(crate) mod deser {
 
     pub(crate) fn serialize<S>(
         this: &Mime,
-        serializer: S,
+        serializer: S
     ) -> Result<<S as Serializer>::Ok, <S as Serializer>::Error>
     where
-        S: Serializer,
+        S: Serializer
     {
         MimeSer(this).serialize(serializer)
     }
 
     pub(crate) fn deserialize<'de, D>(
-        deserializer: D,
+        deserializer: D
     ) -> Result<Mime, <D as Deserializer<'de>>::Error>
     where
-        D: Deserializer<'de>,
+        D: Deserializer<'de>
     {
         MimeDe::deserialize(deserializer).map(|MimeDe(m)| m)
     }
@@ -37,19 +37,19 @@ pub(crate) mod opt_deser {
 
     pub(crate) fn serialize<S>(
         this: &Option<Mime>,
-        serializer: S,
+        serializer: S
     ) -> Result<<S as Serializer>::Ok, <S as Serializer>::Error>
     where
-        S: Serializer,
+        S: Serializer
     {
         this.as_ref().map(MimeSer).serialize(serializer)
     }
 
     pub(crate) fn deserialize<'de, D>(
-        deserializer: D,
+        deserializer: D
     ) -> Result<Option<Mime>, <D as Deserializer<'de>>::Error>
     where
-        D: Deserializer<'de>,
+        D: Deserializer<'de>
     {
         Option::<MimeDe>::deserialize(deserializer).map(|opt| opt.map(|MimeDe(m)| m))
     }
@@ -58,9 +58,12 @@ pub(crate) mod opt_deser {
 struct MimeSer<'a>(&'a Mime);
 
 impl Serialize for MimeSer<'_> {
-    fn serialize<S>(&self, serializer: S) -> Result<<S as Serializer>::Ok, <S as Serializer>::Error>
+    fn serialize<S>(
+        &self,
+        serializer: S
+    ) -> Result<<S as Serializer>::Ok, <S as Serializer>::Error>
     where
-        S: Serializer,
+        S: Serializer
     {
         serializer.serialize_str(self.0.as_ref())
     }
@@ -76,11 +79,11 @@ impl Visitor<'_> for MimeVisitor {
 
     fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
     where
-        E: serde::de::Error,
+        E: serde::de::Error
     {
         match v.parse::<Mime>() {
             Ok(mime_type) => Ok(MimeDe(mime_type)),
-            Err(e) => Err(E::custom(e)),
+            Err(e) => Err(E::custom(e))
         }
     }
 }
@@ -90,7 +93,7 @@ struct MimeDe(Mime);
 impl<'de> Deserialize<'de> for MimeDe {
     fn deserialize<D>(deserializer: D) -> Result<Self, <D as Deserializer<'de>>::Error>
     where
-        D: Deserializer<'de>,
+        D: Deserializer<'de>
     {
         deserializer.deserialize_str(MimeVisitor)
     }

@@ -16,7 +16,7 @@ pub(crate) mod schema_check;
 
 use std::{
     fs,
-    path::{Path, PathBuf},
+    path::{Path, PathBuf}
 };
 
 use aho_corasick::AhoCorasick;
@@ -41,7 +41,9 @@ fn toolchain() -> String {
 fn ensure_rustfmt(sh: &Shell) {
     let toolchain = toolchain();
 
-    let version = cmd!(sh, "rustup run {toolchain} rustfmt --version").read().unwrap_or_default();
+    let version = cmd!(sh, "rustup run {toolchain} rustfmt --version")
+        .read()
+        .unwrap_or_default();
 
     if !version.contains("nightly") {
         panic!(
@@ -87,7 +89,7 @@ pub fn ensure_file_contents(file: &Path, contents: &str) {
 }
 
 pub fn ensure_files_contents<'a>(
-    files_and_contents: impl IntoIterator<Item = (&'a Path, &'a str)>,
+    files_and_contents: impl IntoIterator<Item = (&'a Path, &'a str)>
 ) {
     let mut err_count = 0;
 
@@ -120,7 +122,7 @@ pub fn ensure_files_contents<'a>(
         // Singular
         1 => ("", "was"),
         // Plural
-        _ => ("s", "were"),
+        _ => ("s", "were")
     };
 
     if std::env::var("CI").is_ok() {
@@ -147,24 +149,33 @@ pub fn replace_block(path: &Path, title: &str, new: &str) -> String {
             0 => starts.push(finding.start()..finding.end()),
             // end
             1 => ends.push(finding.start()..finding.end()),
-            n => panic!("{n}"),
+            n => panic!("{n}")
         }
     }
 
     let start_offset = match &*starts {
-        [] => panic!("Coulnd't find start of block {title} in {p}", p = path.display()),
+        [] => panic!(
+            "Coulnd't find start of block {title} in {p}",
+            p = path.display()
+        ),
         [offset] => offset.end,
-        [..] => panic!(),
+        [..] => panic!()
     };
 
     let end_offset = match &*ends {
-        [] => panic!("Coulnd't find end of block {title} in {p}", p = path.display()),
+        [] => panic!(
+            "Coulnd't find end of block {title} in {p}",
+            p = path.display()
+        ),
         [offset] => offset.start,
-        [..] => panic!(),
+        [..] => panic!()
     };
 
     if end_offset < start_offset {
-        panic!("End of the {title} block is located before the start in {p}", p = path.display());
+        panic!(
+            "End of the {title} block is located before the start in {p}",
+            p = path.display()
+        );
     }
 
     format!("{}{}{}", &file[..start_offset], new, &file[end_offset..])

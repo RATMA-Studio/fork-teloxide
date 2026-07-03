@@ -22,7 +22,7 @@ pub struct MessageReactionCountUpdated {
     pub date: DateTime<Utc>,
 
     /// List of reactions that are present on the message
-    pub reactions: Vec<ReactionCount>,
+    pub reactions: Vec<ReactionCount>
 }
 
 /// Represents a reaction added to a message along with the number of times it
@@ -35,7 +35,7 @@ pub struct ReactionCount {
     pub r#type: ReactionType,
 
     /// Number of times the reaction was added
-    pub total_count: u64,
+    pub total_count: u64
 }
 
 #[cfg(test)]

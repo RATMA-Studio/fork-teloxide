@@ -1,7 +1,9 @@
 use serde::{Deserialize, Serialize};
 
 /// A unique business connection identifier.
-#[derive(Default, Clone, Debug, derive_more::Display, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(
+    Default, Clone, Debug, derive_more::Display, PartialEq, Eq, Hash, Serialize, Deserialize,
+)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(transparent)]
 pub struct BusinessConnectionId(pub String);

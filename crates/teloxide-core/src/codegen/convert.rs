@@ -4,7 +4,7 @@ pub enum Convert {
     #[allow(dead_code)]
     Id(Type),
     Into(Type),
-    Collect(Type),
+    Collect(Type)
 }
 
 pub fn convert_for(ty: &Type) -> Convert {
@@ -25,9 +25,9 @@ pub fn convert_for(ty: &Type) -> Convert {
             raw @ "Recipient" | raw @ "ChatId" | raw @ "TargetMessage" | raw @ "ReplyMarkup" => {
                 Convert::Into(Type::RawTy(raw.to_owned()))
             }
-            raw => Convert::Id(Type::RawTy(raw.to_owned())),
+            raw => Convert::Id(Type::RawTy(raw.to_owned()))
         },
         ty @ Type::Url => Convert::Id(ty.clone()),
-        ty @ Type::DateTime => Convert::Into(ty.clone()),
+        ty @ Type::DateTime => Convert::Into(ty.clone())
     }
 }

@@ -112,8 +112,9 @@ impl_request_link_preview_ext! {
 mod tests {
     use std::ops::Deref;
 
-    use super::*;
     use teloxide_core::{Bot, prelude::*};
+
+    use super::*;
 
     #[test]
     fn test_reply_to() {
@@ -122,7 +123,9 @@ mod tests {
         let real_reply_req = bot
             .send_message(ChatId(1234), "test")
             .reply_parameters(ReplyParameters::new(MessageId(1)));
-        let sugar_reply_req = bot.send_message(ChatId(1234), "test").reply_to(MessageId(1));
+        let sugar_reply_req = bot
+            .send_message(ChatId(1234), "test")
+            .reply_to(MessageId(1));
 
         assert_eq!(real_reply_req.deref(), sugar_reply_req.deref())
     }
@@ -135,7 +138,9 @@ mod tests {
         let real_reply_req = bot
             .send_document(ChatId(1234), document.clone())
             .reply_parameters(ReplyParameters::new(MessageId(1)));
-        let sugar_reply_req = bot.send_document(ChatId(1234), document).reply_to(MessageId(1));
+        let sugar_reply_req = bot
+            .send_document(ChatId(1234), document)
+            .reply_to(MessageId(1));
 
         assert_eq!(
             real_reply_req.deref().reply_parameters,
@@ -148,12 +153,16 @@ mod tests {
     fn test_reply_to_adaptors() {
         use teloxide_core::{adaptors::trace::Settings, requests::HasPayload};
 
-        let bot = Bot::new("TOKEN").trace(Settings::empty()).parse_mode(ParseMode::Html);
+        let bot = Bot::new("TOKEN")
+            .trace(Settings::empty())
+            .parse_mode(ParseMode::Html);
 
         let real_reply_req = bot
             .send_message(ChatId(1234), "test")
             .reply_parameters(ReplyParameters::new(MessageId(1)));
-        let sugar_reply_req = bot.send_message(ChatId(1234), "test").reply_to(MessageId(1));
+        let sugar_reply_req = bot
+            .send_message(ChatId(1234), "test")
+            .reply_to(MessageId(1));
 
         assert_eq!(
             real_reply_req.payload_ref().payload_ref().reply_parameters,
@@ -164,17 +173,20 @@ mod tests {
     #[test]
     fn test_disable_link_preview() {
         let link_preview_options = LinkPreviewOptions {
-            is_disabled: true,
-            url: None,
+            is_disabled:        true,
+            url:                None,
             prefer_small_media: false,
             prefer_large_media: false,
-            show_above_text: false,
+            show_above_text:    false
         };
         let bot = Bot::new("TOKEN");
 
-        let real_link_req =
-            bot.send_message(ChatId(1234), "test").link_preview_options(link_preview_options);
-        let sugar_link_req = bot.send_message(ChatId(1234), "test").disable_link_preview(true);
+        let real_link_req = bot
+            .send_message(ChatId(1234), "test")
+            .link_preview_options(link_preview_options);
+        let sugar_link_req = bot
+            .send_message(ChatId(1234), "test")
+            .disable_link_preview(true);
 
         assert_eq!(real_link_req.deref(), sugar_link_req.deref())
     }
@@ -185,17 +197,22 @@ mod tests {
         use teloxide_core::{adaptors::trace::Settings, requests::HasPayload};
 
         let link_preview_options = LinkPreviewOptions {
-            is_disabled: true,
-            url: None,
+            is_disabled:        true,
+            url:                None,
             prefer_small_media: false,
             prefer_large_media: false,
-            show_above_text: false,
+            show_above_text:    false
         };
-        let bot = Bot::new("TOKEN").trace(Settings::empty()).parse_mode(ParseMode::Html);
+        let bot = Bot::new("TOKEN")
+            .trace(Settings::empty())
+            .parse_mode(ParseMode::Html);
 
-        let real_link_req =
-            bot.send_message(ChatId(1234), "test").link_preview_options(link_preview_options);
-        let sugar_link_req = bot.send_message(ChatId(1234), "test").disable_link_preview(true);
+        let real_link_req = bot
+            .send_message(ChatId(1234), "test")
+            .link_preview_options(link_preview_options);
+        let sugar_link_req = bot
+            .send_message(ChatId(1234), "test")
+            .disable_link_preview(true);
 
         assert_eq!(
             real_link_req.payload_ref().payload_ref().reply_parameters,

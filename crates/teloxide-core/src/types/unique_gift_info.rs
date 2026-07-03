@@ -1,6 +1,7 @@
-use crate::types::{OwnedGiftId, UniqueGift};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
+
+use crate::types::{OwnedGiftId, UniqueGift};
 
 /// Describes a service message about a unique gift that was sent or received.
 #[serde_with::skip_serializing_none]
@@ -38,7 +39,7 @@ pub struct UniqueGiftInfo {
     /// then the gift can be transferred now
     #[serde(default, with = "crate::types::serde_opt_date_from_unix_timestamp")]
     #[cfg_attr(test, schemars(with = "Option<i64>"))]
-    pub next_transfer_date: Option<DateTime<Utc>>,
+    pub next_transfer_date: Option<DateTime<Utc>>
 }
 
 /// Origin of the gift. Currently, either `Upgrade` for gifts upgraded from
@@ -55,7 +56,7 @@ pub enum UniqueGiftOrigin {
     Transfer,
     Resale,
     GiftedUpgrade,
-    Offer,
+    Offer
 }
 
 #[cfg(test)]

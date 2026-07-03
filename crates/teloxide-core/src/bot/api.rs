@@ -10,8 +10,8 @@ use crate::{
         InputChecklist, InputFile, InputMedia, InputPaidMedia, InputPollOption, InputProfilePhoto,
         InputSticker, InputStoryContent, KeyboardButton, LabeledPrice, MessageId, OwnedGiftId,
         PreCheckoutQueryId, Recipient, Seconds, ShippingQueryId, StickerFormat, StoryId,
-        TelegramTransactionId, ThreadId, UserId,
-    },
+        TelegramTransactionId, ThreadId, UserId
+    }
 };
 
 impl Requester for Bot {
@@ -52,7 +52,7 @@ impl Requester for Bot {
     fn send_message<C, T>(&self, chat_id: C, text: T) -> Self::SendMessage
     where
         C: Into<Recipient>,
-        T: Into<String>,
+        T: Into<String>
     {
         Self::SendMessage::new(self.clone(), payloads::SendMessage::new(chat_id, text))
     }
@@ -63,15 +63,15 @@ impl Requester for Bot {
         &self,
         chat_id: C,
         from_chat_id: F,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> Self::ForwardMessage
     where
         C: Into<Recipient>,
-        F: Into<Recipient>,
+        F: Into<Recipient>
     {
         Self::ForwardMessage::new(
             self.clone(),
-            payloads::ForwardMessage::new(chat_id, from_chat_id, message_id),
+            payloads::ForwardMessage::new(chat_id, from_chat_id, message_id)
         )
     }
 
@@ -80,16 +80,16 @@ impl Requester for Bot {
         &self,
         chat_id: C,
         from_chat_id: F,
-        message_ids: M,
+        message_ids: M
     ) -> Self::ForwardMessages
     where
         C: Into<Recipient>,
         F: Into<Recipient>,
-        M: IntoIterator<Item = MessageId>,
+        M: IntoIterator<Item = MessageId>
     {
         Self::ForwardMessages::new(
             self.clone(),
-            payloads::ForwardMessages::new(chat_id, from_chat_id, message_ids),
+            payloads::ForwardMessages::new(chat_id, from_chat_id, message_ids)
         )
     }
 
@@ -97,7 +97,7 @@ impl Requester for Bot {
 
     fn send_photo<C>(&self, chat_id: C, photo: InputFile) -> Self::SendPhoto
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::SendPhoto::new(self.clone(), payloads::SendPhoto::new(chat_id, photo))
     }
@@ -106,7 +106,7 @@ impl Requester for Bot {
 
     fn send_audio<C>(&self, chat_id: C, audio: InputFile) -> Self::SendAudio
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::SendAudio::new(self.clone(), payloads::SendAudio::new(chat_id, audio))
     }
@@ -115,7 +115,7 @@ impl Requester for Bot {
 
     fn send_document<C>(&self, chat_id: C, document: InputFile) -> Self::SendDocument
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::SendDocument::new(self.clone(), payloads::SendDocument::new(chat_id, document))
     }
@@ -124,7 +124,7 @@ impl Requester for Bot {
 
     fn send_video<C>(&self, chat_id: C, video: InputFile) -> Self::SendVideo
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::SendVideo::new(self.clone(), payloads::SendVideo::new(chat_id, video))
     }
@@ -135,14 +135,14 @@ impl Requester for Bot {
         &self,
         chat_id: C,
         live_photo: InputFile,
-        photo: InputFile,
+        photo: InputFile
     ) -> Self::SendLivePhoto
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::SendLivePhoto::new(
             self.clone(),
-            payloads::SendLivePhoto::new(chat_id, live_photo, photo),
+            payloads::SendLivePhoto::new(chat_id, live_photo, photo)
         )
     }
 
@@ -150,16 +150,19 @@ impl Requester for Bot {
 
     fn send_animation<C>(&self, chat_id: C, animation: InputFile) -> Self::SendAnimation
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
-        Self::SendAnimation::new(self.clone(), payloads::SendAnimation::new(chat_id, animation))
+        Self::SendAnimation::new(
+            self.clone(),
+            payloads::SendAnimation::new(chat_id, animation)
+        )
     }
 
     type SendVoice = MultipartRequest<payloads::SendVoice>;
 
     fn send_voice<C>(&self, chat_id: C, voice: InputFile) -> Self::SendVoice
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::SendVoice::new(self.clone(), payloads::SendVoice::new(chat_id, voice))
     }
@@ -168,9 +171,12 @@ impl Requester for Bot {
 
     fn send_video_note<C>(&self, chat_id: C, video_note: InputFile) -> Self::SendVideoNote
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
-        Self::SendVideoNote::new(self.clone(), payloads::SendVideoNote::new(chat_id, video_note))
+        Self::SendVideoNote::new(
+            self.clone(),
+            payloads::SendVideoNote::new(chat_id, video_note)
+        )
     }
 
     type SendPaidMedia = MultipartRequest<payloads::SendPaidMedia>;
@@ -178,11 +184,11 @@ impl Requester for Bot {
     fn send_paid_media<C, M>(&self, chat_id: C, star_count: u32, media: M) -> Self::SendPaidMedia
     where
         C: Into<Recipient>,
-        M: IntoIterator<Item = InputPaidMedia>,
+        M: IntoIterator<Item = InputPaidMedia>
     {
         Self::SendPaidMedia::new(
             self.clone(),
-            payloads::SendPaidMedia::new(chat_id, star_count, media),
+            payloads::SendPaidMedia::new(chat_id, star_count, media)
         )
     }
 
@@ -191,7 +197,7 @@ impl Requester for Bot {
     fn send_media_group<C, M>(&self, chat_id: C, media: M) -> Self::SendMediaGroup
     where
         C: Into<Recipient>,
-        M: IntoIterator<Item = InputMedia>,
+        M: IntoIterator<Item = InputMedia>
     {
         Self::SendMediaGroup::new(self.clone(), payloads::SendMediaGroup::new(chat_id, media))
     }
@@ -200,11 +206,11 @@ impl Requester for Bot {
 
     fn send_location<C>(&self, chat_id: C, latitude: f64, longitude: f64) -> Self::SendLocation
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::SendLocation::new(
             self.clone(),
-            payloads::SendLocation::new(chat_id, latitude, longitude),
+            payloads::SendLocation::new(chat_id, latitude, longitude)
         )
     }
 
@@ -215,14 +221,14 @@ impl Requester for Bot {
         chat_id: C,
         message_id: MessageId,
         latitude: f64,
-        longitude: f64,
+        longitude: f64
     ) -> Self::EditMessageLiveLocation
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::EditMessageLiveLocation::new(
             self.clone(),
-            payloads::EditMessageLiveLocation::new(chat_id, message_id, latitude, longitude),
+            payloads::EditMessageLiveLocation::new(chat_id, message_id, latitude, longitude)
         )
     }
 
@@ -232,14 +238,14 @@ impl Requester for Bot {
         &self,
         inline_message_id: I,
         latitude: f64,
-        longitude: f64,
+        longitude: f64
     ) -> Self::EditMessageLiveLocationInline
     where
-        I: Into<String>,
+        I: Into<String>
     {
         Self::EditMessageLiveLocationInline::new(
             self.clone(),
-            payloads::EditMessageLiveLocationInline::new(inline_message_id, latitude, longitude),
+            payloads::EditMessageLiveLocationInline::new(inline_message_id, latitude, longitude)
         )
     }
 
@@ -248,14 +254,14 @@ impl Requester for Bot {
     fn stop_message_live_location<C>(
         &self,
         chat_id: C,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> Self::StopMessageLiveLocation
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::StopMessageLiveLocation::new(
             self.clone(),
-            payloads::StopMessageLiveLocation::new(chat_id, message_id),
+            payloads::StopMessageLiveLocation::new(chat_id, message_id)
         )
     }
 
@@ -263,14 +269,14 @@ impl Requester for Bot {
 
     fn stop_message_live_location_inline<I>(
         &self,
-        inline_message_id: I,
+        inline_message_id: I
     ) -> Self::StopMessageLiveLocationInline
     where
-        I: Into<String>,
+        I: Into<String>
     {
         Self::StopMessageLiveLocationInline::new(
             self.clone(),
-            payloads::StopMessageLiveLocationInline::new(inline_message_id),
+            payloads::StopMessageLiveLocationInline::new(inline_message_id)
         )
     }
 
@@ -281,10 +287,10 @@ impl Requester for Bot {
         business_connection_id: BusinessConnectionId,
         chat_id: C,
         message_id: MessageId,
-        checklist: InputChecklist,
+        checklist: InputChecklist
     ) -> Self::EditMessageChecklist
     where
-        C: Into<ChatId>,
+        C: Into<ChatId>
     {
         Self::EditMessageChecklist::new(
             self.clone(),
@@ -292,8 +298,8 @@ impl Requester for Bot {
                 business_connection_id,
                 chat_id,
                 message_id,
-                checklist,
-            ),
+                checklist
+            )
         )
     }
 
@@ -305,30 +311,35 @@ impl Requester for Bot {
         latitude: f64,
         longitude: f64,
         title: T,
-        address: A,
+        address: A
     ) -> Self::SendVenue
     where
         C: Into<Recipient>,
         T: Into<String>,
-        A: Into<String>,
+        A: Into<String>
     {
         Self::SendVenue::new(
             self.clone(),
-            payloads::SendVenue::new(chat_id, latitude, longitude, title, address),
+            payloads::SendVenue::new(chat_id, latitude, longitude, title, address)
         )
     }
 
     type SendContact = JsonRequest<payloads::SendContact>;
 
-    fn send_contact<C, P, F>(&self, chat_id: C, phone_number: P, first_name: F) -> Self::SendContact
+    fn send_contact<C, P, F>(
+        &self,
+        chat_id: C,
+        phone_number: P,
+        first_name: F
+    ) -> Self::SendContact
     where
         C: Into<Recipient>,
         P: Into<String>,
-        F: Into<String>,
+        F: Into<String>
     {
         Self::SendContact::new(
             self.clone(),
-            payloads::SendContact::new(chat_id, phone_number, first_name),
+            payloads::SendContact::new(chat_id, phone_number, first_name)
         )
     }
 
@@ -338,9 +349,12 @@ impl Requester for Bot {
     where
         C: Into<Recipient>,
         Q: Into<String>,
-        O: IntoIterator<Item = InputPollOption>,
+        O: IntoIterator<Item = InputPollOption>
     {
-        Self::SendPoll::new(self.clone(), payloads::SendPoll::new(chat_id, question, options))
+        Self::SendPoll::new(
+            self.clone(),
+            payloads::SendPoll::new(chat_id, question, options)
+        )
     }
 
     type SendChecklist = JsonRequest<payloads::SendChecklist>;
@@ -349,14 +363,14 @@ impl Requester for Bot {
         &self,
         business_connection_id: BusinessConnectionId,
         chat_id: C,
-        checklist: InputChecklist,
+        checklist: InputChecklist
     ) -> Self::SendChecklist
     where
-        C: Into<ChatId>,
+        C: Into<ChatId>
     {
         Self::SendChecklist::new(
             self.clone(),
-            payloads::SendChecklist::new(business_connection_id, chat_id, checklist),
+            payloads::SendChecklist::new(business_connection_id, chat_id, checklist)
         )
     }
 
@@ -364,7 +378,7 @@ impl Requester for Bot {
 
     fn send_dice<C>(&self, chat_id: C) -> Self::SendDice
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::SendDice::new(self.clone(), payloads::SendDice::new(chat_id))
     }
@@ -373,11 +387,11 @@ impl Requester for Bot {
 
     fn send_message_draft<C>(&self, chat_id: C, draft_id: i32) -> Self::SendMessageDraft
     where
-        C: Into<ChatId>,
+        C: Into<ChatId>
     {
         Self::SendMessageDraft::new(
             self.clone(),
-            payloads::SendMessageDraft::new(chat_id, draft_id),
+            payloads::SendMessageDraft::new(chat_id, draft_id)
         )
     }
 
@@ -386,23 +400,27 @@ impl Requester for Bot {
     fn send_chat_action<C>(
         &self,
         chat_id: C,
-        action: crate::types::ChatAction,
+        action: crate::types::ChatAction
     ) -> Self::SendChatAction
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::SendChatAction::new(self.clone(), payloads::SendChatAction::new(chat_id, action))
     }
 
     type SetMessageReaction = JsonRequest<payloads::SetMessageReaction>;
 
-    fn set_message_reaction<C>(&self, chat_id: C, message_id: MessageId) -> Self::SetMessageReaction
+    fn set_message_reaction<C>(
+        &self,
+        chat_id: C,
+        message_id: MessageId
+    ) -> Self::SetMessageReaction
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::SetMessageReaction::new(
             self.clone(),
-            payloads::SetMessageReaction::new(chat_id, message_id),
+            payloads::SetMessageReaction::new(chat_id, message_id)
         )
     }
 
@@ -434,16 +452,19 @@ impl Requester for Bot {
 
     fn kick_chat_member<C>(&self, chat_id: C, user_id: UserId) -> Self::KickChatMember
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
-        Self::KickChatMember::new(self.clone(), payloads::KickChatMember::new(chat_id, user_id))
+        Self::KickChatMember::new(
+            self.clone(),
+            payloads::KickChatMember::new(chat_id, user_id)
+        )
     }
 
     type BanChatMember = JsonRequest<payloads::BanChatMember>;
 
     fn ban_chat_member<C>(&self, chat_id: C, user_id: UserId) -> Self::BanChatMember
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::BanChatMember::new(self.clone(), payloads::BanChatMember::new(chat_id, user_id))
     }
@@ -452,9 +473,12 @@ impl Requester for Bot {
 
     fn unban_chat_member<C>(&self, chat_id: C, user_id: UserId) -> Self::UnbanChatMember
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
-        Self::UnbanChatMember::new(self.clone(), payloads::UnbanChatMember::new(chat_id, user_id))
+        Self::UnbanChatMember::new(
+            self.clone(),
+            payloads::UnbanChatMember::new(chat_id, user_id)
+        )
     }
 
     type RestrictChatMember = JsonRequest<payloads::RestrictChatMember>;
@@ -463,14 +487,14 @@ impl Requester for Bot {
         &self,
         chat_id: C,
         user_id: UserId,
-        permissions: ChatPermissions,
+        permissions: ChatPermissions
     ) -> Self::RestrictChatMember
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::RestrictChatMember::new(
             self.clone(),
-            payloads::RestrictChatMember::new(chat_id, user_id, permissions),
+            payloads::RestrictChatMember::new(chat_id, user_id, permissions)
         )
     }
 
@@ -478,11 +502,11 @@ impl Requester for Bot {
 
     fn promote_chat_member<C>(&self, chat_id: C, user_id: UserId) -> Self::PromoteChatMember
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::PromoteChatMember::new(
             self.clone(),
-            payloads::PromoteChatMember::new(chat_id, user_id),
+            payloads::PromoteChatMember::new(chat_id, user_id)
         )
     }
 
@@ -492,15 +516,15 @@ impl Requester for Bot {
         &self,
         chat_id: Ch,
         user_id: UserId,
-        custom_title: Cu,
+        custom_title: Cu
     ) -> Self::SetChatAdministratorCustomTitle
     where
         Ch: Into<Recipient>,
-        Cu: Into<String>,
+        Cu: Into<String>
     {
         Self::SetChatAdministratorCustomTitle::new(
             self.clone(),
-            payloads::SetChatAdministratorCustomTitle::new(chat_id, user_id, custom_title),
+            payloads::SetChatAdministratorCustomTitle::new(chat_id, user_id, custom_title)
         )
     }
 
@@ -508,9 +532,12 @@ impl Requester for Bot {
 
     fn set_chat_member_tag<C>(&self, chat_id: C, user_id: UserId) -> Self::SetChatMemberTag
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
-        Self::SetChatMemberTag::new(self.clone(), payloads::SetChatMemberTag::new(chat_id, user_id))
+        Self::SetChatMemberTag::new(
+            self.clone(),
+            payloads::SetChatMemberTag::new(chat_id, user_id)
+        )
     }
 
     type BanChatSenderChat = JsonRequest<payloads::BanChatSenderChat>;
@@ -518,11 +545,11 @@ impl Requester for Bot {
     fn ban_chat_sender_chat<C, S>(&self, chat_id: C, sender_chat_id: S) -> Self::BanChatSenderChat
     where
         C: Into<Recipient>,
-        S: Into<ChatId>,
+        S: Into<ChatId>
     {
         Self::BanChatSenderChat::new(
             self.clone(),
-            payloads::BanChatSenderChat::new(chat_id, sender_chat_id),
+            payloads::BanChatSenderChat::new(chat_id, sender_chat_id)
         )
     }
 
@@ -531,15 +558,15 @@ impl Requester for Bot {
     fn unban_chat_sender_chat<C, S>(
         &self,
         chat_id: C,
-        sender_chat_id: S,
+        sender_chat_id: S
     ) -> Self::UnbanChatSenderChat
     where
         C: Into<Recipient>,
-        S: Into<ChatId>,
+        S: Into<ChatId>
     {
         Self::UnbanChatSenderChat::new(
             self.clone(),
-            payloads::UnbanChatSenderChat::new(chat_id, sender_chat_id),
+            payloads::UnbanChatSenderChat::new(chat_id, sender_chat_id)
         )
     }
 
@@ -548,14 +575,14 @@ impl Requester for Bot {
     fn set_chat_permissions<C>(
         &self,
         chat_id: C,
-        permissions: ChatPermissions,
+        permissions: ChatPermissions
     ) -> Self::SetChatPermissions
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::SetChatPermissions::new(
             self.clone(),
-            payloads::SetChatPermissions::new(chat_id, permissions),
+            payloads::SetChatPermissions::new(chat_id, permissions)
         )
     }
 
@@ -563,7 +590,7 @@ impl Requester for Bot {
 
     fn export_chat_invite_link<C>(&self, chat_id: C) -> Self::ExportChatInviteLink
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::ExportChatInviteLink::new(self.clone(), payloads::ExportChatInviteLink::new(chat_id))
     }
@@ -572,7 +599,7 @@ impl Requester for Bot {
 
     fn create_chat_invite_link<C>(&self, chat_id: C) -> Self::CreateChatInviteLink
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::CreateChatInviteLink::new(self.clone(), payloads::CreateChatInviteLink::new(chat_id))
     }
@@ -582,32 +609,33 @@ impl Requester for Bot {
     fn edit_chat_invite_link<C, I>(&self, chat_id: C, invite_link: I) -> Self::EditChatInviteLink
     where
         C: Into<Recipient>,
-        I: Into<String>,
+        I: Into<String>
     {
         Self::EditChatInviteLink::new(
             self.clone(),
-            payloads::EditChatInviteLink::new(chat_id, invite_link),
+            payloads::EditChatInviteLink::new(chat_id, invite_link)
         )
     }
 
-    type CreateChatSubscriptionInviteLink = JsonRequest<payloads::CreateChatSubscriptionInviteLink>;
+    type CreateChatSubscriptionInviteLink =
+        JsonRequest<payloads::CreateChatSubscriptionInviteLink>;
 
     fn create_chat_subscription_invite_link<C>(
         &self,
         chat_id: C,
         subscription_period: Seconds,
-        subscription_price: u32,
+        subscription_price: u32
     ) -> Self::CreateChatSubscriptionInviteLink
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::CreateChatSubscriptionInviteLink::new(
             self.clone(),
             payloads::CreateChatSubscriptionInviteLink::new(
                 chat_id,
                 subscription_period,
-                subscription_price,
-            ),
+                subscription_price
+            )
         )
     }
 
@@ -616,15 +644,15 @@ impl Requester for Bot {
     fn edit_chat_subscription_invite_link<C, I>(
         &self,
         chat_id: C,
-        invite_link: I,
+        invite_link: I
     ) -> Self::EditChatSubscriptionInviteLink
     where
         C: Into<Recipient>,
-        I: Into<String>,
+        I: Into<String>
     {
         Self::EditChatSubscriptionInviteLink::new(
             self.clone(),
-            payloads::EditChatSubscriptionInviteLink::new(chat_id, invite_link),
+            payloads::EditChatSubscriptionInviteLink::new(chat_id, invite_link)
         )
     }
 
@@ -633,15 +661,15 @@ impl Requester for Bot {
     fn revoke_chat_invite_link<C, I>(
         &self,
         chat_id: C,
-        invite_link: I,
+        invite_link: I
     ) -> Self::RevokeChatInviteLink
     where
         C: Into<Recipient>,
-        I: Into<String>,
+        I: Into<String>
     {
         Self::RevokeChatInviteLink::new(
             self.clone(),
-            payloads::RevokeChatInviteLink::new(chat_id, invite_link),
+            payloads::RevokeChatInviteLink::new(chat_id, invite_link)
         )
     }
 
@@ -650,14 +678,14 @@ impl Requester for Bot {
     fn approve_chat_join_request<C>(
         &self,
         chat_id: C,
-        user_id: UserId,
+        user_id: UserId
     ) -> Self::ApproveChatJoinRequest
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::ApproveChatJoinRequest::new(
             self.clone(),
-            payloads::ApproveChatJoinRequest::new(chat_id, user_id),
+            payloads::ApproveChatJoinRequest::new(chat_id, user_id)
         )
     }
 
@@ -666,14 +694,14 @@ impl Requester for Bot {
     fn decline_chat_join_request<C>(
         &self,
         chat_id: C,
-        user_id: UserId,
+        user_id: UserId
     ) -> Self::DeclineChatJoinRequest
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::DeclineChatJoinRequest::new(
             self.clone(),
-            payloads::DeclineChatJoinRequest::new(chat_id, user_id),
+            payloads::DeclineChatJoinRequest::new(chat_id, user_id)
         )
     }
 
@@ -681,7 +709,7 @@ impl Requester for Bot {
 
     fn set_chat_photo<C>(&self, chat_id: C, photo: InputFile) -> Self::SetChatPhoto
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::SetChatPhoto::new(self.clone(), payloads::SetChatPhoto::new(chat_id, photo))
     }
@@ -690,7 +718,7 @@ impl Requester for Bot {
 
     fn delete_chat_photo<C>(&self, chat_id: C) -> Self::DeleteChatPhoto
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::DeleteChatPhoto::new(self.clone(), payloads::DeleteChatPhoto::new(chat_id))
     }
@@ -700,7 +728,7 @@ impl Requester for Bot {
     fn set_chat_title<C, T>(&self, chat_id: C, title: T) -> Self::SetChatTitle
     where
         C: Into<Recipient>,
-        T: Into<String>,
+        T: Into<String>
     {
         Self::SetChatTitle::new(self.clone(), payloads::SetChatTitle::new(chat_id, title))
     }
@@ -709,7 +737,7 @@ impl Requester for Bot {
 
     fn set_chat_description<C>(&self, chat_id: C) -> Self::SetChatDescription
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::SetChatDescription::new(self.clone(), payloads::SetChatDescription::new(chat_id))
     }
@@ -718,16 +746,19 @@ impl Requester for Bot {
 
     fn pin_chat_message<C>(&self, chat_id: C, message_id: MessageId) -> Self::PinChatMessage
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
-        Self::PinChatMessage::new(self.clone(), payloads::PinChatMessage::new(chat_id, message_id))
+        Self::PinChatMessage::new(
+            self.clone(),
+            payloads::PinChatMessage::new(chat_id, message_id)
+        )
     }
 
     type UnpinChatMessage = JsonRequest<payloads::UnpinChatMessage>;
 
     fn unpin_chat_message<C>(&self, chat_id: C) -> Self::UnpinChatMessage
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::UnpinChatMessage::new(self.clone(), payloads::UnpinChatMessage::new(chat_id))
     }
@@ -736,7 +767,7 @@ impl Requester for Bot {
 
     fn leave_chat<C>(&self, chat_id: C) -> Self::LeaveChat
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::LeaveChat::new(self.clone(), payloads::LeaveChat::new(chat_id))
     }
@@ -745,7 +776,7 @@ impl Requester for Bot {
 
     fn get_chat<C>(&self, chat_id: C) -> Self::GetChat
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::GetChat::new(self.clone(), payloads::GetChat::new(chat_id))
     }
@@ -754,11 +785,11 @@ impl Requester for Bot {
 
     fn get_chat_administrators<C>(&self, chat_id: C) -> Self::GetChatAdministrators
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::GetChatAdministrators::new(
             self.clone(),
-            payloads::GetChatAdministrators::new(chat_id),
+            payloads::GetChatAdministrators::new(chat_id)
         )
     }
 
@@ -766,11 +797,11 @@ impl Requester for Bot {
 
     fn delete_all_message_reactions<C>(&self, chat_id: C) -> Self::DeleteAllMessageReactions
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::DeleteAllMessageReactions::new(
             self.clone(),
-            payloads::DeleteAllMessageReactions::new(chat_id),
+            payloads::DeleteAllMessageReactions::new(chat_id)
         )
     }
 
@@ -779,14 +810,14 @@ impl Requester for Bot {
     fn delete_message_reaction<C>(
         &self,
         chat_id: C,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> Self::DeleteMessageReaction
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::DeleteMessageReaction::new(
             self.clone(),
-            payloads::DeleteMessageReaction::new(chat_id, message_id),
+            payloads::DeleteMessageReaction::new(chat_id, message_id)
         )
     }
 
@@ -794,7 +825,7 @@ impl Requester for Bot {
 
     fn get_chat_members_count<C>(&self, chat_id: C) -> Self::GetChatMembersCount
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::GetChatMembersCount::new(self.clone(), payloads::GetChatMembersCount::new(chat_id))
     }
@@ -803,7 +834,7 @@ impl Requester for Bot {
 
     fn get_chat_member_count<C>(&self, chat_id: C) -> Self::GetChatMemberCount
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::GetChatMemberCount::new(self.clone(), payloads::GetChatMemberCount::new(chat_id))
     }
@@ -812,21 +843,25 @@ impl Requester for Bot {
 
     fn get_chat_member<C>(&self, chat_id: C, user_id: UserId) -> Self::GetChatMember
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::GetChatMember::new(self.clone(), payloads::GetChatMember::new(chat_id, user_id))
     }
 
     type SetChatStickerSet = JsonRequest<payloads::SetChatStickerSet>;
 
-    fn set_chat_sticker_set<C, S>(&self, chat_id: C, sticker_set_name: S) -> Self::SetChatStickerSet
+    fn set_chat_sticker_set<C, S>(
+        &self,
+        chat_id: C,
+        sticker_set_name: S
+    ) -> Self::SetChatStickerSet
     where
         C: Into<Recipient>,
-        S: Into<String>,
+        S: Into<String>
     {
         Self::SetChatStickerSet::new(
             self.clone(),
-            payloads::SetChatStickerSet::new(chat_id, sticker_set_name),
+            payloads::SetChatStickerSet::new(chat_id, sticker_set_name)
         )
     }
 
@@ -834,7 +869,7 @@ impl Requester for Bot {
 
     fn delete_chat_sticker_set<C>(&self, chat_id: C) -> Self::DeleteChatStickerSet
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::DeleteChatStickerSet::new(self.clone(), payloads::DeleteChatStickerSet::new(chat_id))
     }
@@ -844,7 +879,7 @@ impl Requester for Bot {
     fn get_forum_topic_icon_stickers(&self) -> Self::GetForumTopicIconStickers {
         Self::GetForumTopicIconStickers::new(
             self.clone(),
-            payloads::GetForumTopicIconStickers::new(),
+            payloads::GetForumTopicIconStickers::new()
         )
     }
 
@@ -853,7 +888,7 @@ impl Requester for Bot {
     fn create_forum_topic<C, N>(&self, chat_id: C, name: N) -> Self::CreateForumTopic
     where
         C: Into<Recipient>,
-        N: Into<String>,
+        N: Into<String>
     {
         Self::CreateForumTopic::new(self.clone(), payloads::CreateForumTopic::new(chat_id, name))
     }
@@ -862,23 +897,27 @@ impl Requester for Bot {
 
     fn edit_forum_topic<C>(&self, chat_id: C, message_thread_id: ThreadId) -> Self::EditForumTopic
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::EditForumTopic::new(
             self.clone(),
-            payloads::EditForumTopic::new(chat_id, message_thread_id),
+            payloads::EditForumTopic::new(chat_id, message_thread_id)
         )
     }
 
     type CloseForumTopic = JsonRequest<payloads::CloseForumTopic>;
 
-    fn close_forum_topic<C>(&self, chat_id: C, message_thread_id: ThreadId) -> Self::CloseForumTopic
+    fn close_forum_topic<C>(
+        &self,
+        chat_id: C,
+        message_thread_id: ThreadId
+    ) -> Self::CloseForumTopic
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::CloseForumTopic::new(
             self.clone(),
-            payloads::CloseForumTopic::new(chat_id, message_thread_id),
+            payloads::CloseForumTopic::new(chat_id, message_thread_id)
         )
     }
 
@@ -887,14 +926,14 @@ impl Requester for Bot {
     fn reopen_forum_topic<C>(
         &self,
         chat_id: C,
-        message_thread_id: ThreadId,
+        message_thread_id: ThreadId
     ) -> Self::ReopenForumTopic
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::ReopenForumTopic::new(
             self.clone(),
-            payloads::ReopenForumTopic::new(chat_id, message_thread_id),
+            payloads::ReopenForumTopic::new(chat_id, message_thread_id)
         )
     }
 
@@ -903,14 +942,14 @@ impl Requester for Bot {
     fn delete_forum_topic<C>(
         &self,
         chat_id: C,
-        message_thread_id: ThreadId,
+        message_thread_id: ThreadId
     ) -> Self::DeleteForumTopic
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::DeleteForumTopic::new(
             self.clone(),
-            payloads::DeleteForumTopic::new(chat_id, message_thread_id),
+            payloads::DeleteForumTopic::new(chat_id, message_thread_id)
         )
     }
 
@@ -919,14 +958,14 @@ impl Requester for Bot {
     fn unpin_all_forum_topic_messages<C>(
         &self,
         chat_id: C,
-        message_thread_id: ThreadId,
+        message_thread_id: ThreadId
     ) -> Self::UnpinAllForumTopicMessages
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::UnpinAllForumTopicMessages::new(
             self.clone(),
-            payloads::UnpinAllForumTopicMessages::new(chat_id, message_thread_id),
+            payloads::UnpinAllForumTopicMessages::new(chat_id, message_thread_id)
         )
     }
 
@@ -935,11 +974,11 @@ impl Requester for Bot {
     fn edit_general_forum_topic<C, N>(&self, chat_id: C, name: N) -> Self::EditGeneralForumTopic
     where
         C: Into<Recipient>,
-        N: Into<String>,
+        N: Into<String>
     {
         Self::EditGeneralForumTopic::new(
             self.clone(),
-            payloads::EditGeneralForumTopic::new(chat_id, name),
+            payloads::EditGeneralForumTopic::new(chat_id, name)
         )
     }
 
@@ -947,11 +986,11 @@ impl Requester for Bot {
 
     fn close_general_forum_topic<C>(&self, chat_id: C) -> Self::CloseGeneralForumTopic
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::CloseGeneralForumTopic::new(
             self.clone(),
-            payloads::CloseGeneralForumTopic::new(chat_id),
+            payloads::CloseGeneralForumTopic::new(chat_id)
         )
     }
 
@@ -959,11 +998,11 @@ impl Requester for Bot {
 
     fn reopen_general_forum_topic<C>(&self, chat_id: C) -> Self::ReopenGeneralForumTopic
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::ReopenGeneralForumTopic::new(
             self.clone(),
-            payloads::ReopenGeneralForumTopic::new(chat_id),
+            payloads::ReopenGeneralForumTopic::new(chat_id)
         )
     }
 
@@ -971,11 +1010,11 @@ impl Requester for Bot {
 
     fn hide_general_forum_topic<C>(&self, chat_id: C) -> Self::HideGeneralForumTopic
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::HideGeneralForumTopic::new(
             self.clone(),
-            payloads::HideGeneralForumTopic::new(chat_id),
+            payloads::HideGeneralForumTopic::new(chat_id)
         )
     }
 
@@ -983,11 +1022,11 @@ impl Requester for Bot {
 
     fn unhide_general_forum_topic<C>(&self, chat_id: C) -> Self::UnhideGeneralForumTopic
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::UnhideGeneralForumTopic::new(
             self.clone(),
-            payloads::UnhideGeneralForumTopic::new(chat_id),
+            payloads::UnhideGeneralForumTopic::new(chat_id)
         )
     }
 
@@ -996,14 +1035,14 @@ impl Requester for Bot {
 
     fn unpin_all_general_forum_topic_messages<C>(
         &self,
-        chat_id: C,
+        chat_id: C
     ) -> Self::UnpinAllGeneralForumTopicMessages
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::UnpinAllGeneralForumTopicMessages::new(
             self.clone(),
-            payloads::UnpinAllGeneralForumTopicMessages::new(chat_id),
+            payloads::UnpinAllGeneralForumTopicMessages::new(chat_id)
         )
     }
 
@@ -1011,11 +1050,11 @@ impl Requester for Bot {
 
     fn answer_callback_query(
         &self,
-        callback_query_id: CallbackQueryId,
+        callback_query_id: CallbackQueryId
     ) -> Self::AnswerCallbackQuery {
         Self::AnswerCallbackQuery::new(
             self.clone(),
-            payloads::AnswerCallbackQuery::new(callback_query_id),
+            payloads::AnswerCallbackQuery::new(callback_query_id)
         )
     }
 
@@ -1023,11 +1062,11 @@ impl Requester for Bot {
 
     fn get_user_chat_boosts<C>(&self, chat_id: C, user_id: UserId) -> Self::GetUserChatBoosts
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::GetUserChatBoosts::new(
             self.clone(),
-            payloads::GetUserChatBoosts::new(chat_id, user_id),
+            payloads::GetUserChatBoosts::new(chat_id, user_id)
         )
     }
 
@@ -1035,7 +1074,7 @@ impl Requester for Bot {
 
     fn set_my_commands<C>(&self, commands: C) -> Self::SetMyCommands
     where
-        C: IntoIterator<Item = BotCommand>,
+        C: IntoIterator<Item = BotCommand>
     {
         Self::SetMyCommands::new(self.clone(), payloads::SetMyCommands::new(commands))
     }
@@ -1044,11 +1083,11 @@ impl Requester for Bot {
 
     fn get_business_connection(
         &self,
-        business_connection_id: BusinessConnectionId,
+        business_connection_id: BusinessConnectionId
     ) -> Self::GetBusinessConnection {
         Self::GetBusinessConnection::new(
             self.clone(),
-            payloads::GetBusinessConnection::new(business_connection_id),
+            payloads::GetBusinessConnection::new(business_connection_id)
         )
     }
 
@@ -1116,7 +1155,7 @@ impl Requester for Bot {
     fn replace_managed_bot_token(&self, user_id: UserId) -> Self::ReplaceManagedBotToken {
         Self::ReplaceManagedBotToken::new(
             self.clone(),
-            payloads::ReplaceManagedBotToken::new(user_id),
+            payloads::ReplaceManagedBotToken::new(user_id)
         )
     }
 
@@ -1124,11 +1163,11 @@ impl Requester for Bot {
 
     fn get_managed_bot_access_settings(
         &self,
-        user_id: UserId,
+        user_id: UserId
     ) -> Self::GetManagedBotAccessSettings {
         Self::GetManagedBotAccessSettings::new(
             self.clone(),
-            payloads::GetManagedBotAccessSettings::new(user_id),
+            payloads::GetManagedBotAccessSettings::new(user_id)
         )
     }
 
@@ -1137,11 +1176,11 @@ impl Requester for Bot {
     fn set_managed_bot_access_settings(
         &self,
         user_id: UserId,
-        is_access_restricted: bool,
+        is_access_restricted: bool
     ) -> Self::SetManagedBotAccessSettings {
         Self::SetManagedBotAccessSettings::new(
             self.clone(),
-            payloads::SetManagedBotAccessSettings::new(user_id, is_access_restricted),
+            payloads::SetManagedBotAccessSettings::new(user_id, is_access_restricted)
         )
     }
 
@@ -1150,11 +1189,11 @@ impl Requester for Bot {
     fn get_user_personal_chat_messages(
         &self,
         user_id: UserId,
-        limit: u8,
+        limit: u8
     ) -> Self::GetUserPersonalChatMessages {
         Self::GetUserPersonalChatMessages::new(
             self.clone(),
-            payloads::GetUserPersonalChatMessages::new(user_id, limit),
+            payloads::GetUserPersonalChatMessages::new(user_id, limit)
         )
     }
 
@@ -1175,7 +1214,7 @@ impl Requester for Bot {
     fn set_my_default_administrator_rights(&self) -> Self::SetMyDefaultAdministratorRights {
         Self::SetMyDefaultAdministratorRights::new(
             self.clone(),
-            payloads::SetMyDefaultAdministratorRights::new(),
+            payloads::SetMyDefaultAdministratorRights::new()
         )
     }
 
@@ -1184,7 +1223,7 @@ impl Requester for Bot {
     fn get_my_default_administrator_rights(&self) -> Self::GetMyDefaultAdministratorRights {
         Self::GetMyDefaultAdministratorRights::new(
             self.clone(),
-            payloads::GetMyDefaultAdministratorRights::new(),
+            payloads::GetMyDefaultAdministratorRights::new()
         )
     }
 
@@ -1199,14 +1238,14 @@ impl Requester for Bot {
     fn answer_inline_query<R>(
         &self,
         inline_query_id: InlineQueryId,
-        results: R,
+        results: R
     ) -> Self::AnswerInlineQuery
     where
-        R: IntoIterator<Item = InlineQueryResult>,
+        R: IntoIterator<Item = InlineQueryResult>
     {
         Self::AnswerInlineQuery::new(
             self.clone(),
-            payloads::AnswerInlineQuery::new(inline_query_id, results),
+            payloads::AnswerInlineQuery::new(inline_query_id, results)
         )
     }
 
@@ -1215,14 +1254,14 @@ impl Requester for Bot {
     fn answer_web_app_query<W>(
         &self,
         web_app_query_id: W,
-        result: InlineQueryResult,
+        result: InlineQueryResult
     ) -> Self::AnswerWebAppQuery
     where
-        W: Into<String>,
+        W: Into<String>
     {
         Self::AnswerWebAppQuery::new(
             self.clone(),
-            payloads::AnswerWebAppQuery::new(web_app_query_id, result),
+            payloads::AnswerWebAppQuery::new(web_app_query_id, result)
         )
     }
 
@@ -1231,14 +1270,14 @@ impl Requester for Bot {
     fn answer_guest_query<G>(
         &self,
         guest_query_id: G,
-        result: InlineQueryResult,
+        result: InlineQueryResult
     ) -> Self::AnswerGuestQuery
     where
-        G: Into<String>,
+        G: Into<String>
     {
         Self::AnswerGuestQuery::new(
             self.clone(),
-            payloads::AnswerGuestQuery::new(guest_query_id, result),
+            payloads::AnswerGuestQuery::new(guest_query_id, result)
         )
     }
 
@@ -1247,11 +1286,11 @@ impl Requester for Bot {
     fn save_prepared_inline_message(
         &self,
         user_id: UserId,
-        result: InlineQueryResult,
+        result: InlineQueryResult
     ) -> Self::SavePreparedInlineMessage {
         Self::SavePreparedInlineMessage::new(
             self.clone(),
-            payloads::SavePreparedInlineMessage::new(user_id, result),
+            payloads::SavePreparedInlineMessage::new(user_id, result)
         )
     }
 
@@ -1260,11 +1299,11 @@ impl Requester for Bot {
     fn save_prepared_keyboard_button(
         &self,
         user_id: UserId,
-        button: KeyboardButton,
+        button: KeyboardButton
     ) -> Self::SavePreparedKeyboardButton {
         Self::SavePreparedKeyboardButton::new(
             self.clone(),
-            payloads::SavePreparedKeyboardButton::new(user_id, button),
+            payloads::SavePreparedKeyboardButton::new(user_id, button)
         )
     }
 
@@ -1274,15 +1313,15 @@ impl Requester for Bot {
         &self,
         chat_id: C,
         message_id: MessageId,
-        text: T,
+        text: T
     ) -> Self::EditMessageText
     where
         C: Into<Recipient>,
-        T: Into<String>,
+        T: Into<String>
     {
         Self::EditMessageText::new(
             self.clone(),
-            payloads::EditMessageText::new(chat_id, message_id, text),
+            payloads::EditMessageText::new(chat_id, message_id, text)
         )
     }
 
@@ -1291,39 +1330,46 @@ impl Requester for Bot {
     fn edit_message_text_inline<I, T>(
         &self,
         inline_message_id: I,
-        text: T,
+        text: T
     ) -> Self::EditMessageTextInline
     where
         I: Into<String>,
-        T: Into<String>,
+        T: Into<String>
     {
         Self::EditMessageTextInline::new(
             self.clone(),
-            payloads::EditMessageTextInline::new(inline_message_id, text),
+            payloads::EditMessageTextInline::new(inline_message_id, text)
         )
     }
 
     type EditMessageCaption = JsonRequest<payloads::EditMessageCaption>;
 
-    fn edit_message_caption<C>(&self, chat_id: C, message_id: MessageId) -> Self::EditMessageCaption
+    fn edit_message_caption<C>(
+        &self,
+        chat_id: C,
+        message_id: MessageId
+    ) -> Self::EditMessageCaption
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::EditMessageCaption::new(
             self.clone(),
-            payloads::EditMessageCaption::new(chat_id, message_id),
+            payloads::EditMessageCaption::new(chat_id, message_id)
         )
     }
 
     type EditMessageCaptionInline = JsonRequest<payloads::EditMessageCaptionInline>;
 
-    fn edit_message_caption_inline<I>(&self, inline_message_id: I) -> Self::EditMessageCaptionInline
+    fn edit_message_caption_inline<I>(
+        &self,
+        inline_message_id: I
+    ) -> Self::EditMessageCaptionInline
     where
-        I: Into<String>,
+        I: Into<String>
     {
         Self::EditMessageCaptionInline::new(
             self.clone(),
-            payloads::EditMessageCaptionInline::new(inline_message_id),
+            payloads::EditMessageCaptionInline::new(inline_message_id)
         )
     }
 
@@ -1333,14 +1379,14 @@ impl Requester for Bot {
         &self,
         chat_id: C,
         message_id: MessageId,
-        media: InputMedia,
+        media: InputMedia
     ) -> Self::EditMessageMedia
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::EditMessageMedia::new(
             self.clone(),
-            payloads::EditMessageMedia::new(chat_id, message_id, media),
+            payloads::EditMessageMedia::new(chat_id, message_id, media)
         )
     }
 
@@ -1349,14 +1395,14 @@ impl Requester for Bot {
     fn edit_message_media_inline<I>(
         &self,
         inline_message_id: I,
-        media: InputMedia,
+        media: InputMedia
     ) -> Self::EditMessageMediaInline
     where
-        I: Into<String>,
+        I: Into<String>
     {
         Self::EditMessageMediaInline::new(
             self.clone(),
-            payloads::EditMessageMediaInline::new(inline_message_id, media),
+            payloads::EditMessageMediaInline::new(inline_message_id, media)
         )
     }
 
@@ -1365,14 +1411,14 @@ impl Requester for Bot {
     fn edit_message_reply_markup<C>(
         &self,
         chat_id: C,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> Self::EditMessageReplyMarkup
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::EditMessageReplyMarkup::new(
             self.clone(),
-            payloads::EditMessageReplyMarkup::new(chat_id, message_id),
+            payloads::EditMessageReplyMarkup::new(chat_id, message_id)
         )
     }
 
@@ -1380,14 +1426,14 @@ impl Requester for Bot {
 
     fn edit_message_reply_markup_inline<I>(
         &self,
-        inline_message_id: I,
+        inline_message_id: I
     ) -> Self::EditMessageReplyMarkupInline
     where
-        I: Into<String>,
+        I: Into<String>
     {
         Self::EditMessageReplyMarkupInline::new(
             self.clone(),
-            payloads::EditMessageReplyMarkupInline::new(inline_message_id),
+            payloads::EditMessageReplyMarkupInline::new(inline_message_id)
         )
     }
 
@@ -1395,7 +1441,7 @@ impl Requester for Bot {
 
     fn stop_poll<C>(&self, chat_id: C, message_id: MessageId) -> Self::StopPoll
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::StopPoll::new(self.clone(), payloads::StopPoll::new(chat_id, message_id))
     }
@@ -1405,14 +1451,14 @@ impl Requester for Bot {
     fn approve_suggested_post<C>(
         &self,
         chat_id: C,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> Self::ApproveSuggestedPost
     where
-        C: Into<ChatId>,
+        C: Into<ChatId>
     {
         Self::ApproveSuggestedPost::new(
             self.clone(),
-            payloads::ApproveSuggestedPost::new(chat_id, message_id),
+            payloads::ApproveSuggestedPost::new(chat_id, message_id)
         )
     }
 
@@ -1421,14 +1467,14 @@ impl Requester for Bot {
     fn decline_suggested_post<C>(
         &self,
         chat_id: C,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> Self::DeclineSuggestedPost
     where
-        C: Into<ChatId>,
+        C: Into<ChatId>
     {
         Self::DeclineSuggestedPost::new(
             self.clone(),
-            payloads::DeclineSuggestedPost::new(chat_id, message_id),
+            payloads::DeclineSuggestedPost::new(chat_id, message_id)
         )
     }
 
@@ -1436,25 +1482,31 @@ impl Requester for Bot {
 
     fn delete_message<C>(&self, chat_id: C, message_id: MessageId) -> Self::DeleteMessage
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
-        Self::DeleteMessage::new(self.clone(), payloads::DeleteMessage::new(chat_id, message_id))
+        Self::DeleteMessage::new(
+            self.clone(),
+            payloads::DeleteMessage::new(chat_id, message_id)
+        )
     }
 
     type DeleteMessages = JsonRequest<payloads::DeleteMessages>;
     fn delete_messages<C, M>(&self, chat_id: C, message_ids: M) -> Self::DeleteMessages
     where
         C: Into<Recipient>,
-        M: IntoIterator<Item = MessageId>,
+        M: IntoIterator<Item = MessageId>
     {
-        Self::DeleteMessages::new(self.clone(), payloads::DeleteMessages::new(chat_id, message_ids))
+        Self::DeleteMessages::new(
+            self.clone(),
+            payloads::DeleteMessages::new(chat_id, message_ids)
+        )
     }
 
     type SendSticker = MultipartRequest<payloads::SendSticker>;
 
     fn send_sticker<C>(&self, chat_id: C, sticker: InputFile) -> Self::SendSticker
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::SendSticker::new(self.clone(), payloads::SendSticker::new(chat_id, sticker))
     }
@@ -1463,7 +1515,7 @@ impl Requester for Bot {
 
     fn get_sticker_set<N>(&self, name: N) -> Self::GetStickerSet
     where
-        N: Into<String>,
+        N: Into<String>
     {
         Self::GetStickerSet::new(self.clone(), payloads::GetStickerSet::new(name))
     }
@@ -1472,11 +1524,11 @@ impl Requester for Bot {
 
     fn get_custom_emoji_stickers<C>(&self, custom_emoji_ids: C) -> Self::GetCustomEmojiStickers
     where
-        C: IntoIterator<Item = CustomEmojiId>,
+        C: IntoIterator<Item = CustomEmojiId>
     {
         Self::GetCustomEmojiStickers::new(
             self.clone(),
-            payloads::GetCustomEmojiStickers::new(custom_emoji_ids),
+            payloads::GetCustomEmojiStickers::new(custom_emoji_ids)
         )
     }
 
@@ -1486,11 +1538,11 @@ impl Requester for Bot {
         &self,
         user_id: UserId,
         sticker: InputFile,
-        sticker_format: StickerFormat,
+        sticker_format: StickerFormat
     ) -> Self::UploadStickerFile {
         Self::UploadStickerFile::new(
             self.clone(),
-            payloads::UploadStickerFile::new(user_id, sticker, sticker_format),
+            payloads::UploadStickerFile::new(user_id, sticker, sticker_format)
         )
     }
 
@@ -1501,16 +1553,16 @@ impl Requester for Bot {
         user_id: UserId,
         name: N,
         title: T,
-        stickers: S,
+        stickers: S
     ) -> Self::CreateNewStickerSet
     where
         N: Into<String>,
         T: Into<String>,
-        S: IntoIterator<Item = InputSticker>,
+        S: IntoIterator<Item = InputSticker>
     {
         Self::CreateNewStickerSet::new(
             self.clone(),
-            payloads::CreateNewStickerSet::new(user_id, name, title, stickers),
+            payloads::CreateNewStickerSet::new(user_id, name, title, stickers)
         )
     }
 
@@ -1520,14 +1572,14 @@ impl Requester for Bot {
         &self,
         user_id: UserId,
         name: N,
-        sticker: InputSticker,
+        sticker: InputSticker
     ) -> Self::AddStickerToSet
     where
-        N: Into<String>,
+        N: Into<String>
     {
         Self::AddStickerToSet::new(
             self.clone(),
-            payloads::AddStickerToSet::new(user_id, name, sticker),
+            payloads::AddStickerToSet::new(user_id, name, sticker)
         )
     }
 
@@ -1536,14 +1588,14 @@ impl Requester for Bot {
     fn set_sticker_position_in_set<S>(
         &self,
         sticker: S,
-        position: u32,
+        position: u32
     ) -> Self::SetStickerPositionInSet
     where
-        S: Into<String>,
+        S: Into<String>
     {
         Self::SetStickerPositionInSet::new(
             self.clone(),
-            payloads::SetStickerPositionInSet::new(sticker, position),
+            payloads::SetStickerPositionInSet::new(sticker, position)
         )
     }
 
@@ -1551,7 +1603,7 @@ impl Requester for Bot {
 
     fn delete_sticker_from_set<S>(&self, sticker: S) -> Self::DeleteStickerFromSet
     where
-        S: Into<String>,
+        S: Into<String>
     {
         Self::DeleteStickerFromSet::new(self.clone(), payloads::DeleteStickerFromSet::new(sticker))
     }
@@ -1563,11 +1615,11 @@ impl Requester for Bot {
         user_id: UserId,
         name: N,
         old_sticker: O,
-        sticker: InputSticker,
+        sticker: InputSticker
     ) -> Self::ReplaceStickerInSet
     where
         N: Into<String>,
-        O: Into<String>,
+        O: Into<String>
     {
         Self::ReplaceStickerInSet::new(
             self.clone(),
@@ -1575,8 +1627,8 @@ impl Requester for Bot {
                 user_id,
                 name: name.into(),
                 old_sticker: old_sticker.into(),
-                sticker,
-            },
+                sticker
+            }
         )
     }
 
@@ -1586,14 +1638,14 @@ impl Requester for Bot {
         &self,
         name: N,
         user_id: UserId,
-        format: StickerFormat,
+        format: StickerFormat
     ) -> Self::SetStickerSetThumbnail
     where
-        N: Into<String>,
+        N: Into<String>
     {
         Self::SetStickerSetThumbnail::new(
             self.clone(),
-            payloads::SetStickerSetThumbnail::new(name, user_id, format),
+            payloads::SetStickerSetThumbnail::new(name, user_id, format)
         )
     }
 
@@ -1602,14 +1654,14 @@ impl Requester for Bot {
 
     fn set_custom_emoji_sticker_set_thumbnail<N>(
         &self,
-        name: N,
+        name: N
     ) -> Self::SetCustomEmojiStickerSetThumbnail
     where
-        N: Into<String>,
+        N: Into<String>
     {
         Self::SetCustomEmojiStickerSetThumbnail::new(
             self.clone(),
-            payloads::SetCustomEmojiStickerSetThumbnail::new(name),
+            payloads::SetCustomEmojiStickerSetThumbnail::new(name)
         )
     }
 
@@ -1618,7 +1670,7 @@ impl Requester for Bot {
     fn set_sticker_set_title<N, T>(&self, name: N, title: T) -> Self::SetStickerSetTitle
     where
         N: Into<String>,
-        T: Into<String>,
+        T: Into<String>
     {
         Self::SetStickerSetTitle::new(self.clone(), payloads::SetStickerSetTitle::new(name, title))
     }
@@ -1627,7 +1679,7 @@ impl Requester for Bot {
 
     fn delete_sticker_set<N>(&self, name: N) -> Self::DeleteStickerSet
     where
-        N: Into<String>,
+        N: Into<String>
     {
         Self::DeleteStickerSet::new(self.clone(), payloads::DeleteStickerSet::new(name))
     }
@@ -1637,11 +1689,11 @@ impl Requester for Bot {
     fn set_sticker_emoji_list<S, E>(&self, sticker: S, emoji_list: E) -> Self::SetStickerEmojiList
     where
         S: Into<String>,
-        E: IntoIterator<Item = String>,
+        E: IntoIterator<Item = String>
     {
         Self::SetStickerEmojiList::new(
             self.clone(),
-            payloads::SetStickerEmojiList::new(sticker, emoji_list),
+            payloads::SetStickerEmojiList::new(sticker, emoji_list)
         )
     }
 
@@ -1649,7 +1701,7 @@ impl Requester for Bot {
 
     fn set_sticker_keywords<S>(&self, sticker: S) -> Self::SetStickerKeywords
     where
-        S: Into<String>,
+        S: Into<String>
     {
         Self::SetStickerKeywords::new(self.clone(), payloads::SetStickerKeywords::new(sticker))
     }
@@ -1658,11 +1710,11 @@ impl Requester for Bot {
 
     fn set_sticker_mask_position<S>(&self, sticker: S) -> Self::SetStickerMaskPosition
     where
-        S: Into<String>,
+        S: Into<String>
     {
         Self::SetStickerMaskPosition::new(
             self.clone(),
-            payloads::SetStickerMaskPosition::new(sticker),
+            payloads::SetStickerMaskPosition::new(sticker)
         )
     }
 
@@ -1682,7 +1734,7 @@ impl Requester for Bot {
 
     fn send_gift_chat<C>(&self, chat_id: C, gift_id: GiftId) -> Self::SendGiftChat
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::SendGiftChat::new(self.clone(), payloads::SendGiftChat::new(chat_id, gift_id))
     }
@@ -1693,11 +1745,11 @@ impl Requester for Bot {
         &self,
         user_id: UserId,
         month_count: u8,
-        star_count: u32,
+        star_count: u32
     ) -> Self::GiftPremiumSubscription {
         Self::GiftPremiumSubscription::new(
             self.clone(),
-            payloads::GiftPremiumSubscription::new(user_id, month_count, star_count),
+            payloads::GiftPremiumSubscription::new(user_id, month_count, star_count)
         )
     }
 
@@ -1711,7 +1763,7 @@ impl Requester for Bot {
 
     fn verify_chat<C>(&self, chat_id: C) -> Self::VerifyChat
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::VerifyChat::new(self.clone(), payloads::VerifyChat::new(chat_id))
     }
@@ -1721,7 +1773,7 @@ impl Requester for Bot {
     fn remove_user_verification(&self, user_id: UserId) -> Self::RemoveUserVerification {
         Self::RemoveUserVerification::new(
             self.clone(),
-            payloads::RemoveUserVerification::new(user_id),
+            payloads::RemoveUserVerification::new(user_id)
         )
     }
 
@@ -1729,11 +1781,11 @@ impl Requester for Bot {
 
     fn remove_chat_verification<C>(&self, chat_id: C) -> Self::RemoveChatVerification
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::RemoveChatVerification::new(
             self.clone(),
-            payloads::RemoveChatVerification::new(chat_id),
+            payloads::RemoveChatVerification::new(chat_id)
         )
     }
 
@@ -1743,14 +1795,14 @@ impl Requester for Bot {
         &self,
         business_connection_id: BusinessConnectionId,
         chat_id: C,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> Self::ReadBusinessMessage
     where
-        C: Into<ChatId>,
+        C: Into<ChatId>
     {
         Self::ReadBusinessMessage::new(
             self.clone(),
-            payloads::ReadBusinessMessage::new(business_connection_id, chat_id, message_id),
+            payloads::ReadBusinessMessage::new(business_connection_id, chat_id, message_id)
         )
     }
 
@@ -1759,14 +1811,14 @@ impl Requester for Bot {
     fn delete_business_messages<M>(
         &self,
         business_connection_id: BusinessConnectionId,
-        message_ids: M,
+        message_ids: M
     ) -> Self::DeleteBusinessMessages
     where
-        M: IntoIterator<Item = MessageId>,
+        M: IntoIterator<Item = MessageId>
     {
         Self::DeleteBusinessMessages::new(
             self.clone(),
-            payloads::DeleteBusinessMessages::new(business_connection_id, message_ids),
+            payloads::DeleteBusinessMessages::new(business_connection_id, message_ids)
         )
     }
 
@@ -1775,14 +1827,14 @@ impl Requester for Bot {
     fn set_business_account_name<F>(
         &self,
         business_connection_id: BusinessConnectionId,
-        first_name: F,
+        first_name: F
     ) -> Self::SetBusinessAccountName
     where
-        F: Into<String>,
+        F: Into<String>
     {
         Self::SetBusinessAccountName::new(
             self.clone(),
-            payloads::SetBusinessAccountName::new(business_connection_id, first_name),
+            payloads::SetBusinessAccountName::new(business_connection_id, first_name)
         )
     }
 
@@ -1790,11 +1842,11 @@ impl Requester for Bot {
 
     fn set_business_account_username(
         &self,
-        business_connection_id: BusinessConnectionId,
+        business_connection_id: BusinessConnectionId
     ) -> Self::SetBusinessAccountUsername {
         Self::SetBusinessAccountUsername::new(
             self.clone(),
-            payloads::SetBusinessAccountUsername::new(business_connection_id),
+            payloads::SetBusinessAccountUsername::new(business_connection_id)
         )
     }
 
@@ -1802,11 +1854,11 @@ impl Requester for Bot {
 
     fn set_business_account_bio(
         &self,
-        business_connection_id: BusinessConnectionId,
+        business_connection_id: BusinessConnectionId
     ) -> Self::SetBusinessAccountBio {
         Self::SetBusinessAccountBio::new(
             self.clone(),
-            payloads::SetBusinessAccountBio::new(business_connection_id),
+            payloads::SetBusinessAccountBio::new(business_connection_id)
         )
     }
 
@@ -1816,11 +1868,11 @@ impl Requester for Bot {
     fn set_business_account_profile_photo(
         &self,
         business_connection_id: BusinessConnectionId,
-        photo: InputProfilePhoto,
+        photo: InputProfilePhoto
     ) -> Self::SetBusinessAccountProfilePhoto {
         Self::SetBusinessAccountProfilePhoto::new(
             self.clone(),
-            payloads::SetBusinessAccountProfilePhoto::new(business_connection_id, photo),
+            payloads::SetBusinessAccountProfilePhoto::new(business_connection_id, photo)
         )
     }
 
@@ -1829,11 +1881,11 @@ impl Requester for Bot {
 
     fn remove_business_account_profile_photo(
         &self,
-        business_connection_id: BusinessConnectionId,
+        business_connection_id: BusinessConnectionId
     ) -> Self::RemoveBusinessAccountProfilePhoto {
         Self::RemoveBusinessAccountProfilePhoto::new(
             self.clone(),
-            payloads::RemoveBusinessAccountProfilePhoto::new(business_connection_id),
+            payloads::RemoveBusinessAccountProfilePhoto::new(business_connection_id)
         )
     }
 
@@ -1843,15 +1895,15 @@ impl Requester for Bot {
         &self,
         business_connection_id: BusinessConnectionId,
         show_gift_button: bool,
-        accepted_gift_types: AcceptedGiftTypes,
+        accepted_gift_types: AcceptedGiftTypes
     ) -> Self::SetBusinessAccountGiftSettings {
         Self::SetBusinessAccountGiftSettings::new(
             self.clone(),
             payloads::SetBusinessAccountGiftSettings::new(
                 business_connection_id,
                 show_gift_button,
-                accepted_gift_types,
-            ),
+                accepted_gift_types
+            )
         )
     }
 
@@ -1859,11 +1911,11 @@ impl Requester for Bot {
 
     fn get_business_account_star_balance(
         &self,
-        business_connection_id: BusinessConnectionId,
+        business_connection_id: BusinessConnectionId
     ) -> Self::GetBusinessAccountStarBalance {
         Self::GetBusinessAccountStarBalance::new(
             self.clone(),
-            payloads::GetBusinessAccountStarBalance::new(business_connection_id),
+            payloads::GetBusinessAccountStarBalance::new(business_connection_id)
         )
     }
 
@@ -1872,11 +1924,11 @@ impl Requester for Bot {
     fn transfer_business_account_stars(
         &self,
         business_connection_id: BusinessConnectionId,
-        star_count: u32,
+        star_count: u32
     ) -> Self::TransferBusinessAccountStars {
         Self::TransferBusinessAccountStars::new(
             self.clone(),
-            payloads::TransferBusinessAccountStars::new(business_connection_id, star_count),
+            payloads::TransferBusinessAccountStars::new(business_connection_id, star_count)
         )
     }
 
@@ -1884,11 +1936,11 @@ impl Requester for Bot {
 
     fn get_business_account_gifts(
         &self,
-        business_connection_id: BusinessConnectionId,
+        business_connection_id: BusinessConnectionId
     ) -> Self::GetBusinessAccountGifts {
         Self::GetBusinessAccountGifts::new(
             self.clone(),
-            payloads::GetBusinessAccountGifts::new(business_connection_id),
+            payloads::GetBusinessAccountGifts::new(business_connection_id)
         )
     }
 
@@ -1902,7 +1954,7 @@ impl Requester for Bot {
 
     fn get_chat_gifts<C>(&self, chat_id: C) -> Self::GetChatGifts
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::GetChatGifts::new(self.clone(), payloads::GetChatGifts::new(chat_id))
     }
@@ -1912,11 +1964,11 @@ impl Requester for Bot {
     fn convert_gift_to_stars(
         &self,
         business_connection_id: BusinessConnectionId,
-        owned_gift_id: OwnedGiftId,
+        owned_gift_id: OwnedGiftId
     ) -> Self::ConvertGiftToStars {
         Self::ConvertGiftToStars::new(
             self.clone(),
-            payloads::ConvertGiftToStars::new(business_connection_id, owned_gift_id),
+            payloads::ConvertGiftToStars::new(business_connection_id, owned_gift_id)
         )
     }
 
@@ -1925,11 +1977,11 @@ impl Requester for Bot {
     fn upgrade_gift(
         &self,
         business_connection_id: BusinessConnectionId,
-        owned_gift_id: OwnedGiftId,
+        owned_gift_id: OwnedGiftId
     ) -> Self::UpgradeGift {
         Self::UpgradeGift::new(
             self.clone(),
-            payloads::UpgradeGift::new(business_connection_id, owned_gift_id),
+            payloads::UpgradeGift::new(business_connection_id, owned_gift_id)
         )
     }
 
@@ -1939,14 +1991,14 @@ impl Requester for Bot {
         &self,
         business_connection_id: BusinessConnectionId,
         owned_gift_id: OwnedGiftId,
-        new_owner_chat_id: C,
+        new_owner_chat_id: C
     ) -> Self::TransferGift
     where
-        C: Into<ChatId>,
+        C: Into<ChatId>
     {
         Self::TransferGift::new(
             self.clone(),
-            payloads::TransferGift::new(business_connection_id, owned_gift_id, new_owner_chat_id),
+            payloads::TransferGift::new(business_connection_id, owned_gift_id, new_owner_chat_id)
         )
     }
 
@@ -1956,11 +2008,11 @@ impl Requester for Bot {
         &self,
         business_connection_id: BusinessConnectionId,
         content: InputStoryContent,
-        active_period: Seconds,
+        active_period: Seconds
     ) -> Self::PostStory {
         Self::PostStory::new(
             self.clone(),
-            payloads::PostStory::new(business_connection_id, content, active_period),
+            payloads::PostStory::new(business_connection_id, content, active_period)
         )
     }
 
@@ -1971,10 +2023,10 @@ impl Requester for Bot {
         business_connection_id: BusinessConnectionId,
         from_chat_id: F,
         from_story_id: StoryId,
-        active_period: Seconds,
+        active_period: Seconds
     ) -> Self::RepostStory
     where
-        F: Into<ChatId>,
+        F: Into<ChatId>
     {
         Self::RepostStory::new(
             self.clone(),
@@ -1982,8 +2034,8 @@ impl Requester for Bot {
                 business_connection_id,
                 from_chat_id,
                 from_story_id,
-                active_period,
-            ),
+                active_period
+            )
         )
     }
 
@@ -1993,11 +2045,11 @@ impl Requester for Bot {
         &self,
         business_connection_id: BusinessConnectionId,
         story_id: StoryId,
-        content: InputStoryContent,
+        content: InputStoryContent
     ) -> Self::EditStory {
         Self::EditStory::new(
             self.clone(),
-            payloads::EditStory::new(business_connection_id, story_id, content),
+            payloads::EditStory::new(business_connection_id, story_id, content)
         )
     }
 
@@ -2006,11 +2058,11 @@ impl Requester for Bot {
     fn delete_story(
         &self,
         business_connection_id: BusinessConnectionId,
-        story_id: StoryId,
+        story_id: StoryId
     ) -> Self::DeleteStory {
         Self::DeleteStory::new(
             self.clone(),
-            payloads::DeleteStory::new(business_connection_id, story_id),
+            payloads::DeleteStory::new(business_connection_id, story_id)
         )
     }
 
@@ -2023,7 +2075,7 @@ impl Requester for Bot {
         description: D,
         payload: Pa,
         currency: C,
-        prices: Pri,
+        prices: Pri
     ) -> Self::SendInvoice
     where
         Ch: Into<Recipient>,
@@ -2031,11 +2083,11 @@ impl Requester for Bot {
         D: Into<String>,
         Pa: Into<String>,
         C: Into<String>,
-        Pri: IntoIterator<Item = LabeledPrice>,
+        Pri: IntoIterator<Item = LabeledPrice>
     {
         Self::SendInvoice::new(
             self.clone(),
-            payloads::SendInvoice::new(chat_id, title, description, payload, currency, prices),
+            payloads::SendInvoice::new(chat_id, title, description, payload, currency, prices)
         )
     }
 
@@ -2047,18 +2099,18 @@ impl Requester for Bot {
         description: D,
         payload: Pa,
         currency: C,
-        prices: Pri,
+        prices: Pri
     ) -> Self::CreateInvoiceLink
     where
         T: Into<String>,
         D: Into<String>,
         Pa: Into<String>,
         C: Into<String>,
-        Pri: IntoIterator<Item = LabeledPrice>,
+        Pri: IntoIterator<Item = LabeledPrice>
     {
         Self::CreateInvoiceLink::new(
             self.clone(),
-            payloads::CreateInvoiceLink::new(title, description, payload, currency, prices),
+            payloads::CreateInvoiceLink::new(title, description, payload, currency, prices)
         )
     }
 
@@ -2067,11 +2119,11 @@ impl Requester for Bot {
     fn answer_shipping_query(
         &self,
         shipping_query_id: ShippingQueryId,
-        ok: bool,
+        ok: bool
     ) -> Self::AnswerShippingQuery {
         Self::AnswerShippingQuery::new(
             self.clone(),
-            payloads::AnswerShippingQuery::new(shipping_query_id, ok),
+            payloads::AnswerShippingQuery::new(shipping_query_id, ok)
         )
     }
 
@@ -2080,11 +2132,11 @@ impl Requester for Bot {
     fn answer_pre_checkout_query(
         &self,
         pre_checkout_query_id: PreCheckoutQueryId,
-        ok: bool,
+        ok: bool
     ) -> Self::AnswerPreCheckoutQuery {
         Self::AnswerPreCheckoutQuery::new(
             self.clone(),
-            payloads::AnswerPreCheckoutQuery::new(pre_checkout_query_id, ok),
+            payloads::AnswerPreCheckoutQuery::new(pre_checkout_query_id, ok)
         )
     }
 
@@ -2105,11 +2157,11 @@ impl Requester for Bot {
     fn refund_star_payment(
         &self,
         user_id: UserId,
-        telegram_payment_charge_id: TelegramTransactionId,
+        telegram_payment_charge_id: TelegramTransactionId
     ) -> Self::RefundStarPayment {
         Self::RefundStarPayment::new(
             self.clone(),
-            payloads::RefundStarPayment::new(user_id, telegram_payment_charge_id),
+            payloads::RefundStarPayment::new(user_id, telegram_payment_charge_id)
         )
     }
 
@@ -2119,27 +2171,31 @@ impl Requester for Bot {
         &self,
         user_id: UserId,
         telegram_payment_charge_id: TelegramTransactionId,
-        is_canceled: bool,
+        is_canceled: bool
     ) -> Self::EditUserStarSubscription {
         Self::EditUserStarSubscription::new(
             self.clone(),
             payloads::EditUserStarSubscription::new(
                 user_id,
                 telegram_payment_charge_id,
-                is_canceled,
-            ),
+                is_canceled
+            )
         )
     }
 
     type SetPassportDataErrors = JsonRequest<payloads::SetPassportDataErrors>;
 
-    fn set_passport_data_errors<E>(&self, user_id: UserId, errors: E) -> Self::SetPassportDataErrors
+    fn set_passport_data_errors<E>(
+        &self,
+        user_id: UserId,
+        errors: E
+    ) -> Self::SetPassportDataErrors
     where
-        E: IntoIterator<Item = crate::types::PassportElementError>,
+        E: IntoIterator<Item = crate::types::PassportElementError>
     {
         Self::SetPassportDataErrors::new(
             self.clone(),
-            payloads::SetPassportDataErrors::new(user_id, errors),
+            payloads::SetPassportDataErrors::new(user_id, errors)
         )
     }
 
@@ -2148,9 +2204,12 @@ impl Requester for Bot {
     fn send_game<C, G>(&self, chat_id: C, game_short_name: G) -> Self::SendGame
     where
         C: Into<ChatId>,
-        G: Into<String>,
+        G: Into<String>
     {
-        Self::SendGame::new(self.clone(), payloads::SendGame::new(chat_id, game_short_name))
+        Self::SendGame::new(
+            self.clone(),
+            payloads::SendGame::new(chat_id, game_short_name)
+        )
     }
 
     type SetGameScore = JsonRequest<payloads::SetGameScore>;
@@ -2160,11 +2219,11 @@ impl Requester for Bot {
         user_id: UserId,
         score: u64,
         chat_id: u32,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> Self::SetGameScore {
         Self::SetGameScore::new(
             self.clone(),
-            payloads::SetGameScore::new(user_id, score, chat_id, message_id),
+            payloads::SetGameScore::new(user_id, score, chat_id, message_id)
         )
     }
 
@@ -2174,14 +2233,14 @@ impl Requester for Bot {
         &self,
         user_id: UserId,
         score: u64,
-        inline_message_id: I,
+        inline_message_id: I
     ) -> Self::SetGameScoreInline
     where
-        I: Into<String>,
+        I: Into<String>
     {
         Self::SetGameScoreInline::new(
             self.clone(),
-            payloads::SetGameScoreInline::new(user_id, score, inline_message_id),
+            payloads::SetGameScoreInline::new(user_id, score, inline_message_id)
         )
     }
 
@@ -2189,11 +2248,11 @@ impl Requester for Bot {
 
     fn get_game_high_scores<T>(&self, user_id: UserId, target: T) -> Self::GetGameHighScores
     where
-        T: Into<crate::types::TargetMessage>,
+        T: Into<crate::types::TargetMessage>
     {
         Self::GetGameHighScores::new(
             self.clone(),
-            payloads::GetGameHighScores::new(user_id, target),
+            payloads::GetGameHighScores::new(user_id, target)
         )
     }
 
@@ -2215,15 +2274,15 @@ impl Requester for Bot {
         &self,
         chat_id: C,
         from_chat_id: F,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> Self::CopyMessage
     where
         C: Into<Recipient>,
-        F: Into<Recipient>,
+        F: Into<Recipient>
     {
         Self::CopyMessage::new(
             self.clone(),
-            payloads::CopyMessage::new(chat_id, from_chat_id, message_id),
+            payloads::CopyMessage::new(chat_id, from_chat_id, message_id)
         )
     }
 
@@ -2232,16 +2291,16 @@ impl Requester for Bot {
         &self,
         chat_id: C,
         from_chat_id: F,
-        message_ids: M,
+        message_ids: M
     ) -> Self::CopyMessages
     where
         C: Into<Recipient>,
         F: Into<Recipient>,
-        M: IntoIterator<Item = MessageId>,
+        M: IntoIterator<Item = MessageId>
     {
         Self::CopyMessages::new(
             self.clone(),
-            payloads::CopyMessages::new(chat_id, from_chat_id, message_ids),
+            payloads::CopyMessages::new(chat_id, from_chat_id, message_ids)
         )
     }
 
@@ -2249,7 +2308,7 @@ impl Requester for Bot {
 
     fn unpin_all_chat_messages<C>(&self, chat_id: C) -> Self::UnpinAllChatMessages
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         Self::UnpinAllChatMessages::new(self.clone(), payloads::UnpinAllChatMessages::new(chat_id))
     }

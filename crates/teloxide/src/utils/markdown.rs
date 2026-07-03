@@ -5,7 +5,7 @@
 use teloxide_core::types::{User, UserId};
 
 pub(super) const ESCAPE_CHARS: [char; 19] = [
-    '\\', '_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!',
+    '\\', '_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!'
 ];
 
 /// Applies the bold font style to the string.
@@ -66,7 +66,11 @@ pub fn underline(s: &str) -> String {
     // underline entity, so instead of ___italic underline___ we should use
     // ___italic underline_\r__, where \r is a character with code 13, which
     // will be ignored.
-    if s.starts_with('_') && s.ends_with('_') { format!(r"__{s}\r__") } else { format!("__{s}__") }
+    if s.starts_with('_') && s.ends_with('_') {
+        format!(r"__{s}\r__")
+    } else {
+        format!("__{s}__")
+    }
 }
 
 /// Applies the strikethrough font style to the string.
@@ -171,7 +175,7 @@ pub fn escape_code(s: &str) -> String {
 pub fn user_mention_or_link(user: &User) -> String {
     match user.mention() {
         Some(mention) => escape(&mention),
-        None => link(user.url().as_str(), &escape(&user.full_name())),
+        None => link(user.url().as_str(), &escape(&user.full_name()))
     }
 }
 
@@ -236,7 +240,10 @@ mod tests {
 
     #[test]
     fn test_expandable_blockquote() {
-        assert_eq!(expandable_blockquote("foobar\n\nfoo\nbar"), "**>foobar\n>\n>foo\n>bar||");
+        assert_eq!(
+            expandable_blockquote("foobar\n\nfoo\nbar"),
+            "**>foobar\n>\n>foo\n>bar||"
+        );
     }
 
     #[test]
@@ -257,9 +264,15 @@ mod tests {
 
     #[test]
     fn test_code_inline() {
-        assert_eq!(code_inline(" let x = (1, 2, 3); "), "` let x = (1, 2, 3); `");
+        assert_eq!(
+            code_inline(" let x = (1, 2, 3); "),
+            "` let x = (1, 2, 3); `"
+        );
         assert_eq!(code_inline("<html>foo</html>"), "`<html>foo</html>`");
-        assert_eq!(code_inline(r" `(code inside code \ )` "), r"` \`(code inside code \\ )\` `");
+        assert_eq!(
+            code_inline(r" `(code inside code \ )` "),
+            r"` \`(code inside code \\ )\` `"
+        );
     }
 
     #[test]
@@ -282,26 +295,46 @@ mod tests {
             escape_link_url(r"https://en.wikipedia.org/wiki/`"),
             r"https://en.wikipedia.org/wiki/\`"
         );
-        assert_eq!(escape_link_url(r"_*[]()~`#+-=|{}.!\"), r"_*[](\)~\`#+-=|{}.!\");
+        assert_eq!(
+            escape_link_url(r"_*[]()~`#+-=|{}.!\"),
+            r"_*[](\)~\`#+-=|{}.!\"
+        );
     }
 
     #[test]
     fn test_escape_code() {
-        assert_eq!(escape_code(r"` \code inside the code\ `"), r"\` \\code inside the code\\ \`");
+        assert_eq!(
+            escape_code(r"` \code inside the code\ `"),
+            r"\` \\code inside the code\\ \`"
+        );
         assert_eq!(escape_code(r"_*[]()~`#+-=|{}.!\"), r"_*[]()~\`#+-=|{}.!\\");
     }
 
     #[test]
     fn user_mention_link() {
-        let user_with_username = User { username: Some("abcd".to_string()), ..Default::default() };
+        let user_with_username = User {
+            username: Some("abcd".to_string()),
+            ..Default::default()
+        };
         assert_eq!(user_mention_or_link(&user_with_username), "@abcd");
         // Telegram allows underscores in usernames
         // https://telegram.org/faq?setln=en#q-what-can-i-use-as-my-username
-        let user_with_username_underscore =
-            User { username: Some("Abcd_Efg".to_string()), ..user_with_username };
-        assert_eq!(user_mention_or_link(&user_with_username_underscore), "@Abcd\\_Efg");
-        let user_without_username =
-            User { id: UserId(123_456_789), first_name: "Name".to_string(), ..Default::default() };
-        assert_eq!(user_mention_or_link(&user_without_username), "[Name](tg://user/?id=123456789)")
+        let user_with_username_underscore = User {
+            username: Some("Abcd_Efg".to_string()),
+            ..user_with_username
+        };
+        assert_eq!(
+            user_mention_or_link(&user_with_username_underscore),
+            "@Abcd\\_Efg"
+        );
+        let user_without_username = User {
+            id: UserId(123_456_789),
+            first_name: "Name".to_string(),
+            ..Default::default()
+        };
+        assert_eq!(
+            user_mention_or_link(&user_without_username),
+            "[Name](tg://user/?id=123456789)"
+        )
     }
 }

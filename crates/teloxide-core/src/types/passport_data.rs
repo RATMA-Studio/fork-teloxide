@@ -15,5 +15,5 @@ pub struct PassportData {
     pub data: Vec<EncryptedPassportElement>,
 
     /// Encrypted credentials required to decrypt the data.
-    pub credentials: EncryptedCredentials,
+    pub credentials: EncryptedCredentials
 }

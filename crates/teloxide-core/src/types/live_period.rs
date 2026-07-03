@@ -7,10 +7,9 @@ use crate::types::Seconds;
 /// Period in seconds for which the location can be updated, should be
 /// between 60 and 86400, or 0x7FFFFFFF for live locations that can be
 /// edited indefinitely.
-#[derive(Clone, Copy)]
-#[derive(Debug, derive_more::Display)]
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[derive(Serialize)]
+#[derive(
+    Clone, Copy, Debug, derive_more::Display, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize,
+)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 // Its a wrapper for a wrapper (LivePeriod for Seconds), better to just tell the
 // schemars that its a u32
@@ -19,7 +18,7 @@ use crate::types::Seconds;
 #[non_exhaustive]
 pub enum LivePeriod {
     Timeframe(Seconds),
-    Indefinite,
+    Indefinite
 }
 
 impl LivePeriod {
@@ -46,7 +45,7 @@ impl TryInto<Seconds> for LivePeriod {
     fn try_into(self) -> Result<Seconds, Self::Error> {
         match self {
             LivePeriod::Timeframe(v) => Ok(v),
-            LivePeriod::Indefinite => Err("indefinite live period"),
+            LivePeriod::Indefinite => Err("indefinite live period")
         }
     }
 }
@@ -57,7 +56,7 @@ impl TryInto<Seconds> for &LivePeriod {
     fn try_into(self) -> Result<Seconds, Self::Error> {
         match self {
             LivePeriod::Timeframe(v) => Ok(*v),
-            LivePeriod::Indefinite => Err("indefinite live period"),
+            LivePeriod::Indefinite => Err("indefinite live period")
         }
     }
 }
@@ -77,7 +76,7 @@ impl Into<LivePeriod> for u32 {
 impl<'de> Deserialize<'de> for LivePeriod {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
-        D: serde::Deserializer<'de>,
+        D: serde::Deserializer<'de>
     {
         let value = u32::deserialize(deserializer)?;
 
@@ -95,14 +94,16 @@ mod tests {
 
     #[derive(Serialize, Deserialize)]
     struct Struct {
-        live_period: Option<LivePeriod>,
+        live_period: Option<LivePeriod>
     }
 
     #[test]
     fn deserialize_indefinite() {
         let json = r#"{"live_period": 2147483647}"#; // 0x7FFFFFFF
         let expected = LivePeriod::Indefinite;
-        let Struct { live_period } = serde_json::from_str(json).unwrap();
+        let Struct {
+            live_period
+        } = serde_json::from_str(json).unwrap();
         assert_eq!(live_period, Some(expected));
     }
 
@@ -110,7 +111,9 @@ mod tests {
     fn deserialize_900() {
         let json = r#"{"live_period": 900}"#;
         let expected = LivePeriod::from_u32(900);
-        let Struct { live_period } = serde_json::from_str(json).unwrap();
+        let Struct {
+            live_period
+        } = serde_json::from_str(json).unwrap();
         assert_eq!(live_period, Some(expected));
     }
 }

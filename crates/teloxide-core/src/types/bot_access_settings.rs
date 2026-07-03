@@ -6,9 +6,7 @@ use crate::types::User;
 ///
 /// [The official docs](https://core.telegram.org/bots/api#botaccesssettings).
 #[serde_with::skip_serializing_none]
-#[derive(Clone, Debug)]
-#[derive(PartialEq, Eq, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct BotAccessSettings {
     /// `true`, if only selected users can access the bot. The bot's owner can
@@ -17,7 +15,7 @@ pub struct BotAccessSettings {
 
     /// The list of other users who have access to the bot if the access is
     /// restricted.
-    pub added_users: Option<Vec<User>>,
+    pub added_users: Option<Vec<User>>
 }
 
 #[cfg(test)]

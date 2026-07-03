@@ -14,10 +14,12 @@ mod tests {
     fn test_request_id_de() {
         #[derive(Debug, Clone, Copy, PartialEq, Deserialize, Serialize)]
         struct Dummy {
-            request_id: RequestId,
+            request_id: RequestId
         }
         let json = r#"{"request_id":42}"#;
-        let dummy = Dummy { request_id: RequestId(42) };
+        let dummy = Dummy {
+            request_id: RequestId(42)
+        };
 
         assert_eq!(serde_json::to_string(&dummy).unwrap(), json);
         assert_eq!(dummy, serde_json::from_str(json).unwrap());

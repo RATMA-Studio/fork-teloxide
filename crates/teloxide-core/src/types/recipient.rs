@@ -8,9 +8,7 @@ use crate::types::{ChatId, UserId};
 ///
 /// Since Bot API 10.0 messages can also be sent to other bots via their
 /// `@bot_username` if both bots enabled bot-to-bot communication.
-#[derive(Clone, PartialEq, Eq, Hash)]
-#[derive(Debug, Display, From)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, PartialEq, Eq, Hash, Debug, Display, From, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(untagged)]
 #[non_exhaustive]
@@ -23,7 +21,7 @@ pub enum Recipient {
     /// supergroup or, since Bot API 10.0, a bot when bot-to-bot
     /// communication is enabled on both sides.
     #[display("{_0}")]
-    ChannelUsername(String),
+    ChannelUsername(String)
 }
 
 impl Default for Recipient {

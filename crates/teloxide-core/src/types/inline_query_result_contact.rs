@@ -46,7 +46,7 @@ pub struct InlineQueryResultContact {
     pub thumbnail_width: Option<u32>,
 
     /// Thumbnail height.
-    pub thumbnail_height: Option<u32>,
+    pub thumbnail_height: Option<u32>
 }
 
 impl InlineQueryResultContact {
@@ -54,25 +54,25 @@ impl InlineQueryResultContact {
     where
         S1: Into<String>,
         S2: Into<String>,
-        S3: Into<String>,
+        S3: Into<String>
     {
         Self {
-            id: id.into(),
-            phone_number: phone_number.into(),
-            first_name: first_name.into(),
-            last_name: None,
-            vcard: None,
-            reply_markup: None,
+            id:                    id.into(),
+            phone_number:          phone_number.into(),
+            first_name:            first_name.into(),
+            last_name:             None,
+            vcard:                 None,
+            reply_markup:          None,
             input_message_content: None,
-            thumbnail_url: None,
-            thumbnail_width: None,
-            thumbnail_height: None,
+            thumbnail_url:         None,
+            thumbnail_width:       None,
+            thumbnail_height:      None
         }
     }
 
     pub fn id<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.id = val.into();
         self
@@ -80,7 +80,7 @@ impl InlineQueryResultContact {
 
     pub fn phone_number<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.phone_number = val.into();
         self
@@ -88,7 +88,7 @@ impl InlineQueryResultContact {
 
     pub fn first_name<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.first_name = val.into();
         self
@@ -96,7 +96,7 @@ impl InlineQueryResultContact {
 
     pub fn last_name<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.last_name = Some(val.into());
         self
@@ -104,7 +104,7 @@ impl InlineQueryResultContact {
 
     pub fn vcard<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.vcard = Some(val.into());
         self

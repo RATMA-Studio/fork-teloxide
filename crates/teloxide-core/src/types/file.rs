@@ -28,21 +28,12 @@ pub struct File {
     ///
     /// [`Bot::download_file(file_path, dst)`]: crate::net::Download::download_file
     #[serde(default, rename = "file_path")]
-    pub path: String,
+    pub path: String
 }
 
 /// Identifier for a file
 #[derive(
-    Default,
-    Clone,
-    Debug,
-    derive_more::Display,
-    PartialEq,
-    Eq,
-    Hash,
-    Serialize,
-    Deserialize,
-    From
+    Default, Clone, Debug, derive_more::Display, PartialEq, Eq, Hash, Serialize, Deserialize, From,
 )]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(transparent)]
@@ -53,16 +44,7 @@ pub struct FileId(pub String);
 /// time and for different bots. Can't be used to download or reuse the
 /// file.
 #[derive(
-    Default,
-    Clone,
-    Debug,
-    derive_more::Display,
-    PartialEq,
-    Eq,
-    Hash,
-    Serialize,
-    Deserialize,
-    From
+    Default, Clone, Debug, derive_more::Display, PartialEq, Eq, Hash, Serialize, Deserialize, From,
 )]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(transparent)]
@@ -89,7 +71,7 @@ pub struct FileMeta {
     // but just in case something goes wrong with the TBA server
     // (see the test below)
     #[serde(default = "file_size_fallback")]
-    pub size: u32,
+    pub size: u32
 }
 
 pub(crate) const fn file_size_fallback() -> u32 {
@@ -137,11 +119,11 @@ mod tests {
             file,
             File {
                 meta: FileMeta {
-                    id: FileId("FILE_ID".to_owned()),
+                    id:        FileId("FILE_ID".to_owned()),
                     unique_id: FileUniqueId("FILE_UNIQUE_ID".to_owned()),
-                    size: u32::MAX,
+                    size:      u32::MAX
                 },
-                path: "FILE_PATH".to_owned(),
+                path: "FILE_PATH".to_owned()
             }
         );
     }
@@ -156,9 +138,9 @@ mod tests {
         assert_eq!(
             file,
             FileMeta {
-                id: FileId("FILE_ID".to_owned()),
+                id:        FileId("FILE_ID".to_owned()),
                 unique_id: FileUniqueId("FILE_UNIQUE_ID".to_owned()),
-                size: 42
+                size:      42
             }
         );
     }
@@ -172,11 +154,11 @@ mod tests {
             file,
             File {
                 meta: FileMeta {
-                    id: FileId("FILE_ID".to_owned()),
+                    id:        FileId("FILE_ID".to_owned()),
                     unique_id: FileUniqueId("FILE_UNIQUE_ID".to_owned()),
-                    size: 42,
+                    size:      42
                 },
-                path: "FILE_PATH".to_owned(),
+                path: "FILE_PATH".to_owned()
             }
         );
     }

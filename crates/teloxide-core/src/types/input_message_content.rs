@@ -16,7 +16,7 @@ pub enum InputMessageContent {
     Location(InputMessageContentLocation),
     Venue(InputMessageContentVenue),
     Contact(InputMessageContentContact),
-    Invoice(InputMessageContentInvoice),
+    Invoice(InputMessageContentInvoice)
 }
 /// Represents the content of a text message to be sent as the result of an
 /// inline query.
@@ -40,25 +40,25 @@ pub struct InputMessageContentText {
     pub entities: Option<Vec<MessageEntity>>,
 
     /// Link preview generation options for the message
-    pub link_preview_options: Option<LinkPreviewOptions>,
+    pub link_preview_options: Option<LinkPreviewOptions>
 }
 
 impl InputMessageContentText {
     pub fn new<S>(message_text: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         Self {
-            message_text: message_text.into(),
-            parse_mode: None,
-            entities: None,
-            link_preview_options: None,
+            message_text:         message_text.into(),
+            parse_mode:           None,
+            entities:             None,
+            link_preview_options: None
         }
     }
 
     pub fn message_text<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.message_text = val.into();
         self
@@ -72,7 +72,7 @@ impl InputMessageContentText {
 
     pub fn entities<C>(mut self, val: C) -> Self
     where
-        C: IntoIterator<Item = MessageEntity>,
+        C: IntoIterator<Item = MessageEntity>
     {
         self.entities = Some(val.into_iter().collect());
         self
@@ -112,7 +112,7 @@ pub struct InputMessageContentLocation {
     /// For live locations, a maximum distance for proximity alerts about
     /// approaching another chat member, in meters. Must be between 1 and 100000
     /// if specified.
-    pub proximity_alert_radius: Option<u32>,
+    pub proximity_alert_radius: Option<u32>
 }
 
 impl InputMessageContentLocation {
@@ -124,7 +124,7 @@ impl InputMessageContentLocation {
             live_period: None,
             horizontal_accuracy: None,
             heading: None,
-            proximity_alert_radius: None,
+            proximity_alert_radius: None
         }
     }
 
@@ -179,14 +179,14 @@ pub struct InputMessageContentVenue {
     /// Google Places type of the venue. (See [supported types].)
     ///
     /// [supported types]: https://developers.google.com/places/web-service/supported_types
-    pub google_place_type: Option<String>,
+    pub google_place_type: Option<String>
 }
 
 impl InputMessageContentVenue {
     pub fn new<S1, S2>(latitude: f64, longitude: f64, title: S1, address: S2) -> Self
     where
         S1: Into<String>,
-        S2: Into<String>,
+        S2: Into<String>
     {
         Self {
             latitude,
@@ -196,7 +196,7 @@ impl InputMessageContentVenue {
             foursquare_id: None,
             foursquare_type: None,
             google_place_id: None,
-            google_place_type: None,
+            google_place_type: None
         }
     }
 
@@ -214,7 +214,7 @@ impl InputMessageContentVenue {
 
     pub fn title<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.title = val.into();
         self
@@ -222,7 +222,7 @@ impl InputMessageContentVenue {
 
     pub fn address<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.address = val.into();
         self
@@ -230,7 +230,7 @@ impl InputMessageContentVenue {
 
     pub fn foursquare_id<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.foursquare_id = Some(val.into());
         self
@@ -238,7 +238,7 @@ impl InputMessageContentVenue {
 
     pub fn foursquare_type<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.foursquare_type = Some(val.into());
         self
@@ -264,26 +264,26 @@ pub struct InputMessageContentContact {
     /// bytes.
     ///
     /// [vCard]: https://en.wikipedia.org/wiki/VCard
-    pub vcard: Option<String>,
+    pub vcard: Option<String>
 }
 
 impl InputMessageContentContact {
     pub fn new<S1, S2>(phone_number: S1, first_name: S2) -> Self
     where
         S1: Into<String>,
-        S2: Into<String>,
+        S2: Into<String>
     {
         Self {
             phone_number: phone_number.into(),
-            first_name: first_name.into(),
-            last_name: None,
-            vcard: None,
+            first_name:   first_name.into(),
+            last_name:    None,
+            vcard:        None
         }
     }
 
     pub fn phone_number<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.phone_number = val.into();
         self
@@ -291,7 +291,7 @@ impl InputMessageContentContact {
 
     pub fn first_name<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.first_name = val.into();
         self
@@ -299,7 +299,7 @@ impl InputMessageContentContact {
 
     pub fn last_name<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.last_name = Some(val.into());
         self
@@ -307,7 +307,7 @@ impl InputMessageContentContact {
 
     pub fn vcard<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.vcard = Some(val.into());
         self
@@ -404,7 +404,7 @@ pub struct InputMessageContentInvoice {
     pub send_email_to_provider: Option<bool>,
 
     /// Pass True, if the final price depends on the shipping method
-    pub is_flexible: Option<bool>,
+    pub is_flexible: Option<bool>
 }
 
 impl InputMessageContentInvoice {
@@ -413,14 +413,14 @@ impl InputMessageContentInvoice {
         description: D,
         payload: PA,
         currency: C,
-        prices: PR,
+        prices: PR
     ) -> Self
     where
         T: Into<String>,
         D: Into<String>,
         PA: Into<String>,
         C: Into<String>,
-        PR: IntoIterator<Item = LabeledPrice>,
+        PR: IntoIterator<Item = LabeledPrice>
     {
         let title = title.into();
         let description = description.into();
@@ -448,13 +448,13 @@ impl InputMessageContentInvoice {
             need_shipping_address: None,
             send_phone_number_to_provider: None,
             send_email_to_provider: None,
-            is_flexible: None,
+            is_flexible: None
         }
     }
 
     pub fn title<T>(mut self, val: T) -> Self
     where
-        T: Into<String>,
+        T: Into<String>
     {
         self.title = val.into();
         self
@@ -462,7 +462,7 @@ impl InputMessageContentInvoice {
 
     pub fn description<T>(mut self, val: T) -> Self
     where
-        T: Into<String>,
+        T: Into<String>
     {
         self.description = val.into();
         self
@@ -470,7 +470,7 @@ impl InputMessageContentInvoice {
 
     pub fn payload<T>(mut self, val: T) -> Self
     where
-        T: Into<String>,
+        T: Into<String>
     {
         self.payload = val.into();
         self
@@ -478,7 +478,7 @@ impl InputMessageContentInvoice {
 
     pub fn provider_token<T>(mut self, val: T) -> Self
     where
-        T: Into<String>,
+        T: Into<String>
     {
         self.provider_token = Some(val.into());
         self
@@ -487,7 +487,7 @@ impl InputMessageContentInvoice {
     #[must_use]
     pub fn currency<T>(mut self, val: T) -> Self
     where
-        T: Into<String>,
+        T: Into<String>
     {
         self.currency = val.into();
         self
@@ -495,7 +495,7 @@ impl InputMessageContentInvoice {
 
     pub fn prices<T>(mut self, val: T) -> Self
     where
-        T: IntoIterator<Item = LabeledPrice>,
+        T: IntoIterator<Item = LabeledPrice>
     {
         self.prices = val.into_iter().collect();
         self
@@ -509,7 +509,7 @@ impl InputMessageContentInvoice {
 
     pub fn suggested_tip_amounts<T>(mut self, val: T) -> Self
     where
-        T: IntoIterator<Item = u32>,
+        T: IntoIterator<Item = u32>
     {
         self.suggested_tip_amounts = Some(val.into_iter().collect());
         self
@@ -517,7 +517,7 @@ impl InputMessageContentInvoice {
 
     pub fn provider_data<T>(mut self, val: T) -> Self
     where
-        T: Into<String>,
+        T: Into<String>
     {
         self.provider_data = Some(val.into());
         self
@@ -600,16 +600,16 @@ mod tests {
         let expected_json =
             r#"{"message_text":"text","link_preview_options":{"is_disabled":true}}"#;
         let text_content = InputMessageContent::Text(InputMessageContentText {
-            message_text: String::from("text"),
-            parse_mode: None,
-            entities: None,
+            message_text:         String::from("text"),
+            parse_mode:           None,
+            entities:             None,
             link_preview_options: Some(LinkPreviewOptions {
-                is_disabled: true,
-                url: None,
+                is_disabled:        true,
+                url:                None,
                 prefer_small_media: false,
                 prefer_large_media: false,
-                show_above_text: false,
-            }),
+                show_above_text:    false
+            })
         });
 
         let actual_json = serde_json::to_string(&text_content).unwrap();
@@ -620,12 +620,12 @@ mod tests {
     fn location_serialize() {
         let expected_json = r#"{"latitude":59.08,"longitude":38.4326}"#;
         let location_content = InputMessageContent::Location(InputMessageContentLocation {
-            latitude: 59.08,
-            longitude: 38.4326,
-            live_period: None,
-            horizontal_accuracy: None,
-            heading: None,
-            proximity_alert_radius: None,
+            latitude:               59.08,
+            longitude:              38.4326,
+            live_period:            None,
+            horizontal_accuracy:    None,
+            heading:                None,
+            proximity_alert_radius: None
         });
 
         let actual_json = serde_json::to_string(&location_content).unwrap();
@@ -636,14 +636,14 @@ mod tests {
     fn venue_serialize() {
         let expected_json = r#"{"latitude":59.08,"longitude":38.4326,"title":"some title","address":"some address"}"#;
         let venue_content = InputMessageContent::Venue(InputMessageContentVenue {
-            latitude: 59.08,
-            longitude: 38.4326,
-            title: String::from("some title"),
-            address: String::from("some address"),
-            foursquare_id: None,
-            foursquare_type: None,
-            google_place_id: None,
-            google_place_type: None,
+            latitude:          59.08,
+            longitude:         38.4326,
+            title:             String::from("some title"),
+            address:           String::from("some address"),
+            foursquare_id:     None,
+            foursquare_type:   None,
+            google_place_id:   None,
+            google_place_type: None
         });
 
         let actual_json = serde_json::to_string(&venue_content).unwrap();
@@ -655,9 +655,9 @@ mod tests {
         let expected_json = r#"{"phone_number":"+3800000000","first_name":"jhon"}"#;
         let contact_content = InputMessageContent::Contact(InputMessageContentContact {
             phone_number: String::from("+3800000000"),
-            first_name: String::from("jhon"),
-            last_name: None,
-            vcard: None,
+            first_name:   String::from("jhon"),
+            last_name:    None,
+            vcard:        None
         });
 
         let actual_json = serde_json::to_string(&contact_content).unwrap();

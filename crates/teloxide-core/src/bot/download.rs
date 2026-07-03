@@ -2,16 +2,15 @@ use std::path::Path;
 
 use bytes::Bytes;
 use futures::{FutureExt, StreamExt, future::BoxFuture, stream::BoxStream};
-
 use tokio::{
     fs::File,
-    io::{AsyncReadExt, AsyncWrite, AsyncWriteExt},
+    io::{AsyncReadExt, AsyncWrite, AsyncWriteExt}
 };
 
 use crate::{
     DownloadError,
     bot::Bot,
-    net::{self, Download},
+    net::{self, Download}
 };
 
 impl Download for Bot {
@@ -24,11 +23,11 @@ impl Download for Bot {
     fn download_file<'dst>(
         &self,
         path: &'dst str,
-        destination: &'dst mut (dyn AsyncWrite + Unpin + Send),
+        destination: &'dst mut (dyn AsyncWrite + Unpin + Send)
     ) -> Self::Fut<'dst> {
         let is_localhost = match &self.api_url.host_str() {
             Some(host) => ["localhost", "127.0.0.1", "::1"].contains(host),
-            None => false,
+            None => false
         };
         // If path is absolute and api_url contains localhost, it is pretty clear there
         // is a local TBA server with --local option, we can just copy the file
@@ -41,7 +40,7 @@ impl Download for Bot {
             reqwest::Url::clone(&*self.api_url),
             &self.token,
             path,
-            destination,
+            destination
         )
         .boxed()
     }
@@ -55,7 +54,7 @@ impl Download for Bot {
             &self.client,
             reqwest::Url::clone(&*self.api_url),
             &self.token,
-            path,
+            path
         )
         .map(|res| res.map_err(crate::errors::hide_token))
         .boxed()
@@ -64,7 +63,7 @@ impl Download for Bot {
 
 async fn copy_file<'o, D>(path: &'o str, dst: &'o mut D) -> Result<(), DownloadError>
 where
-    D: ?Sized + AsyncWrite + Unpin,
+    D: ?Sized + AsyncWrite + Unpin
 {
     let mut src_file = File::open(path).await?;
 

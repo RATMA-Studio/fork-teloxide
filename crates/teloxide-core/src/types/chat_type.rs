@@ -11,5 +11,5 @@ pub enum ChatType {
     Private,
     Group,
     Supergroup,
-    Channel,
+    Channel
 }

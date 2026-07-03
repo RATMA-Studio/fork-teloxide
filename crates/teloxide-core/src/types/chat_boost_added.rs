@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct ChatBoostAdded {
     /// Number of boosts added by the user
-    pub boost_count: u16,
+    pub boost_count: u16
 }
 
 #[cfg(test)]

@@ -25,5 +25,5 @@ pub struct SuggestedPostPaid {
 
     /// The amount of Telegram Stars that was received by the channel; for
     /// payments in Telegram Stars only
-    pub star_amount: Option<StarAmount>,
+    pub star_amount: Option<StarAmount>
 }

@@ -1,9 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 /// Represents the rights of a business bot.
-#[derive(Clone, Debug)]
-#[derive(PartialEq, Eq, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct BusinessBotRights {
     /// `true`, if the bot can send and edit messages in the private chats that
@@ -68,5 +66,5 @@ pub struct BusinessBotRights {
     /// `true`, if the bot can post, edit and delete stories on behalf of the
     /// business account
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
-    pub can_manage_stories: bool,
+    pub can_manage_stories: bool
 }

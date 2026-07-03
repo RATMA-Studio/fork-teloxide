@@ -1,25 +1,23 @@
 //! Commonly used items.
 
-pub use crate::error_handlers::{LoggingErrorHandler, OnError};
-
-pub use crate::respond;
-
-pub use crate::dispatching::{
-    Dispatcher, HandlerExt as _, MessageFilterExt as _, UpdateFilterExt as _, dialogue::Dialogue,
-};
-
-#[cfg(feature = "ctrlc_handler")]
-pub use crate::repls::CommandReplExt as _;
-
+pub use dptree::{self, prelude::*};
+#[doc(no_inline)]
+pub use teloxide_core::prelude::*;
 pub use teloxide_core::{
     requests::ResponseResult,
     types::{
         CallbackQuery, ChatMemberUpdated, ChosenInlineResult, InlineQuery, Message, Poll,
-        PollAnswer, PreCheckoutQuery, ShippingQuery, Update,
-    },
+        PollAnswer, PreCheckoutQuery, ShippingQuery, Update
+    }
 };
 
-#[doc(no_inline)]
-pub use teloxide_core::prelude::*;
-
-pub use dptree::{self, prelude::*};
+#[cfg(feature = "ctrlc_handler")]
+pub use crate::repls::CommandReplExt as _;
+pub use crate::{
+    dispatching::{
+        Dispatcher, HandlerExt as _, MessageFilterExt as _, UpdateFilterExt as _,
+        dialogue::Dialogue
+    },
+    error_handlers::{LoggingErrorHandler, OnError},
+    respond
+};

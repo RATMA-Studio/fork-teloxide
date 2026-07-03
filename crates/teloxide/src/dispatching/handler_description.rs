@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use dptree::{
     HandlerDescription,
-    description::{EventKind, InterestSet},
+    description::{EventKind, InterestSet}
 };
 use teloxide_core::types::AllowedUpdate;
 
@@ -11,14 +11,16 @@ use teloxide_core::types::AllowedUpdate;
 /// [`Dispatcher`]: crate::dispatching::Dispatcher
 #[derive(Debug, Clone)]
 pub struct DpHandlerDescription {
-    allowed: InterestSet<Kind>,
+    allowed: InterestSet<Kind>
 }
 
 impl DpHandlerDescription {
     pub(crate) fn of(allowed: AllowedUpdate) -> Self {
         let mut set = HashSet::with_capacity(1);
         set.insert(Kind(allowed));
-        Self { allowed: InterestSet::new_filter(set) }
+        Self {
+            allowed: InterestSet::new_filter(set)
+        }
     }
 
     pub(crate) fn allowed_updates(&self) -> Vec<AllowedUpdate> {
@@ -28,19 +30,27 @@ impl DpHandlerDescription {
 
 impl HandlerDescription for DpHandlerDescription {
     fn entry() -> Self {
-        Self { allowed: HandlerDescription::entry() }
+        Self {
+            allowed: HandlerDescription::entry()
+        }
     }
 
     fn user_defined() -> Self {
-        Self { allowed: HandlerDescription::user_defined() }
+        Self {
+            allowed: HandlerDescription::user_defined()
+        }
     }
 
     fn merge_chain(&self, other: &Self) -> Self {
-        Self { allowed: self.allowed.merge_chain(&other.allowed) }
+        Self {
+            allowed: self.allowed.merge_chain(&other.allowed)
+        }
     }
 
     fn merge_branch(&self, other: &Self) -> Self {
-        Self { allowed: self.allowed.merge_branch(&other.allowed) }
+        Self {
+            allowed: self.allowed.merge_branch(&other.allowed)
+        }
     }
 }
 
@@ -86,7 +96,7 @@ impl EventKind for Kind {
             ChatBoost,
             RemovedChatBoost,
             ManagedBot,
-            GuestMessage,
+            GuestMessage
         ]
         .into_iter()
         .map(Kind)
@@ -101,31 +111,37 @@ impl EventKind for Kind {
 #[cfg(test)]
 mod tests {
     #[cfg(feature = "macros")]
+    use dptree::description::EventKind;
+
+    #[cfg(feature = "macros")]
     use crate::{
         self as teloxide, // fixup for the `BotCommands` macro
         dispatching::{HandlerExt, UpdateFilterExt, handler_description::Kind},
         types::{AllowedUpdate::*, Update},
-        utils::command::BotCommands,
+        utils::command::BotCommands
     };
-    #[cfg(feature = "macros")]
-    use dptree::description::EventKind;
 
     #[cfg(feature = "macros")]
     #[derive(BotCommands, Clone)]
     #[command(rename_rule = "lowercase")]
     enum Cmd {
-        B,
+        B
     }
 
     // <https://github.com/teloxide/teloxide/discussions/648>
     #[test]
     #[cfg(feature = "macros")]
     fn discussion_648() {
-        let h =
-            dptree::entry().branch(Update::filter_my_chat_member().endpoint(|| async {})).branch(
+        let h = dptree::entry()
+            .branch(Update::filter_my_chat_member().endpoint(|| async {}))
+            .branch(
                 Update::filter_message()
-                    .branch(dptree::entry().filter_command::<Cmd>().endpoint(|| async {}))
-                    .endpoint(|| async {}),
+                    .branch(
+                        dptree::entry()
+                            .filter_command::<Cmd>()
+                            .endpoint(|| async {})
+                    )
+                    .endpoint(|| async {})
             );
 
         let mut v = h.description().allowed_updates();
@@ -205,7 +221,7 @@ mod tests {
                 _ => panic!(
                     "new `AllowedUpdate` variant detected; add it to `allowed_updates_reference` \
                      and `Kind::full_set()`"
-                ),
+                )
             }
         }
     }

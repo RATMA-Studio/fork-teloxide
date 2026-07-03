@@ -1,6 +1,6 @@
 use serde::{
     de::{self, Deserialize, Deserializer, Visitor},
-    ser::{Serialize, Serializer},
+    ser::{Serialize, Serializer}
 };
 
 /// A type that is always true.
@@ -15,7 +15,7 @@ impl std::convert::TryFrom<bool> for True {
     fn try_from(value: bool) -> Result<Self, Self::Error> {
         match value {
             true => Ok(True),
-            false => Err(()),
+            false => Err(())
         }
     }
 }
@@ -23,7 +23,7 @@ impl std::convert::TryFrom<bool> for True {
 impl<'de> Deserialize<'de> for True {
     fn deserialize<D>(des: D) -> Result<Self, D::Error>
     where
-        D: Deserializer<'de>,
+        D: Deserializer<'de>
     {
         des.deserialize_bool(TrueVisitor)
     }
@@ -40,11 +40,11 @@ impl Visitor<'_> for TrueVisitor {
 
     fn visit_bool<E>(self, value: bool) -> Result<Self::Value, E>
     where
-        E: de::Error,
+        E: de::Error
     {
         match value {
             true => Ok(True),
-            false => Err(E::custom("expected `true`, found `false`")),
+            false => Err(E::custom("expected `true`, found `false`"))
         }
     }
 }
@@ -52,7 +52,7 @@ impl Visitor<'_> for TrueVisitor {
 impl Serialize for True {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
-        S: Serializer,
+        S: Serializer
     {
         serializer.serialize_bool(true)
     }

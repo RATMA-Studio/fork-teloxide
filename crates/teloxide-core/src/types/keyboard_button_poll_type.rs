@@ -16,5 +16,5 @@ pub enum KeyboardButtonPollType {
     /// If `Any` is passed, the user will be allowed to create a poll of any
     /// type.
     #[serde(rename = "")]
-    Any,
+    Any
 }

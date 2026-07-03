@@ -2,19 +2,19 @@ use std::{
     future::{Future, IntoFuture},
     pin::Pin,
     sync::Arc,
-    time::Instant,
+    time::Instant
 };
 
 use futures::{
     future::BoxFuture,
-    task::{Context, Poll},
+    task::{Context, Poll}
 };
 use tokio::sync::mpsc;
 
 use crate::{
     adaptors::throttle::{ChatIdHash, FreezeUntil, RequestLock, channel},
     errors::AsResponseParameters,
-    requests::{HasPayload, Output, Request},
+    requests::{HasPayload, Output, Request}
 };
 
 /// Request returned by [`Throttling`](crate::adaptors::Throttle) methods.
@@ -23,7 +23,7 @@ use crate::{
 pub struct ThrottlingRequest<R: HasPayload> {
     pub(super) request: Arc<R>,
     pub(super) chat_id: fn(&R::Payload) -> ChatIdHash,
-    pub(super) worker: mpsc::Sender<(ChatIdHash, RequestLock)>,
+    pub(super) worker:  mpsc::Sender<(ChatIdHash, RequestLock)>
 }
 
 /// Future returned by [`ThrottlingRequest`]s.
@@ -33,7 +33,7 @@ pub struct ThrottlingSend<R: Request>(#[pin] BoxFuture<'static, Result<Output<R>
 enum ShareableRequest<R> {
     Shared(Arc<R>),
     // Option is used to `take` ownership
-    Owned(Option<R>),
+    Owned(Option<R>)
 }
 
 impl<R: HasPayload + Clone> HasPayload for ThrottlingRequest<R> {
@@ -54,7 +54,7 @@ impl<R> Request for ThrottlingRequest<R>
 where
     R: Request + Clone + Send + Sync + 'static, // TODO: rem static
     R::Err: AsResponseParameters + Send,
-    Output<R>: Send,
+    Output<R>: Send
 {
     type Err = R::Err;
     type Send = ThrottlingSend<R>;
@@ -64,7 +64,7 @@ where
         let chat = (self.chat_id)(self.payload_ref());
         let request = match Arc::try_unwrap(self.request) {
             Ok(owned) => ShareableRequest::Owned(Some(owned)),
-            Err(shared) => ShareableRequest::Shared(shared),
+            Err(shared) => ShareableRequest::Shared(shared)
         };
         let fut = send(request, chat, self.worker);
 
@@ -84,7 +84,7 @@ impl<R> IntoFuture for ThrottlingRequest<R>
 where
     R: Request + Clone + Send + Sync + 'static,
     R::Err: AsResponseParameters + Send,
-    Output<R>: Send,
+    Output<R>: Send
 {
     type Output = Result<Output<Self>, <Self as Request>::Err>;
     type IntoFuture = <Self as Request>::Send;
@@ -96,7 +96,7 @@ where
 
 impl<R: Request> Future for ThrottlingSend<R>
 where
-    R::Err: AsResponseParameters,
+    R::Err: AsResponseParameters
 {
     type Output = Result<Output<R>, R::Err>;
 
@@ -156,12 +156,12 @@ where
 async fn send<R>(
     mut request: ShareableRequest<R>,
     chat: ChatIdHash,
-    worker: mpsc::Sender<(ChatIdHash, RequestLock)>,
+    worker: mpsc::Sender<(ChatIdHash, RequestLock)>
 ) -> Result<Output<R>, R::Err>
 where
     R: Request + Send + Sync + 'static,
     R::Err: AsResponseParameters + Send,
-    Output<R>: Send,
+    Output<R>: Send
 {
     // We use option in `ShareableRequest` to `take` when sending by value.
     //
@@ -179,7 +179,7 @@ where
 
             let res = match &mut request {
                 ShareableRequest::Shared(shared) => shared.send_ref().await,
-                ShareableRequest::Owned(owned) => owned.take().unwrap().await,
+                ShareableRequest::Owned(owned) => owned.take().unwrap().await
             };
 
             return res;
@@ -195,7 +195,7 @@ where
                 log::error!("Throttle worker dropped the request lock before responding");
                 let res = match &mut request {
                     ShareableRequest::Shared(shared) => shared.send_ref().await,
-                    ShareableRequest::Owned(owned) => owned.take().unwrap().await,
+                    ShareableRequest::Owned(owned) => owned.take().unwrap().await
                 };
                 return res;
             }
@@ -206,13 +206,13 @@ where
             (true, request) => {
                 let request = match request {
                     ShareableRequest::Shared(shared) => &**shared,
-                    ShareableRequest::Owned(owned) => owned.as_ref().unwrap(),
+                    ShareableRequest::Owned(owned) => owned.as_ref().unwrap()
                 };
 
                 request.send_ref().await
             }
             (false, ShareableRequest::Shared(shared)) => shared.send_ref().await,
-            (false, ShareableRequest::Owned(owned)) => owned.take().unwrap().await,
+            (false, ShareableRequest::Owned(owned)) => owned.take().unwrap().await
         };
 
         let retry_after = res.as_ref().err().and_then(<_>::retry_after);
@@ -222,7 +222,13 @@ where
 
             // If we'll retry, we check that worker hasn't died at the start of the loop
             // otherwise we don't care if the worker is alive or not
-            let _ = freeze.send(FreezeUntil { until, after, chat }).await;
+            let _ = freeze
+                .send(FreezeUntil {
+                    until,
+                    after,
+                    chat
+                })
+                .await;
 
             if retry {
                 log::warn!("Freezing, before retrying: {retry_after:?}");
@@ -232,7 +238,7 @@ where
 
         match res {
             Err(_) if retry && retry_after.is_some() => continue,
-            res => break res,
+            res => break res
         };
     }
 }

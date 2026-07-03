@@ -1,10 +1,10 @@
 // Some concepts are from Serde.
 
-use crate::error::{Result, compile_error};
-
 use heck::{
-    ToKebabCase, ToLowerCamelCase, ToPascalCase, ToShoutyKebabCase, ToShoutySnakeCase, ToSnakeCase,
+    ToKebabCase, ToLowerCamelCase, ToPascalCase, ToShoutyKebabCase, ToShoutySnakeCase, ToSnakeCase
 };
+
+use crate::error::{Result, compile_error};
 
 #[derive(Copy, Clone, Debug)]
 pub(crate) enum RenameRule {
@@ -25,7 +25,7 @@ pub(crate) enum RenameRule {
     /// -> `SCREAMING-KEBAB-CASE`
     ScreamingKebabCase,
     /// Leaves input as-is
-    Identity,
+    Identity
 }
 
 impl RenameRule {
@@ -45,7 +45,7 @@ impl RenameRule {
             ScreamingSnakeCase => input.to_shouty_snake_case(),
             KebabCase => input.to_kebab_case(),
             ScreamingKebabCase => input.to_shouty_kebab_case(),
-            Identity => input.to_owned(),
+            Identity => input.to_owned()
         }
     }
 

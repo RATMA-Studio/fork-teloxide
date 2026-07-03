@@ -23,5 +23,5 @@ pub struct PollOptionDeleted {
     /// Special entities that appear in the [`option_text`].
     ///
     /// [`option_text`]: PollOptionDeleted::option_text
-    pub option_text_entities: Option<Vec<MessageEntity>>,
+    pub option_text_entities: Option<Vec<MessageEntity>>
 }

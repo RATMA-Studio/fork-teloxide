@@ -1,27 +1,27 @@
+use proc_macro2::Span;
+use syn::Attribute;
+
 use crate::{
     Result,
     attr::{Attr, AttrValue, fold_attrs},
     error::compile_error_at,
     fields_parse::ParserType,
-    rename_rules::RenameRule,
+    rename_rules::RenameRule
 };
-
-use proc_macro2::Span;
-use syn::Attribute;
 
 /// All attributes that can be used for `derive(BotCommands)`
 pub(crate) struct CommandAttrs {
-    pub prefix: Option<(String, Span)>,
+    pub prefix:            Option<(String, Span)>,
     /// The bool is true if the description contains a doc comment
-    pub description: Option<(String, bool, Span)>,
-    pub rename_rule: Option<(RenameRule, Span)>,
-    pub rename: Option<(String, Span)>,
-    pub aliases: Option<(Vec<String>, Span)>,
-    pub parser: Option<(ParserType, Span)>,
-    pub separator: Option<(String, Span)>,
+    pub description:       Option<(String, bool, Span)>,
+    pub rename_rule:       Option<(RenameRule, Span)>,
+    pub rename:            Option<(String, Span)>,
+    pub aliases:           Option<(Vec<String>, Span)>,
+    pub parser:            Option<(ParserType, Span)>,
+    pub separator:         Option<(String, Span)>,
     pub command_separator: Option<(String, Span)>,
-    pub hide: Option<((), Span)>,
-    pub hide_aliases: Option<((), Span)>,
+    pub hide:              Option<((), Span)>,
+    pub hide_aliases:      Option<((), Span)>
 }
 
 /// A single k/v attribute for `BotCommands` derive macro.
@@ -35,7 +35,7 @@ pub(crate) struct CommandAttrs {
 /// ```
 struct CommandAttr {
     kind: CommandAttrKind,
-    sp: Span,
+    sp:   Span
 }
 
 /// Kind of [`CommandAttr`].
@@ -50,7 +50,7 @@ enum CommandAttrKind {
     Separator(String),
     CommandSeparator(String),
     Hide,
-    HideAliases,
+    HideAliases
 }
 
 impl CommandAttrs {
@@ -62,16 +62,16 @@ impl CommandAttrs {
             |attr| is_command_attribute(attr) || is_doc_comment(attr),
             CommandAttr::parse,
             Self {
-                prefix: None,
-                description: None,
-                rename_rule: None,
-                rename: None,
-                aliases: None,
-                parser: None,
-                separator: None,
+                prefix:            None,
+                description:       None,
+                rename_rule:       None,
+                rename:            None,
+                aliases:           None,
+                parser:            None,
+                separator:         None,
                 command_separator: None,
-                hide: None,
-                hide_aliases: None,
+                hide:              None,
+                hide_aliases:      None
             },
             |mut this, attr| {
                 fn insert<T>(opt: &mut Option<(T, Span)>, x: T, sp: Span) -> Result<()> {
@@ -80,7 +80,7 @@ impl CommandAttrs {
                             *slot = Some((x, sp));
                             Ok(())
                         }
-                        Some(_) => Err(compile_error_at("duplicate attribute", sp)),
+                        Some(_) => Err(compile_error_at("duplicate attribute", sp))
                     }
                 }
 
@@ -102,7 +102,7 @@ impl CommandAttrs {
                             &mut this.description,
                             // Sometimes doc comments include a space before them, this removes it
                             d.strip_prefix(' ').unwrap_or(&d),
-                            attr.sp,
+                            attr.sp
                         );
                         if is_doc && let Some((_, is_doc, _)) = &mut this.description {
                             *is_doc = true;
@@ -116,11 +116,11 @@ impl CommandAttrs {
                     Separator(s) => insert(&mut this.separator, s, attr.sp),
                     CommandSeparator(s) => insert(&mut this.command_separator, s, attr.sp),
                     Hide => insert(&mut this.hide, (), attr.sp),
-                    HideAliases => insert(&mut this.hide_aliases, (), attr.sp),
+                    HideAliases => insert(&mut this.hide_aliases, (), attr.sp)
                 }?;
 
                 Ok(this)
-            },
+            }
         )
     }
 }
@@ -130,7 +130,10 @@ impl CommandAttr {
         use CommandAttrKind::*;
 
         let sp = attr.span();
-        let Attr { mut key, value } = attr;
+        let Attr {
+            mut key,
+            value
+        } = attr;
 
         let outermost_key = key.pop().unwrap(); // `Attr`'s invariants ensure `key.len() > 0`
 
@@ -139,7 +142,7 @@ impl CommandAttr {
                 if let Some(unexpected_key) = key.last() {
                     return Err(compile_error_at(
                         "`doc` can't have nested attributes",
-                        unexpected_key.span(),
+                        unexpected_key.span()
                     ));
                 }
 
@@ -150,23 +153,25 @@ impl CommandAttr {
                 let Some(attr) = key.pop() else {
                     return Err(compile_error_at(
                         "expected an attribute name",
-                        outermost_key.span(),
+                        outermost_key.span()
                     ));
                 };
 
                 if let Some(unexpected_key) = key.last() {
                     return Err(compile_error_at(
                         &format!("{attr} can't have nested attributes"),
-                        unexpected_key.span(),
+                        unexpected_key.span()
                     ));
                 }
 
                 match &*attr.to_string() {
                     "prefix" => Prefix(value.expect_string()?),
                     "description" => Description(value.expect_string()?, false),
-                    "rename_rule" => {
-                        RenameRule(value.expect_string().and_then(|r| self::RenameRule::parse(&r))?)
-                    }
+                    "rename_rule" => RenameRule(
+                        value
+                            .expect_string()
+                            .and_then(|r| self::RenameRule::parse(&r))?
+                    ),
                     "rename" => Rename(value.expect_string()?),
                     "parse_with" => ParseWith(ParserType::parse(value)?),
                     "separator" => Separator(value.expect_string()?),
@@ -179,13 +184,13 @@ impl CommandAttr {
                             .expect_array()?
                             .into_iter()
                             .map(AttrValue::expect_string)
-                            .collect::<Result<_>>()?,
+                            .collect::<Result<_>>()?
                     ),
                     _ => {
                         return Err(compile_error_at(
                             "unexpected attribute name (expected one of `prefix`, `description`, \
                              `rename`, `parse_with`, `separator`, `hide`, `alias` and `aliases`",
-                            attr.span(),
+                            attr.span()
                         ));
                     }
                 }
@@ -194,12 +199,15 @@ impl CommandAttr {
             _ => {
                 return Err(compile_error_at(
                     "unexpected attribute (expected `command` or `doc`)",
-                    outermost_key.span(),
+                    outermost_key.span()
                 ));
             }
         };
 
-        Ok(Self { kind, sp })
+        Ok(Self {
+            kind,
+            sp
+        })
     }
 }
 
@@ -209,20 +217,25 @@ fn is_command_attribute(a: &Attribute) -> bool {
 
 pub(crate) fn match_separator(
     parser: &mut ParserType,
-    separator: Option<(String, Span)>,
+    separator: Option<(String, Span)>
 ) -> Result<()> {
     match (parser, separator) {
-        (ParserType::Split { separator }, Some((s, _))) => *separator = Some(s),
+        (
+            ParserType::Split {
+                separator
+            },
+            Some((s, _))
+        ) => *separator = Some(s),
         (ParserType::Default, Some((_, sp))) => {
             return Err(compile_error_at(
                 "`separator` can only be used with `parse_with = \"split\"`",
-                sp,
+                sp
             ));
         }
         (ParserType::Custom(_), Some((_, sp))) => {
             return Err(compile_error_at(
                 "`separator` can only be used with `parse_with = \"split\"`",
-                sp,
+                sp
             ));
         }
         (_, None) => {}

@@ -1,7 +1,12 @@
+use std::{
+    borrow::Cow, convert::Infallible, fmt, future::Future, io, iter, mem, path::PathBuf, pin::Pin,
+    sync::Arc, task
+};
+
 use bytes::{Bytes, BytesMut};
 use futures::{
     future::{Either, ready},
-    stream,
+    stream
 };
 use once_cell::sync::OnceCell;
 use rc_box::ArcBox;
@@ -10,14 +15,9 @@ use serde::Serialize;
 use takecell::TakeCell;
 use tokio::{
     io::{AsyncRead, AsyncReadExt, ReadBuf},
-    sync::watch,
+    sync::watch
 };
 use tokio_util::codec::{Decoder, FramedRead};
-
-use std::{
-    borrow::Cow, convert::Infallible, fmt, future::Future, io, iter, mem, path::PathBuf, pin::Pin,
-    sync::Arc, task,
-};
 
 use crate::types::{self, InputSticker};
 
@@ -28,9 +28,9 @@ use crate::types::{self, InputSticker};
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[cfg_attr(test, schemars(with = "String"))] // It is just a String in the TBA
 pub struct InputFile {
-    id: OnceCell<Arc<str>>,
+    id:        OnceCell<Arc<str>>,
     file_name: Option<Cow<'static, str>>,
-    inner: InnerFile,
+    inner:     InnerFile
 }
 
 #[derive(Clone)]
@@ -39,7 +39,7 @@ enum InnerFile {
     File(PathBuf),
     Bytes(bytes::Bytes),
     Url(url::Url),
-    FileId(types::FileId),
+    FileId(types::FileId)
 }
 
 use InnerFile::*;
@@ -111,7 +111,11 @@ impl InputFile {
     /// Shorthand for `Self { file_name: None, inner, id: default() }`
     /// (private because `InnerFile` is private implementation detail)
     fn new(inner: InnerFile) -> Self {
-        Self { file_name: None, inner, id: OnceCell::new() }
+        Self {
+            file_name: None,
+            inner,
+            id: OnceCell::new()
+        }
     }
 
     /// Returns id of this file.
@@ -163,9 +167,9 @@ impl InputFile {
         self.file_name.take().unwrap_or_else(|| match &self.inner {
             File(path_to_file) => match path_to_file.file_name() {
                 Some(name) => Cow::Owned(name.to_string_lossy().into_owned()),
-                None => Cow::Borrowed(""),
+                None => Cow::Borrowed("")
             },
-            _ => Cow::Borrowed(""),
+            _ => Cow::Borrowed("")
         })
     }
 }
@@ -178,7 +182,7 @@ impl fmt::Debug for InnerFile {
             Bytes(bytes) if f.alternate() => f.debug_tuple("Memory").field(bytes).finish(),
             Bytes(_) => f.debug_struct("Memory").finish_non_exhaustive(),
             Url(url) => f.debug_tuple("Url").field(url).finish(),
-            FileId(file_id) => f.debug_tuple("FileId").field(file_id).finish(),
+            FileId(file_id) => f.debug_tuple("FileId").field(file_id).finish()
         }
     }
 }
@@ -186,7 +190,7 @@ impl fmt::Debug for InnerFile {
 impl Serialize for InputFile {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
-        S: serde::Serializer,
+        S: serde::Serializer
     {
         self.attach_or_value().serialize(serializer)
     }
@@ -226,7 +230,7 @@ impl InputFile {
                 let stream = Part::stream(data).file_name(filename);
                 Some(Either::Right(Either::Left(ready(stream))))
             }
-            Read(read) => Some(Either::Right(Either::Right(read.into_part(filename)))),
+            Read(read) => Some(Either::Right(Either::Right(read.into_part(filename))))
         }
     }
 }
@@ -235,25 +239,30 @@ impl InputFile {
 /// `multipart/form-data`
 #[derive(Clone)]
 struct Read {
-    inner: Arc<TakeCell<dyn AsyncRead + Send + Unpin>>,
-    buf: Arc<OnceCell<Result<Vec<Bytes>, Arc<io::Error>>>>,
+    inner:  Arc<TakeCell<dyn AsyncRead + Send + Unpin>>,
+    buf:    Arc<OnceCell<Result<Vec<Bytes>, Arc<io::Error>>>>,
     notify: Arc<watch::Sender<()>>,
-    wait: watch::Receiver<()>,
+    wait:   watch::Receiver<()>
 }
 
 impl Read {
     fn new(it: Arc<TakeCell<dyn AsyncRead + Send + Unpin>>) -> Self {
         let (tx, rx) = watch::channel(());
 
-        Self { inner: it, buf: Arc::default(), notify: Arc::new(tx), wait: rx }
+        Self {
+            inner:  it,
+            buf:    Arc::default(),
+            notify: Arc::new(tx),
+            wait:   rx
+        }
     }
 
     pub(crate) async fn into_part(mut self, filename: Cow<'static, str>) -> Part {
         if !self.inner.is_taken() {
             let res = ArcBox::<TakeCell<dyn AsyncRead + Send + Unpin>>::try_from(self.inner);
             match res {
-                // Fast/easy path: this is the only file copy, so we can just forward the underlying
-                // `dyn AsyncRead` via some adaptors to reqwest.
+                // Fast/easy path: this is the only file copy, so we can just forward the
+                // underlying `dyn AsyncRead` via some adaptors to reqwest.
                 Ok(arc_box) => {
                     let fr = FramedRead::new(ExclusiveArcAsyncRead(arc_box), BytesDecoder);
 
@@ -261,7 +270,7 @@ impl Read {
                     return Part::stream(body).file_name(filename);
                 }
                 // move the arc back into `self`
-                Err(i) => self.inner = i,
+                Err(i) => self.inner = i
             }
         }
 
@@ -301,7 +310,7 @@ impl Read {
                         Ok(_) => {}
 
                         // i/o error
-                        Err(err) => break Err(Arc::new(err)),
+                        Err(err) => break Err(Arc::new(err))
                     }
                 };
 
@@ -342,7 +351,7 @@ impl Read {
                         Some(Ok::<_, Infallible>(res))
                     }
                     // We've just checked in the above match, it's `Ok(_)`
-                    Err(_) => unreachable!(),
+                    Err(_) => unreachable!()
                 });
 
                 Body::wrap_stream(stream::iter(iter))
@@ -363,7 +372,7 @@ impl AsyncRead for ExclusiveArcAsyncRead {
     fn poll_read(
         self: Pin<&mut Self>,
         cx: &mut task::Context<'_>,
-        buf: &mut ReadBuf<'_>,
+        buf: &mut ReadBuf<'_>
     ) -> task::Poll<io::Result<()>> {
         let Self(inner) = Pin::get_mut(self);
         let read: &mut (dyn AsyncRead + Unpin) = inner.get();

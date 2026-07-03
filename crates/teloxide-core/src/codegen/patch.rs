@@ -6,7 +6,11 @@ pub fn patch_schema(mut schema: Schema) -> Schema {
     }
 
     schema.methods.iter_mut().for_each(|method| {
-        method.params.iter_mut().map(|p| &mut p.name).for_each(escape_kw);
+        method
+            .params
+            .iter_mut()
+            .map(|p| &mut p.name)
+            .for_each(escape_kw);
 
         DOC_PATCHES.iter().for_each(|(key, patch)| match key {
             Target::Method(m) => {
@@ -14,7 +18,10 @@ pub fn patch_schema(mut schema: Schema) -> Schema {
                     method.doc.patch(patch, *key);
                 }
             }
-            Target::Field { method_name: m, field_name: f } => {
+            Target::Field {
+                method_name: m,
+                field_name: f
+            } => {
                 if check(m, &method.names.0) {
                     method
                         .params
@@ -23,11 +30,16 @@ pub fn patch_schema(mut schema: Schema) -> Schema {
                         .for_each(|p| p.descr.patch(patch, *key))
                 }
             }
-            Target::Any { method_name: m } => {
+            Target::Any {
+                method_name: m
+            } => {
                 if check(m, &method.names.0) {
                     method.doc.patch(patch, *key);
 
-                    method.params.iter_mut().for_each(|p| p.descr.patch(patch, *key))
+                    method
+                        .params
+                        .iter_mut()
+                        .for_each(|p| p.descr.patch(patch, *key))
                 }
             }
         });
@@ -38,135 +50,147 @@ pub fn patch_schema(mut schema: Schema) -> Schema {
 
 static DOC_PATCHES: &[(Target, Patch)] = &[
     (
-        Target::Any { method_name: None },
-        Patch::ReplaceLink {
-            name: "More info on Sending Files »",
-            value: "crate::types::InputFile",
+        Target::Any {
+            method_name: None
         },
+        Patch::ReplaceLink {
+            name:  "More info on Sending Files »",
+            value: "crate::types::InputFile"
+        }
     ),
     (
         Target::Field {
             method_name: Some("sendChatAction"),
-            field_name: Some("action"),
+            field_name:  Some("action")
         },
         Patch::ReplaceLink {
-            name: "text messages",
-            value: "crate::payloads::SendMessage",
-        },
+            name:  "text messages",
+            value: "crate::payloads::SendMessage"
+        }
     ),
     (
         Target::Field {
             method_name: Some("sendChatAction"),
-            field_name: Some("action"),
+            field_name:  Some("action")
         },
         Patch::ReplaceLink {
-            name: "photos",
-            value: "crate::payloads::SendPhoto",
-        },
+            name:  "photos",
+            value: "crate::payloads::SendPhoto"
+        }
     ),
     (
         Target::Field {
             method_name: Some("sendChatAction"),
-            field_name: Some("action"),
+            field_name:  Some("action")
         },
         Patch::ReplaceLink {
-            name: "videos",
-            value: "crate::payloads::SendVideo",
-        },
+            name:  "videos",
+            value: "crate::payloads::SendVideo"
+        }
     ),
     (
         Target::Field {
             method_name: Some("sendChatAction"),
-            field_name: Some("action"),
+            field_name:  Some("action")
         },
         Patch::ReplaceLink {
-            name: "audio files",
-            value: "crate::payloads::SendAudio",
-        },
+            name:  "audio files",
+            value: "crate::payloads::SendAudio"
+        }
     ),
     (
         Target::Field {
             method_name: Some("sendChatAction"),
-            field_name: Some("action"),
+            field_name:  Some("action")
         },
         Patch::ReplaceLink {
-            name: "general files",
-            value: "crate::payloads::SendDocument",
-        },
+            name:  "general files",
+            value: "crate::payloads::SendDocument"
+        }
     ),
     (
         Target::Field {
             method_name: Some("sendChatAction"),
-            field_name: Some("action"),
+            field_name:  Some("action")
         },
         Patch::ReplaceLink {
-            name: "location data",
-            value: "crate::payloads::SendLocation",
-        },
+            name:  "location data",
+            value: "crate::payloads::SendLocation"
+        }
     ),
     (
         Target::Field {
             method_name: Some("sendChatAction"),
-            field_name: Some("action"),
+            field_name:  Some("action")
         },
         Patch::ReplaceLink {
-            name: "video notes",
-            value: "crate::payloads::SendVideoNote",
-        },
+            name:  "video notes",
+            value: "crate::payloads::SendVideoNote"
+        }
     ),
     (
         Target::Field {
             method_name: Some("sendChatAction"),
-            field_name: Some("action"),
+            field_name:  Some("action")
         },
         Patch::ReplaceLink {
-            name: "stickers",
-            value: "crate::payloads::SendSticker",
-        },
+            name:  "stickers",
+            value: "crate::payloads::SendSticker"
+        }
     ),
     (
-        Target::Any { method_name: None },
-        Patch::Custom(intra_links),
+        Target::Any {
+            method_name: None
+        },
+        Patch::Custom(intra_links)
     ),
     (
         Target::Method(Some("addStickerToSet")),
         Patch::Replace {
             text: "You **must** use exactly one of the fields _png\\_sticker_ or _tgs\\_sticker_. ",
-            with: "",
-        },
+            with: ""
+        }
     ),
     (
         Target::Method(Some("GetFile")),
         Patch::Replace {
             text: "The file can then be downloaded via the link `https://api.telegram.org/file/bot<token>/<file_path>`, where `<file_path>` is taken from the response. It is guaranteed that the link will be valid for at least 1 hour. When the link expires, a new one can be requested by calling [`GetFile`] again.",
-            with: "The file can then be downloaded via the method [`Bot::download_file(file_path, dst)`], where `file_path` is taken from the response. It is guaranteed that the path from [`GetFile`] will be valid for at least 1 hour. When the path expires, a new one can be requested by calling [`GetFile`].",
-        },
+            with: "The file can then be downloaded via the method [`Bot::download_file(file_path, dst)`], where `file_path` is taken from the response. It is guaranteed that the path from [`GetFile`] will be valid for at least 1 hour. When the path expires, a new one can be requested by calling [`GetFile`]."
+        }
     ),
     (
         Target::Method(Some("GetFile")),
         Patch::AddLink {
-            name: "`Bot::download_file(file_path, dst)`",
-            value: "crate::net::Download::download_file",
-        },
-    ),
+            name:  "`Bot::download_file(file_path, dst)`",
+            value: "crate::net::Download::download_file"
+        }
+    )
     // FIXME RETUNRS
 ];
 
 #[derive(Debug, Clone, Copy)]
 enum Target<'a> {
-    Any { method_name: Option<&'a str> },
+    Any {
+        method_name: Option<&'a str>
+    },
     Method(Option<&'a str>),
-    Field { method_name: Option<&'a str>, field_name: Option<&'a str> },
+    Field {
+        method_name: Option<&'a str>,
+        field_name:  Option<&'a str>
+    }
 }
 
 impl Target<'_> {
     fn is_exact(&self) -> bool {
         match self {
             Target::Method(m) => m.is_some(),
-            Target::Field { method_name, field_name } => {
-                method_name.is_some() && field_name.is_some()
-            }
-            Target::Any { method_name: _ } => false,
+            Target::Field {
+                method_name,
+                field_name
+            } => method_name.is_some() && field_name.is_some(),
+            Target::Any {
+                method_name: _
+            } => false
         }
     }
 }
@@ -177,13 +201,16 @@ enum Patch<'a> {
     // RemoveLink { name: &'a str },
     // FullReplace { text: &'a str, with: &'a str },
     Replace { text: &'a str, with: &'a str },
-    Custom(fn(&mut Doc)),
+    Custom(fn(&mut Doc))
 }
 
 impl Doc {
     fn patch(&mut self, patch: &Patch, key: Target) {
         match patch {
-            Patch::ReplaceLink { name, value } => {
+            Patch::ReplaceLink {
+                name,
+                value
+            } => {
                 if let Some(link) = self.md_links.get_mut(*name) {
                     link.clear();
                     *link += *value;
@@ -191,8 +218,12 @@ impl Doc {
                     panic!("Patch error: {key:?} doesn't have link {name}");
                 }
             }
-            Patch::AddLink { name, value } => {
-                self.md_links.insert((*name).to_owned(), (*value).to_owned());
+            Patch::AddLink {
+                name,
+                value
+            } => {
+                self.md_links
+                    .insert((*name).to_owned(), (*value).to_owned());
             }
             // Patch::RemoveLink { name } => drop(self.md_links.remove(*name)),
             // Patch::FullReplace { text, with } => {
@@ -201,8 +232,11 @@ impl Doc {
             //     self.md.clear();
             //     self.md += with;
             // }
-            Patch::Replace { text, with } => self.md = self.md.replace(*text, with),
-            Patch::Custom(f) => f(self),
+            Patch::Replace {
+                text,
+                with
+            } => self.md = self.md.replace(*text, with),
+            Patch::Custom(f) => f(self)
         }
     }
 }
@@ -236,7 +270,9 @@ fn intra_links(doc: &mut Doc) {
 
     for repl in repls_t {
         if let Some(value) = doc.md_links.swap_remove(repl.as_str()) {
-            doc.md = doc.md.replace(format!("[{repl}]").as_str(), &format!("[`{repl}`]"));
+            doc.md = doc
+                .md
+                .replace(format!("[{repl}]").as_str(), &format!("[`{repl}`]"));
             doc.md_links.insert(format!("`{repl}`"), value);
         }
     }
@@ -244,7 +280,9 @@ fn intra_links(doc: &mut Doc) {
     for repl in repls_m {
         if let Some(value) = doc.md_links.swap_remove(repl.as_str()) {
             let repln = to_uppercase(&repl);
-            doc.md = doc.md.replace(format!("[{repl}]").as_str(), &format!("[`{repln}`]"));
+            doc.md = doc
+                .md
+                .replace(format!("[{repl}]").as_str(), &format!("[`{repln}`]"));
             doc.md_links.insert(format!("`{repln}`"), value);
         }
     }
@@ -263,13 +301,21 @@ fn to_uppercase(s: &str) -> String {
 
 pub(crate) fn patch_ty(mut schema: Schema) -> Schema {
     // URLs
-    patch_types(&mut schema, Type::String, Type::Url, &[("set_webhook", "url")]);
+    patch_types(
+        &mut schema,
+        Type::String,
+        Type::Url,
+        &[("set_webhook", "url")]
+    );
 
     patch_types(
         &mut schema,
         Type::Option(Box::new(Type::String)),
         Type::Option(Box::new(Type::Url)),
-        &[("answer_callback_query", "url"), ("send_invoice", "photo_url")],
+        &[
+            ("answer_callback_query", "url"),
+            ("send_invoice", "photo_url")
+        ]
     );
 
     // Dates
@@ -282,8 +328,8 @@ pub(crate) fn patch_ty(mut schema: Schema) -> Schema {
             ("ban_chat_member", "until_date"),
             ("kick_chat_member", "until_date"),
             ("restrict_chat_member", "until_date"),
-            ("approve_suggested_post", "send_date"),
-        ],
+            ("approve_suggested_post", "send_date")
+        ]
     );
     patch_types(
         &mut schema,
@@ -292,8 +338,8 @@ pub(crate) fn patch_ty(mut schema: Schema) -> Schema {
         &[
             ("create_chat_invite_link", "expire_date"),
             ("edit_chat_invite_link", "expire_date"),
-            ("set_user_emoji_status", "emoji_status_expiration_date"),
-        ],
+            ("set_user_emoji_status", "emoji_status_expiration_date")
+        ]
     );
 
     schema

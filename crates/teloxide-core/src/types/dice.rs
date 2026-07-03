@@ -14,5 +14,5 @@ pub struct Dice {
     ///
     /// Value of the dice, 1-6 for 🎲, 🎯 and 🎳 base emoji, 1-5 for 🏀 and ⚽
     /// base emoji, 1-64 for 🎰 base emoji
-    pub value: u8,
+    pub value: u8
 }

@@ -1,26 +1,29 @@
-use crate::{Result, error::compile_error_at};
-
 use proc_macro2::{Delimiter, Group, Span};
 use quote::ToTokens;
 use syn::{
     Attribute, Ident, Lit, Path, Token,
     parse::{Parse, ParseStream, Parser},
-    spanned::Spanned,
+    spanned::Spanned
 };
+
+use crate::{Result, error::compile_error_at};
 
 pub(crate) fn fold_attrs<A, R>(
     attrs: &[Attribute],
     filter: fn(&Attribute) -> bool,
     parse: impl Fn(Attr) -> Result<R>,
     init: A,
-    f: impl Fn(A, R) -> Result<A>,
+    f: impl Fn(A, R) -> Result<A>
 ) -> Result<A> {
     attrs
         .iter()
         .filter(|&a| filter(a))
         .flat_map(|attribute| {
             let Some(key) = attribute.path().get_ident().cloned() else {
-                return vec![Err(compile_error_at("expected an ident", attribute.path().span()))];
+                return vec![Err(compile_error_at(
+                    "expected an ident",
+                    attribute.path().span()
+                ))];
             };
 
             // TODO: rewrite `Attrs` parser to syn 2 fully
@@ -38,7 +41,7 @@ pub(crate) fn fold_attrs<A, R>(
                 Err(_) => {
                     let value = match attribute.meta.require_name_value() {
                         Ok(v) => v.value.to_token_stream(),
-                        Err(err) => return vec![Err(err.into())],
+                        Err(err) => return vec![Err(err.into())]
                     };
 
                     quote::quote! { = #value }
@@ -47,7 +50,7 @@ pub(crate) fn fold_attrs<A, R>(
 
             match (|input: ParseStream<'_>| Attrs::parse_with_key(input, key)).parse2(args) {
                 Ok(ok) => ok.0.into_iter().map(&parse).collect(),
-                Err(err) => vec![Err(err.into())],
+                Err(err) => vec![Err(err.into())]
             }
         })
         .try_fold(init, |acc, r| f(acc, r?))
@@ -89,8 +92,8 @@ pub(crate) struct Attr {
     /// ```
     ///
     /// The `key` will be `[key, blahblah]`. See [Attrs] for more examples.
-    pub key: Vec<Ident>,
-    pub value: AttrValue,
+    pub key:   Vec<Ident>,
+    pub value: AttrValue
 }
 
 /// Value of an attribute.
@@ -105,7 +108,7 @@ pub(crate) enum AttrValue {
     Path(Path),
     Lit(Lit),
     Array(Vec<AttrValue>, Span),
-    None(Span),
+    None(Span)
 }
 
 impl Parse for Attrs {
@@ -135,7 +138,10 @@ impl Attrs {
                         })
                         .unwrap_or_default();
 
-                attrs.0.iter_mut().for_each(|attr| attr.key.push(key.clone()));
+                attrs
+                    .0
+                    .iter_mut()
+                    .for_each(|attr| attr.key.push(key.clone()));
 
                 Ok((Some(attrs), next_cursor))
             } else {
@@ -153,16 +159,22 @@ impl Attrs {
                 input.parse::<Token![=]>()?;
                 input.parse::<AttrValue>()?
             }
-            false => AttrValue::None(input.span()),
+            false => AttrValue::None(input.span())
         };
 
-        Ok(Attrs(vec![Attr { key: vec![key], value }]))
+        Ok(Attrs(vec![Attr {
+            key: vec![key],
+            value
+        }]))
     }
 }
 
 impl Attr {
     pub(crate) fn span(&self) -> Span {
-        self.key().span().join(self.value.span()).unwrap_or_else(|| self.key().span())
+        self.key()
+            .span()
+            .join(self.value.span())
+            .unwrap_or_else(|| self.key().span())
     }
 
     fn key(&self) -> &Ident {
@@ -176,7 +188,7 @@ impl AttrValue {
     pub fn expect_string(self) -> Result<String> {
         self.expect("a string", |this| match this {
             AttrValue::Lit(Lit::Str(s)) => Ok(s.value()),
-            _ => Err(this),
+            _ => Err(this)
         })
     }
 
@@ -186,8 +198,8 @@ impl AttrValue {
             AttrValue::None(_) => Ok(()),
             _ => Err(compile_error_at(
                 &format!("The {option_name} option should not have a value, remove it"),
-                self.span(),
-            )),
+                self.span()
+            ))
         }
     }
 
@@ -201,7 +213,7 @@ impl AttrValue {
     pub fn expect_array(self) -> Result<Vec<Self>> {
         self.expect("an array", |this| match this {
             AttrValue::Array(a, _) => Ok(a),
-            _ => Err(this),
+            _ => Err(this)
         })
     }
 
@@ -215,7 +227,10 @@ impl AttrValue {
 
     pub fn expect<T>(self, expected: &str, f: impl FnOnce(Self) -> Result<T, Self>) -> Result<T> {
         f(self).map_err(|this| {
-            compile_error_at(&format!("expected {expected}, found {}", this.descr()), this.span())
+            compile_error_at(
+                &format!("expected {expected}, found {}", this.descr()),
+                this.span()
+            )
         })
     }
 
@@ -231,10 +246,10 @@ impl AttrValue {
                 Float(_) => "a floating point integer",
                 Bool(_) => "a boolean",
                 Verbatim(_) => ":shrug:",
-                _ => ":mag:",
+                _ => ":mag:"
             },
             Self::Array(_, _) => "an array",
-            Self::Path(_) => "a path",
+            Self::Path(_) => "a path"
         }
     }
 
@@ -249,7 +264,7 @@ impl AttrValue {
             Self::Path(p) => p.span(),
             Self::Lit(l) => l.span(),
             Self::None(sp) => *sp,
-            Self::Array(_, sp) => *sp,
+            Self::Array(_, sp) => *sp
         }
     }
 }
@@ -262,13 +277,14 @@ impl Parse for AttrValue {
             let content;
             let array_span = syn::bracketed!(content in input).span;
             let array = content.parse_terminated(AttrValue::parse, Token![,])?;
-            Ok(AttrValue::Array(array.into_iter().collect(), array_span.span()))
-        } else {
-            Ok(AttrValue::Path(
-                input
-                    .parse::<Path>()
-                    .map_err(|_| syn::Error::new(input.span(), "Unexpected token"))?,
+            Ok(AttrValue::Array(
+                array.into_iter().collect(),
+                array_span.span()
             ))
+        } else {
+            Ok(AttrValue::Path(input.parse::<Path>().map_err(|_| {
+                syn::Error::new(input.span(), "Unexpected token")
+            })?))
         }
     }
 }

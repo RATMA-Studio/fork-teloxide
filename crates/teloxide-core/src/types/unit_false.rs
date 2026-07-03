@@ -10,7 +10,7 @@ impl std::convert::TryFrom<bool> for False {
     fn try_from(value: bool) -> Result<Self, Self::Error> {
         match value {
             true => Err(()),
-            false => Ok(False),
+            false => Ok(False)
         }
     }
 }
@@ -18,7 +18,7 @@ impl std::convert::TryFrom<bool> for False {
 impl<'de> Deserialize<'de> for False {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
-        D: Deserializer<'de>,
+        D: Deserializer<'de>
     {
         deserializer.deserialize_bool(FalseVisitor)
     }
@@ -35,11 +35,11 @@ impl Visitor<'_> for FalseVisitor {
 
     fn visit_bool<E>(self, value: bool) -> Result<Self::Value, E>
     where
-        E: serde::de::Error,
+        E: serde::de::Error
     {
         match value {
             true => Err(E::custom("expected `false`, found `true`")),
-            false => Ok(False),
+            false => Ok(False)
         }
     }
 }
@@ -47,7 +47,7 @@ impl Visitor<'_> for FalseVisitor {
 impl Serialize for False {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
-        S: Serializer,
+        S: Serializer
     {
         serializer.serialize_bool(false)
     }

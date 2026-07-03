@@ -12,5 +12,5 @@ pub struct UsersShared {
     /// Identifier of the request
     pub request_id: RequestId,
     /// Identifiers of the shared users
-    pub users: Vec<SharedUser>,
+    pub users:      Vec<SharedUser>
 }

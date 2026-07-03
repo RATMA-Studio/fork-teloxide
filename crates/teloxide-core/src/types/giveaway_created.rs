@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 pub struct GiveawayCreated {
     /// The number of Telegram Stars to be split between giveaway winners; for
     /// Telegram Star giveaways only
-    pub prize_star_count: Option<u32>,
+    pub prize_star_count: Option<u32>
 }
 
 #[cfg(test)]

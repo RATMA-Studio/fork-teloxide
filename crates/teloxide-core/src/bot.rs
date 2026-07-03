@@ -6,7 +6,7 @@ use serde::{Serialize, de::DeserializeOwned};
 use crate::{
     net,
     requests::{MultipartPayload, Payload, ResponseResult},
-    serde_multipart,
+    serde_multipart
 };
 
 mod api;
@@ -55,9 +55,9 @@ const TELOXIDE_API_URL: &str = "TELOXIDE_API_URL";
 #[must_use]
 #[derive(Debug, Clone)]
 pub struct Bot {
-    token: Arc<str>,
+    token:   Arc<str>,
     api_url: Arc<reqwest::Url>,
-    client: Client,
+    client:  Client
 }
 
 /// Constructors
@@ -70,9 +70,11 @@ impl Bot {
     /// If it cannot create [`reqwest::Client`].
     pub fn new<S>(token: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
-        let client = net::default_reqwest_settings().build().expect("Client creation failed");
+        let client = net::default_reqwest_settings()
+            .build()
+            .expect("Client creation failed");
 
         Self::with_client(token, client)
     }
@@ -89,15 +91,19 @@ impl Bot {
     /// [issue 223]: https://github.com/teloxide/teloxide/issues/223
     pub fn with_client<S>(token: S, client: Client) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         let token = Into::<String>::into(token).into();
         let api_url = Arc::new(
             reqwest::Url::parse(net::TELEGRAM_API_URL)
-                .expect("Failed to parse the default TBA URL"),
+                .expect("Failed to parse the default TBA URL")
         );
 
-        Self { token, api_url, client }
+        Self {
+            token,
+            api_url,
+            client
+        }
     }
 
     /// Creates a new `Bot` with the `TELOXIDE_TOKEN` & `TELOXIDE_API_URL` &
@@ -152,7 +158,7 @@ impl Bot {
                     .expect("Failed to parse the `TELOXIDE_API_URL` env variable");
                 bot.set_api_url(api_url)
             }
-            Err(_) => bot,
+            Err(_) => bot
         }
     }
 
@@ -168,7 +174,7 @@ impl Bot {
     /// ```
     /// use teloxide_core::{
     ///     Bot,
-    ///     requests::{Request, Requester},
+    ///     requests::{Request, Requester}
     /// };
     ///
     /// # async {
@@ -225,11 +231,11 @@ impl Bot {
 impl Bot {
     pub(crate) fn execute_json<P>(
         &self,
-        payload: &P,
+        payload: &P
     ) -> impl Future<Output = ResponseResult<P::Output>> + use<P>
     where
         P: Payload + Serialize,
-        P::Output: DeserializeOwned + 'static,
+        P::Output: DeserializeOwned + 'static
     {
         let client = self.client.clone();
         let token = Arc::clone(&self.token);
@@ -248,7 +254,7 @@ impl Bot {
                 reqwest::Url::clone(&*api_url),
                 P::NAME,
                 params,
-                timeout_hint,
+                timeout_hint
             )
             .await
         }
@@ -256,11 +262,11 @@ impl Bot {
 
     pub(crate) fn execute_multipart<P>(
         &self,
-        payload: &mut P,
+        payload: &mut P
     ) -> impl Future<Output = ResponseResult<P::Output>> + use<P>
     where
         P: MultipartPayload + Serialize,
-        P::Output: DeserializeOwned + 'static,
+        P::Output: DeserializeOwned + 'static
     {
         let client = self.client.clone();
         let token = Arc::clone(&self.token);
@@ -278,7 +284,7 @@ impl Bot {
                 reqwest::Url::clone(&*api_url),
                 P::NAME,
                 params,
-                timeout_hint,
+                timeout_hint
             )
             .await
         }
@@ -286,11 +292,11 @@ impl Bot {
 
     pub(crate) fn execute_multipart_ref<P>(
         &self,
-        payload: &P,
+        payload: &P
     ) -> impl Future<Output = ResponseResult<P::Output>> + use<P>
     where
         P: MultipartPayload + Serialize,
-        P::Output: DeserializeOwned + 'static,
+        P::Output: DeserializeOwned + 'static
     {
         let client = self.client.clone();
         let token = Arc::clone(&self.token);
@@ -308,7 +314,7 @@ impl Bot {
                 reqwest::Url::clone(&*api_url),
                 P::NAME,
                 params,
-                timeout_hint,
+                timeout_hint
             )
             .await
         }

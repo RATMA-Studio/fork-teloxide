@@ -73,7 +73,7 @@
 //!                Use filter_text method of MessageFilterExt to accept
 //!                only textual messages. Others will be ignored by this handler (2)
 //!             */
-//!             Message::filter_text().endpoint(process_text_message),
+//!             Message::filter_text().endpoint(process_text_message)
 //!         );
 //!
 //!     Dispatcher::builder(bot, schema).build().dispatch().await;
@@ -81,7 +81,11 @@
 //! }
 //!
 //! /// Replies to the user's text messages
-//! async fn process_text_message(bot: Bot, user: User, message_text: String) -> Result<(), Error> {
+//! async fn process_text_message(
+//!     bot: Bot,
+//!     user: User,
+//!     message_text: String
+//! ) -> Result<(), Error> {
 //!     /*
 //!        The id of a chat with a user is the same as his telegram_id
 //!        from the bot's perspective.
@@ -91,7 +95,9 @@
 //!        - User is provided by the (1)
 //!        - String is provided by the (2)
 //!     */
-//!     let _ = bot.send_message(user.id, format!("Hi! You sent: {message_text}")).await?;
+//!     let _ = bot
+//!         .send_message(user.id, format!("Hi! You sent: {message_text}"))
+//!         .await?;
 //!     Ok(())
 //! }
 //! ```
@@ -147,14 +153,12 @@ pub mod sugar;
 pub mod update_listeners;
 pub mod utils;
 
-#[doc(inline)]
-pub use teloxide_core::*;
-
-#[cfg(feature = "macros")]
-pub use teloxide_macros as macros;
-
 pub use dispatching::{filter_command, filter_mention_command};
 pub use dptree::{self, case as handler};
+#[doc(inline)]
+pub use teloxide_core::*;
+#[cfg(feature = "macros")]
+pub use teloxide_macros as macros;
 
 #[cfg(all(feature = "nightly", doctest))]
 #[cfg_attr(feature = "nightly", cfg_attr(feature = "nightly", doc = include_str!("../../../README.md")))]

@@ -34,14 +34,14 @@ pub struct InlineQueryResultArticle {
     pub thumbnail_width: Option<u32>,
 
     /// Thumbnail height.
-    pub thumbnail_height: Option<u32>,
+    pub thumbnail_height: Option<u32>
 }
 
 impl InlineQueryResultArticle {
     pub fn new<S1, S2>(id: S1, title: S2, input_message_content: InputMessageContent) -> Self
     where
         S1: Into<String>,
-        S2: Into<String>,
+        S2: Into<String>
     {
         Self {
             id: id.into(),
@@ -52,13 +52,13 @@ impl InlineQueryResultArticle {
             description: None,
             thumbnail_url: None,
             thumbnail_width: None,
-            thumbnail_height: None,
+            thumbnail_height: None
         }
     }
 
     pub fn id<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.id = val.into();
         self
@@ -66,7 +66,7 @@ impl InlineQueryResultArticle {
 
     pub fn title<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.title = val.into();
         self
@@ -92,7 +92,7 @@ impl InlineQueryResultArticle {
 
     pub fn description<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.description = Some(val.into());
         self

@@ -5,16 +5,7 @@ use crate::types::{OrderInfo, User};
 
 /// Unique query identifier.
 #[derive(
-    Default,
-    Clone,
-    Debug,
-    derive_more::Display,
-    PartialEq,
-    Eq,
-    Hash,
-    Serialize,
-    Deserialize,
-    From
+    Default, Clone, Debug, derive_more::Display, PartialEq, Eq, Hash, Serialize, Deserialize, From,
 )]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(transparent)]
@@ -58,5 +49,5 @@ pub struct PreCheckoutQuery {
 
     /// Order info provided by the user.
     #[serde(default)]
-    pub order_info: OrderInfo,
+    pub order_info: OrderInfo
 }

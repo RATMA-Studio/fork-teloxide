@@ -57,14 +57,14 @@ pub struct InlineQueryResultLocation {
     pub thumbnail_width: Option<u32>,
 
     /// Thumbnail height.
-    pub thumbnail_height: Option<u32>,
+    pub thumbnail_height: Option<u32>
 }
 
 impl InlineQueryResultLocation {
     pub fn new<S1, S2>(id: S1, title: S2, latitude: f64, longitude: f64) -> Self
     where
         S1: Into<String>,
-        S2: Into<String>,
+        S2: Into<String>
     {
         Self {
             id: id.into(),
@@ -79,13 +79,13 @@ impl InlineQueryResultLocation {
             thumbnail_height: None,
             horizontal_accuracy: None,
             heading: None,
-            proximity_alert_radius: None,
+            proximity_alert_radius: None
         }
     }
 
     pub fn id<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.id = val.into();
         self
@@ -105,7 +105,7 @@ impl InlineQueryResultLocation {
 
     pub fn title<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.title = val.into();
         self

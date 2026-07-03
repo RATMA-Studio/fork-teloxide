@@ -31,5 +31,5 @@ pub struct ChosenInlineResult {
     pub inline_message_id: Option<String>,
 
     /// The query that was used to obtain the result.
-    pub query: String,
+    pub query: String
 }

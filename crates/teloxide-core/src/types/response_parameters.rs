@@ -16,7 +16,7 @@ pub enum ResponseParameters {
 
     /// In case of exceeding flood control, the number of seconds left to wait
     /// before the request can be repeated.
-    RetryAfter(Seconds),
+    RetryAfter(Seconds)
 }
 
 #[cfg(test)]
@@ -35,7 +35,8 @@ mod tests {
     #[test]
     fn retry_after_deserialization() {
         let expected = ResponseParameters::RetryAfter(Seconds::from_seconds(123_456));
-        let actual: ResponseParameters = serde_json::from_str(r#"{"retry_after":123456}"#).unwrap();
+        let actual: ResponseParameters =
+            serde_json::from_str(r#"{"retry_after":123456}"#).unwrap();
 
         assert_eq!(expected, actual);
     }

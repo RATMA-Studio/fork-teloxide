@@ -57,7 +57,7 @@ pub struct Options {
     /// that the request comes from a webhook set by you.
     ///
     /// Default - `teloxide` will generate a random token.
-    pub secret_token: Option<String>,
+    pub secret_token: Option<String>
 }
 
 impl Options {
@@ -72,7 +72,7 @@ impl Options {
             certificate: None,
             max_connections: None,
             drop_pending_updates: false,
-            secret_token: None,
+            secret_token: None
         }
     }
 
@@ -80,7 +80,10 @@ impl Options {
     /// behind a reverse proxy. By default, the path will be taken from the
     /// public URL.
     pub fn path(self, path: String) -> Self {
-        Self { path, ..self }
+        Self {
+            path,
+            ..self
+        }
     }
 
     /// Upload your public key certificate so that the root certificate in use
@@ -88,7 +91,10 @@ impl Options {
     ///
     /// [self-signed guide]: https://core.telegram.org/bots/self-signed
     pub fn certificate(self, v: InputFile) -> Self {
-        Self { certificate: Some(v), ..self }
+        Self {
+            certificate: Some(v),
+            ..self
+        }
     }
 
     /// Maximum allowed number of simultaneous HTTPS connections to the webhook
@@ -96,12 +102,18 @@ impl Options {
     /// the load on your bot's server, and higher values to increase your bot's
     /// throughput.
     pub fn max_connections(self, v: u8) -> Self {
-        Self { max_connections: Some(v), ..self }
+        Self {
+            max_connections: Some(v),
+            ..self
+        }
     }
 
     /// Drop all pending updates before setting up webhook.
     pub fn drop_pending_updates(self) -> Self {
-        Self { drop_pending_updates: true, ..self }
+        Self {
+            drop_pending_updates: true,
+            ..self
+        }
     }
 
     /// A secret token to be sent in a header “X-Telegram-Bot-Api-Secret-Token”
@@ -116,7 +128,10 @@ impl Options {
     pub fn secret_token(self, token: String) -> Self {
         check_secret(token.as_bytes()).expect("Invalid secret token");
 
-        Self { secret_token: Some(token), ..self }
+        Self {
+            secret_token: Some(token),
+            ..self
+        }
     }
 
     /// Returns `self.secret_token`, generating a new one if it's `None`.
@@ -144,14 +159,19 @@ mod axum;
 /// Note: this takes out `certificate`.
 async fn setup_webhook<R>(bot: R, options: &mut Options) -> Result<(), R::Err>
 where
-    R: Requester,
+    R: Requester
 {
-    use crate::requests::Request;
     use teloxide_core::requests::HasPayload;
+
+    use crate::requests::Request;
 
     let secret = options.get_or_gen_secret_token().to_owned();
     let &mut Options {
-        ref url, ref mut certificate, max_connections, drop_pending_updates, ..
+        ref url,
+        ref mut certificate,
+        max_connections,
+        drop_pending_updates,
+        ..
     } = options;
 
     let mut req = bot.set_webhook(url.clone());
@@ -193,7 +213,9 @@ fn check_secret(bytes: &[u8]) -> Result<&[u8], &'static str> {
     let is_not_supported =
         |c: &_| !matches!(c, b'a'..=b'z' | b'A'..=b'Z' | b'0'..=b'9' | b'_' | b'-');
     if bytes.iter().any(is_not_supported) {
-        return Err("secret token must only contain of `a-z`, `A-Z`, `0-9`, `_` and `-` characters");
+        return Err(
+            "secret token must only contain of `a-z`, `A-Z`, `0-9`, `_` and `-` characters"
+        );
     }
 
     Ok(bytes)

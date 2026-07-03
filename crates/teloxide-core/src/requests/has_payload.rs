@@ -33,7 +33,7 @@ pub trait HasPayload {
     fn with_payload_mut<F>(mut self, f: F) -> Self
     where
         Self: Sized,
-        F: FnOnce(&mut Self::Payload),
+        F: FnOnce(&mut Self::Payload)
     {
         f(self.payload_mut());
         self
@@ -42,7 +42,7 @@ pub trait HasPayload {
 
 impl<P> HasPayload for P
 where
-    P: Payload,
+    P: Payload
 {
     type Payload = Self;
 
@@ -58,7 +58,7 @@ where
 impl<L, R> HasPayload for Either<L, R>
 where
     L: HasPayload,
-    R: HasPayload<Payload = L::Payload>,
+    R: HasPayload<Payload = L::Payload>
 {
     type Payload = L::Payload;
 

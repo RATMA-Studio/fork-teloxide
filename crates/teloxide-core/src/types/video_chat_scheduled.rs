@@ -10,5 +10,5 @@ pub struct VideoChatScheduled {
     /// administrator.
     #[serde(with = "crate::types::serde_date_from_unix_timestamp")]
     #[cfg_attr(test, schemars(with = "i64"))]
-    pub start_date: DateTime<Utc>,
+    pub start_date: DateTime<Utc>
 }

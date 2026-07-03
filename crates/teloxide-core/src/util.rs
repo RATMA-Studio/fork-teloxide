@@ -3,13 +3,13 @@ use crate::types::{MessageEntity, User};
 /// Converts an optional iterator to a flattened iterator.
 pub(crate) fn flatten<I>(opt: Option<I>) -> impl Iterator<Item = I::Item>
 where
-    I: IntoIterator,
+    I: IntoIterator
 {
     struct Flat<I>(Option<I>);
 
     impl<I> Iterator for Flat<I>
     where
-        I: Iterator,
+        I: Iterator
     {
         type Item = I::Item;
 
@@ -20,7 +20,7 @@ where
         fn size_hint(&self) -> (usize, Option<usize>) {
             match &self.0 {
                 None => (0, Some(0)),
-                Some(i) => i.size_hint(),
+                Some(i) => i.size_hint()
             }
         }
     }
@@ -29,12 +29,14 @@ where
 }
 
 pub(crate) fn mentioned_users_from_entities(
-    entities: &[MessageEntity],
+    entities: &[MessageEntity]
 ) -> impl Iterator<Item = &User> {
     use crate::types::MessageEntityKind::*;
 
     entities.iter().filter_map(|entity| match &entity.kind {
-        TextMention { user } => Some(user),
+        TextMention {
+            user
+        } => Some(user),
 
         Mention
         | Hashtag
@@ -51,9 +53,17 @@ pub(crate) fn mentioned_users_from_entities(
         | Strikethrough
         | Spoiler
         | Code
-        | Pre { language: _ }
-        | TextLink { url: _ }
-        | CustomEmoji { custom_emoji_id: _ }
-        | DateTime { .. } => None,
+        | Pre {
+            language: _
+        }
+        | TextLink {
+            url: _
+        }
+        | CustomEmoji {
+            custom_emoji_id: _
+        }
+        | DateTime {
+            ..
+        } => None
     })
 }

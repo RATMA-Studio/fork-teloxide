@@ -30,5 +30,5 @@ pub struct Venue {
     /// Google Places type of the venue. (See [supported types].)
     ///
     /// [supported types]: https://developers.google.com/places/web-service/supported_types
-    pub google_place_type: Option<String>,
+    pub google_place_type: Option<String>
 }

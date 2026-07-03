@@ -15,15 +15,19 @@ use crate::types::{InputFile, Seconds};
 pub enum InputPaidMedia {
     Photo(InputPaidMediaPhoto),
     Video(Box<InputPaidMediaVideo>),
-    LivePhoto(InputPaidMediaLivePhoto),
+    LivePhoto(InputPaidMediaLivePhoto)
 }
 
 impl From<InputPaidMedia> for InputFile {
     fn from(media: InputPaidMedia) -> InputFile {
         match media {
-            InputPaidMedia::Photo(InputPaidMediaPhoto { media, .. })
-            | InputPaidMedia::LivePhoto(InputPaidMediaLivePhoto { media, .. }) => media,
-            InputPaidMedia::Video(input_paid_media_video) => input_paid_media_video.media,
+            InputPaidMedia::Photo(InputPaidMediaPhoto {
+                media, ..
+            })
+            | InputPaidMedia::LivePhoto(InputPaidMediaLivePhoto {
+                media, ..
+            }) => media,
+            InputPaidMedia::Video(input_paid_media_video) => input_paid_media_video.media
         }
     }
 }
@@ -34,11 +38,18 @@ impl InputPaidMedia {
         use InputPaidMedia::*;
 
         let (media, extra) = match self {
-            Photo(InputPaidMediaPhoto { media, .. }) => (media, None),
-            Video(input_paid_media_video) => {
-                (&input_paid_media_video.media, input_paid_media_video.thumbnail.as_ref())
-            }
-            LivePhoto(InputPaidMediaLivePhoto { media, photo, .. }) => (media, Some(photo)),
+            Photo(InputPaidMediaPhoto {
+                media, ..
+            }) => (media, None),
+            Video(input_paid_media_video) => (
+                &input_paid_media_video.media,
+                input_paid_media_video.thumbnail.as_ref()
+            ),
+            LivePhoto(InputPaidMediaLivePhoto {
+                media,
+                photo,
+                ..
+            }) => (media, Some(photo))
         };
 
         iter::once(media).chain(extra)
@@ -49,11 +60,18 @@ impl InputPaidMedia {
         use InputPaidMedia::*;
 
         let (media, extra) = match self {
-            Photo(InputPaidMediaPhoto { media, .. }) => (media, None),
-            Video(input_paid_media_video) => {
-                (&mut input_paid_media_video.media, input_paid_media_video.thumbnail.as_mut())
-            }
-            LivePhoto(InputPaidMediaLivePhoto { media, photo, .. }) => (media, Some(photo)),
+            Photo(InputPaidMediaPhoto {
+                media, ..
+            }) => (media, None),
+            Video(input_paid_media_video) => (
+                &mut input_paid_media_video.media,
+                input_paid_media_video.thumbnail.as_mut()
+            ),
+            LivePhoto(InputPaidMediaLivePhoto {
+                media,
+                photo,
+                ..
+            }) => (media, Some(photo))
         };
 
         iter::once(media).chain(extra)
@@ -73,12 +91,14 @@ pub struct InputPaidMediaPhoto {
     /// information on Sending Files »]
     ///
     /// [More information on Sending Files »]: https://core.telegram.org/bots/api#sending-files
-    pub media: InputFile,
+    pub media: InputFile
 }
 
 impl InputPaidMediaPhoto {
     pub const fn new(media: InputFile) -> Self {
-        Self { media }
+        Self {
+            media
+        }
     }
 
     pub fn media(mut self, val: InputFile) -> Self {
@@ -135,7 +155,7 @@ pub struct InputPaidMediaVideo {
     pub duration: Option<Seconds>,
 
     /// Pass `true`, if the uploaded video is suitable for streaming.
-    pub supports_streaming: Option<bool>,
+    pub supports_streaming: Option<bool>
 }
 
 /// The paid media to send is a live photo.
@@ -156,12 +176,15 @@ pub struct InputPaidMediaLivePhoto {
     /// `attach://<file_attach_name>` to upload a new one using
     /// multipart/form-data under `<file_attach_name>` name. Sending live photos
     /// by a URL is currently unsupported.
-    pub photo: InputFile,
+    pub photo: InputFile
 }
 
 impl InputPaidMediaLivePhoto {
     pub const fn new(media: InputFile, photo: InputFile) -> Self {
-        Self { media, photo }
+        Self {
+            media,
+            photo
+        }
     }
 
     pub fn media(mut self, val: InputFile) -> Self {
@@ -185,7 +208,7 @@ impl InputPaidMediaVideo {
             width: None,
             height: None,
             duration: None,
-            supports_streaming: None,
+            supports_streaming: None
         }
     }
 
@@ -238,7 +261,7 @@ mod tests {
     fn photo_serialize() {
         let expected_json = r#"{"type":"photo","media":"123456"}"#;
         let photo = InputPaidMedia::Photo(InputPaidMediaPhoto {
-            media: InputFile::file_id("123456".into()),
+            media: InputFile::file_id("123456".into())
         });
 
         let actual_json = serde_json::to_string(&photo).unwrap();
@@ -249,14 +272,14 @@ mod tests {
     fn video_serialize() {
         let expected_json = r#"{"type":"video","media":"123456"}"#;
         let video = InputPaidMedia::Video(Box::new(InputPaidMediaVideo {
-            media: InputFile::file_id("123456".into()),
-            thumbnail: None,
-            cover: None,
-            start_timestamp: None,
-            width: None,
-            height: None,
-            duration: None,
-            supports_streaming: None,
+            media:              InputFile::file_id("123456".into()),
+            thumbnail:          None,
+            cover:              None,
+            start_timestamp:    None,
+            width:              None,
+            height:             None,
+            duration:           None,
+            supports_streaming: None
         }));
 
         let actual_json = serde_json::to_string(&video).unwrap();
@@ -268,14 +291,14 @@ mod tests {
         let expected_json = r#"{"type":"video","media":"7890","thumbnail":"7890"}"#;
 
         let mut video = InputPaidMedia::Video(Box::new(InputPaidMediaVideo {
-            media: InputFile::file_id("123456".into()),
-            thumbnail: Some(InputFile::file_id("123456".into())),
-            cover: None,
-            start_timestamp: None,
-            width: None,
-            height: None,
-            duration: None,
-            supports_streaming: None,
+            media:              InputFile::file_id("123456".into()),
+            thumbnail:          Some(InputFile::file_id("123456".into())),
+            cover:              None,
+            start_timestamp:    None,
+            width:              None,
+            height:             None,
+            duration:           None,
+            supports_streaming: None
         }));
 
         for file in video.files_mut() {

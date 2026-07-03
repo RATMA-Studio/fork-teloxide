@@ -176,7 +176,7 @@ pub enum ParseMode {
         note = "This is a legacy mode, retained for backward compatibility. Use `MarkdownV2` \
                 instead."
     )]
-    Markdown,
+    Markdown
 }
 
 impl TryFrom<&str> for ParseMode {
@@ -188,7 +188,7 @@ impl TryFrom<&str> for ParseMode {
             "html" => Ok(ParseMode::Html),
             "markdown" => Ok(ParseMode::Markdown),
             "markdownv2" => Ok(ParseMode::MarkdownV2),
-            _ => Err(()),
+            _ => Err(())
         }
     }
 }

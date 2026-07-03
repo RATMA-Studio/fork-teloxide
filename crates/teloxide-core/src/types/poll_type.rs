@@ -6,5 +6,5 @@ use serde::{Deserialize, Serialize};
 #[non_exhaustive]
 pub enum PollType {
     Quiz,
-    Regular,
+    Regular
 }

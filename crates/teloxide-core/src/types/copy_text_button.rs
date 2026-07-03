@@ -10,5 +10,5 @@ use serde::{Deserialize, Serialize};
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct CopyTextButton {
     /// The text to be copied to the clipboard; 1-256 characters
-    pub text: String,
+    pub text: String
 }

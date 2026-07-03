@@ -1,22 +1,30 @@
-use crate::types::{Chat, Message, MessageEntity, ParseMode, User};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
+use crate::types::{Chat, Message, MessageEntity, ParseMode, User};
+
 // Yes, it's really an i32. See: https://t.me/teloxide_dev/78461
 /// Unique identifier of the task.
-#[derive(Clone, Copy)]
-#[derive(Debug, derive_more::Display)]
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(
+    Clone,
+    Copy,
+    Debug,
+    derive_more::Display,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    Hash,
+    Serialize,
+    Deserialize,
+)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(transparent)]
 pub struct ChecklistTaskId(pub i32);
 
 /// Describes a task in a checklist.
 #[serde_with::skip_serializing_none]
-#[derive(Clone, Debug)]
-#[derive(PartialEq, Eq, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct ChecklistTask {
     /// Unique identifier of the task
@@ -40,23 +48,21 @@ pub struct ChecklistTask {
     /// task wasn't completed
     #[serde(default, with = "crate::types::serde_opt_date_from_unix_timestamp")]
     #[cfg_attr(test, schemars(with = "Option<i64>"))]
-    pub completion_date: Option<DateTime<Utc>>,
+    pub completion_date: Option<DateTime<Utc>>
 }
 
 impl ChecklistTask {
     pub fn is_completed(&self) -> bool {
         match self.completion_date {
             Some(completion_date) => completion_date.timestamp() > 0,
-            None => false,
+            None => false
         }
     }
 }
 
 /// Describes a checklist.
 #[serde_with::skip_serializing_none]
-#[derive(Clone, Debug)]
-#[derive(PartialEq, Eq, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct Checklist {
     /// Title of the checklist
@@ -76,14 +82,12 @@ pub struct Checklist {
     /// `true`, if users other than the creator of the list can mark tasks as
     /// done or not done
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
-    pub others_can_mark_tasks_as_done: bool,
+    pub others_can_mark_tasks_as_done: bool
 }
 
 /// Describes a task to add to a checklist.
 #[serde_with::skip_serializing_none]
-#[derive(Clone, Debug)]
-#[derive(PartialEq, Eq, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct InputChecklistTask {
     /// Unique identifier of the task; must be positive and unique among all
@@ -102,14 +106,12 @@ pub struct InputChecklistTask {
     /// List of special entities that appear in the text, which can be specified
     /// instead of parse_mode. Currently, only _bold_, _italic_, _underline_,
     /// _strikethrough_, _spoiler_, and _custom_emoji_ entities are allowed
-    pub text_entities: Option<Vec<MessageEntity>>,
+    pub text_entities: Option<Vec<MessageEntity>>
 }
 
 /// Describes a checklist to create.
 #[serde_with::skip_serializing_none]
-#[derive(Clone, Debug)]
-#[derive(PartialEq, Eq, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct InputChecklist {
     /// Title of the checklist; 1-255 characters after entities parsing
@@ -137,14 +139,13 @@ pub struct InputChecklist {
     /// Pass `true` if other users can mark tasks as done or not done in the
     /// checklist
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
-    pub others_can_mark_tasks_as_done: bool,
+    pub others_can_mark_tasks_as_done: bool
 }
 
 /// Describes a service message about checklist tasks marked as done or not
 /// done.
 #[serde_with::skip_serializing_none]
-#[derive(Clone, Debug, PartialEq)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct ChecklistTasksDone {
     /// Message containing the checklist whose tasks were marked as done or not
@@ -156,13 +157,12 @@ pub struct ChecklistTasksDone {
     pub marked_as_done_task_ids: Option<Vec<ChecklistTaskId>>,
 
     /// Identifiers of the tasks that were marked as not done
-    pub marked_as_not_done_task_ids: Option<Vec<ChecklistTaskId>>,
+    pub marked_as_not_done_task_ids: Option<Vec<ChecklistTaskId>>
 }
 
 /// Describes a service message about tasks added to a checklist.
 #[serde_with::skip_serializing_none]
-#[derive(Clone, Debug, PartialEq)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct ChecklistTasksAdded {
     /// Message containing the checklist to which the tasks were added. Note
@@ -171,5 +171,5 @@ pub struct ChecklistTasksAdded {
     pub checklist_message: Option<Box<Message>>,
 
     /// List of tasks added to the checklist
-    pub tasks: Vec<ChecklistTask>,
+    pub tasks: Vec<ChecklistTask>
 }

@@ -28,7 +28,7 @@ pub struct LinkPreviewOptions {
     /// `true`, if the link preview must be shown above the message text;
     /// otherwise, the link preview will be shown below the message text
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
-    pub show_above_text: bool,
+    pub show_above_text: bool
 }
 
 #[cfg(test)]

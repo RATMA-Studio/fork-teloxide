@@ -13,8 +13,7 @@ use crate::types::True;
 ///
 /// [`KeyboardMarkup`]: crate::types::KeyboardMarkup
 #[serde_with::skip_serializing_none]
-#[derive(Copy, Clone, Debug, Default, Serialize, Deserialize)]
-#[derive(Eq, Hash, PartialEq)]
+#[derive(Copy, Clone, Debug, Default, Serialize, Deserialize, Eq, Hash, PartialEq)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct KeyboardRemove {
     /// Requests clients to remove the custom keyboard (user will not be able
@@ -36,13 +35,16 @@ pub struct KeyboardRemove {
     ///
     /// [`Message`]: crate::types::Message
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
-    pub selective: bool,
+    pub selective: bool
 }
 
 impl KeyboardRemove {
     #[must_use]
     pub const fn new() -> Self {
-        Self { remove_keyboard: True, selective: false }
+        Self {
+            remove_keyboard: True,
+            selective:       false
+        }
     }
 
     /// Sets [`selective`] to `true`.
@@ -50,7 +52,10 @@ impl KeyboardRemove {
     /// [`selective`]: KeyboardRemove::selective
     #[must_use]
     pub const fn selective(self) -> Self {
-        Self { selective: true, ..self }
+        Self {
+            selective: true,
+            ..self
+        }
     }
 }
 

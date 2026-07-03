@@ -5,16 +5,7 @@ use crate::types::{ShippingAddress, User};
 
 /// Unique query identifier.
 #[derive(
-    Default,
-    Clone,
-    Debug,
-    derive_more::Display,
-    PartialEq,
-    Eq,
-    Hash,
-    Serialize,
-    Deserialize,
-    From
+    Default, Clone, Debug, derive_more::Display, PartialEq, Eq, Hash, Serialize, Deserialize, From,
 )]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(transparent)]
@@ -38,5 +29,5 @@ pub struct ShippingQuery {
     pub invoice_payload: String,
 
     /// User specified shipping address.
-    pub shipping_address: ShippingAddress,
+    pub shipping_address: ShippingAddress
 }

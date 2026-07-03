@@ -15,5 +15,5 @@ pub struct ProximityAlertTriggered {
     pub watcher: User,
 
     /// The distance between the users.
-    pub distance: u32,
+    pub distance: u32
 }

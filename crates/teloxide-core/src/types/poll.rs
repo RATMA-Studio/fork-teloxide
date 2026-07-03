@@ -1,21 +1,12 @@
-use crate::types::{MessageEntity, PollMedia, PollType, Seconds, User};
-
 use chrono::{DateTime, Utc};
 use derive_more::derive::From;
 use serde::{Deserialize, Serialize};
 
+use crate::types::{MessageEntity, PollMedia, PollType, Seconds, User};
+
 /// Unique poll identifier.
 #[derive(
-    Default,
-    Clone,
-    Debug,
-    derive_more::Display,
-    PartialEq,
-    Eq,
-    Hash,
-    Serialize,
-    Deserialize,
-    From
+    Default, Clone, Debug, derive_more::Display, PartialEq, Eq, Hash, Serialize, Deserialize, From,
 )]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(transparent)]
@@ -109,7 +100,7 @@ pub struct Poll {
     /// Point in time when the poll will be automatically closed.
     #[serde(default, with = "crate::types::serde_opt_date_from_unix_timestamp")]
     #[cfg_attr(test, schemars(with = "Option<i64>"))]
-    pub close_date: Option<DateTime<Utc>>,
+    pub close_date: Option<DateTime<Utc>>
 }
 
 /// This object contains information about one answer option in a poll.
@@ -148,7 +139,7 @@ pub struct PollOption {
     pub addition_date: Option<DateTime<Utc>>,
 
     /// Number of users that voted for this option.
-    pub voter_count: u32,
+    pub voter_count: u32
 }
 
 impl Poll {
@@ -161,7 +152,11 @@ impl Poll {
     pub fn mentioned_users(&self) -> impl Iterator<Item = &User> {
         use crate::util::{flatten, mentioned_users_from_entities};
 
-        flatten(self.explanation_entities.as_deref().map(mentioned_users_from_entities))
+        flatten(
+            self.explanation_entities
+                .as_deref()
+                .map(mentioned_users_from_entities)
+        )
     }
 }
 

@@ -36,5 +36,5 @@ pub struct ChatInviteLink {
     pub subscription_period: Option<u32>,
     /// The amount of Telegram Stars a user must pay initially and after each
     /// subsequent subscription period to be a member of the chat using the link
-    pub subscription_price: Option<u32>,
+    pub subscription_price: Option<u32>
 }

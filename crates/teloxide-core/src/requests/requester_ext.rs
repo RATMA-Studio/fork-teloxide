@@ -1,16 +1,12 @@
-use crate::{adaptors::DefaultParseMode, requests::Requester, types::ParseMode};
-
 #[cfg(feature = "cache_me")]
 use crate::adaptors::CacheMe;
-
 #[cfg(feature = "erased")]
 use crate::adaptors::ErasedRequester;
-
-#[cfg(feature = "trace_adaptor")]
-use crate::adaptors::trace::{Settings, Trace};
-
 #[cfg(feature = "throttle")]
 use crate::adaptors::throttle::{Limits, Throttle};
+#[cfg(feature = "trace_adaptor")]
+use crate::adaptors::trace::{Settings, Trace};
+use crate::{adaptors::DefaultParseMode, requests::Requester, types::ParseMode};
 
 /// Extensions methods for [`Requester`].
 pub trait RequesterExt: Requester {
@@ -19,7 +15,7 @@ pub trait RequesterExt: Requester {
     #[must_use]
     fn cache_me(self) -> CacheMe<Self>
     where
-        Self: Sized,
+        Self: Sized
     {
         CacheMe::new(self)
     }
@@ -30,7 +26,7 @@ pub trait RequesterExt: Requester {
     fn erase<'a>(self) -> ErasedRequester<'a, Self::Err>
     where
         Self: 'a,
-        Self: Sized,
+        Self: Sized
     {
         ErasedRequester::new(self)
     }
@@ -40,7 +36,7 @@ pub trait RequesterExt: Requester {
     #[must_use]
     fn trace(self, settings: Settings) -> Trace<Self>
     where
-        Self: Sized,
+        Self: Sized
     {
         Trace::new(self, settings)
     }
@@ -54,7 +50,7 @@ pub trait RequesterExt: Requester {
     where
         Self: Sized + Clone + Send + Sync + 'static,
         Self::Err: crate::errors::AsResponseParameters,
-        Self::GetChat: Send,
+        Self::GetChat: Send
     {
         Throttle::new_spawn(self, limits)
     }
@@ -90,7 +86,7 @@ pub trait RequesterExt: Requester {
     #[must_use]
     fn parse_mode(self, parse_mode: ParseMode) -> DefaultParseMode<Self>
     where
-        Self: Sized,
+        Self: Sized
     {
         DefaultParseMode::new(self, parse_mode)
     }
@@ -98,7 +94,7 @@ pub trait RequesterExt: Requester {
 
 impl<T> RequesterExt for T
 where
-    T: Requester,
+    T: Requester
 {
     /* use default impls */
 }

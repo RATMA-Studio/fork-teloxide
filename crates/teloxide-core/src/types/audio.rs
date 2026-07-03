@@ -33,14 +33,13 @@ pub struct Audio {
     pub mime_type: Option<Mime>,
 
     /// A thumbnail of the album cover to which the music file belongs.
-    pub thumbnail: Option<PhotoSize>,
+    pub thumbnail: Option<PhotoSize>
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::types::{FileId, FileUniqueId};
-
     use super::*;
+    use crate::types::{FileId, FileUniqueId};
 
     #[test]
     fn deserialize() {
@@ -61,25 +60,25 @@ mod tests {
             }
         }"#;
         let expected = Audio {
-            file: FileMeta {
-                id: FileId("id".to_string()),
+            file:      FileMeta {
+                id:        FileId("id".to_string()),
                 unique_id: FileUniqueId("".to_string()),
-                size: 123_456,
+                size:      123_456
             },
-            duration: Seconds::from_seconds(60),
+            duration:  Seconds::from_seconds(60),
             performer: Some("Performer".to_string()),
-            title: Some("Title".to_string()),
+            title:     Some("Title".to_string()),
             mime_type: Some("application/zip".parse().unwrap()),
             thumbnail: Some(PhotoSize {
-                file: FileMeta {
-                    id: FileId("id".to_owned()),
+                file:   FileMeta {
+                    id:        FileId("id".to_owned()),
                     unique_id: FileUniqueId("".to_owned()),
-                    size: 3452,
+                    size:      3452
                 },
-                width: 320,
-                height: 320,
+                width:  320,
+                height: 320
             }),
-            file_name: None,
+            file_name: None
         };
         let actual = serde_json::from_str::<Audio>(json).unwrap();
         assert_eq!(actual, expected)

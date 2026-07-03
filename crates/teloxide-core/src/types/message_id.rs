@@ -2,16 +2,7 @@ use serde::{Deserialize, Serialize};
 
 /// A unique message identifier.
 #[derive(
-    Default,
-    Clone,
-    Copy,
-    Debug,
-    derive_more::Display,
-    PartialEq,
-    Eq,
-    Hash,
-    Serialize,
-    Deserialize
+    Default, Clone, Copy, Debug, derive_more::Display, PartialEq, Eq, Hash, Serialize, Deserialize,
 )]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(from = "MessageIdRaw", into = "MessageIdRaw")]
@@ -30,18 +21,24 @@ pub struct MessageId(pub i32);
 #[derive(Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 struct MessageIdRaw {
-    message_id: i32,
+    message_id: i32
 }
 
 impl From<MessageIdRaw> for MessageId {
-    fn from(MessageIdRaw { message_id }: MessageIdRaw) -> Self {
+    fn from(
+        MessageIdRaw {
+            message_id
+        }: MessageIdRaw
+    ) -> Self {
         MessageId(message_id)
     }
 }
 
 impl From<MessageId> for MessageIdRaw {
     fn from(MessageId(message_id): MessageId) -> Self {
-        MessageIdRaw { message_id }
+        MessageIdRaw {
+            message_id
+        }
     }
 }
 

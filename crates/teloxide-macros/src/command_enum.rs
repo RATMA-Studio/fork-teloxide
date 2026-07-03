@@ -3,7 +3,7 @@ use crate::{
     command_attr::{CommandAttrs, match_separator},
     error::compile_error_at,
     fields_parse::ParserType,
-    rename_rules::RenameRule,
+    rename_rules::RenameRule
 };
 
 /// Create a if block that checks if the given attribute is applied to a enum
@@ -22,12 +22,12 @@ macro_rules! variants_only_attr {
 }
 
 pub(crate) struct CommandEnum {
-    pub prefix: String,
+    pub prefix:            String,
     /// The bool is true if the description contains a doc comment
-    pub description: Option<(String, bool)>,
+    pub description:       Option<(String, bool)>,
     pub command_separator: String,
-    pub rename_rule: RenameRule,
-    pub parser_type: ParserType,
+    pub rename_rule:       RenameRule,
+    pub parser_type:       ParserType
 }
 
 impl CommandEnum {
@@ -43,7 +43,7 @@ impl CommandEnum {
             command_separator,
             separator,
             hide,
-            hide_aliases,
+            hide_aliases
         } = attrs;
 
         variants_only_attr![rename, hide, hide_aliases, aliases];
@@ -53,13 +53,15 @@ impl CommandEnum {
         match_separator(&mut parser, separator)?;
 
         Ok(Self {
-            prefix: prefix.map(|(p, _)| p).unwrap_or_else(|| "/".to_owned()),
-            description: description.map(|(d, is_doc, _)| (d, is_doc)),
+            prefix:            prefix.map(|(p, _)| p).unwrap_or_else(|| "/".to_owned()),
+            description:       description.map(|(d, is_doc, _)| (d, is_doc)),
             command_separator: command_separator
                 .map(|(s, _)| s)
                 .unwrap_or_else(|| String::from(" ")),
-            rename_rule: rename_rule.map(|(rr, _)| rr).unwrap_or(RenameRule::Identity),
-            parser_type: parser,
+            rename_rule:       rename_rule
+                .map(|(rr, _)| rr)
+                .unwrap_or(RenameRule::Identity),
+            parser_type:       parser
         })
     }
 }

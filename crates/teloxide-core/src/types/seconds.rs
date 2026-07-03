@@ -1,9 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 /// A wrapper around `u32` which represents duration in seconds.
-#[derive(Clone, Copy)]
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[derive(Debug, derive_more::Display)]
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, derive_more::Display)]
 #[display("{_0}s")]
 #[derive(Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
@@ -41,13 +39,15 @@ mod tests {
 
     #[derive(Serialize, Deserialize)]
     struct W {
-        seconds: Seconds,
+        seconds: Seconds
     }
 
     #[test]
     fn deserialization() {
         let expected = Seconds::from_seconds(123456);
-        let W { seconds: actual } = serde_json::from_str(r#"{"seconds":123456}"#).unwrap();
+        let W {
+            seconds: actual
+        } = serde_json::from_str(r#"{"seconds":123456}"#).unwrap();
 
         assert_eq!(expected, actual);
         assert_eq!(actual.seconds(), 123456);
@@ -56,7 +56,10 @@ mod tests {
     #[test]
     fn serialization() {
         let expected = r#"{"seconds":123456}"#;
-        let actual = serde_json::to_string(&W { seconds: Seconds::from_seconds(123456) }).unwrap();
+        let actual = serde_json::to_string(&W {
+            seconds: Seconds::from_seconds(123456)
+        })
+        .unwrap();
 
         assert_eq!(expected, actual);
     }

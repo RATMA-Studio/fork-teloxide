@@ -3,7 +3,7 @@ use serde::Deserialize;
 use crate::{
     ApiError, RequestError,
     requests::ResponseResult,
-    types::{False, ResponseParameters, True},
+    types::{False, ResponseParameters, True}
 };
 
 #[derive(Deserialize)]
@@ -15,7 +15,7 @@ pub(crate) enum TelegramResponse<R> {
         ok: True,
 
         #[serde(rename = "result")]
-        response: R,
+        response: R
     },
     Err {
         /// A dummy field. Used only for deserialization.
@@ -25,23 +25,30 @@ pub(crate) enum TelegramResponse<R> {
         #[serde(rename = "description")]
         error: ApiError,
 
-        // // This field is present in the json sent by telegram, but isn't currently used anywhere
-        // // and as such - ignored
+        // // This field is present in the json sent by telegram, but isn't currently used
+        // anywhere // and as such - ignored
         // error_code: u16,
         #[serde(rename = "parameters")]
-        response_parameters: Option<ResponseParameters>,
-    },
+        response_parameters: Option<ResponseParameters>
+    }
 }
 
 impl<R> From<TelegramResponse<R>> for ResponseResult<R> {
     fn from(this: TelegramResponse<R>) -> ResponseResult<R> {
         match this {
-            TelegramResponse::Ok { response, .. } => Ok(response),
-            TelegramResponse::Err { response_parameters: Some(params), .. } => Err(match params {
+            TelegramResponse::Ok {
+                response, ..
+            } => Ok(response),
+            TelegramResponse::Err {
+                response_parameters: Some(params),
+                ..
+            } => Err(match params {
                 ResponseParameters::RetryAfter(i) => RequestError::RetryAfter(i),
-                ResponseParameters::MigrateToChatId(to) => RequestError::MigrateToChatId(to),
+                ResponseParameters::MigrateToChatId(to) => RequestError::MigrateToChatId(to)
             }),
-            TelegramResponse::Err { error, .. } => Err(RequestError::Api(error)),
+            TelegramResponse::Err {
+                error, ..
+            } => Err(RequestError::Api(error))
         }
     }
 }
@@ -58,7 +65,10 @@ mod tests {
 
         assert!(matches!(
             val,
-            TelegramResponse::Err { error: ApiError::TerminatedByOtherGetUpdates, .. }
+            TelegramResponse::Err {
+                error: ApiError::TerminatedByOtherGetUpdates,
+                ..
+            }
         ));
     }
 

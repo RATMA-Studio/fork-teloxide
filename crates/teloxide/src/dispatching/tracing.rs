@@ -1,12 +1,13 @@
-use super::UpdateHandler;
+use std::{collections::BTreeSet, sync::Arc};
 
 use dptree::{
     HandlerSignature,
     di::{Asyncify, Injectable},
-    prelude::DependencyMap,
+    prelude::DependencyMap
 };
-use std::{collections::BTreeSet, sync::Arc};
 use tracing::{Instrument, Span};
+
+use super::UpdateHandler;
 
 pub trait UpdateHandlerTracingExt<E> {
     /// Returns an `UpdateHandler` wrapped in an async span.
@@ -23,7 +24,7 @@ pub trait UpdateHandlerTracingExt<E> {
 impl<E: 'static> UpdateHandlerTracingExt<E> for UpdateHandler<E> {
     fn instrument_with_async<F, FnArgs>(self, f: F) -> UpdateHandler<E>
     where
-        F: Injectable<Span, FnArgs> + Send + Sync + 'static,
+        F: Injectable<Span, FnArgs> + Send + Sync + 'static
     {
         let f = Arc::new(f);
 
@@ -42,17 +43,17 @@ impl<E: 'static> UpdateHandlerTracingExt<E> for UpdateHandler<E> {
                 }
             },
             HandlerSignature::Other {
-                obligations: F::obligations(),
-                guaranteed_outcomes: BTreeSet::new(),
+                obligations:          F::obligations(),
+                guaranteed_outcomes:  BTreeSet::new(),
                 conditional_outcomes: BTreeSet::new(),
-                continues: true,
-            },
+                continues:            true
+            }
         )
     }
 
     fn instrument_with<F, FnArgs>(self, f: F) -> Self
     where
-        Asyncify<F>: Injectable<Span, FnArgs> + Send + Sync + 'static,
+        Asyncify<F>: Injectable<Span, FnArgs> + Send + Sync + 'static
     {
         self.instrument_with_async(Asyncify(f))
     }

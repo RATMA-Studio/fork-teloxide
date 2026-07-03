@@ -25,7 +25,7 @@ pub struct StickerSet {
     pub stickers: Vec<Sticker>,
 
     /// Sticker set thumbnail in the `.webp`, `.tgs` or `.webm` format.
-    pub thumbnail: Option<PhotoSize>,
+    pub thumbnail: Option<PhotoSize>
 }
 
 /// This allows calling [`StickerType`]'s methods directly on [`StickerSet`].

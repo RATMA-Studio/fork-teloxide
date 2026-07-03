@@ -39,9 +39,8 @@ mod parse_mode;
 pub use cache_me::CacheMe;
 #[cfg(feature = "erased")]
 pub use erased::ErasedRequester;
+pub use parse_mode::DefaultParseMode;
 #[cfg(feature = "throttle")]
 pub use throttle::Throttle;
 #[cfg(feature = "trace_adaptor")]
 pub use trace::Trace;
-
-pub use parse_mode::DefaultParseMode;

@@ -16,5 +16,5 @@ pub struct SuggestedPostApprovalFailed {
     pub suggested_post_message: Option<Box<Message>>,
 
     /// Expected price of the post
-    pub price: SuggestedPostPrice,
+    pub price: SuggestedPostPrice
 }

@@ -6,7 +6,7 @@ use dptree::Handler;
 
 use crate::{
     dispatching::DpHandlerDescription,
-    types::{AllowedUpdate, Message, Update, UpdateKind},
+    types::{AllowedUpdate, Message, Update, UpdateKind}
 };
 
 macro_rules! define_ext {

@@ -3,10 +3,9 @@
 use std::time::Duration;
 
 pub use self::download::{Download, download_file, download_file_stream};
-
 pub(crate) use self::{
     request::{request_json, request_multipart},
-    telegram_response::TelegramResponse,
+    telegram_response::TelegramResponse
 };
 
 mod download;
@@ -44,7 +43,7 @@ pub fn client_from_env() -> reqwest::Client {
 
     match std::env::var(TELOXIDE_PROXY).ok() {
         Some(proxy) => builder.proxy(Proxy::all(proxy).expect("reqwest::Proxy creation failed")),
-        None => builder,
+        None => builder
     }
     .build()
     .expect("creating reqwest::Client")
@@ -90,7 +89,9 @@ pub fn default_reqwest_settings() -> reqwest::ClientBuilder {
 fn method_url(base: reqwest::Url, token: &str, method_name: &str) -> reqwest::Url {
     let mut url = base;
     {
-        let mut segments = url.path_segments_mut().expect("base URL cannot be a cannot-be-a-base");
+        let mut segments = url
+            .path_segments_mut()
+            .expect("base URL cannot be a cannot-be-a-base");
         segments.push(&format!("bot{token}"));
         segments.push(method_name);
     }
@@ -103,7 +104,9 @@ fn method_url(base: reqwest::Url, token: &str, method_name: &str) -> reqwest::Ur
 fn file_url(base: reqwest::Url, token: &str, file_path: &str) -> reqwest::Url {
     let mut url = base;
     {
-        let mut segments = url.path_segments_mut().expect("base URL cannot be a cannot-be-a-base");
+        let mut segments = url
+            .path_segments_mut()
+            .expect("base URL cannot be a cannot-be-a-base");
         segments.push("file");
         segments.push(&format!("bot{token}"));
         segments.push(file_path);
@@ -120,7 +123,7 @@ mod tests {
         let url = method_url(
             reqwest::Url::parse(TELEGRAM_API_URL).unwrap(),
             "535362388:AAF7-g0gYncWnm5IyfZlpPRqRRv6kNAGlao",
-            "methodName",
+            "methodName"
         );
 
         assert_eq!(
@@ -134,13 +137,13 @@ mod tests {
         let url = method_url(
             reqwest::Url::parse("https://example.com/telegram").unwrap(),
             "535362388:AAF7-g0gYncWnm5IyfZlpPRqRRv6kNAGlao",
-            "methodName",
+            "methodName"
         );
 
         assert_eq!(
-	    url.as_str(),
-	    "https://example.com/telegram/bot535362388:AAF7-g0gYncWnm5IyfZlpPRqRRv6kNAGlao/methodName"
-	);
+            url.as_str(),
+            "https://example.com/telegram/bot535362388:AAF7-g0gYncWnm5IyfZlpPRqRRv6kNAGlao/methodName"
+        );
     }
 
     #[test]
@@ -148,7 +151,7 @@ mod tests {
         let url = file_url(
             reqwest::Url::parse(TELEGRAM_API_URL).unwrap(),
             "535362388:AAF7-g0gYncWnm5IyfZlpPRqRRv6kNAGlao",
-            "AgADAgADyqoxG2g8aEsu_KjjVsGF4-zetw8ABAEAAwIAA20AA_8QAwABFgQ",
+            "AgADAgADyqoxG2g8aEsu_KjjVsGF4-zetw8ABAEAAwIAA20AA_8QAwABFgQ"
         );
 
         assert_eq!(
@@ -162,12 +165,12 @@ mod tests {
         let url = file_url(
             reqwest::Url::parse("https://example.com/telegram").unwrap(),
             "535362388:AAF7-g0gYncWnm5IyfZlpPRqRRv6kNAGlao",
-            "AgADAgADyqoxG2g8aEsu_KjjVsGF4-zetw8ABAEAAwIAA20AA_8QAwABFgQ",
+            "AgADAgADyqoxG2g8aEsu_KjjVsGF4-zetw8ABAEAAwIAA20AA_8QAwABFgQ"
         );
 
         assert_eq!(
-	    url.as_str(),
-	    "https://example.com/telegram/file/bot535362388:AAF7-g0gYncWnm5IyfZlpPRqRRv6kNAGlao/AgADAgADyqoxG2g8aEsu_KjjVsGF4-zetw8ABAEAAwIAA20AA_8QAwABFgQ"
-	);
+            url.as_str(),
+            "https://example.com/telegram/file/bot535362388:AAF7-g0gYncWnm5IyfZlpPRqRRv6kNAGlao/AgADAgADyqoxG2g8aEsu_KjjVsGF4-zetw8ABAEAAwIAA20AA_8QAwABFgQ"
+        );
     }
 }

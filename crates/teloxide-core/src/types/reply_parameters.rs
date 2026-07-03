@@ -43,12 +43,15 @@ pub struct ReplyParameters {
     /// Identifier of the specific checklist task to be replied to
     pub checklist_task_id: Option<ChecklistTaskId>,
     /// Persistent identifier of the specific poll option to be replied to.
-    pub poll_option_id: Option<String>,
+    pub poll_option_id: Option<String>
 }
 
 impl ReplyParameters {
     pub fn new(message_id: MessageId) -> Self {
-        Self { message_id, ..Self::default() }
+        Self {
+            message_id,
+            ..Self::default()
+        }
     }
 
     /// Setter for the `chat_id` field

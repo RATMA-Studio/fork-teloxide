@@ -11,23 +11,21 @@ mod worker;
 
 use std::{
     future::Future,
-    hash::{Hash, Hasher},
-};
-
-use tokio::sync::{
-    mpsc,
-    oneshot::{self},
-};
-
-use crate::{errors::AsResponseParameters, requests::Requester, types::*};
-
-use self::{
-    request_lock::{RequestLock, channel},
-    worker::{FreezeUntil, InfoMessage, worker},
+    hash::{Hash, Hasher}
 };
 
 pub use request::{ThrottlingRequest, ThrottlingSend};
 pub use settings::{Limits, Settings};
+use tokio::sync::{
+    mpsc,
+    oneshot::{self}
+};
+
+use self::{
+    request_lock::{RequestLock, channel},
+    worker::{FreezeUntil, InfoMessage, worker}
+};
+use crate::{errors::AsResponseParameters, requests::Requester, types::*};
 
 /// Automatic request limits respecting mechanism.
 ///
@@ -72,10 +70,10 @@ pub use settings::{Limits, Settings};
 /// wrapper.
 #[derive(Clone, Debug)]
 pub struct Throttle<B> {
-    bot: B,
+    bot:     B,
     // `RequestLock` allows to unlock requests (allowing them to be sent).
-    queue: mpsc::Sender<(ChatIdHash, RequestLock)>,
-    info_tx: mpsc::Sender<InfoMessage>,
+    queue:   mpsc::Sender<(ChatIdHash, RequestLock)>,
+    info_tx: mpsc::Sender<InfoMessage>
 }
 
 impl<B> Throttle<B> {
@@ -86,9 +84,12 @@ impl<B> Throttle<B> {
     pub fn new(bot: B, limits: Limits) -> (Self, impl Future<Output = ()>)
     where
         B: Requester + Clone,
-        B::Err: AsResponseParameters,
+        B::Err: AsResponseParameters
     {
-        let settings = Settings { limits, ..<_>::default() };
+        let settings = Settings {
+            limits,
+            ..<_>::default()
+        };
         Self::with_settings(bot, settings)
     }
 
@@ -99,13 +100,17 @@ impl<B> Throttle<B> {
     pub fn with_settings(bot: B, settings: Settings) -> (Self, impl Future<Output = ()>)
     where
         B: Requester + Clone,
-        B::Err: AsResponseParameters,
+        B::Err: AsResponseParameters
     {
         let (tx, rx) = mpsc::channel(settings.limits.messages_per_sec_overall as usize);
         let (info_tx, info_rx) = mpsc::channel(2);
 
         let worker = worker(settings, rx, info_rx, bot.clone());
-        let this = Self { bot, queue: tx, info_tx };
+        let this = Self {
+            bot,
+            queue: tx,
+            info_tx
+        };
 
         (this, worker)
     }
@@ -119,7 +124,7 @@ impl<B> Throttle<B> {
     where
         B: Requester + Clone + Send + Sync + 'static,
         B::Err: AsResponseParameters,
-        B::GetChat: Send,
+        B::GetChat: Send
     {
         let (this, worker) = Self::new(bot, limits);
 
@@ -133,7 +138,7 @@ impl<B> Throttle<B> {
     where
         B: Requester + Clone + Send + Sync + 'static,
         B::Err: AsResponseParameters,
-        B::GetChat: Send,
+        B::GetChat: Send
     {
         let (this, worker) = Self::with_settings(bot, settings);
 
@@ -157,7 +162,12 @@ impl<B> Throttle<B> {
 
         let (tx, rx) = oneshot::channel();
 
-        self.info_tx.send(InfoMessage::GetLimits { response: tx }).await.expect(WORKER_DIED);
+        self.info_tx
+            .send(InfoMessage::GetLimits {
+                response: tx
+            })
+            .await
+            .expect(WORKER_DIED);
 
         rx.await.expect(WORKER_DIED)
     }
@@ -168,7 +178,13 @@ impl<B> Throttle<B> {
     pub async fn set_limits(&self, new: Limits) {
         let (tx, rx) = oneshot::channel();
 
-        self.info_tx.send(InfoMessage::SetLimits { new, response: tx }).await.ok();
+        self.info_tx
+            .send(InfoMessage::SetLimits {
+                new,
+                response: tx
+            })
+            .await
+            .ok();
 
         rx.await.ok();
     }
@@ -181,14 +197,14 @@ impl<B> Throttle<B> {
 #[derive(Debug, Copy, Clone, Hash, Eq, PartialEq)]
 enum ChatIdHash {
     Id(ChatId),
-    ChannelUsernameHash(u64),
+    ChannelUsernameHash(u64)
 }
 
 impl ChatIdHash {
     fn is_channel_or_supergroup(&self) -> bool {
         match self {
             &Self::Id(id) => id.is_channel_or_supergroup(),
-            Self::ChannelUsernameHash(_) => true,
+            Self::ChannelUsernameHash(_) => true
         }
     }
 }

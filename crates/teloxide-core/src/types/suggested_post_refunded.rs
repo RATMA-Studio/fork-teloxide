@@ -15,7 +15,7 @@ pub struct SuggestedPostRefunded {
     pub suggested_post_message: Option<Box<Message>>,
 
     /// Reason for the refund.     
-    pub reason: SuggestedPostRefundReason,
+    pub reason: SuggestedPostRefundReason
 }
 
 /// Currently, one of PostDeleted if the post was
@@ -28,5 +28,5 @@ pub struct SuggestedPostRefunded {
 #[non_exhaustive]
 pub enum SuggestedPostRefundReason {
     PostDeleted,
-    PaymentRefunded,
+    PaymentRefunded
 }

@@ -61,13 +61,13 @@ pub struct InlineQueryResultDocument {
     pub thumbnail_width: Option<u32>,
 
     /// Thumbnail height.
-    pub thumbnail_height: Option<u32>,
+    pub thumbnail_height: Option<u32>
 }
 
 impl InlineQueryResultDocument {
     pub fn id<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.id = val.into();
         self
@@ -75,7 +75,7 @@ impl InlineQueryResultDocument {
 
     pub fn title<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.title = val.into();
         self
@@ -83,7 +83,7 @@ impl InlineQueryResultDocument {
 
     pub fn caption<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.caption = Some(val.into());
         self
@@ -97,7 +97,7 @@ impl InlineQueryResultDocument {
 
     pub fn caption_entities<C>(mut self, val: C) -> Self
     where
-        C: IntoIterator<Item = MessageEntity>,
+        C: IntoIterator<Item = MessageEntity>
     {
         self.caption_entities = Some(val.into_iter().collect());
         self
@@ -117,7 +117,7 @@ impl InlineQueryResultDocument {
 
     pub fn description<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.description = Some(val.into());
         self

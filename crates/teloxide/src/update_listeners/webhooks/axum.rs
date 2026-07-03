@@ -2,7 +2,7 @@ use std::{convert::Infallible, future::Future};
 
 use axum::{
     extract::{FromRequestParts, State},
-    http::{request::Parts, status::StatusCode},
+    http::{request::Parts, status::StatusCode}
 };
 use tokio::sync::mpsc;
 
@@ -10,7 +10,7 @@ use crate::{
     requests::Requester,
     stop::StopFlag,
     types::{Update, UpdateKind},
-    update_listeners::{UpdateListener, webhooks::Options},
+    update_listeners::{UpdateListener, webhooks::Options}
 };
 
 /// Webhook implementation based on the [mod@axum] framework.
@@ -40,13 +40,15 @@ use crate::{
 /// function.
 pub async fn axum<R>(
     bot: R,
-    options: Options,
+    options: Options
 ) -> Result<impl UpdateListener<Err = Infallible>, R::Err>
 where
     R: Requester + Send + 'static,
-    <R as Requester>::DeleteWebhook: Send,
+    <R as Requester>::DeleteWebhook: Send
 {
-    let Options { address, .. } = options;
+    let Options {
+        address, ..
+    } = options;
 
     let (mut update_listener, stop_flag, app) = axum_to_router(bot, options).await?;
     let stop_token = update_listener.stop_token();
@@ -109,17 +111,22 @@ where
 /// versions of this function.
 pub async fn axum_to_router<R>(
     bot: R,
-    mut options: Options,
+    mut options: Options
 ) -> Result<
-    (impl UpdateListener<Err = Infallible>, impl Future<Output = ()> + Send, axum::Router),
-    R::Err,
+    (
+        impl UpdateListener<Err = Infallible>,
+        impl Future<Output = ()> + Send,
+        axum::Router
+    ),
+    R::Err
 >
 where
     R: Requester + Send,
-    <R as Requester>::DeleteWebhook: Send,
+    <R as Requester>::DeleteWebhook: Send
 {
-    use crate::{requests::Request, update_listeners::webhooks::setup_webhook};
     use futures::FutureExt;
+
+    use crate::{requests::Request, update_listeners::webhooks::setup_webhook};
 
     setup_webhook(&bot, &mut options).await?;
 
@@ -153,22 +160,31 @@ where
 /// [`fn@axum`] and [`axum_to_router`] for higher-level versions of this
 /// function.
 pub fn axum_no_setup(
-    options: Options,
-) -> (impl UpdateListener<Err = Infallible>, impl Future<Output = ()>, axum::Router) {
-    use crate::{
-        stop::{StopToken, mk_stop_token},
-        update_listeners::{StatefulListener, webhooks::tuple_first_mut},
-    };
+    options: Options
+) -> (
+    impl UpdateListener<Err = Infallible>,
+    impl Future<Output = ()>,
+    axum::Router
+) {
     use axum::{response::IntoResponse, routing::post};
     use tokio_stream::wrappers::UnboundedReceiverStream;
     use tower_http::trace::TraceLayer;
 
+    use crate::{
+        stop::{StopToken, mk_stop_token},
+        update_listeners::{StatefulListener, webhooks::tuple_first_mut}
+    };
+
     let (tx, rx): (UpdateSender, _) = mpsc::unbounded_channel();
 
     async fn telegram_request(
-        State(WebhookState { secret, flag, mut tx }): State<WebhookState>,
+        State(WebhookState {
+            secret,
+            flag,
+            mut tx
+        }): State<WebhookState>,
         secret_header: XTelegramBotApiSecretToken,
-        input: String,
+        input: String
     ) -> impl IntoResponse {
         // FIXME: use constant time comparison here
         if secret_header.0.as_deref() != secret.as_deref().map(str::as_bytes) {
@@ -183,7 +199,7 @@ pub fn axum_no_setup(
                 tx.close();
                 return StatusCode::SERVICE_UNAVAILABLE;
             }
-            Some(tx) => tx,
+            Some(tx) => tx
         };
 
         match serde_json::from_str::<Update>(&input) {
@@ -194,7 +210,8 @@ pub fn axum_no_setup(
                     *value = serde_json::from_str(&input).unwrap_or_default();
                 }
 
-                tx.send(Ok(update)).expect("Cannot send an incoming update from the webhook")
+                tx.send(Ok(update))
+                    .expect("Cannot send an incoming update from the webhook")
             }
             Err(error) => {
                 log::error!(
@@ -214,9 +231,9 @@ pub fn axum_no_setup(
         .route(&options.path, post(telegram_request))
         .layer(TraceLayer::new_for_http())
         .with_state(WebhookState {
-            tx: ClosableSender::new(tx),
-            flag: stop_flag.clone(),
-            secret: options.secret_token,
+            tx:     ClosableSender::new(tx),
+            flag:   stop_flag.clone(),
+            secret: options.secret_token
         });
 
     let stream = UnboundedReceiverStream::new(rx);
@@ -225,7 +242,7 @@ pub fn axum_no_setup(
     let listener = StatefulListener::new(
         (stream, stop_token),
         tuple_first_mut,
-        |state: &mut (_, StopToken)| state.1.clone(),
+        |state: &mut (_, StopToken)| state.1.clone()
     );
 
     (listener, stop_flag, app)
@@ -236,25 +253,29 @@ type UpdateCSender = ClosableSender<Result<Update, std::convert::Infallible>>;
 
 #[derive(Clone)]
 struct WebhookState {
-    tx: UpdateCSender,
-    flag: StopFlag,
-    secret: Option<String>,
+    tx:     UpdateCSender,
+    flag:   StopFlag,
+    secret: Option<String>
 }
 
 /// A terrible workaround to drop axum extension
 struct ClosableSender<T> {
-    origin: std::sync::Arc<std::sync::RwLock<Option<mpsc::UnboundedSender<T>>>>,
+    origin: std::sync::Arc<std::sync::RwLock<Option<mpsc::UnboundedSender<T>>>>
 }
 
 impl<T> Clone for ClosableSender<T> {
     fn clone(&self) -> Self {
-        Self { origin: self.origin.clone() }
+        Self {
+            origin: self.origin.clone()
+        }
     }
 }
 
 impl<T> ClosableSender<T> {
     fn new(sender: mpsc::UnboundedSender<T>) -> Self {
-        Self { origin: std::sync::Arc::new(std::sync::RwLock::new(Some(sender))) }
+        Self {
+            origin: std::sync::Arc::new(std::sync::RwLock::new(Some(sender)))
+        }
     }
 
     fn get(&self) -> Option<mpsc::UnboundedSender<T>> {
@@ -273,7 +294,7 @@ impl<S> FromRequestParts<S> for XTelegramBotApiSecretToken {
 
     fn from_request_parts(
         req: &mut Parts,
-        _state: &S,
+        _state: &S
     ) -> impl Future<Output = Result<Self, Self::Rejection>> + Send {
         use crate::update_listeners::webhooks::check_secret;
 

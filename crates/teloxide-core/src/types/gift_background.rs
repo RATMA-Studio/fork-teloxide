@@ -5,9 +5,7 @@ use crate::types::Rgb;
 /// This object describes the background of a gift.
 ///
 /// [The official docs](https://core.telegram.org/bots/api#giftbackground).
-#[derive(Clone, Copy, Debug)]
-#[derive(PartialEq, Eq, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct GiftBackground {
     /// Center color of the background in RGB format.
@@ -17,7 +15,7 @@ pub struct GiftBackground {
     pub edge_color: Rgb,
 
     /// Text color of the background in RGB format.
-    pub text_color: Rgb,
+    pub text_color: Rgb
 }
 
 #[cfg(test)]
@@ -37,9 +35,21 @@ mod tests {
         assert_eq!(
             bg,
             GiftBackground {
-                center_color: Rgb { r: 0xFF, g: 0xFF, b: 0x00 },
-                edge_color: Rgb { r: 0x00, g: 0xFF, b: 0x00 },
-                text_color: Rgb { r: 0x00, g: 0x00, b: 0xFF },
+                center_color: Rgb {
+                    r: 0xFF,
+                    g: 0xFF,
+                    b: 0x00
+                },
+                edge_color:   Rgb {
+                    r: 0x00,
+                    g: 0xFF,
+                    b: 0x00
+                },
+                text_color:   Rgb {
+                    r: 0x00,
+                    g: 0x00,
+                    b: 0xFF
+                }
             }
         );
     }

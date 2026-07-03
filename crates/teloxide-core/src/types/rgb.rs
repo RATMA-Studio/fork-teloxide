@@ -3,14 +3,13 @@ use serde::{Deserialize, Serialize, de::Visitor};
 
 /// RGB color format
 #[repr(C)]
-#[derive(Clone, Copy, Debug)]
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[cfg_attr(test, schemars(with = "u32"))]
 pub struct Rgb {
     pub r: u8,
     pub g: u8,
-    pub b: u8,
+    pub b: u8
 }
 
 impl Rgb {
@@ -21,7 +20,15 @@ impl Rgb {
     ///
     /// ```
     /// use teloxide_core::types::Rgb;
-    /// assert_eq!(Rgb { r: 0xAA, g: 0xBB, b: 0xCC }.to_u32(), 0xAABBCC);
+    /// assert_eq!(
+    ///     Rgb {
+    ///         r: 0xAA,
+    ///         g: 0xBB,
+    ///         b: 0xCC
+    ///     }
+    ///     .to_u32(),
+    ///     0xAABBCC
+    /// );
     /// ```
     ///
     /// [`Rgb`]: Rgb
@@ -36,20 +43,31 @@ impl Rgb {
     ///
     /// ```
     /// use teloxide_core::types::Rgb;
-    /// assert_eq!(Rgb::from_u32(0xAABBCC), Rgb { r: 0xAA, g: 0xBB, b: 0xCC });
+    /// assert_eq!(
+    ///     Rgb::from_u32(0xAABBCC),
+    ///     Rgb {
+    ///         r: 0xAA,
+    ///         g: 0xBB,
+    ///         b: 0xCC
+    ///     }
+    /// );
     /// ```
     ///
     /// [`Rgb`]: Rgb
     pub fn from_u32(rgb: u32) -> Self {
         let [_, r, g, b] = rgb.to_be_bytes();
-        Rgb { r, g, b }
+        Rgb {
+            r,
+            g,
+            b
+        }
     }
 }
 
 impl Serialize for Rgb {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
-        S: serde::Serializer,
+        S: serde::Serializer
     {
         serializer.serialize_u32(self.to_u32())
     }
@@ -58,7 +76,7 @@ impl Serialize for Rgb {
 impl<'de> Deserialize<'de> for Rgb {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
-        D: serde::Deserializer<'de>,
+        D: serde::Deserializer<'de>
     {
         struct V;
 
@@ -71,16 +89,19 @@ impl<'de> Deserialize<'de> for Rgb {
 
             fn visit_u32<E>(self, v: u32) -> Result<Self::Value, E>
             where
-                E: serde::de::Error,
+                E: serde::de::Error
             {
                 Ok(Self::Value::from_u32(v))
             }
 
             fn visit_u64<E>(self, v: u64) -> Result<Self::Value, E>
             where
-                E: serde::de::Error,
+                E: serde::de::Error
             {
-                self.visit_u32(v.try_into().map_err(|_| E::custom("rgb value doesn't fit u32"))?)
+                self.visit_u32(
+                    v.try_into()
+                        .map_err(|_| E::custom("rgb value doesn't fit u32"))?
+                )
             }
         }
 
@@ -90,21 +111,24 @@ impl<'de> Deserialize<'de> for Rgb {
 
 impl From<RGB8> for Rgb {
     fn from(color: RGB8) -> Self {
-        Rgb { r: color.r, g: color.g, b: color.b }
+        Rgb {
+            r: color.r,
+            g: color.g,
+            b: color.b
+        }
     }
 }
 
 /// ARGB color format
 #[repr(C)]
-#[derive(Clone, Copy, Debug)]
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[cfg_attr(test, schemars(with = "u32"))]
 pub struct Argb {
     pub a: u8,
     pub r: u8,
     pub g: u8,
-    pub b: u8,
+    pub b: u8
 }
 
 impl Argb {
@@ -115,7 +139,16 @@ impl Argb {
     ///
     /// ```
     /// use teloxide_core::types::Argb;
-    /// assert_eq!(Argb { a: 0x11, r: 0xAA, g: 0xBB, b: 0xCC }.to_u32(), 0x11AABBCC);
+    /// assert_eq!(
+    ///     Argb {
+    ///         a: 0x11,
+    ///         r: 0xAA,
+    ///         g: 0xBB,
+    ///         b: 0xCC
+    ///     }
+    ///     .to_u32(),
+    ///     0x11AABBCC
+    /// );
     /// ```
     ///
     /// [`Argb`]: Argb
@@ -130,20 +163,33 @@ impl Argb {
     ///
     /// ```
     /// use teloxide_core::types::Argb;
-    /// assert_eq!(Argb::from_u32(0x11AABBCC), Argb { a: 0x11, r: 0xAA, g: 0xBB, b: 0xCC });
+    /// assert_eq!(
+    ///     Argb::from_u32(0x11AABBCC),
+    ///     Argb {
+    ///         a: 0x11,
+    ///         r: 0xAA,
+    ///         g: 0xBB,
+    ///         b: 0xCC
+    ///     }
+    /// );
     /// ```
     ///
     /// [`Argb`]: Argb
     pub fn from_u32(argb: u32) -> Self {
         let [a, r, g, b] = argb.to_be_bytes();
-        Argb { a, r, g, b }
+        Argb {
+            a,
+            r,
+            g,
+            b
+        }
     }
 }
 
 impl Serialize for Argb {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
-        S: serde::Serializer,
+        S: serde::Serializer
     {
         serializer.serialize_u32(self.to_u32())
     }
@@ -152,7 +198,7 @@ impl Serialize for Argb {
 impl<'de> Deserialize<'de> for Argb {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
-        D: serde::Deserializer<'de>,
+        D: serde::Deserializer<'de>
     {
         struct V;
 
@@ -165,16 +211,19 @@ impl<'de> Deserialize<'de> for Argb {
 
             fn visit_u32<E>(self, v: u32) -> Result<Self::Value, E>
             where
-                E: serde::de::Error,
+                E: serde::de::Error
             {
                 Ok(Self::Value::from_u32(v))
             }
 
             fn visit_u64<E>(self, v: u64) -> Result<Self::Value, E>
             where
-                E: serde::de::Error,
+                E: serde::de::Error
             {
-                self.visit_u32(v.try_into().map_err(|_| E::custom("argb value doesn't fit u32"))?)
+                self.visit_u32(
+                    v.try_into()
+                        .map_err(|_| E::custom("argb value doesn't fit u32"))?
+                )
             }
         }
 
@@ -184,7 +233,12 @@ impl<'de> Deserialize<'de> for Argb {
 
 impl From<rgb::Argb<u8>> for Argb {
     fn from(color: rgb::Argb<u8>) -> Self {
-        Argb { a: color.a, r: color.r, g: color.g, b: color.b }
+        Argb {
+            a: color.a,
+            r: color.r,
+            g: color.g,
+            b: color.b
+        }
     }
 }
 
@@ -198,25 +252,44 @@ mod tests {
     fn rgb() {
         #[derive(Debug, PartialEq, Eq, Serialize, Deserialize)]
         struct Struct {
-            color: Rgb,
+            color: Rgb
         }
 
         let json = format!(r#"{{"color":{}}}"#, 0x00AABBCC);
-        let Struct { color } = serde_json::from_str(&json).unwrap();
+        let Struct {
+            color
+        } = serde_json::from_str(&json).unwrap();
 
-        assert_eq!(color, Rgb { r: 0xAA, g: 0xBB, b: 0xCC })
+        assert_eq!(
+            color,
+            Rgb {
+                r: 0xAA,
+                g: 0xBB,
+                b: 0xCC
+            }
+        )
     }
 
     #[test]
     fn argb() {
         #[derive(Debug, PartialEq, Eq, Serialize, Deserialize)]
         struct Struct {
-            color: Argb,
+            color: Argb
         }
 
         let json = format!(r#"{{"color":{}}}"#, 0x11AABBCC);
-        let Struct { color } = serde_json::from_str(&json).unwrap();
+        let Struct {
+            color
+        } = serde_json::from_str(&json).unwrap();
 
-        assert_eq!(color, Argb { a: 0x11, r: 0xAA, g: 0xBB, b: 0xCC })
+        assert_eq!(
+            color,
+            Argb {
+                a: 0x11,
+                r: 0xAA,
+                g: 0xBB,
+                b: 0xCC
+            }
+        )
     }
 }

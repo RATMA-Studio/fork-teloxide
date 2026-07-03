@@ -14,7 +14,7 @@ pub struct InlineQueryResultsButton {
     pub text: String,
 
     #[serde(flatten)]
-    pub kind: InlineQueryResultsButtonKind,
+    pub kind: InlineQueryResultsButtonKind
 }
 
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Serialize, Deserialize)]
@@ -46,7 +46,7 @@ pub enum InlineQueryResultsButtonKind {
     ///
     /// [Deep-linking]: https://core.telegram.org/bots/features#deep-linking
     /// [switch_inline]: https://core.telegram.org/bots/api#inlinekeyboardmarkup
-    StartParameter(String),
+    StartParameter(String)
 }
 
 #[cfg(test)]
@@ -57,7 +57,7 @@ mod tests {
     fn inline_query_results_button() {
         let button = InlineQueryResultsButton {
             text: "test".into(),
-            kind: InlineQueryResultsButtonKind::StartParameter("bot".into()),
+            kind: InlineQueryResultsButtonKind::StartParameter("bot".into())
         };
         let expected = r#"{"text":"test","start_parameter":"bot"}"#;
         let actual = serde_json::to_string(&button).unwrap();

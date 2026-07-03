@@ -4,23 +4,22 @@ use std::{
     pin::Pin,
     task::{
         self,
-        Poll::{self, Ready},
+        Poll::{self, Ready}
     },
     time::Duration,
-    vec,
+    vec
 };
 
 use futures::{ready, stream::Stream};
-use tokio::time::{Sleep, sleep};
-
 use teloxide_core::errors::AsResponseParameters;
+use tokio::time::{Sleep, sleep};
 
 use crate::{
     backoff::{BackoffStrategy, exponential_backoff_strategy},
     requests::{HasPayload, Request, Requester},
     stop::{StopFlag, StopToken, mk_stop_token},
     types::{AllowedUpdate, Update},
-    update_listeners::{AsUpdateStream, UpdateListener, assert_update_listener},
+    update_listeners::{AsUpdateStream, UpdateListener, assert_update_listener}
 };
 
 /// Builder for polling update listener.
@@ -29,18 +28,18 @@ use crate::{
 #[non_exhaustive]
 #[must_use = "`PollingBuilder` is a builder and does nothing unless used"]
 pub struct PollingBuilder<R> {
-    pub bot: R,
-    pub timeout: Option<Duration>,
-    pub limit: Option<u8>,
-    pub allowed_updates: Option<Vec<AllowedUpdate>>,
+    pub bot:                  R,
+    pub timeout:              Option<Duration>,
+    pub limit:                Option<u8>,
+    pub allowed_updates:      Option<Vec<AllowedUpdate>>,
     pub drop_pending_updates: bool,
-    pub backoff_strategy: BackoffStrategy,
+    pub backoff_strategy:     BackoffStrategy
 }
 
 impl<R> PollingBuilder<R>
 where
     R: Requester + Send + 'static,
-    <R as Requester>::GetUpdates: Send,
+    <R as Requester>::GetUpdates: Send
 {
     /// A timeout in seconds for polling.
     ///
@@ -51,7 +50,10 @@ where
     ///
     /// [`default_reqwest_settings`]: crate::net::default_reqwest_settings
     pub fn timeout(self, timeout: Duration) -> Self {
-        Self { timeout: Some(timeout), ..self }
+        Self {
+            timeout: Some(timeout),
+            ..self
+        }
     }
 
     /// Limit the number of updates to be retrieved at once. Values between
@@ -63,9 +65,15 @@ where
     #[track_caller]
     pub fn limit(self, limit: u8) -> Self {
         assert_ne!(limit, 0, "limit can't be 0");
-        assert!(limit <= 100, "maximum limit is 100, can't set limit to `{limit}`");
+        assert!(
+            limit <= 100,
+            "maximum limit is 100, can't set limit to `{limit}`"
+        );
 
-        Self { limit: Some(limit), ..self }
+        Self {
+            limit: Some(limit),
+            ..self
+        }
     }
 
     /// A list of the types of updates you want to receive.
@@ -80,12 +88,18 @@ where
     /// [`repl`]: fn@crate::repl
     /// [`hint_allowed_updates`]: crate::update_listeners::UpdateListener::hint_allowed_updates
     pub fn allowed_updates(self, allowed_updates: Vec<AllowedUpdate>) -> Self {
-        Self { allowed_updates: Some(allowed_updates), ..self }
+        Self {
+            allowed_updates: Some(allowed_updates),
+            ..self
+        }
     }
 
     /// Drops pending updates.
     pub fn drop_pending_updates(self) -> Self {
-        Self { drop_pending_updates: true, ..self }
+        Self {
+            drop_pending_updates: true,
+            ..self
+        }
     }
 
     /// The backoff strategy that will be used for delay calculation between
@@ -94,9 +108,12 @@ where
     /// By default, the [`exponential_backoff_strategy`] is used.
     pub fn backoff_strategy(
         self,
-        backoff_strategy: impl 'static + Send + Fn(u32) -> Duration,
+        backoff_strategy: impl 'static + Send + Fn(u32) -> Duration
     ) -> Self {
-        Self { backoff_strategy: Box::new(backoff_strategy), ..self }
+        Self {
+            backoff_strategy: Box::new(backoff_strategy),
+            ..self
+        }
     }
 
     /// Deletes webhook if it was set up.
@@ -111,8 +128,14 @@ where
     ///
     /// See also: [`polling_default`], [`Polling`].
     pub fn build(self) -> Polling<R> {
-        let Self { bot, timeout, limit, allowed_updates, drop_pending_updates, backoff_strategy } =
-            self;
+        let Self {
+            bot,
+            timeout,
+            limit,
+            allowed_updates,
+            drop_pending_updates,
+            backoff_strategy
+        } = self;
         let (token, flag) = mk_stop_token();
         let polling = Polling {
             bot,
@@ -123,7 +146,7 @@ where
             flag: Some(flag),
             token,
             stop_token_cloned: false,
-            backoff_strategy,
+            backoff_strategy
         };
 
         assert_update_listener(polling)
@@ -140,17 +163,20 @@ where
 pub async fn polling_default<R>(bot: R) -> Polling<R>
 where
     R: Requester + Send + 'static,
-    <R as Requester>::GetUpdates: Send,
+    <R as Requester>::GetUpdates: Send
 {
-    let polling =
-        Polling::builder(bot).timeout(Duration::from_secs(10)).delete_webhook().await.build();
+    let polling = Polling::builder(bot)
+        .timeout(Duration::from_secs(10))
+        .delete_webhook()
+        .await
+        .build();
 
     assert_update_listener(polling)
 }
 
 async fn delete_webhook_if_setup<R>(requester: &R)
 where
-    R: Requester,
+    R: Requester
 {
     let webhook_info = match requester.get_webhook_info().send().await {
         Ok(ok) => ok,
@@ -240,26 +266,26 @@ where
 /// [`Dispatcher`]: crate::dispatching::Dispatcher
 #[must_use = "`Polling` is an update listener and does nothing unless used"]
 pub struct Polling<B: Requester> {
-    bot: B,
-    timeout: Option<Duration>,
-    limit: Option<u8>,
-    allowed_updates: Option<Vec<AllowedUpdate>>,
+    bot:                  B,
+    timeout:              Option<Duration>,
+    limit:                Option<u8>,
+    allowed_updates:      Option<Vec<AllowedUpdate>>,
     drop_pending_updates: bool,
-    flag: Option<StopFlag>,
-    token: StopToken,
-    stop_token_cloned: bool,
-    backoff_strategy: BackoffStrategy,
+    flag:                 Option<StopFlag>,
+    token:                StopToken,
+    stop_token_cloned:    bool,
+    backoff_strategy:     BackoffStrategy
 }
 
 impl<R> Polling<R>
 where
-    R: Requester,
+    R: Requester
 {
     /// Returns a builder for polling update listener.
     pub fn builder(bot: R) -> PollingBuilder<R>
     where
         R: Send + 'static,
-        <R as Requester>::GetUpdates: Send,
+        <R as Requester>::GetUpdates: Send
     {
         PollingBuilder {
             bot,
@@ -267,7 +293,7 @@ where
             limit: None,
             allowed_updates: None,
             drop_pending_updates: false,
-            backoff_strategy: Box::new(exponential_backoff_strategy),
+            backoff_strategy: Box::new(exponential_backoff_strategy)
         }
     }
 
@@ -294,16 +320,16 @@ pub struct PollingStream<'a, B: Requester> {
     drop_pending_updates: bool,
 
     /// Timeout parameter for normal `get_updates()` calls.
-    timeout: Option<u32>,
+    timeout:         Option<u32>,
     /// Allowed updates parameter for the first `get_updates()` call.
     allowed_updates: Option<Vec<AllowedUpdate>>,
     /// Offset parameter  for normal `get_updates()` calls.
-    offset: i32,
+    offset:          i32,
 
     /// If this is set, return `None` from `poll_next` immediately.
     force_stop: bool,
     /// If true we've sent last `get_updates()` call for graceful shutdown.
-    stopping: bool,
+    stopping:   bool,
 
     /// Buffer of updates to be yielded.
     buffer: vec::IntoIter<Update>,
@@ -322,7 +348,7 @@ pub struct PollingStream<'a, B: Requester> {
 
     /// Counter for network errors occured during the current series of
     /// reconnections
-    error_count: u32,
+    error_count: u32
 }
 
 impl<B: Requester + Send + 'static> UpdateListener for Polling<B> {
@@ -346,7 +372,9 @@ impl<'a, B: Requester + Send + 'a> AsUpdateStream<'a> for Polling<B> {
     type Stream = PollingStream<'a, B>;
 
     fn as_stream(&'a mut self) -> Self::Stream {
-        let timeout = self.timeout.map(|t| t.as_secs().try_into().expect("timeout is too big"));
+        let timeout = self
+            .timeout
+            .map(|t| t.as_secs().try_into().expect("timeout is too big"));
         let allowed_updates = self.allowed_updates.clone();
         let drop_pending_updates = self.drop_pending_updates;
 
@@ -376,7 +404,7 @@ impl<'a, B: Requester + Send + 'a> AsUpdateStream<'a> for Polling<B> {
             in_flight: None,
             flag,
             eepy: None,
-            error_count: 0,
+            error_count: 0
         }
     }
 }
@@ -384,7 +412,10 @@ impl<'a, B: Requester + Send + 'a> AsUpdateStream<'a> for Polling<B> {
 impl<B: Requester> Stream for PollingStream<'_, B> {
     type Item = Result<Update, B::Err>;
 
-    fn poll_next(mut self: Pin<&mut Self>, cx: &mut task::Context<'_>) -> Poll<Option<Self::Item>> {
+    fn poll_next(
+        mut self: Pin<&mut Self>,
+        cx: &mut task::Context<'_>
+    ) -> Poll<Option<Self::Item>> {
         log::trace!("polling polling stream");
         let mut this = self.as_mut().project();
 
@@ -432,7 +463,7 @@ impl<B: Requester> Stream for PollingStream<'_, B> {
 
                     match *this.drop_pending_updates {
                         false => *this.buffer = updates.into_iter(),
-                        true => *this.drop_pending_updates = false,
+                        true => *this.drop_pending_updates = false
                     }
                 }
                 Err(err) => {
@@ -472,8 +503,8 @@ impl<B: Requester> Stream for PollingStream<'_, B> {
         let (offset, limit, timeout) = match (this.stopping, this.drop_pending_updates) {
             // Normal `get_updates()` call
             (false, false) => (*this.offset, this.polling.limit, *this.timeout),
-            // Graceful shutdown `get_updates()` call (shutdown takes priority over dropping pending
-            // updates)
+            // Graceful shutdown `get_updates()` call (shutdown takes priority over dropping
+            // pending updates)
             //
             // When stopping we set `timeout = 0` and `limit = 1` so that `get_updates()`
             // set last seen update (offset) and return immediately
@@ -482,7 +513,7 @@ impl<B: Requester> Stream for PollingStream<'_, B> {
                 (*this.offset, Some(1), Some(0))
             }
             // Drop pending updates
-            (_, true) => (-1, Some(1), Some(0)),
+            (_, true) => (-1, Some(1), Some(0))
         };
 
         let req = this

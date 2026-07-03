@@ -46,14 +46,14 @@ pub struct InlineQueryResultCachedDocument {
     pub reply_markup: Option<InlineKeyboardMarkup>,
 
     /// Content of the message to be sent instead of the file.
-    pub input_message_content: Option<InputMessageContent>,
+    pub input_message_content: Option<InputMessageContent>
 }
 
 impl InlineQueryResultCachedDocument {
     pub fn new<S1, S2>(id: S1, title: S2, document_file_id: FileId) -> Self
     where
         S1: Into<String>,
-        S2: Into<String>,
+        S2: Into<String>
     {
         Self {
             id: id.into(),
@@ -64,13 +64,13 @@ impl InlineQueryResultCachedDocument {
             parse_mode: None,
             caption_entities: None,
             reply_markup: None,
-            input_message_content: None,
+            input_message_content: None
         }
     }
 
     pub fn id<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.id = val.into();
         self
@@ -78,7 +78,7 @@ impl InlineQueryResultCachedDocument {
 
     pub fn title<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.title = val.into();
         self
@@ -91,7 +91,7 @@ impl InlineQueryResultCachedDocument {
 
     pub fn description<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.description = Some(val.into());
         self
@@ -99,7 +99,7 @@ impl InlineQueryResultCachedDocument {
 
     pub fn caption<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.caption = Some(val.into());
         self
@@ -113,7 +113,7 @@ impl InlineQueryResultCachedDocument {
 
     pub fn caption_entities<C>(mut self, val: C) -> Self
     where
-        C: IntoIterator<Item = MessageEntity>,
+        C: IntoIterator<Item = MessageEntity>
     {
         self.caption_entities = Some(val.into_iter().collect());
         self

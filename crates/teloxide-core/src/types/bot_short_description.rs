@@ -4,5 +4,5 @@ use serde::{Deserialize, Serialize};
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct BotShortDescription {
     /// The bot's short description
-    pub short_description: String,
+    pub short_description: String
 }

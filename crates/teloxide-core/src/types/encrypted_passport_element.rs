@@ -18,7 +18,7 @@ pub struct EncryptedPassportElement {
     pub hash: String,
 
     #[serde(flatten)]
-    pub kind: EncryptedPassportElementKind,
+    pub kind: EncryptedPassportElementKind
 }
 
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Serialize, Deserialize)]
@@ -39,7 +39,7 @@ pub enum EncryptedPassportElementKind {
     PassportRegistration(EncryptedPassportElementPassportRegistration),
     EncryptedPassportElement(EncryptedPassportElementTemporaryRegistration),
     PhoneNumber(EncryptedPassportElementPhoneNumber),
-    Email(EncryptedPassportElementEmail),
+    Email(EncryptedPassportElementEmail)
 }
 
 #[serde_with::skip_serializing_none]
@@ -54,7 +54,7 @@ pub struct EncryptedPassportElementPersonalDetails {
     ///
     /// [`EncryptedCredentials`]:
     /// crate::types::EncryptedCredentials
-    pub data: String,
+    pub data: String
 }
 
 #[serde_with::skip_serializing_none]
@@ -99,7 +99,7 @@ pub struct EncryptedPassportElementPassport {
     ///
     /// [`EncryptedCredentials`]:
     /// crate::types::EncryptedCredentials
-    pub translation: Option<Vec<PassportFile>>,
+    pub translation: Option<Vec<PassportFile>>
 }
 
 #[serde_with::skip_serializing_none]
@@ -153,7 +153,7 @@ pub struct EncryptedPassportElementDriverLicense {
     ///
     /// [`EncryptedCredentials`]:
     /// crate::types::EncryptedCredentials
-    pub translation: Option<Vec<PassportFile>>,
+    pub translation: Option<Vec<PassportFile>>
 }
 
 #[serde_with::skip_serializing_none]
@@ -207,7 +207,7 @@ pub struct EncryptedPassportElementIdentityCard {
     ///
     /// [`EncryptedCredentials`]:
     /// crate::types::EncryptedCredentials
-    pub translation: Option<Vec<PassportFile>>,
+    pub translation: Option<Vec<PassportFile>>
 }
 
 #[serde_with::skip_serializing_none]
@@ -252,7 +252,7 @@ pub struct EncryptedPassportElementInternalPassport {
     ///
     /// [`EncryptedCredentials`]:
     /// crate::types::EncryptedCredentials
-    pub translation: Option<Vec<PassportFile>>,
+    pub translation: Option<Vec<PassportFile>>
 }
 
 #[serde_with::skip_serializing_none]
@@ -267,7 +267,7 @@ pub struct EncryptedPassportElementAddress {
     ///
     /// [`EncryptedCredentials`]:
     /// crate::types::EncryptedCredentials
-    pub data: String,
+    pub data: String
 }
 
 #[serde_with::skip_serializing_none]
@@ -294,7 +294,7 @@ pub struct EncryptedPassportElementUtilityBill {
     ///
     /// [`EncryptedCredentials`]:
     /// crate::types::EncryptedCredentials
-    pub translation: Option<Vec<PassportFile>>,
+    pub translation: Option<Vec<PassportFile>>
 }
 
 #[serde_with::skip_serializing_none]
@@ -321,7 +321,7 @@ pub struct EncryptedPassportElementBankStatement {
     ///
     /// [`EncryptedCredentials`]:
     /// crate::types::EncryptedCredentials
-    pub translation: Option<Vec<PassportFile>>,
+    pub translation: Option<Vec<PassportFile>>
 }
 
 #[serde_with::skip_serializing_none]
@@ -348,7 +348,7 @@ pub struct EncryptedPassportElementRentalAgreement {
     ///
     /// [`EncryptedCredentials`]:
     /// crate::types::EncryptedCredentials
-    pub translation: Option<Vec<PassportFile>>,
+    pub translation: Option<Vec<PassportFile>>
 }
 
 #[serde_with::skip_serializing_none]
@@ -375,7 +375,7 @@ pub struct EncryptedPassportElementPassportRegistration {
     ///
     /// [`EncryptedCredentials`]:
     /// crate::types::EncryptedCredentials
-    pub translation: Option<Vec<PassportFile>>,
+    pub translation: Option<Vec<PassportFile>>
 }
 
 #[serde_with::skip_serializing_none]
@@ -402,7 +402,7 @@ pub struct EncryptedPassportElementTemporaryRegistration {
     ///
     /// [`EncryptedCredentials`]:
     /// crate::types::EncryptedCredentials
-    pub translation: Option<Vec<PassportFile>>,
+    pub translation: Option<Vec<PassportFile>>
 }
 
 #[serde_with::skip_serializing_none]
@@ -411,7 +411,7 @@ pub struct EncryptedPassportElementTemporaryRegistration {
 pub struct EncryptedPassportElementPhoneNumber {
     /// User's verified phone number, available only for `phone_number`
     /// type.
-    pub phone_number: String,
+    pub phone_number: String
 }
 
 #[serde_with::skip_serializing_none]
@@ -419,7 +419,7 @@ pub struct EncryptedPassportElementPhoneNumber {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct EncryptedPassportElementEmail {
     /// User's verified email address, available only for `email` type.
-    pub email: String,
+    pub email: String
 }
 
 #[cfg(test)]
@@ -434,8 +434,8 @@ mod tests {
         let expected = EncryptedPassportElement {
             hash: "123456".to_owned(),
             kind: EncryptedPassportElementKind::Email(EncryptedPassportElementEmail {
-                email: "test@gmail.com".to_owned(),
-            }),
+                email: "test@gmail.com".to_owned()
+            })
         };
         assert_eq!(expected, actual);
     }

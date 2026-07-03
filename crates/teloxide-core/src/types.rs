@@ -457,9 +457,8 @@ mod user_id;
 pub use chat_id::*;
 pub use recipient::*;
 pub use seconds::*;
-pub use user_id::*;
-
 use serde_with::with_prefix;
+pub use user_id::*;
 
 // Deserialization prefix for giveaway_message_id field used in GiveawayWinners
 // and ChatBoostSourceGiveaway
@@ -468,7 +467,7 @@ with_prefix!(prefix_giveaway_message_id "giveaway_");
 /// Converts an `i64` timestamp to a `choro::DateTime`, producing serde error
 /// for invalid timestamps
 pub(crate) fn serde_timestamp<E: serde::de::Error>(
-    timestamp: i64,
+    timestamp: i64
 ) -> Result<chrono::DateTime<chrono::Utc>, E> {
     chrono::DateTime::from_timestamp(timestamp, 0).ok_or_else(|| E::custom("invalid timestump"))
 }
@@ -481,19 +480,21 @@ pub(crate) mod serde_opt_date_from_unix_timestamp {
 
     pub(crate) fn serialize<S>(
         this: &Option<DateTime<Utc>>,
-        serializer: S,
+        serializer: S
     ) -> Result<S::Ok, S::Error>
     where
-        S: Serializer,
+        S: Serializer
     {
         this.map(|dt| dt.timestamp()).serialize(serializer)
     }
 
     pub(crate) fn deserialize<'de, D>(deserializer: D) -> Result<Option<DateTime<Utc>>, D::Error>
     where
-        D: Deserializer<'de>,
+        D: Deserializer<'de>
     {
-        Option::<i64>::deserialize(deserializer)?.map(serde_timestamp).transpose()
+        Option::<i64>::deserialize(deserializer)?
+            .map(serde_timestamp)
+            .transpose()
     }
 
     #[test]
@@ -501,21 +502,25 @@ pub(crate) mod serde_opt_date_from_unix_timestamp {
         #[derive(Serialize, Deserialize)]
         struct Struct {
             #[serde(default, with = "crate::types::serde_opt_date_from_unix_timestamp")]
-            date: Option<DateTime<Utc>>,
+            date: Option<DateTime<Utc>>
         }
 
         {
             let json = r#"{"date":1}"#;
             let expected = DateTime::from_timestamp(1, 0).unwrap();
 
-            let Struct { date } = serde_json::from_str(json).unwrap();
+            let Struct {
+                date
+            } = serde_json::from_str(json).unwrap();
             assert_eq!(date, Some(expected));
         }
 
         {
             let json = "{}";
 
-            let Struct { date } = serde_json::from_str(json).unwrap();
+            let Struct {
+                date
+            } = serde_json::from_str(json).unwrap();
             assert_eq!(date, None);
         }
     }
@@ -529,14 +534,14 @@ pub(crate) mod serde_date_from_unix_timestamp {
 
     pub(crate) fn serialize<S>(this: &DateTime<Utc>, serializer: S) -> Result<S::Ok, S::Error>
     where
-        S: Serializer,
+        S: Serializer
     {
         this.timestamp().serialize(serializer)
     }
 
     pub(crate) fn deserialize<'de, D>(deserializer: D) -> Result<DateTime<Utc>, D::Error>
     where
-        D: Deserializer<'de>,
+        D: Deserializer<'de>
     {
         serde_timestamp(i64::deserialize(deserializer)?)
     }
@@ -548,17 +553,17 @@ pub(crate) mod option_url_from_string {
 
     pub(crate) fn serialize<S>(this: &Option<Url>, serializer: S) -> Result<S::Ok, S::Error>
     where
-        S: Serializer,
+        S: Serializer
     {
         match this {
             Some(url) => url.serialize(serializer),
-            None => "".serialize(serializer),
+            None => "".serialize(serializer)
         }
     }
 
     pub(crate) fn deserialize<'de, D>(deserializer: D) -> Result<Option<Url>, D::Error>
     where
-        D: Deserializer<'de>,
+        D: Deserializer<'de>
     {
         Ok(reqwest::Url::deserialize(deserializer).ok())
     }
@@ -569,7 +574,7 @@ pub(crate) mod option_url_from_string {
         #[derive(Serialize, Deserialize)]
         struct Struct {
             #[serde(with = "crate::types::option_url_from_string")]
-            url: Option<Url>,
+            url: Option<Url>
         }
 
         {
@@ -580,7 +585,10 @@ pub(crate) mod option_url_from_string {
 
             let json = r#"{"url":"https://github.com/token"}"#;
             let url: Struct = serde_json::from_str(json).unwrap();
-            assert_eq!(url.url, Some(Url::from_str("https://github.com/token").unwrap()));
+            assert_eq!(
+                url.url,
+                Some(Url::from_str("https://github.com/token").unwrap())
+            );
             assert_eq!(serde_json::to_string(&url).unwrap(), json.to_owned());
         }
     }
@@ -590,20 +598,20 @@ pub(crate) mod option_url_from_string {
 // Workaround to avoid flattening with serde-multipart requests (involving
 // file-manipulations)
 pub(crate) mod msg_id_as_int {
-    use crate::types::MessageId;
-
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
+
+    use crate::types::MessageId;
 
     pub(crate) fn serialize<S>(MessageId(id): &MessageId, serializer: S) -> Result<S::Ok, S::Error>
     where
-        S: Serializer,
+        S: Serializer
     {
         id.serialize(serializer)
     }
 
     pub(crate) fn deserialize<'de, D>(deserializer: D) -> Result<MessageId, D::Error>
     where
-        D: Deserializer<'de>,
+        D: Deserializer<'de>
     {
         i32::deserialize(deserializer).map(MessageId)
     }
@@ -613,7 +621,7 @@ pub(crate) mod msg_id_as_int {
         #[derive(Serialize, Deserialize)]
         struct Struct {
             #[serde(with = "crate::types::msg_id_as_int")]
-            message_id: MessageId,
+            message_id: MessageId
         }
 
         {
@@ -626,20 +634,20 @@ pub(crate) mod msg_id_as_int {
 }
 
 pub(crate) mod option_msg_id_as_int {
-    use crate::types::MessageId;
-
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
+
+    use crate::types::MessageId;
 
     pub(crate) fn serialize<S>(this: &Option<MessageId>, serializer: S) -> Result<S::Ok, S::Error>
     where
-        S: Serializer,
+        S: Serializer
     {
         this.map(|MessageId(id)| id).serialize(serializer)
     }
 
     pub(crate) fn deserialize<'de, D>(deserializer: D) -> Result<Option<MessageId>, D::Error>
     where
-        D: Deserializer<'de>,
+        D: Deserializer<'de>
     {
         Option::<i32>::deserialize(deserializer).map(|r| r.map(MessageId))
     }
@@ -649,7 +657,7 @@ pub(crate) mod option_msg_id_as_int {
         #[derive(Serialize, Deserialize)]
         struct Struct {
             #[serde(with = "crate::types::option_msg_id_as_int")]
-            id: Option<MessageId>,
+            id: Option<MessageId>
         }
 
         {
@@ -662,17 +670,19 @@ pub(crate) mod option_msg_id_as_int {
 }
 
 pub(crate) mod vec_msg_id_as_vec_int {
-    use crate::types::MessageId;
+    use std::fmt;
+
     use serde::{
         Deserializer, Serializer,
         de::{SeqAccess, Visitor},
-        ser::SerializeSeq,
+        ser::SerializeSeq
     };
-    use std::fmt;
+
+    use crate::types::MessageId;
 
     pub(crate) fn serialize<S>(msg_ids: &Vec<MessageId>, serializer: S) -> Result<S::Ok, S::Error>
     where
-        S: Serializer,
+        S: Serializer
     {
         let mut seq = serializer.serialize_seq(Some(msg_ids.len()))?;
         for e in msg_ids {
@@ -683,7 +693,7 @@ pub(crate) mod vec_msg_id_as_vec_int {
 
     pub(crate) fn deserialize<'de, D>(deserializer: D) -> Result<Vec<MessageId>, D::Error>
     where
-        D: Deserializer<'de>,
+        D: Deserializer<'de>
     {
         struct MsgIdVecVisitor;
 
@@ -696,7 +706,7 @@ pub(crate) mod vec_msg_id_as_vec_int {
 
             fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
             where
-                A: SeqAccess<'de>,
+                A: SeqAccess<'de>
             {
                 let mut vec = Vec::new();
                 while let Some(value) = seq.next_element::<i32>()? {
@@ -714,11 +724,13 @@ pub(crate) mod vec_msg_id_as_vec_int {
         #[derive(serde::Serialize, serde::Deserialize, Debug, PartialEq)]
         struct Struct {
             #[serde(with = "crate::types::vec_msg_id_as_vec_int")]
-            msg_ids: Vec<MessageId>,
+            msg_ids: Vec<MessageId>
         }
 
         {
-            let s = Struct { msg_ids: vec![MessageId(1), MessageId(2)] };
+            let s = Struct {
+                msg_ids: vec![MessageId(1), MessageId(2)]
+            };
             let json = serde_json::to_string(&s).unwrap();
             assert_eq!(json, "{\"msg_ids\":[1,2]}");
         }
@@ -726,7 +738,12 @@ pub(crate) mod vec_msg_id_as_vec_int {
         {
             let json = "{\"msg_ids\":[1,2]}";
             let s: Struct = serde_json::from_str(json).unwrap();
-            assert_eq!(s, Struct { msg_ids: vec![MessageId(1), MessageId(2)] });
+            assert_eq!(
+                s,
+                Struct {
+                    msg_ids: vec![MessageId(1), MessageId(2)]
+                }
+            );
         }
     }
 }

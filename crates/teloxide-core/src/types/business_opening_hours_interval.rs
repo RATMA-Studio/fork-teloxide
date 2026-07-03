@@ -12,5 +12,5 @@ pub struct BusinessOpeningHoursInterval {
     /// The minute's sequence number in a week, starting on Monday, marking the
     /// end of the time interval during which the business is open;
     /// 0 - 8 * 24* 60
-    pub closing_minute: u16,
+    pub closing_minute: u16
 }

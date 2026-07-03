@@ -49,7 +49,7 @@ pub struct WebhookInfo {
 
     /// A list of update types the bot is subscribed to. Defaults to all update
     /// types.
-    pub allowed_updates: Option<Vec<AllowedUpdate>>,
+    pub allowed_updates: Option<Vec<AllowedUpdate>>
 }
 
 // Regression test for <https://github.com/teloxide/teloxide-core/pull/166>
@@ -66,7 +66,7 @@ fn empty_url() {
         last_error_message: None,
         last_synchronization_error_date: None,
         max_connections: None,
-        allowed_updates: Some(vec![AllowedUpdate::Message]),
+        allowed_updates: Some(vec![AllowedUpdate::Message])
     };
 
     assert_eq!(actual, expected);

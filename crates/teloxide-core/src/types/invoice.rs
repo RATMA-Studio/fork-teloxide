@@ -31,5 +31,5 @@ pub struct Invoice {
     /// majority of currencies).
     ///
     /// [`currencies.json`]: https://core.telegram.org/bots/payments/currencies.json
-    pub total_amount: u32,
+    pub total_amount: u32
 }

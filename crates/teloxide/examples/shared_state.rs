@@ -2,7 +2,7 @@
 
 use std::sync::{
     Arc,
-    atomic::{AtomicU64, Ordering},
+    atomic::{AtomicU64, Ordering}
 };
 
 use teloxide::prelude::*;
@@ -18,10 +18,13 @@ async fn main() {
     let handler = Update::filter_message().endpoint(
         |bot: Bot, messages_total: Arc<AtomicU64>, msg: Message| async move {
             let previous = messages_total.fetch_add(1, Ordering::Relaxed);
-            bot.send_message(msg.chat.id, format!("I received {previous} messages in total."))
-                .await?;
+            bot.send_message(
+                msg.chat.id,
+                format!("I received {previous} messages in total.")
+            )
+            .await?;
             respond(())
-        },
+        }
     );
 
     Dispatcher::builder(bot, handler)

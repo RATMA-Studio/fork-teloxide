@@ -8,9 +8,7 @@ use crate::types::{CustomEmojiId, File, FileMeta, MaskPosition, PhotoSize};
 ///
 /// [The official docs](https://core.telegram.org/bots/api#sticker).
 #[serde_with::skip_serializing_none]
-#[derive(Clone, Debug)]
-#[derive(PartialEq, Eq, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct Sticker {
     /// Metadata of the sticker file.
@@ -62,15 +60,13 @@ pub struct Sticker {
     /// color of the Telegram Premium badge in emoji status, white color on
     /// chat photos, or another appropriate color in other places
     #[serde(default)]
-    pub needs_repainting: bool,
+    pub needs_repainting: bool
 }
 
 /// Kind of a [`Sticker`] - regular, mask or custom emoji.
 ///
 /// Dataful version of [`StickerType`].
-#[derive(Clone, Debug)]
-#[derive(PartialEq, Eq, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(tag = "type")]
 #[serde(rename_all = "snake_case")]
@@ -79,18 +75,18 @@ pub enum StickerKind {
     /// "Normal", raster, animated or video sticker.
     Regular {
         /// Premium animation for the sticker, if the sticker is premium.
-        premium_animation: Option<File>,
+        premium_animation: Option<File>
     },
     /// Mask sticker.
     Mask {
         /// For mask stickers, the position where the mask should be placed.
-        mask_position: MaskPosition,
+        mask_position: MaskPosition
     },
     /// Custom emoji sticker.
     CustomEmoji {
         /// A unique identifier of the custom emoji.
-        custom_emoji_id: CustomEmojiId,
-    },
+        custom_emoji_id: CustomEmojiId
+    }
 }
 
 /// Type of a [`Sticker`] - regular, mask or custom emoji.
@@ -107,7 +103,7 @@ pub enum StickerType {
     /// Mask sticker.
     Mask,
     /// Custom emoji sticker.
-    CustomEmoji,
+    CustomEmoji
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -118,7 +114,7 @@ pub struct StickerFormatFlags {
     pub is_animated: bool,
     /// True, if the sticker is a video sticker
     #[serde(default)]
-    pub is_video: bool,
+    pub is_video:    bool
 }
 
 /// Format of a [`Sticker`] - regular/webp, animated/tgs or video/webm.
@@ -136,7 +132,7 @@ pub enum StickerFormat {
     /// [Video], `.webm` sticker.
     ///
     /// [Video]: https://telegram.org/blog/video-stickers-better-reactions
-    Video,
+    Video
 }
 
 /// This allows calling [`StickerKind`]'s methods directly on [`Sticker`].
@@ -208,9 +204,15 @@ impl StickerKind {
     #[must_use]
     pub fn type_(&self) -> StickerType {
         match self {
-            StickerKind::Regular { .. } => StickerType::Regular,
-            StickerKind::Mask { .. } => StickerType::Mask,
-            StickerKind::CustomEmoji { .. } => StickerType::CustomEmoji,
+            StickerKind::Regular {
+                ..
+            } => StickerType::Regular,
+            StickerKind::Mask {
+                ..
+            } => StickerType::Mask,
+            StickerKind::CustomEmoji {
+                ..
+            } => StickerType::CustomEmoji
         }
     }
 
@@ -241,7 +243,10 @@ impl StickerKind {
     /// Getter for [`StickerKind::Regular::premium_animation`].
     #[must_use]
     pub fn premium_animation(&self) -> Option<&File> {
-        if let Self::Regular { premium_animation } = self {
+        if let Self::Regular {
+            premium_animation
+        } = self
+        {
             premium_animation.as_ref()
         } else {
             None
@@ -251,13 +256,27 @@ impl StickerKind {
     /// Getter for [`StickerKind::Mask::mask_position`].
     #[must_use]
     pub fn mask_position(&self) -> Option<MaskPosition> {
-        if let Self::Mask { mask_position } = self { Some(*mask_position) } else { None }
+        if let Self::Mask {
+            mask_position
+        } = self
+        {
+            Some(*mask_position)
+        } else {
+            None
+        }
     }
 
     /// Getter for [`StickerKind::CustomEmoji::custom_emoji_id`].
     #[must_use]
     pub fn custom_emoji_id(&self) -> Option<&CustomEmojiId> {
-        if let Self::CustomEmoji { custom_emoji_id } = self { Some(custom_emoji_id) } else { None }
+        if let Self::CustomEmoji {
+            custom_emoji_id
+        } = self
+        {
+            Some(custom_emoji_id)
+        } else {
+            None
+        }
     }
 }
 
@@ -296,7 +315,7 @@ impl StickerFormatFlags {
             // precedence over the static interpretation, matching the order
             // Telegram clients use when both file formats are available.
             (true, false) | (true, true) => StickerFormat::Animated,
-            (false, true) => StickerFormat::Video,
+            (false, true) => StickerFormat::Video
         }
     }
 }
@@ -334,9 +353,18 @@ mod tests {
     #[test]
     fn sticker_format_serde() {
         // Ser
-        assert_eq!(serde_json::to_string(&StickerFormat::Static).unwrap(), r#""static""#);
-        assert_eq!(serde_json::to_string(&StickerFormat::Animated).unwrap(), r#""animated""#);
-        assert_eq!(serde_json::to_string(&StickerFormat::Video).unwrap(), r#""video""#);
+        assert_eq!(
+            serde_json::to_string(&StickerFormat::Static).unwrap(),
+            r#""static""#
+        );
+        assert_eq!(
+            serde_json::to_string(&StickerFormat::Animated).unwrap(),
+            r#""animated""#
+        );
+        assert_eq!(
+            serde_json::to_string(&StickerFormat::Video).unwrap(),
+            r#""video""#
+        );
 
         // De
         assert_eq!(

@@ -25,7 +25,7 @@ pub struct PollAnswer {
     /// Persistent identifiers of answer options, chosen by the user.
     ///
     /// May be empty if the user retracted their vote.
-    pub option_persistent_ids: Vec<String>,
+    pub option_persistent_ids: Vec<String>
 }
 
 /// These fields `chat` and `user` from the original [`PollAnswer`] should be
@@ -39,12 +39,18 @@ struct VoterDe {
 
     /// The user that changed the answer to the poll, if the voter isn't
     /// anonymous
-    pub user: Option<User>,
+    pub user: Option<User>
 }
 
 fn deserialize_voter<'d, D: Deserializer<'d>>(d: D) -> Result<MaybeAnonymousUser, D::Error> {
-    let VoterDe { voter_chat, user } = VoterDe::deserialize(d)?;
-    Ok(voter_chat.map(MaybeAnonymousUser::Chat).or(user.map(MaybeAnonymousUser::User)).unwrap())
+    let VoterDe {
+        voter_chat,
+        user
+    } = VoterDe::deserialize(d)?;
+    Ok(voter_chat
+        .map(MaybeAnonymousUser::Chat)
+        .or(user.map(MaybeAnonymousUser::User))
+        .unwrap())
 }
 
 #[cfg(test)]

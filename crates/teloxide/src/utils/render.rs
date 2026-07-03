@@ -1,10 +1,8 @@
 //! Utils for rendering HTML and Markdown output.
 
-use teloxide_core::types::{MessageEntity, MessageEntityKind as MEK};
-
-use tag::*;
-
 pub use helper::RenderMessageTextHelper;
+use tag::*;
+use teloxide_core::types::{MessageEntity, MessageEntityKind as MEK};
 
 mod helper;
 mod html;
@@ -15,7 +13,7 @@ mod tag;
 #[derive(Clone, Eq, PartialEq)]
 pub struct Renderer<'a> {
     text: &'a str,
-    tags: Vec<Tag<'a>>,
+    tags: Vec<Tag<'a>>
 }
 
 impl<'a> Renderer<'a> {
@@ -64,11 +62,19 @@ impl<'a> Renderer<'a> {
                 MEK::Strikethrough => Kind::Strikethrough,
                 MEK::Spoiler => Kind::Spoiler,
                 MEK::Code => Kind::Code,
-                MEK::Pre { language } => Kind::Pre(language.as_ref().map(String::as_str)),
-                MEK::TextLink { url } => Kind::TextLink(url.as_str()),
-                MEK::TextMention { user } => Kind::TextMention(user.id.0),
-                MEK::CustomEmoji { custom_emoji_id } => Kind::CustomEmoji(custom_emoji_id),
-                _ => continue,
+                MEK::Pre {
+                    language
+                } => Kind::Pre(language.as_ref().map(String::as_str)),
+                MEK::TextLink {
+                    url
+                } => Kind::TextLink(url.as_str()),
+                MEK::TextMention {
+                    user
+                } => Kind::TextMention(user.id.0),
+                MEK::CustomEmoji {
+                    custom_emoji_id
+                } => Kind::CustomEmoji(custom_emoji_id),
+                _ => continue
             };
 
             // FIXME: maybe instead of clone store all the `kind`s in a seperate
@@ -88,7 +94,7 @@ impl<'a> Renderer<'a> {
                     tags.push(Tag::mid_new_line(
                         kind.clone(),
                         entity.offset + new_line_index + 1,
-                        index,
+                        index
                     ));
                 }
             }
@@ -98,7 +104,10 @@ impl<'a> Renderer<'a> {
 
         tags.sort_unstable();
 
-        Self { text, tags }
+        Self {
+            text,
+            tags
+        }
     }
 
     /// Renders text with a given [`TagWriter`].
@@ -128,12 +137,15 @@ impl<'a> Renderer<'a> {
                         (writer.write_tag_fn)(tag, &mut buffer);
                         current_tag = tags.next();
                     }
-                    _ => break,
+                    _ => break
                 }
             }
 
             let ch = if let Some(previous) = prev_point.take() {
-                char::decode_utf16([previous, point]).next().unwrap().unwrap()
+                char::decode_utf16([previous, point])
+                    .next()
+                    .unwrap()
+                    .unwrap()
             } else {
                 match char::decode_utf16([point]).next().unwrap() {
                     Ok(c) => c,
@@ -177,27 +189,57 @@ mod test {
     fn test_render_simple() {
         let text = "Bold italic <underline_";
         let entities = vec![
-            MessageEntity { kind: MEK::Bold, offset: 0, length: 4 },
-            MessageEntity { kind: MEK::Italic, offset: 5, length: 6 },
-            MessageEntity { kind: MEK::Underline, offset: 12, length: 10 },
+            MessageEntity {
+                kind:   MEK::Bold,
+                offset: 0,
+                length: 4
+            },
+            MessageEntity {
+                kind:   MEK::Italic,
+                offset: 5,
+                length: 6
+            },
+            MessageEntity {
+                kind:   MEK::Underline,
+                offset: 12,
+                length: 10
+            },
         ];
 
         let render = Renderer::new(text, &entities);
 
-        assert_eq!(render.as_html(), "<b>Bold</b> <i>italic</i> <u>&lt;underline</u>_");
-        assert_eq!(render.as_markdown(), "*Bold* _\ritalic_\r __\r<underline__\r\\_");
+        assert_eq!(
+            render.as_html(),
+            "<b>Bold</b> <i>italic</i> <u>&lt;underline</u>_"
+        );
+        assert_eq!(
+            render.as_markdown(),
+            "*Bold* _\ritalic_\r __\r<underline__\r\\_"
+        );
     }
 
     #[test]
     fn test_render_pre_with_lang() {
         let text = "Some pre, normal and rusty code";
         let entities = vec![
-            MessageEntity { kind: MEK::Pre { language: None }, offset: 5, length: 3 },
-            MessageEntity { kind: MEK::Code, offset: 10, length: 6 },
             MessageEntity {
-                kind: MEK::Pre { language: Some("rust".to_owned()) },
+                kind:   MEK::Pre {
+                    language: None
+                },
+                offset: 5,
+                length: 3
+            },
+            MessageEntity {
+                kind:   MEK::Code,
+                offset: 10,
+                length: 6
+            },
+            MessageEntity {
+                kind:   MEK::Pre {
+                    language: Some("rust".to_owned())
+                },
                 offset: 21,
-                length: 5,
+                length: 5
             },
         ];
 
@@ -218,8 +260,16 @@ mod test {
     fn test_render_nested() {
         let text = "Some bold both italics";
         let entities = vec![
-            MessageEntity { kind: MEK::Bold, offset: 5, length: 9 },
-            MessageEntity { kind: MEK::Italic, offset: 10, length: 12 },
+            MessageEntity {
+                kind:   MEK::Bold,
+                offset: 5,
+                length: 9
+            },
+            MessageEntity {
+                kind:   MEK::Italic,
+                offset: 10,
+                length: 12
+            },
         ];
 
         let render = Renderer::new(text, &entities);
@@ -235,29 +285,85 @@ mod test {
                     Blockquote!\nIm in an expandable multiline Blockquote!\n\nIm in an expandable \
                     multiline Blockquote!";
         let entities = vec![
-            MessageEntity { kind: MEK::Bold, offset: 0, length: 2 },
-            MessageEntity { kind: MEK::Italic, offset: 3, length: 3 },
-            MessageEntity { kind: MEK::Underline, offset: 7, length: 3 },
-            MessageEntity { kind: MEK::Strikethrough, offset: 11, length: 3 },
-            MessageEntity { kind: MEK::Bold, offset: 16, length: 1 },
-            MessageEntity { kind: MEK::Bold, offset: 17, length: 5 },
-            MessageEntity { kind: MEK::Underline, offset: 17, length: 4 },
-            MessageEntity { kind: MEK::Strikethrough, offset: 17, length: 4 },
             MessageEntity {
-                kind: MEK::TextLink { url: reqwest::Url::parse("https://t.me/").unwrap() },
+                kind:   MEK::Bold,
+                offset: 0,
+                length: 2
+            },
+            MessageEntity {
+                kind:   MEK::Italic,
+                offset: 3,
+                length: 3
+            },
+            MessageEntity {
+                kind:   MEK::Underline,
+                offset: 7,
+                length: 3
+            },
+            MessageEntity {
+                kind:   MEK::Strikethrough,
+                offset: 11,
+                length: 3
+            },
+            MessageEntity {
+                kind:   MEK::Bold,
+                offset: 16,
+                length: 1
+            },
+            MessageEntity {
+                kind:   MEK::Bold,
+                offset: 17,
+                length: 5
+            },
+            MessageEntity {
+                kind:   MEK::Underline,
+                offset: 17,
+                length: 4
+            },
+            MessageEntity {
+                kind:   MEK::Strikethrough,
+                offset: 17,
+                length: 4
+            },
+            MessageEntity {
+                kind:   MEK::TextLink {
+                    url: reqwest::Url::parse("https://t.me/").unwrap()
+                },
                 offset: 23,
-                length: 8,
+                length: 8
             },
             MessageEntity {
-                kind: MEK::TextLink { url: reqwest::Url::parse("tg://user?id=1234567").unwrap() },
+                kind:   MEK::TextLink {
+                    url: reqwest::Url::parse("tg://user?id=1234567").unwrap()
+                },
                 offset: 32,
-                length: 3,
+                length: 3
             },
-            MessageEntity { kind: MEK::Code, offset: 36, length: 4 },
-            MessageEntity { kind: MEK::Blockquote, offset: 41, length: 19 },
-            MessageEntity { kind: MEK::Blockquote, offset: 61, length: 60 },
-            MessageEntity { kind: MEK::ExpandableBlockquote, offset: 122, length: 31 },
-            MessageEntity { kind: MEK::ExpandableBlockquote, offset: 154, length: 84 },
+            MessageEntity {
+                kind:   MEK::Code,
+                offset: 36,
+                length: 4
+            },
+            MessageEntity {
+                kind:   MEK::Blockquote,
+                offset: 41,
+                length: 19
+            },
+            MessageEntity {
+                kind:   MEK::Blockquote,
+                offset: 61,
+                length: 60
+            },
+            MessageEntity {
+                kind:   MEK::ExpandableBlockquote,
+                offset: 122,
+                length: 31
+            },
+            MessageEntity {
+                kind:   MEK::ExpandableBlockquote,
+                offset: 154,
+                length: 84
+            },
         ];
 
         let render = Renderer::new(text, &entities);

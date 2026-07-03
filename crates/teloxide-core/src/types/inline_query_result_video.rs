@@ -74,7 +74,7 @@ pub struct InlineQueryResultVideo {
     ///
     /// [`InlineQueryResultVideo`]:
     /// crate::types::InlineQueryResultVideo
-    pub input_message_content: Option<InputMessageContent>,
+    pub input_message_content: Option<InputMessageContent>
 }
 
 impl InlineQueryResultVideo {
@@ -83,11 +83,11 @@ impl InlineQueryResultVideo {
         video_url: reqwest::Url,
         mime_type: Mime,
         thumbnail_url: reqwest::Url,
-        title: S2,
+        title: S2
     ) -> Self
     where
         S1: Into<String>,
-        S2: Into<String>,
+        S2: Into<String>
     {
         Self {
             id: id.into(),
@@ -104,13 +104,13 @@ impl InlineQueryResultVideo {
             video_duration: None,
             description: None,
             reply_markup: None,
-            input_message_content: None,
+            input_message_content: None
         }
     }
 
     pub fn id<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.id = val.into();
         self
@@ -136,7 +136,7 @@ impl InlineQueryResultVideo {
 
     pub fn title<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.title = val.into();
         self
@@ -144,7 +144,7 @@ impl InlineQueryResultVideo {
 
     pub fn caption<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.caption = Some(val.into());
         self
@@ -158,7 +158,7 @@ impl InlineQueryResultVideo {
 
     pub fn caption_entities<C>(mut self, val: C) -> Self
     where
-        C: IntoIterator<Item = MessageEntity>,
+        C: IntoIterator<Item = MessageEntity>
     {
         self.caption_entities = Some(val.into_iter().collect());
         self
@@ -189,7 +189,7 @@ impl InlineQueryResultVideo {
 
     pub fn description<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.description = Some(val.into());
         self

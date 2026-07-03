@@ -33,7 +33,7 @@ use futures::Stream;
 
 use crate::{
     stop::StopToken,
-    types::{AllowedUpdate, Update},
+    types::{AllowedUpdate, Update}
 };
 
 mod polling;
@@ -42,7 +42,7 @@ mod stateful_listener;
 #[allow(deprecated)]
 pub use self::{
     polling::{Polling, PollingBuilder, PollingStream, polling_default},
-    stateful_listener::StatefulListener,
+    stateful_listener::StatefulListener
 };
 
 /// An update listener.
@@ -119,7 +119,7 @@ pub trait AsUpdateStream<'a> {
 #[inline(always)]
 pub(crate) const fn assert_update_listener<L>(listener: L) -> L
 where
-    L: UpdateListener,
+    L: UpdateListener
 {
     listener
 }

@@ -2,7 +2,7 @@ use serde::Serialize;
 
 use crate::types::{
     InputFile, InputMediaAnimation, InputMediaLivePhoto, InputMediaLocation, InputMediaPhoto,
-    InputMediaSticker, InputMediaVenue, InputMediaVideo,
+    InputMediaSticker, InputMediaVenue, InputMediaVideo
 };
 
 /// Represents the content of a poll option to be sent.
@@ -20,7 +20,7 @@ pub enum InputPollOptionMedia {
     Photo(InputMediaPhoto),
     Sticker(InputMediaSticker),
     Venue(InputMediaVenue),
-    Video(InputMediaVideo),
+    Video(InputMediaVideo)
 }
 
 impl InputPollOptionMedia {
@@ -30,13 +30,28 @@ impl InputPollOptionMedia {
         use InputPollOptionMedia::*;
 
         let pair: (Option<&InputFile>, Option<&InputFile>) = match self {
-            Photo(InputMediaPhoto { media, .. }) | Sticker(InputMediaSticker { media, .. }) => {
-                (Some(media), None)
-            }
-            Animation(InputMediaAnimation { media, thumbnail, .. })
-            | Video(InputMediaVideo { media, thumbnail, .. }) => (Some(media), thumbnail.as_ref()),
-            LivePhoto(InputMediaLivePhoto { media, photo, .. }) => (Some(media), Some(photo)),
-            Location(_) | Venue(_) => (None, None),
+            Photo(InputMediaPhoto {
+                media, ..
+            })
+            | Sticker(InputMediaSticker {
+                media, ..
+            }) => (Some(media), None),
+            Animation(InputMediaAnimation {
+                media,
+                thumbnail,
+                ..
+            })
+            | Video(InputMediaVideo {
+                media,
+                thumbnail,
+                ..
+            }) => (Some(media), thumbnail.as_ref()),
+            LivePhoto(InputMediaLivePhoto {
+                media,
+                photo,
+                ..
+            }) => (Some(media), Some(photo)),
+            Location(_) | Venue(_) => (None, None)
         };
 
         pair.0.into_iter().chain(pair.1)
@@ -48,13 +63,28 @@ impl InputPollOptionMedia {
         use InputPollOptionMedia::*;
 
         let pair: (Option<&mut InputFile>, Option<&mut InputFile>) = match self {
-            Photo(InputMediaPhoto { media, .. }) | Sticker(InputMediaSticker { media, .. }) => {
-                (Some(media), None)
-            }
-            Animation(InputMediaAnimation { media, thumbnail, .. })
-            | Video(InputMediaVideo { media, thumbnail, .. }) => (Some(media), thumbnail.as_mut()),
-            LivePhoto(InputMediaLivePhoto { media, photo, .. }) => (Some(media), Some(photo)),
-            Location(_) | Venue(_) => (None, None),
+            Photo(InputMediaPhoto {
+                media, ..
+            })
+            | Sticker(InputMediaSticker {
+                media, ..
+            }) => (Some(media), None),
+            Animation(InputMediaAnimation {
+                media,
+                thumbnail,
+                ..
+            })
+            | Video(InputMediaVideo {
+                media,
+                thumbnail,
+                ..
+            }) => (Some(media), thumbnail.as_mut()),
+            LivePhoto(InputMediaLivePhoto {
+                media,
+                photo,
+                ..
+            }) => (Some(media), Some(photo)),
+            Location(_) | Venue(_) => (None, None)
         };
 
         pair.0.into_iter().chain(pair.1)

@@ -11,7 +11,7 @@ pub struct ChatBoostUpdated {
     pub chat: Chat,
 
     /// Infomation about the chat boost
-    pub boost: ChatBoost,
+    pub boost: ChatBoost
 }
 
 #[cfg(test)]

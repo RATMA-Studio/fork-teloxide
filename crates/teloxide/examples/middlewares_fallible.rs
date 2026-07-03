@@ -32,10 +32,15 @@ async fn main() {
             HandlerResult::Ok(())
         });
 
-    Dispatcher::builder(bot, handler).enable_ctrlc_handler().build().dispatch().await;
+    Dispatcher::builder(bot, handler)
+        .enable_ctrlc_handler()
+        .build()
+        .dispatch()
+        .await;
 }
 
 async fn my_endpoint(bot: Bot, msg: Message) -> HandlerResult {
-    bot.send_message(msg.chat.id, "Inside the endpoint.").await?;
+    bot.send_message(msg.chat.id, "Inside the endpoint.")
+        .await?;
     Ok(())
 }

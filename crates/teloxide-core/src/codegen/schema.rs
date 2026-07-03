@@ -19,47 +19,47 @@ pub fn get() -> Schema {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Schema {
-    pub api_version: ApiVersion,
-    pub methods: Vec<Method>,
-    pub tg_categories: HashMap<String, String>,
+    pub api_version:   ApiVersion,
+    pub methods:       Vec<Method>,
+    pub tg_categories: HashMap<String, String>
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct ApiVersion {
-    pub ver: String,
-    pub date: String,
+    pub ver:  String,
+    pub date: String
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(deny_unknown_fields)]
 pub struct Method {
-    pub names: (String, String, String),
-    pub return_ty: Type,
-    pub doc: Doc,
-    pub tg_doc: String,
+    pub names:       (String, String, String),
+    pub return_ty:   Type,
+    pub doc:         Doc,
+    pub tg_doc:      String,
     pub tg_category: String,
     #[serde(default)]
-    pub notes: Vec<Doc>,
-    pub params: Vec<Param>,
+    pub notes:       Vec<Doc>,
+    pub params:      Vec<Param>,
     #[serde(default)]
-    pub sibling: Option<String>,
+    pub sibling:     Option<String>
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Doc {
-    pub md: String,
+    pub md:       String,
     #[serde(default)]
-    pub md_links: HashMap<String, String>,
+    pub md_links: HashMap<String, String>
 }
 
 #[derive(Debug, Serialize, PartialEq, Deserialize, Clone)]
 #[serde(deny_unknown_fields)]
 pub struct Param {
-    pub name: String,
-    pub ty: Type,
-    pub descr: Doc,
+    pub name:  String,
+    pub ty:    Type,
+    pub descr: Doc
 }
 
 #[allow(non_camel_case_types)]
@@ -81,7 +81,7 @@ pub enum Type {
     RawTy(String),
 
     Url,
-    DateTime,
+    DateTime
 }
 
 impl std::fmt::Display for Type {
@@ -101,7 +101,7 @@ impl std::fmt::Display for Type {
             Type::ArrayOf(inner) => write!(f, "Vec<{inner}>"),
             Type::RawTy(raw) => f.write_str(raw),
             Type::Url => write!(f, "Url"),
-            Type::DateTime => write!(f, "DateTime<Utc>"),
+            Type::DateTime => write!(f, "DateTime<Utc>")
         }
     }
 }

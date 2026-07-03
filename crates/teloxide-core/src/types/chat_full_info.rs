@@ -5,21 +5,12 @@ use serde::{Deserialize, Serialize};
 use crate::types::{
     AcceptedGiftTypes, Audio, Birthdate, BusinessIntro, BusinessLocation, BusinessOpeningHours,
     Chat, ChatId, ChatLocation, ChatPermissions, ChatPhoto, Message, ReactionType, Seconds,
-    UniqueGiftColors, User, UserRating,
+    UniqueGiftColors, User, UserRating
 };
 
 /// Custom emoji identifier.
 #[derive(
-    Default,
-    Clone,
-    Debug,
-    derive_more::Display,
-    PartialEq,
-    Eq,
-    Hash,
-    Serialize,
-    Deserialize,
-    From
+    Default, Clone, Debug, derive_more::Display, PartialEq, Eq, Hash, Serialize, Deserialize, From,
 )]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(transparent)]
@@ -112,7 +103,7 @@ pub struct ChatFullInfo {
 
     /// Color scheme for the chat's name, replies to messages and link previews
     /// based on a unique gift owned by the chat's owner.
-    pub unique_gift_colors: Option<UniqueGiftColors>,
+    pub unique_gift_colors: Option<UniqueGiftColors>
 }
 
 #[serde_with::skip_serializing_none]
@@ -122,7 +113,7 @@ pub struct ChatFullInfo {
 #[non_exhaustive]
 pub enum ChatFullInfoKind {
     Public(Box<ChatFullInfoPublic>),
-    Private(Box<ChatFullInfoPrivate>),
+    Private(Box<ChatFullInfoPrivate>)
 }
 
 #[serde_with::skip_serializing_none]
@@ -153,13 +144,16 @@ pub struct ChatFullInfoPublic {
 
     /// List of available reactions allowed in the chat. If omitted, then all
     /// emoji reactions are allowed.
-    pub available_reactions: Option<Vec<ReactionType>>,
+    pub available_reactions: Option<Vec<ReactionType>>
 }
 
 #[serde_with::skip_serializing_none]
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
-#[serde(from = "serde_helper::ChatPrivateFullInfo", into = "serde_helper::ChatPrivateFullInfo")]
+#[serde(
+    from = "serde_helper::ChatPrivateFullInfo",
+    into = "serde_helper::ChatPrivateFullInfo"
+)]
 pub struct ChatFullInfoPrivate {
     /// A username, for private chats, supergroups and channels if
     /// available.
@@ -202,7 +196,7 @@ pub struct ChatFullInfoPrivate {
     pub business_opening_hours: Option<BusinessOpeningHours>,
 
     /// For private chats, the first audio added to the profile of the user.
-    pub first_profile_audio: Option<Audio>,
+    pub first_profile_audio: Option<Audio>
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -213,7 +207,7 @@ pub struct ChatFullInfoPrivate {
 pub enum ChatFullInfoPublicKind {
     Channel(ChatFullInfoPublicChannel),
     Group(ChatFullInfoPublicGroup),
-    Supergroup(Box<ChatFullInfoPublicSupergroup>),
+    Supergroup(Box<ChatFullInfoPublicSupergroup>)
 }
 
 #[serde_with::skip_serializing_none]
@@ -231,7 +225,7 @@ pub struct ChatFullInfoPublicChannel {
     /// `true`, if paid media messages can be sent or forwarded to the channel
     /// chat. The field is available only for channel chats.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
-    pub can_send_paid_media: bool,
+    pub can_send_paid_media: bool
 }
 
 #[serde_with::skip_serializing_none]
@@ -239,7 +233,7 @@ pub struct ChatFullInfoPublicChannel {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct ChatFullInfoPublicGroup {
     /// A default chat member permissions, for groups and supergroups.
-    pub permissions: Option<ChatPermissions>,
+    pub permissions: Option<ChatPermissions>
 }
 
 #[serde_with::skip_serializing_none]
@@ -304,7 +298,7 @@ pub struct ChatFullInfoPublicSupergroup {
     /// `true`, if all users directly joining the supergroup without using an
     /// invite link need to be approved by supergroup administrators.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
-    pub join_by_request: bool,
+    pub join_by_request: bool
 }
 
 impl ChatFullInfo {
@@ -323,7 +317,13 @@ impl ChatFullInfo {
     #[must_use]
     pub fn is_group(&self) -> bool {
         if let ChatFullInfoKind::Public(chat_pub) = &self.kind {
-            matches!(**chat_pub, ChatFullInfoPublic { kind: ChatFullInfoPublicKind::Group(_), .. })
+            matches!(
+                **chat_pub,
+                ChatFullInfoPublic {
+                    kind: ChatFullInfoPublicKind::Group(_),
+                    ..
+                }
+            )
         } else {
             false
         }
@@ -341,7 +341,10 @@ impl ChatFullInfo {
         if let ChatFullInfoKind::Public(chat_pub) = &self.kind {
             matches!(
                 **chat_pub,
-                ChatFullInfoPublic { kind: ChatFullInfoPublicKind::Supergroup(_), .. }
+                ChatFullInfoPublic {
+                    kind: ChatFullInfoPublicKind::Supergroup(_),
+                    ..
+                }
             )
         } else {
             false
@@ -353,7 +356,10 @@ impl ChatFullInfo {
         if let ChatFullInfoKind::Public(chat_pub) = &self.kind {
             matches!(
                 **chat_pub,
-                ChatFullInfoPublic { kind: ChatFullInfoPublicKind::Channel(_), .. }
+                ChatFullInfoPublic {
+                    kind: ChatFullInfoPublicKind::Channel(_),
+                    ..
+                }
             )
         } else {
             false
@@ -378,7 +384,7 @@ impl ChatFullInfo {
     pub fn title(&self) -> Option<&str> {
         match &self.kind {
             ChatFullInfoKind::Public(this) => this.title.as_deref(),
-            _ => None,
+            _ => None
         }
     }
 
@@ -387,15 +393,15 @@ impl ChatFullInfo {
     pub fn username(&self) -> Option<&str> {
         match &self.kind {
             ChatFullInfoKind::Public(this) => match &this.kind {
-                ChatFullInfoPublicKind::Channel(ChatFullInfoPublicChannel { username, .. }) => {
-                    username.as_deref()
-                }
+                ChatFullInfoPublicKind::Channel(ChatFullInfoPublicChannel {
+                    username, ..
+                }) => username.as_deref(),
                 ChatFullInfoPublicKind::Supergroup(chat_full_info_public_supergroup) => {
                     chat_full_info_public_supergroup.username.as_deref()
                 }
-                ChatFullInfoPublicKind::Group(_) => None,
+                ChatFullInfoPublicKind::Group(_) => None
             },
-            ChatFullInfoKind::Private(this) => this.username.as_deref(),
+            ChatFullInfoKind::Private(this) => this.username.as_deref()
         }
     }
 
@@ -412,9 +418,9 @@ impl ChatFullInfo {
                 ChatFullInfoPublicKind::Supergroup(chat_full_info_public_supergroup) => {
                     chat_full_info_public_supergroup.linked_chat_id
                 }
-                ChatFullInfoPublicKind::Group(_) => None,
+                ChatFullInfoPublicKind::Group(_) => None
             },
-            _ => None,
+            _ => None
         }
     }
 
@@ -422,8 +428,9 @@ impl ChatFullInfo {
     #[must_use]
     pub fn permissions(&self) -> Option<ChatPermissions> {
         if let ChatFullInfoKind::Public(this) = &self.kind {
-            if let ChatFullInfoPublicKind::Group(ChatFullInfoPublicGroup { permissions }) =
-                &this.kind
+            if let ChatFullInfoPublicKind::Group(ChatFullInfoPublicGroup {
+                permissions
+            }) = &this.kind
             {
                 return permissions.clone();
             } else if let ChatFullInfoPublicKind::Supergroup(chat_full_info_public_supergroup) =
@@ -543,7 +550,7 @@ impl ChatFullInfo {
     pub fn description(&self) -> Option<&str> {
         match &self.kind {
             ChatFullInfoKind::Public(this) => this.description.as_deref(),
-            _ => None,
+            _ => None
         }
     }
 
@@ -558,7 +565,7 @@ impl ChatFullInfo {
     pub fn invite_link(&self) -> Option<&str> {
         match &self.kind {
             ChatFullInfoKind::Public(this) => this.invite_link.as_deref(),
-            _ => None,
+            _ => None
         }
     }
 
@@ -567,7 +574,7 @@ impl ChatFullInfo {
     pub fn has_protected_content(&self) -> bool {
         match &self.kind {
             ChatFullInfoKind::Public(this) => this.has_protected_content,
-            _ => false,
+            _ => false
         }
     }
 
@@ -577,7 +584,7 @@ impl ChatFullInfo {
     pub fn available_reactions(&self) -> Option<&[ReactionType]> {
         match &self.kind {
             ChatFullInfoKind::Public(this) => this.available_reactions.as_deref(),
-            _ => None,
+            _ => None
         }
     }
 
@@ -586,7 +593,7 @@ impl ChatFullInfo {
     pub fn first_name(&self) -> Option<&str> {
         match &self.kind {
             ChatFullInfoKind::Private(this) => this.first_name.as_deref(),
-            _ => None,
+            _ => None
         }
     }
 
@@ -595,7 +602,7 @@ impl ChatFullInfo {
     pub fn last_name(&self) -> Option<&str> {
         match &self.kind {
             ChatFullInfoKind::Private(this) => this.last_name.as_deref(),
-            _ => None,
+            _ => None
         }
     }
 
@@ -604,7 +611,7 @@ impl ChatFullInfo {
     pub fn bio(&self) -> Option<&str> {
         match &self.kind {
             ChatFullInfoKind::Private(this) => this.bio.as_deref(),
-            _ => None,
+            _ => None
         }
     }
 
@@ -615,7 +622,7 @@ impl ChatFullInfo {
     pub fn has_private_forwards(&self) -> bool {
         match &self.kind {
             ChatFullInfoKind::Private(this) => this.has_private_forwards,
-            _ => false,
+            _ => false
         }
     }
 
@@ -631,16 +638,17 @@ impl ChatFullInfo {
 }
 
 mod serde_helper {
-    use crate::types::{
-        Audio, Birthdate, BusinessIntro, BusinessLocation, BusinessOpeningHours, Chat,
-    };
     use serde::{Deserialize, Serialize};
+
+    use crate::types::{
+        Audio, Birthdate, BusinessIntro, BusinessLocation, BusinessOpeningHours, Chat
+    };
 
     #[derive(Serialize, Deserialize)]
     #[cfg_attr(test, derive(schemars::JsonSchema))]
     #[serde(rename_all = "snake_case")]
     enum Type {
-        Private,
+        Private
     }
 
     #[serde_with::skip_serializing_none]
@@ -664,7 +672,7 @@ mod serde_helper {
         business_intro: Option<BusinessIntro>,
         business_location: Option<BusinessLocation>,
         business_opening_hours: Option<BusinessOpeningHours>,
-        first_profile_audio: Option<Audio>,
+        first_profile_audio: Option<Audio>
     }
 
     impl From<ChatPrivateFullInfo> for super::ChatFullInfoPrivate {
@@ -682,8 +690,8 @@ mod serde_helper {
                 business_intro,
                 business_location,
                 business_opening_hours,
-                first_profile_audio,
-            }: ChatPrivateFullInfo,
+                first_profile_audio
+            }: ChatPrivateFullInfo
         ) -> Self {
             Self {
                 username,
@@ -697,7 +705,7 @@ mod serde_helper {
                 business_intro,
                 business_location,
                 business_opening_hours,
-                first_profile_audio,
+                first_profile_audio
             }
         }
     }
@@ -716,8 +724,8 @@ mod serde_helper {
                 business_intro,
                 business_location,
                 business_opening_hours,
-                first_profile_audio,
-            }: super::ChatFullInfoPrivate,
+                first_profile_audio
+            }: super::ChatFullInfoPrivate
         ) -> Self {
             Self {
                 r#type: Type::Private,
@@ -732,7 +740,7 @@ mod serde_helper {
                 business_intro,
                 business_location,
                 business_opening_hours,
-                first_profile_audio,
+                first_profile_audio
             }
         }
     }
@@ -749,16 +757,20 @@ mod tests {
         let expected = ChatFullInfo {
             id: ChatId(-1),
             kind: ChatFullInfoKind::Public(Box::new(ChatFullInfoPublic {
-                title: None,
-                kind: ChatFullInfoPublicKind::Channel(ChatFullInfoPublicChannel {
-                    username: Some("channel_name".into()),
-                    linked_chat_id: None,
-                    can_send_paid_media: false,
-                }),
-                description: None,
-                invite_link: None,
+                title:                 None,
+                kind:                  ChatFullInfoPublicKind::Channel(
+                    ChatFullInfoPublicChannel {
+                        username:            Some("channel_name".into()),
+                        linked_chat_id:      None,
+                        can_send_paid_media: false
+                    }
+                ),
+                description:           None,
+                invite_link:           None,
                 has_protected_content: false,
-                available_reactions: Some(vec![ReactionType::Emoji { emoji: "🌭".to_owned() }]),
+                available_reactions:   Some(vec![ReactionType::Emoji {
+                    emoji: "🌭".to_owned()
+                }])
             })),
             photo: None,
             pinned_message: None,
@@ -766,11 +778,11 @@ mod tests {
             has_hidden_members: false,
             has_aggressive_anti_spam_enabled: false,
             accepted_gift_types: AcceptedGiftTypes {
-                unlimited_gifts: true,
-                limited_gifts: true,
-                unique_gifts: true,
+                unlimited_gifts:      true,
+                limited_gifts:        true,
+                unique_gifts:         true,
                 premium_subscription: true,
-                gifts_from_channels: true,
+                gifts_from_channels:  true
             },
             accent_color_id: 0,
             background_custom_emoji_id: None,
@@ -782,7 +794,7 @@ mod tests {
             max_reaction_count: 0,
             rating: None,
             paid_message_star_count: None,
-            unique_gift_colors: None,
+            unique_gift_colors: None
         };
         let actual = from_str(
             r#"{
@@ -804,7 +816,7 @@ mod tests {
                     "premium_subscription": true,
                     "gifts_from_channels": true
                 }
-            }"#,
+            }"#
         )
         .unwrap();
         assert_eq!(expected, actual);
@@ -826,7 +838,7 @@ mod tests {
                 business_intro: None,
                 business_location: None,
                 business_opening_hours: None,
-                first_profile_audio: None,
+                first_profile_audio: None
             })),
             photo: None,
             pinned_message: None,
@@ -834,11 +846,11 @@ mod tests {
             has_hidden_members: false,
             has_aggressive_anti_spam_enabled: false,
             accepted_gift_types: AcceptedGiftTypes {
-                unlimited_gifts: true,
-                limited_gifts: true,
-                unique_gifts: true,
+                unlimited_gifts:      true,
+                limited_gifts:        true,
+                unique_gifts:         true,
                 premium_subscription: true,
-                gifts_from_channels: true,
+                gifts_from_channels:  true
             },
             accent_color_id: 0,
             background_custom_emoji_id: None,
@@ -850,7 +862,7 @@ mod tests {
             max_reaction_count: 0,
             rating: None,
             paid_message_star_count: None,
-            unique_gift_colors: None,
+            unique_gift_colors: None
         };
         eprintln!("{}", to_string(&chat).unwrap());
         assert_eq!(
@@ -892,7 +904,7 @@ mod tests {
                 business_intro: None,
                 business_location: None,
                 business_opening_hours: None,
-                first_profile_audio: None,
+                first_profile_audio: None
             })),
             photo: None,
             pinned_message: None,
@@ -900,11 +912,11 @@ mod tests {
             has_hidden_members: false,
             has_aggressive_anti_spam_enabled: false,
             accepted_gift_types: AcceptedGiftTypes {
-                unlimited_gifts: true,
-                limited_gifts: true,
-                unique_gifts: true,
+                unlimited_gifts:      true,
+                limited_gifts:        true,
+                unique_gifts:         true,
                 premium_subscription: true,
-                gifts_from_channels: true,
+                gifts_from_channels:  true
             },
             accent_color_id: 0,
             background_custom_emoji_id: None,
@@ -916,7 +928,7 @@ mod tests {
             max_reaction_count: 0,
             rating: None,
             paid_message_star_count: None,
-            unique_gift_colors: None,
+            unique_gift_colors: None
         };
 
         let json = to_string(&chat).unwrap();

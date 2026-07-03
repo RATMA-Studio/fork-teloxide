@@ -38,7 +38,7 @@ pub struct Game {
     /// via [@Botfather].
     ///
     /// [@Botfather]: https://t.me/botfather
-    pub animation: Option<Animation>,
+    pub animation: Option<Animation>
 }
 
 impl Game {
@@ -51,6 +51,10 @@ impl Game {
     pub fn mentioned_users(&self) -> impl Iterator<Item = &User> {
         use crate::util::{flatten, mentioned_users_from_entities};
 
-        flatten(self.text_entities.as_deref().map(mentioned_users_from_entities))
+        flatten(
+            self.text_entities
+                .as_deref()
+                .map(mentioned_users_from_entities)
+        )
     }
 }

@@ -27,7 +27,7 @@ pub trait BotMessagesExt: Requester {
         &self,
         message: &Message,
         latitude: f64,
-        longitude: f64,
+        longitude: f64
     ) -> Self::EditMessageLiveLocation;
 
     /// This function is the same as [`Bot::stop_message_live_location`],
@@ -116,11 +116,11 @@ pub trait BotMessagesExt: Requester {
 
 impl<R> BotMessagesExt for R
 where
-    R: Requester,
+    R: Requester
 {
     fn forward<C>(&self, to_chat_id: C, message: &Message) -> Self::ForwardMessage
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         self.forward_message(to_chat_id, message.chat.id, message.id)
     }
@@ -129,7 +129,7 @@ where
         &self,
         message: &Message,
         latitude: f64,
-        longitude: f64,
+        longitude: f64
     ) -> Self::EditMessageLiveLocation {
         self.edit_message_live_location(message.chat.id, message.id, latitude, longitude)
     }
@@ -147,12 +147,13 @@ where
     }
 
     fn unpin(&self, message: &Message) -> Self::UnpinChatMessage {
-        self.unpin_chat_message(message.chat.id).message_id(message.id)
+        self.unpin_chat_message(message.chat.id)
+            .message_id(message.id)
     }
 
     fn edit_text<T>(&self, message: &Message, text: T) -> Self::EditMessageText
     where
-        T: Into<String>,
+        T: Into<String>
     {
         self.edit_message_text(message.chat.id, message.id, text)
     }
@@ -179,7 +180,7 @@ where
 
     fn copy<C>(&self, to_chat_id: C, message: &Message) -> Self::CopyMessage
     where
-        C: Into<Recipient>,
+        C: Into<Recipient>
     {
         self.copy_message(to_chat_id, message.chat.id, message.id)
     }
@@ -191,7 +192,7 @@ where
 
             match transactions {
                 Ok(transactions) => Some((stream::iter(transactions.transactions), state + 100)),
-                Err(_) => None,
+                Err(_) => None
             }
         })
         .flatten()

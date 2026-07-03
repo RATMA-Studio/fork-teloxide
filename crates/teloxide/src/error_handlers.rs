@@ -1,7 +1,8 @@
 //! Convenient error handling.
 
-use futures::future::BoxFuture;
 use std::{convert::Infallible, fmt::Debug, future::Future, sync::Arc};
+
+use futures::future::BoxFuture;
 
 /// An asynchronous handler of an error.
 ///
@@ -16,7 +17,7 @@ impl<E, F, Fut> ErrorHandler<E> for F
 where
     F: Fn(E) -> Fut + Send + Sync + 'static,
     E: Send + 'static,
-    Fut: Future<Output = ()> + Send,
+    Fut: Future<Output = ()> + Send
 {
     fn handle_error(self: Arc<Self>, error: E) -> BoxFuture<'static, ()> {
         Box::pin(async move { self(error).await })
@@ -64,7 +65,7 @@ pub trait OnError<E> {
     fn log_on_error<'a>(self) -> BoxFuture<'a, ()>
     where
         Self: Sized + 'a,
-        E: Debug,
+        E: Debug
     {
         self.on_error(LoggingErrorHandler::new())
     }
@@ -73,13 +74,13 @@ pub trait OnError<E> {
 impl<T, E> OnError<E> for Result<T, E>
 where
     T: Send,
-    E: Send,
+    E: Send
 {
     fn on_error<'a, Eh>(self, eh: Arc<Eh>) -> BoxFuture<'a, ()>
     where
         Self: 'a,
         Eh: ErrorHandler<E> + Send + Sync,
-        Arc<Eh>: 'a,
+        Arc<Eh>: 'a
     {
         Box::pin(async move {
             if let Err(error) = self {
@@ -173,12 +174,16 @@ impl ErrorHandler<Infallible> for IgnoringErrorHandlerSafe {
 /// use teloxide::error_handlers::{ErrorHandler, LoggingErrorHandler};
 ///
 /// LoggingErrorHandler::new().handle_error(()).await;
-/// LoggingErrorHandler::with_custom_text("Omg1").handle_error(404).await;
-/// LoggingErrorHandler::with_custom_text("Omg2").handle_error("Invalid data type!").await;
+/// LoggingErrorHandler::with_custom_text("Omg1")
+///     .handle_error(404)
+///     .await;
+/// LoggingErrorHandler::with_custom_text("Omg2")
+///     .handle_error("Invalid data type!")
+///     .await;
 /// # }
 /// ```
 pub struct LoggingErrorHandler {
-    text: String,
+    text: String
 }
 
 impl LoggingErrorHandler {
@@ -188,9 +193,11 @@ impl LoggingErrorHandler {
     #[must_use]
     pub fn with_custom_text<T>(text: T) -> Arc<Self>
     where
-        T: Into<String>,
+        T: Into<String>
     {
-        Arc::new(Self { text: text.into() })
+        Arc::new(Self {
+            text: text.into()
+        })
     }
 
     /// A shortcut for
@@ -203,7 +210,7 @@ impl LoggingErrorHandler {
 
 impl<E> ErrorHandler<E> for LoggingErrorHandler
 where
-    E: Debug,
+    E: Debug
 {
     fn handle_error(self: Arc<Self>, error: E) -> BoxFuture<'static, ()> {
         log::error!("{text}: {:?}", error, text = self.text);

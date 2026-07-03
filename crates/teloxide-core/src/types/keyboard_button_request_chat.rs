@@ -67,7 +67,7 @@ pub struct KeyboardButtonRequestChat {
 
     /// Pass `true` to request the chat's photo.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
-    pub request_photo: bool,
+    pub request_photo: bool
 }
 
 impl KeyboardButtonRequestChat {
@@ -84,7 +84,7 @@ impl KeyboardButtonRequestChat {
             bot_is_member: false,
             request_title: false,
             request_username: false,
-            request_photo: false,
+            request_photo: false
         }
     }
 

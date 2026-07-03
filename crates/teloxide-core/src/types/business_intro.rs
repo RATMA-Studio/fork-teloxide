@@ -13,5 +13,5 @@ pub struct BusinessIntro {
     pub message: Option<String>,
 
     /// Sticker of the business intro
-    pub sticker: Option<Sticker>,
+    pub sticker: Option<Sticker>
 }

@@ -7,8 +7,7 @@ use serde::{Deserialize, Serialize};
 ///
 /// [The official docs](https://core.telegram.org/bots/api#maskposition).
 #[serde_with::skip_serializing_none]
-#[derive(Clone, Copy, Debug)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MaskPosition {
     /// The part of the face relative to which the mask should be placed. One
@@ -26,7 +25,7 @@ pub struct MaskPosition {
     pub y_shift: f64,
 
     /// Mask scaling coefficient. For example, `2.0` means double size.
-    pub scale: f64,
+    pub scale: f64
 }
 
 impl PartialEq for MaskPosition {
@@ -58,9 +57,7 @@ impl Hash for MaskPosition {
 }
 
 /// The part of the face relative to which the mask should be placed.
-#[derive(Clone, Copy, Debug)]
-#[derive(PartialEq, Eq, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 #[non_exhaustive]
@@ -68,13 +65,18 @@ pub enum MaskPoint {
     Forehead,
     Eyes,
     Mouth,
-    Chin,
+    Chin
 }
 
 impl MaskPosition {
     #[must_use]
     pub const fn new(point: MaskPoint, x_shift: f64, y_shift: f64, scale: f64) -> Self {
-        Self { point, x_shift, y_shift, scale }
+        Self {
+            point,
+            x_shift,
+            y_shift,
+            scale
+        }
     }
 
     #[must_use]

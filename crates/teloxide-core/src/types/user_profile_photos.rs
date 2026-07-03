@@ -13,5 +13,5 @@ pub struct UserProfilePhotos {
     pub total_count: u32,
 
     /// Requested profile pictures (in up to 4 sizes each).
-    pub photos: Vec<Vec<PhotoSize>>,
+    pub photos: Vec<Vec<PhotoSize>>
 }

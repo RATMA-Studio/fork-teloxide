@@ -10,7 +10,7 @@ use crate::codegen::{
     convert::{Convert, convert_for},
     ensure_files_contents, project_root, reformat,
     schema::{self, Doc, Method, Param, Type},
-    to_uppercase,
+    to_uppercase
 };
 
 #[test]
@@ -27,29 +27,42 @@ fn codegen_payloads() {
         let uses = uses(&method);
 
         let method_doc = render_doc(&method.doc, method.sibling.as_deref());
-        let eq_hash_derive = if eq_hash_suitable(&method) { " Eq, Hash," } else { "" };
-        let default_derive = if default_needed(&method) { " Default," } else { "" };
+        let eq_hash_derive = if eq_hash_suitable(&method) {
+            " Eq, Hash,"
+        } else {
+            ""
+        };
+        let default_derive = if default_needed(&method) {
+            " Default,"
+        } else {
+            ""
+        };
 
         let return_ty = method.return_ty.to_string();
 
-        let required = params(method.params.iter().filter(|p| !matches!(&p.ty, Type::Option(_))));
+        let required = params(
+            method
+                .params
+                .iter()
+                .filter(|p| !matches!(&p.ty, Type::Option(_)))
+        );
         let required = match &*required {
             "" => "".to_owned(),
-            _ => format!("        required {{\n{required}\n        }}"),
+            _ => format!("        required {{\n{required}\n        }}")
         };
 
         let optional = params(method.params.iter().filter_map(|p| match &p.ty {
             Type::Option(inner) => Some(Param {
-                name: p.name.clone(),
-                ty: inner.deref().clone(),
-                descr: p.descr.clone(),
+                name:  p.name.clone(),
+                ty:    inner.deref().clone(),
+                descr: p.descr.clone()
             }),
-            _ => None,
+            _ => None
         }));
         let optional = match &*optional {
             "" => "".to_owned(),
             _ if required.is_empty() => format!("        optional {{\n{optional}\n        }}"),
-            _ => format!("\n        optional {{\n{optional}\n        }}"),
+            _ => format!("\n        optional {{\n{optional}\n        }}")
         };
 
         let multipart = multipart_input_file_fields(&method)
@@ -74,12 +87,14 @@ fn codegen_payloads() {
             ) {
             "#[derive(Debug, Clone, Serialize)]".to_owned()
         } else {
-            format!("#[derive(Debug, PartialEq,{eq_hash_derive}{default_derive} Clone, Serialize)]")
+            format!(
+                "#[derive(Debug, PartialEq,{eq_hash_derive}{default_derive} Clone, Serialize)]"
+            )
         };
 
         let timeout_secs = match &*method.names.2 {
             "get_updates" => "    @[timeout_secs = timeout]\n",
-            _ => "",
+            _ => ""
         };
 
         let contents = format!(
@@ -107,7 +122,7 @@ fn uses(method: &Method) -> String {
     enum Use {
         Prelude,
         Crate(String),
-        External(String),
+        External(String)
     }
 
     fn ty_use(ty: &Type) -> Use {
@@ -125,7 +140,7 @@ fn uses(method: &Method) -> String {
             Type::Option(inner) | Type::ArrayOf(inner) => ty_use(inner),
             Type::RawTy(raw) => Use::Crate(["use crate::types::", raw, ";"].concat()),
             Type::Url => Use::External(String::from("use url::Url;")),
-            Type::DateTime => Use::External(String::from("use chrono::{DateTime, Utc};")),
+            Type::DateTime => Use::External(String::from("use chrono::{DateTime, Utc};"))
         }
     }
 
@@ -162,8 +177,10 @@ fn render_doc(doc: &Doc, sibling: Option<&str>) -> String {
     let links = match &doc.md_links {
         links if links.is_empty() => String::new(),
         links => {
-            let l: String =
-                links.iter().map(|(name, link)| format!("\n    /// [{name}]: {link}")).collect();
+            let l: String = links
+                .iter()
+                .map(|(name, link)| format!("\n    /// [{name}]: {link}"))
+                .collect();
 
             format!("\n    ///{l}")
         }
@@ -178,7 +195,13 @@ fn render_doc(doc: &Doc, sibling: Option<&str>) -> String {
         })
         .unwrap_or_default();
 
-    ["    /// ", &doc.md.replace('\n', "\n    /// "), &sibling_note, &links].concat()
+    [
+        "    /// ",
+        &doc.md.replace('\n', "\n    /// "),
+        &sibling_note,
+        &links
+    ]
+    .concat()
 }
 
 fn eq_hash_suitable(method: &Method) -> bool {
@@ -243,7 +266,7 @@ fn default_needed(method: &Method) -> bool {
                     | "Recipient"
                     | "User"
                     | "Me"
-            ),
+            )
         }
     }
     method.params.iter().all(|p| ty_is_default(&p.ty))
@@ -269,34 +292,44 @@ fn params(params: impl Iterator<Item = impl Borrow<Param>>) -> String {
                 Type::ArrayOf(b) if **b == Type::RawTy("MessageId".to_string()) => {
                     "\n            #[serde(with = \"crate::types::vec_msg_id_as_vec_int\")]"
                 }
-                _ => "",
+                _ => ""
             };
             let with = match ty {
                 Type::DateTime => {
                     "\n            #[serde(with = \
                      \"crate::types::serde_opt_date_from_unix_timestamp\")]"
                 }
-                _ => "",
+                _ => ""
             };
             let rename = match field.strip_suffix('_') {
                 Some(field) => format!("\n            #[serde(rename = \"{field}\")]"),
-                None => "".to_owned(),
+                None => "".to_owned()
             };
             let convert = match convert_for(ty) {
                 Convert::Id(_) => "",
                 Convert::Into(_) => " [into]",
-                Convert::Collect(_) => " [collect]",
+                Convert::Collect(_) => " [collect]"
             };
-            format!("        {doc}{flatten}{with}{rename}\n            pub {field}: {ty}{convert},")
+            format!(
+                "        {doc}{flatten}{with}{rename}\n            pub {field}: {ty}{convert},"
+            )
         })
         .join("\n")
 }
 
 fn multipart_input_file_fields(m: &Method) -> Option<Vec<&str>> {
-    let fields: Vec<_> =
-        m.params.iter().filter(|&p| ty_is_multiparty(&p.ty)).map(|p| &*p.name).collect();
+    let fields: Vec<_> = m
+        .params
+        .iter()
+        .filter(|&p| ty_is_multiparty(&p.ty))
+        .map(|p| &*p.name)
+        .collect();
 
-    if fields.is_empty() { None } else { Some(fields) }
+    if fields.is_empty() {
+        None
+    } else {
+        Some(fields)
+    }
 }
 
 fn ty_is_multiparty(ty: &Type) -> bool {

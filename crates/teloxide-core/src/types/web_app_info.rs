@@ -11,5 +11,5 @@ pub struct WebAppInfo {
     /// in [Initializing Web Apps].
     ///
     /// [Initializing Web Apps]: https://core.telegram.org/bots/webapps#initializing-web-apps
-    pub url: Url,
+    pub url: Url
 }

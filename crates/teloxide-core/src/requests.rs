@@ -3,7 +3,7 @@
 pub use self::{
     has_payload::HasPayload, json::JsonRequest, multipart::MultipartRequest,
     multipart_payload::MultipartPayload, payload::Payload, request::Request, requester::Requester,
-    requester_ext::RequesterExt,
+    requester_ext::RequesterExt
 };
 
 /// A type that is returned after making a request to Telegram.

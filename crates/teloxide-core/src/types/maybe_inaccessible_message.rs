@@ -12,14 +12,14 @@ use crate::types::{Chat, InaccessibleMessage, Message, MessageId};
 #[non_exhaustive]
 pub enum MaybeInaccessibleMessage {
     Inaccessible(InaccessibleMessage),
-    Regular(Box<Message>),
+    Regular(Box<Message>)
 }
 
 impl MaybeInaccessibleMessage {
     pub fn id(&self) -> MessageId {
         match self {
             Self::Inaccessible(i_message) => i_message.message_id,
-            Self::Regular(message) => message.id,
+            Self::Regular(message) => message.id
         }
     }
 
@@ -27,7 +27,7 @@ impl MaybeInaccessibleMessage {
     pub fn regular_message(&self) -> Option<&Message> {
         match self {
             Self::Regular(message) => Some(message),
-            Self::Inaccessible(_) => None,
+            Self::Inaccessible(_) => None
         }
     }
 
@@ -35,7 +35,7 @@ impl MaybeInaccessibleMessage {
     pub fn chat(&self) -> &Chat {
         match self {
             Self::Regular(message) => &message.chat,
-            Self::Inaccessible(i_message) => &i_message.chat,
+            Self::Inaccessible(i_message) => &i_message.chat
         }
     }
 }
@@ -43,16 +43,18 @@ impl MaybeInaccessibleMessage {
 impl<'de> Deserialize<'de> for MaybeInaccessibleMessage {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
-        D: serde::Deserializer<'de>,
+        D: serde::Deserializer<'de>
     {
         let message: Message = Message::deserialize(deserializer)?;
 
         // Thank you, TBA 7.0 authors!
         if message.date.timestamp() == 0 {
-            return Ok(MaybeInaccessibleMessage::Inaccessible(InaccessibleMessage {
-                chat: message.chat,
-                message_id: message.id,
-            }));
+            return Ok(MaybeInaccessibleMessage::Inaccessible(
+                InaccessibleMessage {
+                    chat:       message.chat,
+                    message_id: message.id
+                }
+            ));
         }
         Ok(MaybeInaccessibleMessage::Regular(Box::new(message)))
     }
@@ -78,7 +80,10 @@ mod tests {
 
         let inaccessible_message = serde_json::from_str::<MaybeInaccessibleMessage>(json);
         assert!(inaccessible_message.is_ok());
-        assert!(matches!(inaccessible_message.unwrap(), MaybeInaccessibleMessage::Inaccessible(_)));
+        assert!(matches!(
+            inaccessible_message.unwrap(),
+            MaybeInaccessibleMessage::Inaccessible(_)
+        ));
     }
 
     #[test]
@@ -97,6 +102,9 @@ mod tests {
 
         let regular_message = serde_json::from_str::<MaybeInaccessibleMessage>(json);
         assert!(regular_message.is_ok());
-        assert!(matches!(regular_message.unwrap(), MaybeInaccessibleMessage::Regular(_)));
+        assert!(matches!(
+            regular_message.unwrap(),
+            MaybeInaccessibleMessage::Regular(_)
+        ));
     }
 }

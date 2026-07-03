@@ -5,9 +5,9 @@ use serde::{Deserialize, Serialize};
 use crate::types::OrderInfo;
 
 /// A unique identifier of the Telegram transaction.
-#[derive(Clone, Debug, derive_more::Display)]
-#[derive(PartialEq, Eq, Hash)]
-#[derive(Serialize, Deserialize, From)]
+#[derive(
+    Clone, Debug, derive_more::Display, PartialEq, Eq, Hash, Serialize, Deserialize, From,
+)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(transparent)]
 #[from(&'static str, String)]
@@ -64,7 +64,7 @@ pub struct SuccessfulPayment {
     pub telegram_payment_charge_id: TelegramTransactionId,
 
     /// Provider payment identifier.
-    pub provider_payment_charge_id: String,
+    pub provider_payment_charge_id: String
 }
 
 #[cfg(test)]
@@ -73,16 +73,23 @@ mod tests {
 
     #[test]
     fn deser() {
-        let telegram_payment_charge_id =
-            S { telegram_payment_charge_id: TelegramTransactionId("id".to_owned()) };
+        let telegram_payment_charge_id = S {
+            telegram_payment_charge_id: TelegramTransactionId("id".to_owned())
+        };
         let json = r#"{"telegram_payment_charge_id":"id"}"#;
 
         #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
         struct S {
-            telegram_payment_charge_id: TelegramTransactionId,
+            telegram_payment_charge_id: TelegramTransactionId
         }
 
-        assert_eq!(serde_json::to_string(&telegram_payment_charge_id).unwrap(), json);
-        assert_eq!(telegram_payment_charge_id, serde_json::from_str(json).unwrap());
+        assert_eq!(
+            serde_json::to_string(&telegram_payment_charge_id).unwrap(),
+            json
+        );
+        assert_eq!(
+            telegram_payment_charge_id,
+            serde_json::from_str(json).unwrap()
+        );
     }
 }

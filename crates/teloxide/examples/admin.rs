@@ -22,21 +22,21 @@ enum Command {
     /// Ban user in chat.
     Ban {
         time: u64,
-        unit: UnitOfTime,
+        unit: UnitOfTime
     },
     /// Mute user in chat.
     Mute {
         time: u64,
-        unit: UnitOfTime,
+        unit: UnitOfTime
     },
-    Help,
+    Help
 }
 
 #[derive(Clone)]
 enum UnitOfTime {
     Seconds,
     Minutes,
-    Hours,
+    Hours
 }
 
 impl FromStr for UnitOfTime {
@@ -46,7 +46,7 @@ impl FromStr for UnitOfTime {
             "h" | "hours" => Ok(UnitOfTime::Hours),
             "m" | "minutes" => Ok(UnitOfTime::Minutes),
             "s" | "seconds" => Ok(UnitOfTime::Seconds),
-            _ => Err("Allowed units: h, m, s"),
+            _ => Err("Allowed units: h, m, s")
         }
     }
 }
@@ -64,11 +64,18 @@ async fn main() {
 async fn action(bot: Bot, msg: Message, cmd: Command) -> ResponseResult<()> {
     match cmd {
         Command::Help => {
-            bot.send_message(msg.chat.id, Command::descriptions().to_string()).await?;
+            bot.send_message(msg.chat.id, Command::descriptions().to_string())
+                .await?;
         }
         Command::Kick => kick_user(bot, msg).await?,
-        Command::Ban { time, unit } => ban_user(bot, msg, calc_restrict_time(time, unit)).await?,
-        Command::Mute { time, unit } => mute_user(bot, msg, calc_restrict_time(time, unit)).await?,
+        Command::Ban {
+            time,
+            unit
+        } => ban_user(bot, msg, calc_restrict_time(time, unit)).await?,
+        Command::Mute {
+            time,
+            unit
+        } => mute_user(bot, msg, calc_restrict_time(time, unit)).await?
     };
 
     Ok(())
@@ -79,10 +86,12 @@ async fn kick_user(bot: Bot, msg: Message) -> ResponseResult<()> {
     match msg.reply_to_message() {
         Some(replied) => {
             // bot.unban_chat_member can also kicks a user from a group chat.
-            bot.unban_chat_member(msg.chat.id, replied.from.as_ref().unwrap().id).await?;
+            bot.unban_chat_member(msg.chat.id, replied.from.as_ref().unwrap().id)
+                .await?;
         }
         None => {
-            bot.send_message(msg.chat.id, "Use this command in reply to another message").await?;
+            bot.send_message(msg.chat.id, "Use this command in reply to another message")
+                .await?;
         }
     }
     Ok(())
@@ -94,14 +103,21 @@ async fn ban_user(bot: Bot, msg: Message, time: Duration) -> ResponseResult<()> 
         Some(replied) => {
             bot.kick_chat_member(
                 msg.chat.id,
-                replied.from.as_ref().expect("Must be MessageKind::Common").id,
+                replied
+                    .from
+                    .as_ref()
+                    .expect("Must be MessageKind::Common")
+                    .id
             )
             .until_date(msg.date + time)
             .await?;
         }
         None => {
-            bot.send_message(msg.chat.id, "Use this command in a reply to another message!")
-                .await?;
+            bot.send_message(
+                msg.chat.id,
+                "Use this command in a reply to another message!"
+            )
+            .await?;
         }
     }
     Ok(())
@@ -113,15 +129,22 @@ async fn mute_user(bot: Bot, msg: Message, time: Duration) -> ResponseResult<()>
         Some(replied) => {
             bot.restrict_chat_member(
                 msg.chat.id,
-                replied.from.as_ref().expect("Must be MessageKind::Common").id,
-                ChatPermissions::empty(),
+                replied
+                    .from
+                    .as_ref()
+                    .expect("Must be MessageKind::Common")
+                    .id,
+                ChatPermissions::empty()
             )
             .until_date(msg.date + time)
             .await?;
         }
         None => {
-            bot.send_message(msg.chat.id, "Use this command in a reply to another message!")
-                .await?;
+            bot.send_message(
+                msg.chat.id,
+                "Use this command in a reply to another message!"
+            )
+            .await?;
         }
     }
     Ok(())
@@ -134,6 +157,6 @@ fn calc_restrict_time(time: u64, unit: UnitOfTime) -> Duration {
     match unit {
         UnitOfTime::Hours => Duration::try_hours(time as i64).unwrap(),
         UnitOfTime::Minutes => Duration::try_minutes(time as i64).unwrap(),
-        UnitOfTime::Seconds => Duration::try_seconds(time as i64).unwrap(),
+        UnitOfTime::Seconds => Duration::try_seconds(time as i64).unwrap()
     }
 }

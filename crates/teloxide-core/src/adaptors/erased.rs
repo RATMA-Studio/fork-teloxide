@@ -7,12 +7,12 @@ use crate::{
     errors::AsResponseParameters,
     payloads::*,
     requests::{HasPayload, Output, Payload, Request, Requester},
-    types::*,
+    types::*
 };
 
 /// [`Requester`] with erased type.
 pub struct ErasedRequester<'a, E> {
-    inner: Arc<dyn ErasableRequester<'a, Err = E> + 'a>,
+    inner: Arc<dyn ErasableRequester<'a, Err = E> + 'a>
 }
 
 impl<'a, E> ErasedRequester<'a, E> {
@@ -23,9 +23,11 @@ impl<'a, E> ErasedRequester<'a, E> {
     /// [`RequesterExt::erase`]: crate::requests::RequesterExt::erase
     pub fn new<B>(requester: B) -> Self
     where
-        B: Requester<Err = E> + 'a,
+        B: Requester<Err = E> + 'a
     {
-        Self { inner: Arc::new(requester) }
+        Self {
+            inner: Arc::new(requester)
+        }
     }
 }
 
@@ -38,26 +40,30 @@ impl<E> std::fmt::Debug for ErasedRequester<'_, E> {
 // NB. hand-written impl to avoid `E: Clone` bound
 impl<E> Clone for ErasedRequester<'_, E> {
     fn clone(&self) -> Self {
-        Self { inner: Arc::clone(&self.inner) }
+        Self {
+            inner: Arc::clone(&self.inner)
+        }
     }
 }
 
 /// [`Request`] with erased type.
 #[must_use = "Requests are lazy and do nothing unless sent"]
 pub struct ErasedRequest<'a, T, E> {
-    inner: Box<dyn ErasableRequest<'a, Payload = T, Err = E> + 'a>,
+    inner: Box<dyn ErasableRequest<'a, Payload = T, Err = E> + 'a>
 }
 
 // `T: Payload` required b/c of <https://github.com/rust-lang/rust/issues/102185>
 impl<'a, T: Payload, E> ErasedRequest<'a, T, E> {
     pub(crate) fn erase(request: impl Request<Payload = T, Err = E> + 'a) -> Self {
-        Self { inner: Box::new(request) }
+        Self {
+            inner: Box::new(request)
+        }
     }
 }
 
 impl<T, E> HasPayload for ErasedRequest<'_, T, E>
 where
-    T: Payload,
+    T: Payload
 {
     type Payload = T;
 
@@ -73,7 +79,7 @@ where
 impl<'a, T, E> Request for ErasedRequest<'a, T, E>
 where
     T: Payload,
-    E: std::error::Error + Send,
+    E: std::error::Error + Send
 {
     type Err = E;
 
@@ -93,7 +99,7 @@ where
 impl<T, E> IntoFuture for ErasedRequest<'_, T, E>
 where
     T: Payload,
-    E: std::error::Error + Send,
+    E: std::error::Error + Send
 {
     type Output = Result<Output<Self>, <Self as Request>::Err>;
     type IntoFuture = <Self as Request>::Send;
@@ -119,7 +125,7 @@ impl<'a, R> ErasableRequest<'a> for R
 where
     R: Request,
     <R as Request>::Send: 'a,
-    <R as Request>::SendRef: 'a,
+    <R as Request>::SendRef: 'a
 {
     type Err = R::Err;
 
@@ -183,7 +189,7 @@ macro_rules! fwd_erased {
 
 impl<'a, Err> Requester for ErasedRequester<'a, Err>
 where
-    Err: std::error::Error + Send + AsResponseParameters,
+    Err: std::error::Error + Send + AsResponseParameters
 {
     type Err = Err;
 
@@ -400,104 +406,104 @@ trait ErasableRequester<'a> {
     fn send_message(
         &self,
         chat_id: Recipient,
-        text: String,
+        text: String
     ) -> ErasedRequest<'a, SendMessage, Self::Err>;
 
     fn forward_message(
         &self,
         chat_id: Recipient,
         from_chat_id: Recipient,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> ErasedRequest<'a, ForwardMessage, Self::Err>;
 
     fn forward_messages(
         &self,
         chat_id: Recipient,
         from_chat_id: Recipient,
-        message_ids: Vec<MessageId>,
+        message_ids: Vec<MessageId>
     ) -> ErasedRequest<'a, ForwardMessages, Self::Err>;
 
     fn copy_message(
         &self,
         chat_id: Recipient,
         from_chat_id: Recipient,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> ErasedRequest<'a, CopyMessage, Self::Err>;
 
     fn copy_messages(
         &self,
         chat_id: Recipient,
         from_chat_id: Recipient,
-        message_ids: Vec<MessageId>,
+        message_ids: Vec<MessageId>
     ) -> ErasedRequest<'a, CopyMessages, Self::Err>;
 
     fn send_photo(
         &self,
         chat_id: Recipient,
-        photo: InputFile,
+        photo: InputFile
     ) -> ErasedRequest<'a, SendPhoto, Self::Err>;
 
     fn send_audio(
         &self,
         chat_id: Recipient,
-        audio: InputFile,
+        audio: InputFile
     ) -> ErasedRequest<'a, SendAudio, Self::Err>;
 
     fn send_document(
         &self,
         chat_id: Recipient,
-        document: InputFile,
+        document: InputFile
     ) -> ErasedRequest<'a, SendDocument, Self::Err>;
 
     fn send_video(
         &self,
         chat_id: Recipient,
-        video: InputFile,
+        video: InputFile
     ) -> ErasedRequest<'a, SendVideo, Self::Err>;
 
     fn send_live_photo(
         &self,
         chat_id: Recipient,
         live_photo: InputFile,
-        photo: InputFile,
+        photo: InputFile
     ) -> ErasedRequest<'a, SendLivePhoto, Self::Err>;
 
     fn send_animation(
         &self,
         chat_id: Recipient,
-        animation: InputFile,
+        animation: InputFile
     ) -> ErasedRequest<'a, SendAnimation, Self::Err>;
 
     fn send_voice(
         &self,
         chat_id: Recipient,
-        voice: InputFile,
+        voice: InputFile
     ) -> ErasedRequest<'a, SendVoice, Self::Err>;
 
     fn send_video_note(
         &self,
         chat_id: Recipient,
-        video_note: InputFile,
+        video_note: InputFile
     ) -> ErasedRequest<'a, SendVideoNote, Self::Err>;
 
     fn send_paid_media(
         &self,
         chat_id: Recipient,
         star_count: u32,
-        media: Vec<InputPaidMedia>,
+        media: Vec<InputPaidMedia>
     ) -> ErasedRequest<'a, SendPaidMedia, Self::Err>;
 
     fn send_media_group(
         &self,
         chat_id: Recipient,
-        media: Vec<InputMedia>,
+        media: Vec<InputMedia>
     ) -> ErasedRequest<'a, SendMediaGroup, Self::Err>;
 
     fn send_location(
         &self,
         chat_id: Recipient,
         latitude: f64,
-        longitude: f64,
+        longitude: f64
     ) -> ErasedRequest<'a, SendLocation, Self::Err>;
 
     fn edit_message_live_location(
@@ -505,25 +511,25 @@ trait ErasableRequester<'a> {
         chat_id: Recipient,
         message_id: MessageId,
         latitude: f64,
-        longitude: f64,
+        longitude: f64
     ) -> ErasedRequest<'a, EditMessageLiveLocation, Self::Err>;
 
     fn edit_message_live_location_inline(
         &self,
         inline_message_id: String,
         latitude: f64,
-        longitude: f64,
+        longitude: f64
     ) -> ErasedRequest<'a, EditMessageLiveLocationInline, Self::Err>;
 
     fn stop_message_live_location(
         &self,
         chat_id: Recipient,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> ErasedRequest<'a, StopMessageLiveLocation, Self::Err>;
 
     fn stop_message_live_location_inline(
         &self,
-        inline_message_id: String,
+        inline_message_id: String
     ) -> ErasedRequest<'a, StopMessageLiveLocationInline, Self::Err>;
 
     fn edit_message_checklist(
@@ -531,7 +537,7 @@ trait ErasableRequester<'a> {
         business_connection_id: BusinessConnectionId,
         chat_id: ChatId,
         message_id: MessageId,
-        checklist: InputChecklist,
+        checklist: InputChecklist
     ) -> ErasedRequest<'a, EditMessageChecklist, Self::Err>;
 
     fn send_venue(
@@ -540,28 +546,28 @@ trait ErasableRequester<'a> {
         latitude: f64,
         longitude: f64,
         title: String,
-        address: String,
+        address: String
     ) -> ErasedRequest<'a, SendVenue, Self::Err>;
 
     fn send_contact(
         &self,
         chat_id: Recipient,
         phone_number: String,
-        first_name: String,
+        first_name: String
     ) -> ErasedRequest<'a, SendContact, Self::Err>;
 
     fn send_poll(
         &self,
         chat_id: Recipient,
         question: String,
-        options: Vec<InputPollOption>,
+        options: Vec<InputPollOption>
     ) -> ErasedRequest<'a, SendPoll, Self::Err>;
 
     fn send_checklist(
         &self,
         business_connection_id: BusinessConnectionId,
         chat_id: ChatId,
-        checklist: InputChecklist,
+        checklist: InputChecklist
     ) -> ErasedRequest<'a, SendChecklist, Self::Err>;
 
     fn send_dice(&self, chat_id: Recipient) -> ErasedRequest<'a, SendDice, Self::Err>;
@@ -569,34 +575,34 @@ trait ErasableRequester<'a> {
     fn send_message_draft(
         &self,
         chat_id: ChatId,
-        draft_id: i32,
+        draft_id: i32
     ) -> ErasedRequest<'a, SendMessageDraft, Self::Err>;
 
     fn send_chat_action(
         &self,
         chat_id: Recipient,
-        action: ChatAction,
+        action: ChatAction
     ) -> ErasedRequest<'a, SendChatAction, Self::Err>;
 
     fn set_message_reaction(
         &self,
         chat_id: Recipient,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> ErasedRequest<'a, SetMessageReaction, Self::Err>;
 
     fn get_user_profile_photos(
         &self,
-        user_id: UserId,
+        user_id: UserId
     ) -> ErasedRequest<'a, GetUserProfilePhotos, Self::Err>;
 
     fn get_user_profile_audios(
         &self,
-        user_id: UserId,
+        user_id: UserId
     ) -> ErasedRequest<'a, GetUserProfileAudios, Self::Err>;
 
     fn set_user_emoji_status(
         &self,
-        user_id: UserId,
+        user_id: UserId
     ) -> ErasedRequest<'a, SetUserEmojiStatus, Self::Err>;
 
     fn get_file(&self, file_id: FileId) -> ErasedRequest<'a, GetFile, Self::Err>;
@@ -604,150 +610,150 @@ trait ErasableRequester<'a> {
     fn ban_chat_member(
         &self,
         chat_id: Recipient,
-        user_id: UserId,
+        user_id: UserId
     ) -> ErasedRequest<'a, BanChatMember, Self::Err>;
 
     fn kick_chat_member(
         &self,
         chat_id: Recipient,
-        user_id: UserId,
+        user_id: UserId
     ) -> ErasedRequest<'a, KickChatMember, Self::Err>;
 
     fn unban_chat_member(
         &self,
         chat_id: Recipient,
-        user_id: UserId,
+        user_id: UserId
     ) -> ErasedRequest<'a, UnbanChatMember, Self::Err>;
 
     fn restrict_chat_member(
         &self,
         chat_id: Recipient,
         user_id: UserId,
-        permissions: ChatPermissions,
+        permissions: ChatPermissions
     ) -> ErasedRequest<'a, RestrictChatMember, Self::Err>;
 
     fn promote_chat_member(
         &self,
         chat_id: Recipient,
-        user_id: UserId,
+        user_id: UserId
     ) -> ErasedRequest<'a, PromoteChatMember, Self::Err>;
 
     fn set_chat_member_tag(
         &self,
         chat_id: Recipient,
-        user_id: UserId,
+        user_id: UserId
     ) -> ErasedRequest<'a, SetChatMemberTag, Self::Err>;
 
     fn set_chat_administrator_custom_title(
         &self,
         chat_id: Recipient,
         user_id: UserId,
-        custom_title: String,
+        custom_title: String
     ) -> ErasedRequest<'a, SetChatAdministratorCustomTitle, Self::Err>;
 
     fn ban_chat_sender_chat(
         &self,
         chat_id: Recipient,
-        sender_chat_id: ChatId,
+        sender_chat_id: ChatId
     ) -> ErasedRequest<'a, BanChatSenderChat, Self::Err>;
 
     fn unban_chat_sender_chat(
         &self,
         chat_id: Recipient,
-        sender_chat_id: ChatId,
+        sender_chat_id: ChatId
     ) -> ErasedRequest<'a, UnbanChatSenderChat, Self::Err>;
 
     fn set_chat_permissions(
         &self,
         chat_id: Recipient,
-        permissions: ChatPermissions,
+        permissions: ChatPermissions
     ) -> ErasedRequest<'a, SetChatPermissions, Self::Err>;
 
     fn export_chat_invite_link(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, ExportChatInviteLink, Self::Err>;
 
     fn create_chat_invite_link(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, CreateChatInviteLink, Self::Err>;
 
     fn edit_chat_invite_link(
         &self,
         chat_id: Recipient,
-        invite_link: String,
+        invite_link: String
     ) -> ErasedRequest<'a, EditChatInviteLink, Self::Err>;
 
     fn create_chat_subscription_invite_link(
         &self,
         chat_id: Recipient,
         subscription_period: Seconds,
-        subscription_price: u32,
+        subscription_price: u32
     ) -> ErasedRequest<'a, CreateChatSubscriptionInviteLink, Self::Err>;
 
     fn edit_chat_subscription_invite_link(
         &self,
         chat_id: Recipient,
-        invite_link: String,
+        invite_link: String
     ) -> ErasedRequest<'a, EditChatSubscriptionInviteLink, Self::Err>;
 
     fn revoke_chat_invite_link(
         &self,
         chat_id: Recipient,
-        invite_link: String,
+        invite_link: String
     ) -> ErasedRequest<'a, RevokeChatInviteLink, Self::Err>;
 
     /// For Telegram documentation see [`ApproveChatJoinRequest`].
     fn approve_chat_join_request(
         &self,
         chat_id: Recipient,
-        user_id: UserId,
+        user_id: UserId
     ) -> ErasedRequest<'a, ApproveChatJoinRequest, Self::Err>;
 
     /// For Telegram documentation see [`DeclineChatJoinRequest`].
     fn decline_chat_join_request(
         &self,
         chat_id: Recipient,
-        user_id: UserId,
+        user_id: UserId
     ) -> ErasedRequest<'a, DeclineChatJoinRequest, Self::Err>;
 
     fn set_chat_photo(
         &self,
         chat_id: Recipient,
-        photo: InputFile,
+        photo: InputFile
     ) -> ErasedRequest<'a, SetChatPhoto, Self::Err>;
 
     fn delete_chat_photo(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, DeleteChatPhoto, Self::Err>;
 
     fn set_chat_title(
         &self,
         chat_id: Recipient,
-        title: String,
+        title: String
     ) -> ErasedRequest<'a, SetChatTitle, Self::Err>;
 
     fn set_chat_description(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, SetChatDescription, Self::Err>;
 
     fn pin_chat_message(
         &self,
         chat_id: Recipient,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> ErasedRequest<'a, PinChatMessage, Self::Err>;
 
     fn unpin_chat_message(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, UnpinChatMessage, Self::Err>;
 
     fn unpin_all_chat_messages(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, UnpinAllChatMessages, Self::Err>;
 
     fn leave_chat(&self, chat_id: Recipient) -> ErasedRequest<'a, LeaveChat, Self::Err>;
@@ -756,137 +762,137 @@ trait ErasableRequester<'a> {
 
     fn get_chat_administrators(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, GetChatAdministrators, Self::Err>;
 
     fn delete_all_message_reactions(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, DeleteAllMessageReactions, Self::Err>;
 
     fn delete_message_reaction(
         &self,
         chat_id: Recipient,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> ErasedRequest<'a, DeleteMessageReaction, Self::Err>;
 
     fn get_chat_member_count(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, GetChatMemberCount, Self::Err>;
 
     fn get_chat_members_count(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, GetChatMembersCount, Self::Err>;
 
     fn get_chat_member(
         &self,
         chat_id: Recipient,
-        user_id: UserId,
+        user_id: UserId
     ) -> ErasedRequest<'a, GetChatMember, Self::Err>;
 
     fn set_chat_sticker_set(
         &self,
         chat_id: Recipient,
-        sticker_set_name: String,
+        sticker_set_name: String
     ) -> ErasedRequest<'a, SetChatStickerSet, Self::Err>;
 
     fn delete_chat_sticker_set(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, DeleteChatStickerSet, Self::Err>;
 
     fn get_forum_topic_icon_stickers(
-        &self,
+        &self
     ) -> ErasedRequest<'a, GetForumTopicIconStickers, Self::Err>;
 
     fn create_forum_topic(
         &self,
         chat_id: Recipient,
-        name: String,
+        name: String
     ) -> ErasedRequest<'a, CreateForumTopic, Self::Err>;
 
     fn edit_forum_topic(
         &self,
         chat_id: Recipient,
-        message_thread_id: ThreadId,
+        message_thread_id: ThreadId
     ) -> ErasedRequest<'a, EditForumTopic, Self::Err>;
 
     fn close_forum_topic(
         &self,
         chat_id: Recipient,
-        message_thread_id: ThreadId,
+        message_thread_id: ThreadId
     ) -> ErasedRequest<'a, CloseForumTopic, Self::Err>;
 
     fn reopen_forum_topic(
         &self,
         chat_id: Recipient,
-        message_thread_id: ThreadId,
+        message_thread_id: ThreadId
     ) -> ErasedRequest<'a, ReopenForumTopic, Self::Err>;
 
     fn delete_forum_topic(
         &self,
         chat_id: Recipient,
-        message_thread_id: ThreadId,
+        message_thread_id: ThreadId
     ) -> ErasedRequest<'a, DeleteForumTopic, Self::Err>;
 
     fn unpin_all_forum_topic_messages(
         &self,
         chat_id: Recipient,
-        message_thread_id: ThreadId,
+        message_thread_id: ThreadId
     ) -> ErasedRequest<'a, UnpinAllForumTopicMessages, Self::Err>;
 
     fn edit_general_forum_topic(
         &self,
         chat_id: Recipient,
-        name: String,
+        name: String
     ) -> ErasedRequest<'a, EditGeneralForumTopic, Self::Err>;
 
     fn close_general_forum_topic(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, CloseGeneralForumTopic, Self::Err>;
 
     fn reopen_general_forum_topic(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, ReopenGeneralForumTopic, Self::Err>;
 
     fn hide_general_forum_topic(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, HideGeneralForumTopic, Self::Err>;
 
     fn unhide_general_forum_topic(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, UnhideGeneralForumTopic, Self::Err>;
 
     fn unpin_all_general_forum_topic_messages(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, UnpinAllGeneralForumTopicMessages, Self::Err>;
 
     fn answer_callback_query(
         &self,
-        callback_query_id: CallbackQueryId,
+        callback_query_id: CallbackQueryId
     ) -> ErasedRequest<'a, AnswerCallbackQuery, Self::Err>;
 
     fn get_user_chat_boosts(
         &self,
         chat_id: Recipient,
-        user_id: UserId,
+        user_id: UserId
     ) -> ErasedRequest<'a, GetUserChatBoosts, Self::Err>;
 
     fn set_my_commands(
         &self,
-        commands: Vec<BotCommand>,
+        commands: Vec<BotCommand>
     ) -> ErasedRequest<'a, SetMyCommands, Self::Err>;
 
     fn get_business_connection(
         &self,
-        business_connection_id: BusinessConnectionId,
+        business_connection_id: BusinessConnectionId
     ) -> ErasedRequest<'a, GetBusinessConnection, Self::Err>;
 
     fn get_my_commands(&self) -> ErasedRequest<'a, GetMyCommands, Self::Err>;
@@ -905,36 +911,36 @@ trait ErasableRequester<'a> {
 
     fn set_my_profile_photo(
         &self,
-        photo: InputProfilePhoto,
+        photo: InputProfilePhoto
     ) -> ErasedRequest<'a, SetMyProfilePhoto, Self::Err>;
 
     fn remove_my_profile_photo(&self) -> ErasedRequest<'a, RemoveMyProfilePhoto, Self::Err>;
 
     fn get_managed_bot_token(
         &self,
-        user_id: UserId,
+        user_id: UserId
     ) -> ErasedRequest<'a, GetManagedBotToken, Self::Err>;
 
     fn replace_managed_bot_token(
         &self,
-        user_id: UserId,
+        user_id: UserId
     ) -> ErasedRequest<'a, ReplaceManagedBotToken, Self::Err>;
 
     fn get_managed_bot_access_settings(
         &self,
-        user_id: UserId,
+        user_id: UserId
     ) -> ErasedRequest<'a, GetManagedBotAccessSettings, Self::Err>;
 
     fn set_managed_bot_access_settings(
         &self,
         user_id: UserId,
-        is_access_restricted: bool,
+        is_access_restricted: bool
     ) -> ErasedRequest<'a, SetManagedBotAccessSettings, Self::Err>;
 
     fn get_user_personal_chat_messages(
         &self,
         user_id: UserId,
-        limit: u8,
+        limit: u8
     ) -> ErasedRequest<'a, GetUserPersonalChatMessages, Self::Err>;
 
     fn set_chat_menu_button(&self) -> ErasedRequest<'a, SetChatMenuButton, Self::Err>;
@@ -942,11 +948,11 @@ trait ErasableRequester<'a> {
     fn get_chat_menu_button(&self) -> ErasedRequest<'a, GetChatMenuButton, Self::Err>;
 
     fn set_my_default_administrator_rights(
-        &self,
+        &self
     ) -> ErasedRequest<'a, SetMyDefaultAdministratorRights, Self::Err>;
 
     fn get_my_default_administrator_rights(
-        &self,
+        &self
     ) -> ErasedRequest<'a, GetMyDefaultAdministratorRights, Self::Err>;
 
     fn delete_my_commands(&self) -> ErasedRequest<'a, DeleteMyCommands, Self::Err>;
@@ -954,129 +960,129 @@ trait ErasableRequester<'a> {
     fn answer_inline_query(
         &self,
         inline_query_id: InlineQueryId,
-        results: Vec<InlineQueryResult>,
+        results: Vec<InlineQueryResult>
     ) -> ErasedRequest<'a, AnswerInlineQuery, Self::Err>;
 
     fn answer_web_app_query(
         &self,
         web_app_query_id: String,
-        result: InlineQueryResult,
+        result: InlineQueryResult
     ) -> ErasedRequest<'a, AnswerWebAppQuery, Self::Err>;
 
     fn answer_guest_query(
         &self,
         guest_query_id: String,
-        result: InlineQueryResult,
+        result: InlineQueryResult
     ) -> ErasedRequest<'a, AnswerGuestQuery, Self::Err>;
 
     fn save_prepared_inline_message(
         &self,
         user_id: UserId,
-        result: InlineQueryResult,
+        result: InlineQueryResult
     ) -> ErasedRequest<'a, SavePreparedInlineMessage, Self::Err>;
 
     fn save_prepared_keyboard_button(
         &self,
         user_id: UserId,
-        button: KeyboardButton,
+        button: KeyboardButton
     ) -> ErasedRequest<'a, SavePreparedKeyboardButton, Self::Err>;
 
     fn edit_message_text(
         &self,
         chat_id: Recipient,
         message_id: MessageId,
-        text: String,
+        text: String
     ) -> ErasedRequest<'a, EditMessageText, Self::Err>;
 
     fn edit_message_text_inline(
         &self,
         inline_message_id: String,
-        text: String,
+        text: String
     ) -> ErasedRequest<'a, EditMessageTextInline, Self::Err>;
 
     fn edit_message_caption(
         &self,
         chat_id: Recipient,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> ErasedRequest<'a, EditMessageCaption, Self::Err>;
 
     fn edit_message_caption_inline(
         &self,
-        inline_message_id: String,
+        inline_message_id: String
     ) -> ErasedRequest<'a, EditMessageCaptionInline, Self::Err>;
 
     fn edit_message_media(
         &self,
         chat_id: Recipient,
         message_id: MessageId,
-        media: InputMedia,
+        media: InputMedia
     ) -> ErasedRequest<'a, EditMessageMedia, Self::Err>;
 
     fn edit_message_media_inline(
         &self,
         inline_message_id: String,
-        media: InputMedia,
+        media: InputMedia
     ) -> ErasedRequest<'a, EditMessageMediaInline, Self::Err>;
 
     fn edit_message_reply_markup(
         &self,
         chat_id: Recipient,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> ErasedRequest<'a, EditMessageReplyMarkup, Self::Err>;
 
     fn edit_message_reply_markup_inline(
         &self,
-        inline_message_id: String,
+        inline_message_id: String
     ) -> ErasedRequest<'a, EditMessageReplyMarkupInline, Self::Err>;
 
     fn stop_poll(
         &self,
         chat_id: Recipient,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> ErasedRequest<'a, StopPoll, Self::Err>;
 
     fn approve_suggested_post(
         &self,
         chat_id: ChatId,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> ErasedRequest<'a, ApproveSuggestedPost, Self::Err>;
 
     fn decline_suggested_post(
         &self,
         chat_id: ChatId,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> ErasedRequest<'a, DeclineSuggestedPost, Self::Err>;
 
     fn delete_message(
         &self,
         chat_id: Recipient,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> ErasedRequest<'a, DeleteMessage, Self::Err>;
 
     fn delete_messages(
         &self,
         chat_id: Recipient,
-        message_ids: Vec<MessageId>,
+        message_ids: Vec<MessageId>
     ) -> ErasedRequest<'a, DeleteMessages, Self::Err>;
 
     fn send_sticker(
         &self,
         chat_id: Recipient,
-        sticker: InputFile,
+        sticker: InputFile
     ) -> ErasedRequest<'a, SendSticker, Self::Err>;
 
     fn get_sticker_set(&self, name: String) -> ErasedRequest<'a, GetStickerSet, Self::Err>;
 
     fn get_custom_emoji_stickers(
         &self,
-        custom_emoji_ids: Vec<CustomEmojiId>,
+        custom_emoji_ids: Vec<CustomEmojiId>
     ) -> ErasedRequest<'a, GetCustomEmojiStickers, Self::Err>;
 
     fn upload_sticker_file(
         &self,
         user_id: UserId,
         sticker: InputFile,
-        sticker_format: StickerFormat,
+        sticker_format: StickerFormat
     ) -> ErasedRequest<'a, UploadStickerFile, Self::Err>;
 
     fn create_new_sticker_set(
@@ -1084,25 +1090,25 @@ trait ErasableRequester<'a> {
         user_id: UserId,
         name: String,
         title: String,
-        stickers: Vec<InputSticker>,
+        stickers: Vec<InputSticker>
     ) -> ErasedRequest<'a, CreateNewStickerSet, Self::Err>;
 
     fn add_sticker_to_set(
         &self,
         user_id: UserId,
         name: String,
-        sticker: InputSticker,
+        sticker: InputSticker
     ) -> ErasedRequest<'a, AddStickerToSet, Self::Err>;
 
     fn set_sticker_position_in_set(
         &self,
         sticker: String,
-        position: u32,
+        position: u32
     ) -> ErasedRequest<'a, SetStickerPositionInSet, Self::Err>;
 
     fn delete_sticker_from_set(
         &self,
-        sticker: String,
+        sticker: String
     ) -> ErasedRequest<'a, DeleteStickerFromSet, Self::Err>;
 
     fn replace_sticker_in_set(
@@ -1110,25 +1116,25 @@ trait ErasableRequester<'a> {
         user_id: UserId,
         name: String,
         old_sticker: String,
-        sticker: InputSticker,
+        sticker: InputSticker
     ) -> ErasedRequest<'a, ReplaceStickerInSet, Self::Err>;
 
     fn set_sticker_set_thumbnail(
         &self,
         name: String,
         user_id: UserId,
-        format: StickerFormat,
+        format: StickerFormat
     ) -> ErasedRequest<'a, SetStickerSetThumbnail, Self::Err>;
 
     fn set_custom_emoji_sticker_set_thumbnail(
         &self,
-        name: String,
+        name: String
     ) -> ErasedRequest<'a, SetCustomEmojiStickerSetThumbnail, Self::Err>;
 
     fn set_sticker_set_title(
         &self,
         name: String,
-        title: String,
+        title: String
     ) -> ErasedRequest<'a, SetStickerSetTitle, Self::Err>;
 
     fn delete_sticker_set(&self, name: String) -> ErasedRequest<'a, DeleteStickerSet, Self::Err>;
@@ -1136,35 +1142,38 @@ trait ErasableRequester<'a> {
     fn set_sticker_emoji_list(
         &self,
         sticker: String,
-        emoji_list: Vec<String>,
+        emoji_list: Vec<String>
     ) -> ErasedRequest<'a, SetStickerEmojiList, Self::Err>;
 
     fn set_sticker_keywords(
         &self,
-        sticker: String,
+        sticker: String
     ) -> ErasedRequest<'a, SetStickerKeywords, Self::Err>;
 
     fn set_sticker_mask_position(
         &self,
-        sticker: String,
+        sticker: String
     ) -> ErasedRequest<'a, SetStickerMaskPosition, Self::Err>;
 
     fn get_available_gifts(&self) -> ErasedRequest<'a, GetAvailableGifts, Self::Err>;
 
-    fn send_gift(&self, user_id: UserId, gift_id: GiftId)
-    -> ErasedRequest<'a, SendGift, Self::Err>;
+    fn send_gift(
+        &self,
+        user_id: UserId,
+        gift_id: GiftId
+    ) -> ErasedRequest<'a, SendGift, Self::Err>;
 
     fn send_gift_chat(
         &self,
         chat_id: Recipient,
-        gift_id: GiftId,
+        gift_id: GiftId
     ) -> ErasedRequest<'a, SendGiftChat, Self::Err>;
 
     fn gift_premium_subscription(
         &self,
         user_id: UserId,
         month_count: u8,
-        star_count: u32,
+        star_count: u32
     ) -> ErasedRequest<'a, GiftPremiumSubscription, Self::Err>;
 
     fn verify_user(&self, user_id: UserId) -> ErasedRequest<'a, VerifyUser, Self::Err>;
@@ -1173,70 +1182,70 @@ trait ErasableRequester<'a> {
 
     fn remove_user_verification(
         &self,
-        user_id: UserId,
+        user_id: UserId
     ) -> ErasedRequest<'a, RemoveUserVerification, Self::Err>;
 
     fn remove_chat_verification(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, RemoveChatVerification, Self::Err>;
 
     fn read_business_message(
         &self,
         business_connection_id: BusinessConnectionId,
         chat_id: ChatId,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> ErasedRequest<'a, ReadBusinessMessage, Self::Err>;
 
     fn delete_business_messages(
         &self,
         business_connection_id: BusinessConnectionId,
-        message_ids: Vec<MessageId>,
+        message_ids: Vec<MessageId>
     ) -> ErasedRequest<'a, DeleteBusinessMessages, Self::Err>;
 
     fn set_business_account_name(
         &self,
         business_connection_id: BusinessConnectionId,
-        first_name: String,
+        first_name: String
     ) -> ErasedRequest<'a, SetBusinessAccountName, Self::Err>;
 
     fn set_business_account_username(
         &self,
-        business_connection_id: BusinessConnectionId,
+        business_connection_id: BusinessConnectionId
     ) -> ErasedRequest<'a, SetBusinessAccountUsername, Self::Err>;
 
     fn set_business_account_profile_photo(
         &self,
         business_connection_id: BusinessConnectionId,
-        photo: InputProfilePhoto,
+        photo: InputProfilePhoto
     ) -> ErasedRequest<'a, SetBusinessAccountProfilePhoto, Self::Err>;
 
     fn remove_business_account_profile_photo(
         &self,
-        business_connection_id: BusinessConnectionId,
+        business_connection_id: BusinessConnectionId
     ) -> ErasedRequest<'a, RemoveBusinessAccountProfilePhoto, Self::Err>;
 
     fn set_business_account_gift_settings(
         &self,
         business_connection_id: BusinessConnectionId,
         show_gift_button: bool,
-        accepted_gift_types: AcceptedGiftTypes,
+        accepted_gift_types: AcceptedGiftTypes
     ) -> ErasedRequest<'a, SetBusinessAccountGiftSettings, Self::Err>;
 
     fn get_business_account_star_balance(
         &self,
-        business_connection_id: BusinessConnectionId,
+        business_connection_id: BusinessConnectionId
     ) -> ErasedRequest<'a, GetBusinessAccountStarBalance, Self::Err>;
 
     fn transfer_business_account_stars(
         &self,
         business_connection_id: BusinessConnectionId,
-        star_count: u32,
+        star_count: u32
     ) -> ErasedRequest<'a, TransferBusinessAccountStars, Self::Err>;
 
     fn get_business_account_gifts(
         &self,
-        business_connection_id: BusinessConnectionId,
+        business_connection_id: BusinessConnectionId
     ) -> ErasedRequest<'a, GetBusinessAccountGifts, Self::Err>;
 
     fn get_user_gifts(&self, user_id: UserId) -> ErasedRequest<'a, GetUserGifts, Self::Err>;
@@ -1246,27 +1255,27 @@ trait ErasableRequester<'a> {
     fn convert_gift_to_stars(
         &self,
         business_connection_id: BusinessConnectionId,
-        owned_gift_id: OwnedGiftId,
+        owned_gift_id: OwnedGiftId
     ) -> ErasedRequest<'a, ConvertGiftToStars, Self::Err>;
 
     fn upgrade_gift(
         &self,
         business_connection_id: BusinessConnectionId,
-        owned_gift_id: OwnedGiftId,
+        owned_gift_id: OwnedGiftId
     ) -> ErasedRequest<'a, UpgradeGift, Self::Err>;
 
     fn transfer_gift(
         &self,
         business_connection_id: BusinessConnectionId,
         owned_gift_id: OwnedGiftId,
-        new_owner_chat_id: ChatId,
+        new_owner_chat_id: ChatId
     ) -> ErasedRequest<'a, TransferGift, Self::Err>;
 
     fn post_story(
         &self,
         business_connection_id: BusinessConnectionId,
         content: InputStoryContent,
-        active_period: Seconds,
+        active_period: Seconds
     ) -> ErasedRequest<'a, PostStory, Self::Err>;
 
     fn repost_story(
@@ -1274,25 +1283,25 @@ trait ErasableRequester<'a> {
         business_connection_id: BusinessConnectionId,
         from_chat_id: ChatId,
         from_story_id: StoryId,
-        active_period: Seconds,
+        active_period: Seconds
     ) -> ErasedRequest<'a, RepostStory, Self::Err>;
 
     fn edit_story(
         &self,
         business_connection_id: BusinessConnectionId,
         story_id: StoryId,
-        content: InputStoryContent,
+        content: InputStoryContent
     ) -> ErasedRequest<'a, EditStory, Self::Err>;
 
     fn delete_story(
         &self,
         business_connection_id: BusinessConnectionId,
-        story_id: StoryId,
+        story_id: StoryId
     ) -> ErasedRequest<'a, DeleteStory, Self::Err>;
 
     fn set_business_account_bio(
         &self,
-        business_connection_id: BusinessConnectionId,
+        business_connection_id: BusinessConnectionId
     ) -> ErasedRequest<'a, SetBusinessAccountBio, Self::Err>;
 
     fn send_invoice(
@@ -1302,7 +1311,7 @@ trait ErasableRequester<'a> {
         description: String,
         payload: String,
         currency: String,
-        prices: Vec<LabeledPrice>,
+        prices: Vec<LabeledPrice>
     ) -> ErasedRequest<'a, SendInvoice, Self::Err>;
 
     fn create_invoice_link(
@@ -1311,19 +1320,19 @@ trait ErasableRequester<'a> {
         description: String,
         payload: String,
         currency: String,
-        prices: Vec<LabeledPrice>,
+        prices: Vec<LabeledPrice>
     ) -> ErasedRequest<'a, CreateInvoiceLink, Self::Err>;
 
     fn answer_shipping_query(
         &self,
         shipping_query_id: ShippingQueryId,
-        ok: bool,
+        ok: bool
     ) -> ErasedRequest<'a, AnswerShippingQuery, Self::Err>;
 
     fn answer_pre_checkout_query(
         &self,
         pre_checkout_query_id: PreCheckoutQueryId,
-        ok: bool,
+        ok: bool
     ) -> ErasedRequest<'a, AnswerPreCheckoutQuery, Self::Err>;
 
     fn get_my_star_balance(&self) -> ErasedRequest<'a, GetMyStarBalance, Self::Err>;
@@ -1333,26 +1342,26 @@ trait ErasableRequester<'a> {
     fn refund_star_payment(
         &self,
         user_id: UserId,
-        telegram_payment_charge_id: TelegramTransactionId,
+        telegram_payment_charge_id: TelegramTransactionId
     ) -> ErasedRequest<'a, RefundStarPayment, Self::Err>;
 
     fn edit_user_star_subscription(
         &self,
         user_id: UserId,
         telegram_payment_charge_id: TelegramTransactionId,
-        is_canceled: bool,
+        is_canceled: bool
     ) -> ErasedRequest<'a, EditUserStarSubscription, Self::Err>;
 
     fn set_passport_data_errors(
         &self,
         user_id: UserId,
-        errors: Vec<PassportElementError>,
+        errors: Vec<PassportElementError>
     ) -> ErasedRequest<'a, SetPassportDataErrors, Self::Err>;
 
     fn send_game(
         &self,
         chat_id: ChatId,
-        game_short_name: String,
+        game_short_name: String
     ) -> ErasedRequest<'a, SendGame, Self::Err>;
 
     fn set_game_score(
@@ -1360,26 +1369,26 @@ trait ErasableRequester<'a> {
         user_id: UserId,
         score: u64,
         chat_id: u32,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> ErasedRequest<'a, SetGameScore, Self::Err>;
 
     fn set_game_score_inline(
         &self,
         user_id: UserId,
         score: u64,
-        inline_message_id: String,
+        inline_message_id: String
     ) -> ErasedRequest<'a, SetGameScoreInline, Self::Err>;
 
     fn get_game_high_scores(
         &self,
         user_id: UserId,
-        target: TargetMessage,
+        target: TargetMessage
     ) -> ErasedRequest<'a, GetGameHighScores, Self::Err>;
 }
 
 impl<'a, B> ErasableRequester<'a> for B
 where
-    B: Requester + 'a,
+    B: Requester + 'a
 {
     type Err = B::Err;
 
@@ -1414,7 +1423,7 @@ where
     fn send_message(
         &self,
         chat_id: Recipient,
-        text: String,
+        text: String
     ) -> ErasedRequest<'a, SendMessage, Self::Err> {
         Requester::send_message(self, chat_id, text).erase()
     }
@@ -1423,7 +1432,7 @@ where
         &self,
         chat_id: Recipient,
         from_chat_id: Recipient,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> ErasedRequest<'a, ForwardMessage, Self::Err> {
         Requester::forward_message(self, chat_id, from_chat_id, message_id).erase()
     }
@@ -1432,7 +1441,7 @@ where
         &self,
         chat_id: Recipient,
         from_chat_id: Recipient,
-        message_ids: Vec<MessageId>,
+        message_ids: Vec<MessageId>
     ) -> ErasedRequest<'a, ForwardMessages, Self::Err> {
         Requester::forward_messages(self, chat_id, from_chat_id, message_ids).erase()
     }
@@ -1441,7 +1450,7 @@ where
         &self,
         chat_id: Recipient,
         from_chat_id: Recipient,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> ErasedRequest<'a, CopyMessage, Self::Err> {
         Requester::copy_message(self, chat_id, from_chat_id, message_id).erase()
     }
@@ -1450,7 +1459,7 @@ where
         &self,
         chat_id: Recipient,
         from_chat_id: Recipient,
-        message_ids: Vec<MessageId>,
+        message_ids: Vec<MessageId>
     ) -> ErasedRequest<'a, CopyMessages, Self::Err> {
         Requester::copy_messages(self, chat_id, from_chat_id, message_ids).erase()
     }
@@ -1458,7 +1467,7 @@ where
     fn send_photo(
         &self,
         chat_id: Recipient,
-        photo: InputFile,
+        photo: InputFile
     ) -> ErasedRequest<'a, SendPhoto, Self::Err> {
         Requester::send_photo(self, chat_id, photo).erase()
     }
@@ -1466,7 +1475,7 @@ where
     fn send_audio(
         &self,
         chat_id: Recipient,
-        audio: InputFile,
+        audio: InputFile
     ) -> ErasedRequest<'a, SendAudio, Self::Err> {
         Requester::send_audio(self, chat_id, audio).erase()
     }
@@ -1474,7 +1483,7 @@ where
     fn send_document(
         &self,
         chat_id: Recipient,
-        document: InputFile,
+        document: InputFile
     ) -> ErasedRequest<'a, SendDocument, Self::Err> {
         Requester::send_document(self, chat_id, document).erase()
     }
@@ -1482,7 +1491,7 @@ where
     fn send_video(
         &self,
         chat_id: Recipient,
-        video: InputFile,
+        video: InputFile
     ) -> ErasedRequest<'a, SendVideo, Self::Err> {
         Requester::send_video(self, chat_id, video).erase()
     }
@@ -1491,7 +1500,7 @@ where
         &self,
         chat_id: Recipient,
         live_photo: InputFile,
-        photo: InputFile,
+        photo: InputFile
     ) -> ErasedRequest<'a, SendLivePhoto, Self::Err> {
         Requester::send_live_photo(self, chat_id, live_photo, photo).erase()
     }
@@ -1499,7 +1508,7 @@ where
     fn send_animation(
         &self,
         chat_id: Recipient,
-        animation: InputFile,
+        animation: InputFile
     ) -> ErasedRequest<'a, SendAnimation, Self::Err> {
         Requester::send_animation(self, chat_id, animation).erase()
     }
@@ -1507,7 +1516,7 @@ where
     fn send_voice(
         &self,
         chat_id: Recipient,
-        voice: InputFile,
+        voice: InputFile
     ) -> ErasedRequest<'a, SendVoice, Self::Err> {
         Requester::send_voice(self, chat_id, voice).erase()
     }
@@ -1515,7 +1524,7 @@ where
     fn send_video_note(
         &self,
         chat_id: Recipient,
-        video_note: InputFile,
+        video_note: InputFile
     ) -> ErasedRequest<'a, SendVideoNote, Self::Err> {
         Requester::send_video_note(self, chat_id, video_note).erase()
     }
@@ -1524,7 +1533,7 @@ where
         &self,
         chat_id: Recipient,
         star_count: u32,
-        media: Vec<InputPaidMedia>,
+        media: Vec<InputPaidMedia>
     ) -> ErasedRequest<'a, SendPaidMedia, Self::Err> {
         Requester::send_paid_media(self, chat_id, star_count, media).erase()
     }
@@ -1532,7 +1541,7 @@ where
     fn send_media_group(
         &self,
         chat_id: Recipient,
-        media: Vec<InputMedia>,
+        media: Vec<InputMedia>
     ) -> ErasedRequest<'a, SendMediaGroup, Self::Err> {
         Requester::send_media_group(self, chat_id, media).erase()
     }
@@ -1541,7 +1550,7 @@ where
         &self,
         chat_id: Recipient,
         latitude: f64,
-        longitude: f64,
+        longitude: f64
     ) -> ErasedRequest<'a, SendLocation, Self::Err> {
         Requester::send_location(self, chat_id, latitude, longitude).erase()
     }
@@ -1551,7 +1560,7 @@ where
         chat_id: Recipient,
         message_id: MessageId,
         latitude: f64,
-        longitude: f64,
+        longitude: f64
     ) -> ErasedRequest<'a, EditMessageLiveLocation, Self::Err> {
         Requester::edit_message_live_location(self, chat_id, message_id, latitude, longitude)
             .erase()
@@ -1561,7 +1570,7 @@ where
         &self,
         inline_message_id: String,
         latitude: f64,
-        longitude: f64,
+        longitude: f64
     ) -> ErasedRequest<'a, EditMessageLiveLocationInline, Self::Err> {
         Requester::edit_message_live_location_inline(self, inline_message_id, latitude, longitude)
             .erase()
@@ -1570,14 +1579,14 @@ where
     fn stop_message_live_location(
         &self,
         chat_id: Recipient,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> ErasedRequest<'a, StopMessageLiveLocation, Self::Err> {
         Requester::stop_message_live_location(self, chat_id, message_id).erase()
     }
 
     fn stop_message_live_location_inline(
         &self,
-        inline_message_id: String,
+        inline_message_id: String
     ) -> ErasedRequest<'a, StopMessageLiveLocationInline, Self::Err> {
         Requester::stop_message_live_location_inline(self, inline_message_id).erase()
     }
@@ -1587,14 +1596,14 @@ where
         business_connection_id: BusinessConnectionId,
         chat_id: ChatId,
         message_id: MessageId,
-        checklist: InputChecklist,
+        checklist: InputChecklist
     ) -> ErasedRequest<'a, EditMessageChecklist, Self::Err> {
         Requester::edit_message_checklist(
             self,
             business_connection_id,
             chat_id,
             message_id,
-            checklist,
+            checklist
         )
         .erase()
     }
@@ -1605,7 +1614,7 @@ where
         latitude: f64,
         longitude: f64,
         title: String,
-        address: String,
+        address: String
     ) -> ErasedRequest<'a, SendVenue, Self::Err> {
         Requester::send_venue(self, chat_id, latitude, longitude, title, address).erase()
     }
@@ -1614,7 +1623,7 @@ where
         &self,
         chat_id: Recipient,
         phone_number: String,
-        first_name: String,
+        first_name: String
     ) -> ErasedRequest<'a, SendContact, Self::Err> {
         Requester::send_contact(self, chat_id, phone_number, first_name).erase()
     }
@@ -1623,7 +1632,7 @@ where
         &self,
         chat_id: Recipient,
         question: String,
-        options: Vec<InputPollOption>,
+        options: Vec<InputPollOption>
     ) -> ErasedRequest<'a, SendPoll, Self::Err> {
         Requester::send_poll(self, chat_id, question, options).erase()
     }
@@ -1632,7 +1641,7 @@ where
         &self,
         business_connection_id: BusinessConnectionId,
         chat_id: ChatId,
-        checklist: InputChecklist,
+        checklist: InputChecklist
     ) -> ErasedRequest<'a, SendChecklist, Self::Err> {
         Requester::send_checklist(self, business_connection_id, chat_id, checklist).erase()
     }
@@ -1644,7 +1653,7 @@ where
     fn send_message_draft(
         &self,
         chat_id: ChatId,
-        draft_id: i32,
+        draft_id: i32
     ) -> ErasedRequest<'a, SendMessageDraft, Self::Err> {
         Requester::send_message_draft(self, chat_id, draft_id).erase()
     }
@@ -1652,7 +1661,7 @@ where
     fn send_chat_action(
         &self,
         chat_id: Recipient,
-        action: ChatAction,
+        action: ChatAction
     ) -> ErasedRequest<'a, SendChatAction, Self::Err> {
         Requester::send_chat_action(self, chat_id, action).erase()
     }
@@ -1660,28 +1669,28 @@ where
     fn set_message_reaction(
         &self,
         chat_id: Recipient,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> ErasedRequest<'a, SetMessageReaction, Self::Err> {
         Requester::set_message_reaction(self, chat_id, message_id).erase()
     }
 
     fn get_user_profile_photos(
         &self,
-        user_id: UserId,
+        user_id: UserId
     ) -> ErasedRequest<'a, GetUserProfilePhotos, Self::Err> {
         Requester::get_user_profile_photos(self, user_id).erase()
     }
 
     fn get_user_profile_audios(
         &self,
-        user_id: UserId,
+        user_id: UserId
     ) -> ErasedRequest<'a, GetUserProfileAudios, Self::Err> {
         Requester::get_user_profile_audios(self, user_id).erase()
     }
 
     fn set_user_emoji_status(
         &self,
-        user_id: UserId,
+        user_id: UserId
     ) -> ErasedRequest<'a, SetUserEmojiStatus, Self::Err> {
         Requester::set_user_emoji_status(self, user_id).erase()
     }
@@ -1693,7 +1702,7 @@ where
     fn ban_chat_member(
         &self,
         chat_id: Recipient,
-        user_id: UserId,
+        user_id: UserId
     ) -> ErasedRequest<'a, BanChatMember, Self::Err> {
         Requester::ban_chat_member(self, chat_id, user_id).erase()
     }
@@ -1701,7 +1710,7 @@ where
     fn kick_chat_member(
         &self,
         chat_id: Recipient,
-        user_id: UserId,
+        user_id: UserId
     ) -> ErasedRequest<'a, KickChatMember, Self::Err> {
         Requester::kick_chat_member(self, chat_id, user_id).erase()
     }
@@ -1709,7 +1718,7 @@ where
     fn unban_chat_member(
         &self,
         chat_id: Recipient,
-        user_id: UserId,
+        user_id: UserId
     ) -> ErasedRequest<'a, UnbanChatMember, Self::Err> {
         Requester::unban_chat_member(self, chat_id, user_id).erase()
     }
@@ -1718,7 +1727,7 @@ where
         &self,
         chat_id: Recipient,
         user_id: UserId,
-        permissions: ChatPermissions,
+        permissions: ChatPermissions
     ) -> ErasedRequest<'a, RestrictChatMember, Self::Err> {
         Requester::restrict_chat_member(self, chat_id, user_id, permissions).erase()
     }
@@ -1726,7 +1735,7 @@ where
     fn promote_chat_member(
         &self,
         chat_id: Recipient,
-        user_id: UserId,
+        user_id: UserId
     ) -> ErasedRequest<'a, PromoteChatMember, Self::Err> {
         Requester::promote_chat_member(self, chat_id, user_id).erase()
     }
@@ -1734,7 +1743,7 @@ where
     fn set_chat_member_tag(
         &self,
         chat_id: Recipient,
-        user_id: UserId,
+        user_id: UserId
     ) -> ErasedRequest<'a, SetChatMemberTag, Self::Err> {
         Requester::set_chat_member_tag(self, chat_id, user_id).erase()
     }
@@ -1743,15 +1752,16 @@ where
         &self,
         chat_id: Recipient,
         user_id: UserId,
-        custom_title: String,
+        custom_title: String
     ) -> ErasedRequest<'a, SetChatAdministratorCustomTitle, Self::Err> {
-        Requester::set_chat_administrator_custom_title(self, chat_id, user_id, custom_title).erase()
+        Requester::set_chat_administrator_custom_title(self, chat_id, user_id, custom_title)
+            .erase()
     }
 
     fn ban_chat_sender_chat(
         &self,
         chat_id: Recipient,
-        sender_chat_id: ChatId,
+        sender_chat_id: ChatId
     ) -> ErasedRequest<'a, BanChatSenderChat, Self::Err> {
         Requester::ban_chat_sender_chat(self, chat_id, sender_chat_id).erase()
     }
@@ -1759,7 +1769,7 @@ where
     fn unban_chat_sender_chat(
         &self,
         chat_id: Recipient,
-        sender_chat_id: ChatId,
+        sender_chat_id: ChatId
     ) -> ErasedRequest<'a, UnbanChatSenderChat, Self::Err> {
         Requester::unban_chat_sender_chat(self, chat_id, sender_chat_id).erase()
     }
@@ -1767,21 +1777,21 @@ where
     fn set_chat_permissions(
         &self,
         chat_id: Recipient,
-        permissions: ChatPermissions,
+        permissions: ChatPermissions
     ) -> ErasedRequest<'a, SetChatPermissions, Self::Err> {
         Requester::set_chat_permissions(self, chat_id, permissions).erase()
     }
 
     fn export_chat_invite_link(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, ExportChatInviteLink, Self::Err> {
         Requester::export_chat_invite_link(self, chat_id).erase()
     }
 
     fn create_chat_invite_link(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, CreateChatInviteLink, Self::Err> {
         Requester::create_chat_invite_link(self, chat_id).erase()
     }
@@ -1789,7 +1799,7 @@ where
     fn edit_chat_invite_link(
         &self,
         chat_id: Recipient,
-        invite_link: String,
+        invite_link: String
     ) -> ErasedRequest<'a, EditChatInviteLink, Self::Err> {
         Requester::edit_chat_invite_link(self, chat_id, invite_link).erase()
     }
@@ -1798,13 +1808,13 @@ where
         &self,
         chat_id: Recipient,
         subscription_period: Seconds,
-        subscription_price: u32,
+        subscription_price: u32
     ) -> ErasedRequest<'a, CreateChatSubscriptionInviteLink, Self::Err> {
         Requester::create_chat_subscription_invite_link(
             self,
             chat_id,
             subscription_period,
-            subscription_price,
+            subscription_price
         )
         .erase()
     }
@@ -1812,7 +1822,7 @@ where
     fn edit_chat_subscription_invite_link(
         &self,
         chat_id: Recipient,
-        invite_link: String,
+        invite_link: String
     ) -> ErasedRequest<'a, EditChatSubscriptionInviteLink, Self::Err> {
         Requester::edit_chat_subscription_invite_link(self, chat_id, invite_link).erase()
     }
@@ -1820,7 +1830,7 @@ where
     fn revoke_chat_invite_link(
         &self,
         chat_id: Recipient,
-        invite_link: String,
+        invite_link: String
     ) -> ErasedRequest<'a, RevokeChatInviteLink, Self::Err> {
         Requester::revoke_chat_invite_link(self, chat_id, invite_link).erase()
     }
@@ -1829,7 +1839,7 @@ where
     fn approve_chat_join_request(
         &self,
         chat_id: Recipient,
-        user_id: UserId,
+        user_id: UserId
     ) -> ErasedRequest<'a, ApproveChatJoinRequest, Self::Err> {
         Requester::approve_chat_join_request(self, chat_id, user_id).erase()
     }
@@ -1838,7 +1848,7 @@ where
     fn decline_chat_join_request(
         &self,
         chat_id: Recipient,
-        user_id: UserId,
+        user_id: UserId
     ) -> ErasedRequest<'a, DeclineChatJoinRequest, Self::Err> {
         Requester::decline_chat_join_request(self, chat_id, user_id).erase()
     }
@@ -1846,14 +1856,14 @@ where
     fn set_chat_photo(
         &self,
         chat_id: Recipient,
-        photo: InputFile,
+        photo: InputFile
     ) -> ErasedRequest<'a, SetChatPhoto, Self::Err> {
         Requester::set_chat_photo(self, chat_id, photo).erase()
     }
 
     fn delete_chat_photo(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, DeleteChatPhoto, Self::Err> {
         Requester::delete_chat_photo(self, chat_id).erase()
     }
@@ -1861,14 +1871,14 @@ where
     fn set_chat_title(
         &self,
         chat_id: Recipient,
-        title: String,
+        title: String
     ) -> ErasedRequest<'a, SetChatTitle, Self::Err> {
         Requester::set_chat_title(self, chat_id, title).erase()
     }
 
     fn set_chat_description(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, SetChatDescription, Self::Err> {
         Requester::set_chat_description(self, chat_id).erase()
     }
@@ -1876,21 +1886,21 @@ where
     fn pin_chat_message(
         &self,
         chat_id: Recipient,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> ErasedRequest<'a, PinChatMessage, Self::Err> {
         Requester::pin_chat_message(self, chat_id, message_id).erase()
     }
 
     fn unpin_chat_message(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, UnpinChatMessage, Self::Err> {
         Requester::unpin_chat_message(self, chat_id).erase()
     }
 
     fn unpin_all_chat_messages(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, UnpinAllChatMessages, Self::Err> {
         Requester::unpin_all_chat_messages(self, chat_id).erase()
     }
@@ -1905,14 +1915,14 @@ where
 
     fn get_chat_administrators(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, GetChatAdministrators, Self::Err> {
         Requester::get_chat_administrators(self, chat_id).erase()
     }
 
     fn delete_all_message_reactions(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, DeleteAllMessageReactions, Self::Err> {
         Requester::delete_all_message_reactions(self, chat_id).erase()
     }
@@ -1920,21 +1930,21 @@ where
     fn delete_message_reaction(
         &self,
         chat_id: Recipient,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> ErasedRequest<'a, DeleteMessageReaction, Self::Err> {
         Requester::delete_message_reaction(self, chat_id, message_id).erase()
     }
 
     fn get_chat_member_count(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, GetChatMemberCount, Self::Err> {
         Requester::get_chat_member_count(self, chat_id).erase()
     }
 
     fn get_chat_members_count(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, GetChatMembersCount, Self::Err> {
         Requester::get_chat_members_count(self, chat_id).erase()
     }
@@ -1942,7 +1952,7 @@ where
     fn get_chat_member(
         &self,
         chat_id: Recipient,
-        user_id: UserId,
+        user_id: UserId
     ) -> ErasedRequest<'a, GetChatMember, Self::Err> {
         Requester::get_chat_member(self, chat_id, user_id).erase()
     }
@@ -1950,20 +1960,20 @@ where
     fn set_chat_sticker_set(
         &self,
         chat_id: Recipient,
-        sticker_set_name: String,
+        sticker_set_name: String
     ) -> ErasedRequest<'a, SetChatStickerSet, Self::Err> {
         Requester::set_chat_sticker_set(self, chat_id, sticker_set_name).erase()
     }
 
     fn delete_chat_sticker_set(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, DeleteChatStickerSet, Self::Err> {
         Requester::delete_chat_sticker_set(self, chat_id).erase()
     }
 
     fn get_forum_topic_icon_stickers(
-        &self,
+        &self
     ) -> ErasedRequest<'a, GetForumTopicIconStickers, Self::Err> {
         Requester::get_forum_topic_icon_stickers(self).erase()
     }
@@ -1971,7 +1981,7 @@ where
     fn create_forum_topic(
         &self,
         chat_id: Recipient,
-        name: String,
+        name: String
     ) -> ErasedRequest<'a, CreateForumTopic, Self::Err> {
         Requester::create_forum_topic(self, chat_id, name).erase()
     }
@@ -1979,7 +1989,7 @@ where
     fn edit_forum_topic(
         &self,
         chat_id: Recipient,
-        message_thread_id: ThreadId,
+        message_thread_id: ThreadId
     ) -> ErasedRequest<'a, EditForumTopic, Self::Err> {
         Requester::edit_forum_topic(self, chat_id, message_thread_id).erase()
     }
@@ -1987,7 +1997,7 @@ where
     fn close_forum_topic(
         &self,
         chat_id: Recipient,
-        message_thread_id: ThreadId,
+        message_thread_id: ThreadId
     ) -> ErasedRequest<'a, CloseForumTopic, Self::Err> {
         Requester::close_forum_topic(self, chat_id, message_thread_id).erase()
     }
@@ -1995,7 +2005,7 @@ where
     fn reopen_forum_topic(
         &self,
         chat_id: Recipient,
-        message_thread_id: ThreadId,
+        message_thread_id: ThreadId
     ) -> ErasedRequest<'a, ReopenForumTopic, Self::Err> {
         Requester::reopen_forum_topic(self, chat_id, message_thread_id).erase()
     }
@@ -2003,7 +2013,7 @@ where
     fn delete_forum_topic(
         &self,
         chat_id: Recipient,
-        message_thread_id: ThreadId,
+        message_thread_id: ThreadId
     ) -> ErasedRequest<'a, DeleteForumTopic, Self::Err> {
         Requester::delete_forum_topic(self, chat_id, message_thread_id).erase()
     }
@@ -2011,7 +2021,7 @@ where
     fn unpin_all_forum_topic_messages(
         &self,
         chat_id: Recipient,
-        message_thread_id: ThreadId,
+        message_thread_id: ThreadId
     ) -> ErasedRequest<'a, UnpinAllForumTopicMessages, Self::Err> {
         Requester::unpin_all_forum_topic_messages(self, chat_id, message_thread_id).erase()
     }
@@ -2019,49 +2029,49 @@ where
     fn edit_general_forum_topic(
         &self,
         chat_id: Recipient,
-        name: String,
+        name: String
     ) -> ErasedRequest<'a, EditGeneralForumTopic, Self::Err> {
         Requester::edit_general_forum_topic(self, chat_id, name).erase()
     }
 
     fn close_general_forum_topic(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, CloseGeneralForumTopic, Self::Err> {
         Requester::close_general_forum_topic(self, chat_id).erase()
     }
 
     fn reopen_general_forum_topic(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, ReopenGeneralForumTopic, Self::Err> {
         Requester::reopen_general_forum_topic(self, chat_id).erase()
     }
 
     fn hide_general_forum_topic(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, HideGeneralForumTopic, Self::Err> {
         Requester::hide_general_forum_topic(self, chat_id).erase()
     }
 
     fn unhide_general_forum_topic(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, UnhideGeneralForumTopic, Self::Err> {
         Requester::unhide_general_forum_topic(self, chat_id).erase()
     }
 
     fn unpin_all_general_forum_topic_messages(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, UnpinAllGeneralForumTopicMessages, Self::Err> {
         Requester::unpin_all_general_forum_topic_messages(self, chat_id).erase()
     }
 
     fn answer_callback_query(
         &self,
-        callback_query_id: CallbackQueryId,
+        callback_query_id: CallbackQueryId
     ) -> ErasedRequest<'a, AnswerCallbackQuery, Self::Err> {
         Requester::answer_callback_query(self, callback_query_id).erase()
     }
@@ -2069,21 +2079,21 @@ where
     fn get_user_chat_boosts(
         &self,
         chat_id: Recipient,
-        user_id: UserId,
+        user_id: UserId
     ) -> ErasedRequest<'a, GetUserChatBoosts, Self::Err> {
         Requester::get_user_chat_boosts(self, chat_id, user_id).erase()
     }
 
     fn set_my_commands(
         &self,
-        commands: Vec<BotCommand>,
+        commands: Vec<BotCommand>
     ) -> ErasedRequest<'a, SetMyCommands, Self::Err> {
         Requester::set_my_commands(self, commands).erase()
     }
 
     fn get_business_connection(
         &self,
-        business_connection_id: BusinessConnectionId,
+        business_connection_id: BusinessConnectionId
     ) -> ErasedRequest<'a, GetBusinessConnection, Self::Err> {
         Requester::get_business_connection(self, business_connection_id).erase()
     }
@@ -2118,7 +2128,7 @@ where
 
     fn set_my_profile_photo(
         &self,
-        photo: InputProfilePhoto,
+        photo: InputProfilePhoto
     ) -> ErasedRequest<'a, SetMyProfilePhoto, Self::Err> {
         Requester::set_my_profile_photo(self, photo).erase()
     }
@@ -2129,21 +2139,21 @@ where
 
     fn get_managed_bot_token(
         &self,
-        user_id: UserId,
+        user_id: UserId
     ) -> ErasedRequest<'a, GetManagedBotToken, Self::Err> {
         Requester::get_managed_bot_token(self, user_id).erase()
     }
 
     fn replace_managed_bot_token(
         &self,
-        user_id: UserId,
+        user_id: UserId
     ) -> ErasedRequest<'a, ReplaceManagedBotToken, Self::Err> {
         Requester::replace_managed_bot_token(self, user_id).erase()
     }
 
     fn get_managed_bot_access_settings(
         &self,
-        user_id: UserId,
+        user_id: UserId
     ) -> ErasedRequest<'a, GetManagedBotAccessSettings, Self::Err> {
         Requester::get_managed_bot_access_settings(self, user_id).erase()
     }
@@ -2151,7 +2161,7 @@ where
     fn set_managed_bot_access_settings(
         &self,
         user_id: UserId,
-        is_access_restricted: bool,
+        is_access_restricted: bool
     ) -> ErasedRequest<'a, SetManagedBotAccessSettings, Self::Err> {
         Requester::set_managed_bot_access_settings(self, user_id, is_access_restricted).erase()
     }
@@ -2159,7 +2169,7 @@ where
     fn get_user_personal_chat_messages(
         &self,
         user_id: UserId,
-        limit: u8,
+        limit: u8
     ) -> ErasedRequest<'a, GetUserPersonalChatMessages, Self::Err> {
         Requester::get_user_personal_chat_messages(self, user_id, limit).erase()
     }
@@ -2173,13 +2183,13 @@ where
     }
 
     fn set_my_default_administrator_rights(
-        &self,
+        &self
     ) -> ErasedRequest<'a, SetMyDefaultAdministratorRights, Self::Err> {
         Requester::set_my_default_administrator_rights(self).erase()
     }
 
     fn get_my_default_administrator_rights(
-        &self,
+        &self
     ) -> ErasedRequest<'a, GetMyDefaultAdministratorRights, Self::Err> {
         Requester::get_my_default_administrator_rights(self).erase()
     }
@@ -2191,7 +2201,7 @@ where
     fn answer_inline_query(
         &self,
         inline_query_id: InlineQueryId,
-        results: Vec<InlineQueryResult>,
+        results: Vec<InlineQueryResult>
     ) -> ErasedRequest<'a, AnswerInlineQuery, Self::Err> {
         Requester::answer_inline_query(self, inline_query_id, results).erase()
     }
@@ -2199,7 +2209,7 @@ where
     fn answer_web_app_query(
         &self,
         web_app_query_id: String,
-        result: InlineQueryResult,
+        result: InlineQueryResult
     ) -> ErasedRequest<'a, AnswerWebAppQuery, Self::Err> {
         Requester::answer_web_app_query(self, web_app_query_id, result).erase()
     }
@@ -2207,7 +2217,7 @@ where
     fn answer_guest_query(
         &self,
         guest_query_id: String,
-        result: InlineQueryResult,
+        result: InlineQueryResult
     ) -> ErasedRequest<'a, AnswerGuestQuery, Self::Err> {
         Requester::answer_guest_query(self, guest_query_id, result).erase()
     }
@@ -2215,7 +2225,7 @@ where
     fn save_prepared_inline_message(
         &self,
         user_id: UserId,
-        result: InlineQueryResult,
+        result: InlineQueryResult
     ) -> ErasedRequest<'a, SavePreparedInlineMessage, Self::Err> {
         Requester::save_prepared_inline_message(self, user_id, result).erase()
     }
@@ -2223,7 +2233,7 @@ where
     fn save_prepared_keyboard_button(
         &self,
         user_id: UserId,
-        button: KeyboardButton,
+        button: KeyboardButton
     ) -> ErasedRequest<'a, SavePreparedKeyboardButton, Self::Err> {
         Requester::save_prepared_keyboard_button(self, user_id, button).erase()
     }
@@ -2232,7 +2242,7 @@ where
         &self,
         chat_id: Recipient,
         message_id: MessageId,
-        text: String,
+        text: String
     ) -> ErasedRequest<'a, EditMessageText, Self::Err> {
         Requester::edit_message_text(self, chat_id, message_id, text).erase()
     }
@@ -2240,7 +2250,7 @@ where
     fn edit_message_text_inline(
         &self,
         inline_message_id: String,
-        text: String,
+        text: String
     ) -> ErasedRequest<'a, EditMessageTextInline, Self::Err> {
         Requester::edit_message_text_inline(self, inline_message_id, text).erase()
     }
@@ -2248,14 +2258,14 @@ where
     fn edit_message_caption(
         &self,
         chat_id: Recipient,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> ErasedRequest<'a, EditMessageCaption, Self::Err> {
         Requester::edit_message_caption(self, chat_id, message_id).erase()
     }
 
     fn edit_message_caption_inline(
         &self,
-        inline_message_id: String,
+        inline_message_id: String
     ) -> ErasedRequest<'a, EditMessageCaptionInline, Self::Err> {
         Requester::edit_message_caption_inline(self, inline_message_id).erase()
     }
@@ -2264,7 +2274,7 @@ where
         &self,
         chat_id: Recipient,
         message_id: MessageId,
-        media: InputMedia,
+        media: InputMedia
     ) -> ErasedRequest<'a, EditMessageMedia, Self::Err> {
         Requester::edit_message_media(self, chat_id, message_id, media).erase()
     }
@@ -2272,7 +2282,7 @@ where
     fn edit_message_media_inline(
         &self,
         inline_message_id: String,
-        media: InputMedia,
+        media: InputMedia
     ) -> ErasedRequest<'a, EditMessageMediaInline, Self::Err> {
         Requester::edit_message_media_inline(self, inline_message_id, media).erase()
     }
@@ -2280,14 +2290,14 @@ where
     fn edit_message_reply_markup(
         &self,
         chat_id: Recipient,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> ErasedRequest<'a, EditMessageReplyMarkup, Self::Err> {
         Requester::edit_message_reply_markup(self, chat_id, message_id).erase()
     }
 
     fn edit_message_reply_markup_inline(
         &self,
-        inline_message_id: String,
+        inline_message_id: String
     ) -> ErasedRequest<'a, EditMessageReplyMarkupInline, Self::Err> {
         Requester::edit_message_reply_markup_inline(self, inline_message_id).erase()
     }
@@ -2295,7 +2305,7 @@ where
     fn stop_poll(
         &self,
         chat_id: Recipient,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> ErasedRequest<'a, StopPoll, Self::Err> {
         Requester::stop_poll(self, chat_id, message_id).erase()
     }
@@ -2303,7 +2313,7 @@ where
     fn approve_suggested_post(
         &self,
         chat_id: ChatId,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> ErasedRequest<'a, ApproveSuggestedPost, Self::Err> {
         Requester::approve_suggested_post(self, chat_id, message_id).erase()
     }
@@ -2311,7 +2321,7 @@ where
     fn decline_suggested_post(
         &self,
         chat_id: ChatId,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> ErasedRequest<'a, DeclineSuggestedPost, Self::Err> {
         Requester::decline_suggested_post(self, chat_id, message_id).erase()
     }
@@ -2319,7 +2329,7 @@ where
     fn delete_message(
         &self,
         chat_id: Recipient,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> ErasedRequest<'a, DeleteMessage, Self::Err> {
         Requester::delete_message(self, chat_id, message_id).erase()
     }
@@ -2327,7 +2337,7 @@ where
     fn delete_messages(
         &self,
         chat_id: Recipient,
-        message_ids: Vec<MessageId>,
+        message_ids: Vec<MessageId>
     ) -> ErasedRequest<'a, DeleteMessages, Self::Err> {
         Requester::delete_messages(self, chat_id, message_ids).erase()
     }
@@ -2335,7 +2345,7 @@ where
     fn send_sticker(
         &self,
         chat_id: Recipient,
-        sticker: InputFile,
+        sticker: InputFile
     ) -> ErasedRequest<'a, SendSticker, Self::Err> {
         Requester::send_sticker(self, chat_id, sticker).erase()
     }
@@ -2346,7 +2356,7 @@ where
 
     fn get_custom_emoji_stickers(
         &self,
-        custom_emoji_ids: Vec<CustomEmojiId>,
+        custom_emoji_ids: Vec<CustomEmojiId>
     ) -> ErasedRequest<'a, GetCustomEmojiStickers, Self::Err> {
         Requester::get_custom_emoji_stickers(self, custom_emoji_ids).erase()
     }
@@ -2355,7 +2365,7 @@ where
         &self,
         user_id: UserId,
         sticker: InputFile,
-        sticker_format: StickerFormat,
+        sticker_format: StickerFormat
     ) -> ErasedRequest<'a, UploadStickerFile, Self::Err> {
         Requester::upload_sticker_file(self, user_id, sticker, sticker_format).erase()
     }
@@ -2365,7 +2375,7 @@ where
         user_id: UserId,
         name: String,
         title: String,
-        stickers: Vec<InputSticker>,
+        stickers: Vec<InputSticker>
     ) -> ErasedRequest<'a, CreateNewStickerSet, Self::Err> {
         Requester::create_new_sticker_set(self, user_id, name, title, stickers).erase()
     }
@@ -2374,7 +2384,7 @@ where
         &self,
         user_id: UserId,
         name: String,
-        sticker: InputSticker,
+        sticker: InputSticker
     ) -> ErasedRequest<'a, AddStickerToSet, Self::Err> {
         Requester::add_sticker_to_set(self, user_id, name, sticker).erase()
     }
@@ -2382,14 +2392,14 @@ where
     fn set_sticker_position_in_set(
         &self,
         sticker: String,
-        position: u32,
+        position: u32
     ) -> ErasedRequest<'a, SetStickerPositionInSet, Self::Err> {
         Requester::set_sticker_position_in_set(self, sticker, position).erase()
     }
 
     fn delete_sticker_from_set(
         &self,
-        sticker: String,
+        sticker: String
     ) -> ErasedRequest<'a, DeleteStickerFromSet, Self::Err> {
         Requester::delete_sticker_from_set(self, sticker).erase()
     }
@@ -2399,7 +2409,7 @@ where
         user_id: UserId,
         name: String,
         old_sticker: String,
-        sticker: InputSticker,
+        sticker: InputSticker
     ) -> ErasedRequest<'a, ReplaceStickerInSet, Self::Err> {
         Requester::replace_sticker_in_set(self, user_id, name, old_sticker, sticker).erase()
     }
@@ -2408,14 +2418,14 @@ where
         &self,
         name: String,
         user_id: UserId,
-        format: StickerFormat,
+        format: StickerFormat
     ) -> ErasedRequest<'a, SetStickerSetThumbnail, Self::Err> {
         Requester::set_sticker_set_thumbnail(self, name, user_id, format).erase()
     }
 
     fn set_custom_emoji_sticker_set_thumbnail(
         &self,
-        name: String,
+        name: String
     ) -> ErasedRequest<'a, SetCustomEmojiStickerSetThumbnail, Self::Err> {
         Requester::set_custom_emoji_sticker_set_thumbnail(self, name).erase()
     }
@@ -2423,7 +2433,7 @@ where
     fn set_sticker_set_title(
         &self,
         name: String,
-        title: String,
+        title: String
     ) -> ErasedRequest<'a, SetStickerSetTitle, Self::Err> {
         Requester::set_sticker_set_title(self, name, title).erase()
     }
@@ -2435,21 +2445,21 @@ where
     fn set_sticker_emoji_list(
         &self,
         sticker: String,
-        emoji_list: Vec<String>,
+        emoji_list: Vec<String>
     ) -> ErasedRequest<'a, SetStickerEmojiList, Self::Err> {
         Requester::set_sticker_emoji_list(self, sticker, emoji_list).erase()
     }
 
     fn set_sticker_keywords(
         &self,
-        sticker: String,
+        sticker: String
     ) -> ErasedRequest<'a, SetStickerKeywords, Self::Err> {
         Requester::set_sticker_keywords(self, sticker).erase()
     }
 
     fn set_sticker_mask_position(
         &self,
-        sticker: String,
+        sticker: String
     ) -> ErasedRequest<'a, SetStickerMaskPosition, Self::Err> {
         Requester::set_sticker_mask_position(self, sticker).erase()
     }
@@ -2461,7 +2471,7 @@ where
     fn send_gift(
         &self,
         user_id: UserId,
-        gift_id: GiftId,
+        gift_id: GiftId
     ) -> ErasedRequest<'a, SendGift, Self::Err> {
         Requester::send_gift(self, user_id, gift_id).erase()
     }
@@ -2469,7 +2479,7 @@ where
     fn send_gift_chat(
         &self,
         chat_id: Recipient,
-        gift_id: GiftId,
+        gift_id: GiftId
     ) -> ErasedRequest<'a, SendGiftChat, Self::Err> {
         Requester::send_gift_chat(self, chat_id, gift_id).erase()
     }
@@ -2478,7 +2488,7 @@ where
         &self,
         user_id: UserId,
         month_count: u8,
-        star_count: u32,
+        star_count: u32
     ) -> ErasedRequest<'a, GiftPremiumSubscription, Self::Err> {
         Requester::gift_premium_subscription(self, user_id, month_count, star_count).erase()
     }
@@ -2493,14 +2503,14 @@ where
 
     fn remove_user_verification(
         &self,
-        user_id: UserId,
+        user_id: UserId
     ) -> ErasedRequest<'a, RemoveUserVerification, Self::Err> {
         Requester::remove_user_verification(self, user_id).erase()
     }
 
     fn remove_chat_verification(
         &self,
-        chat_id: Recipient,
+        chat_id: Recipient
     ) -> ErasedRequest<'a, RemoveChatVerification, Self::Err> {
         Requester::remove_chat_verification(self, chat_id).erase()
     }
@@ -2509,7 +2519,7 @@ where
         &self,
         business_connection_id: BusinessConnectionId,
         chat_id: ChatId,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> ErasedRequest<'a, ReadBusinessMessage, Self::Err> {
         Requester::read_business_message(self, business_connection_id, chat_id, message_id).erase()
     }
@@ -2517,7 +2527,7 @@ where
     fn delete_business_messages(
         &self,
         business_connection_id: BusinessConnectionId,
-        message_ids: Vec<MessageId>,
+        message_ids: Vec<MessageId>
     ) -> ErasedRequest<'a, DeleteBusinessMessages, Self::Err> {
         Requester::delete_business_messages(self, business_connection_id, message_ids).erase()
     }
@@ -2525,21 +2535,21 @@ where
     fn set_business_account_name(
         &self,
         business_connection_id: BusinessConnectionId,
-        first_name: String,
+        first_name: String
     ) -> ErasedRequest<'a, SetBusinessAccountName, Self::Err> {
         Requester::set_business_account_name(self, business_connection_id, first_name).erase()
     }
 
     fn set_business_account_username(
         &self,
-        business_connection_id: BusinessConnectionId,
+        business_connection_id: BusinessConnectionId
     ) -> ErasedRequest<'a, SetBusinessAccountUsername, Self::Err> {
         Requester::set_business_account_username(self, business_connection_id).erase()
     }
 
     fn set_business_account_bio(
         &self,
-        business_connection_id: BusinessConnectionId,
+        business_connection_id: BusinessConnectionId
     ) -> ErasedRequest<'a, SetBusinessAccountBio, Self::Err> {
         Requester::set_business_account_bio(self, business_connection_id).erase()
     }
@@ -2547,14 +2557,14 @@ where
     fn set_business_account_profile_photo(
         &self,
         business_connection_id: BusinessConnectionId,
-        photo: InputProfilePhoto,
+        photo: InputProfilePhoto
     ) -> ErasedRequest<'a, SetBusinessAccountProfilePhoto, Self::Err> {
         Requester::set_business_account_profile_photo(self, business_connection_id, photo).erase()
     }
 
     fn remove_business_account_profile_photo(
         &self,
-        business_connection_id: BusinessConnectionId,
+        business_connection_id: BusinessConnectionId
     ) -> ErasedRequest<'a, RemoveBusinessAccountProfilePhoto, Self::Err> {
         Requester::remove_business_account_profile_photo(self, business_connection_id).erase()
     }
@@ -2563,20 +2573,20 @@ where
         &self,
         business_connection_id: BusinessConnectionId,
         show_gift_button: bool,
-        accepted_gift_types: AcceptedGiftTypes,
+        accepted_gift_types: AcceptedGiftTypes
     ) -> ErasedRequest<'a, SetBusinessAccountGiftSettings, Self::Err> {
         Requester::set_business_account_gift_settings(
             self,
             business_connection_id,
             show_gift_button,
-            accepted_gift_types,
+            accepted_gift_types
         )
         .erase()
     }
 
     fn get_business_account_star_balance(
         &self,
-        business_connection_id: BusinessConnectionId,
+        business_connection_id: BusinessConnectionId
     ) -> ErasedRequest<'a, GetBusinessAccountStarBalance, Self::Err> {
         Requester::get_business_account_star_balance(self, business_connection_id).erase()
     }
@@ -2584,14 +2594,15 @@ where
     fn transfer_business_account_stars(
         &self,
         business_connection_id: BusinessConnectionId,
-        star_count: u32,
+        star_count: u32
     ) -> ErasedRequest<'a, TransferBusinessAccountStars, Self::Err> {
-        Requester::transfer_business_account_stars(self, business_connection_id, star_count).erase()
+        Requester::transfer_business_account_stars(self, business_connection_id, star_count)
+            .erase()
     }
 
     fn get_business_account_gifts(
         &self,
-        business_connection_id: BusinessConnectionId,
+        business_connection_id: BusinessConnectionId
     ) -> ErasedRequest<'a, GetBusinessAccountGifts, Self::Err> {
         Requester::get_business_account_gifts(self, business_connection_id).erase()
     }
@@ -2607,7 +2618,7 @@ where
     fn convert_gift_to_stars(
         &self,
         business_connection_id: BusinessConnectionId,
-        owned_gift_id: OwnedGiftId,
+        owned_gift_id: OwnedGiftId
     ) -> ErasedRequest<'a, ConvertGiftToStars, Self::Err> {
         Requester::convert_gift_to_stars(self, business_connection_id, owned_gift_id).erase()
     }
@@ -2615,7 +2626,7 @@ where
     fn upgrade_gift(
         &self,
         business_connection_id: BusinessConnectionId,
-        owned_gift_id: OwnedGiftId,
+        owned_gift_id: OwnedGiftId
     ) -> ErasedRequest<'a, UpgradeGift, Self::Err> {
         Requester::upgrade_gift(self, business_connection_id, owned_gift_id).erase()
     }
@@ -2624,17 +2635,22 @@ where
         &self,
         business_connection_id: BusinessConnectionId,
         owned_gift_id: OwnedGiftId,
-        new_owner_chat_id: ChatId,
+        new_owner_chat_id: ChatId
     ) -> ErasedRequest<'a, TransferGift, Self::Err> {
-        Requester::transfer_gift(self, business_connection_id, owned_gift_id, new_owner_chat_id)
-            .erase()
+        Requester::transfer_gift(
+            self,
+            business_connection_id,
+            owned_gift_id,
+            new_owner_chat_id
+        )
+        .erase()
     }
 
     fn post_story(
         &self,
         business_connection_id: BusinessConnectionId,
         content: InputStoryContent,
-        active_period: Seconds,
+        active_period: Seconds
     ) -> ErasedRequest<'a, PostStory, Self::Err> {
         Requester::post_story(self, business_connection_id, content, active_period).erase()
     }
@@ -2644,14 +2660,14 @@ where
         business_connection_id: BusinessConnectionId,
         from_chat_id: ChatId,
         from_story_id: StoryId,
-        active_period: Seconds,
+        active_period: Seconds
     ) -> ErasedRequest<'a, RepostStory, Self::Err> {
         Requester::repost_story(
             self,
             business_connection_id,
             from_chat_id,
             from_story_id,
-            active_period,
+            active_period
         )
         .erase()
     }
@@ -2660,7 +2676,7 @@ where
         &self,
         business_connection_id: BusinessConnectionId,
         story_id: StoryId,
-        content: InputStoryContent,
+        content: InputStoryContent
     ) -> ErasedRequest<'a, EditStory, Self::Err> {
         Requester::edit_story(self, business_connection_id, story_id, content).erase()
     }
@@ -2668,7 +2684,7 @@ where
     fn delete_story(
         &self,
         business_connection_id: BusinessConnectionId,
-        story_id: StoryId,
+        story_id: StoryId
     ) -> ErasedRequest<'a, DeleteStory, Self::Err> {
         Requester::delete_story(self, business_connection_id, story_id).erase()
     }
@@ -2680,7 +2696,7 @@ where
         description: String,
         payload: String,
         currency: String,
-        prices: Vec<LabeledPrice>,
+        prices: Vec<LabeledPrice>
     ) -> ErasedRequest<'a, SendInvoice, Self::Err> {
         Requester::send_invoice(self, chat_id, title, description, payload, currency, prices)
             .erase()
@@ -2692,7 +2708,7 @@ where
         description: String,
         payload: String,
         currency: String,
-        prices: Vec<LabeledPrice>,
+        prices: Vec<LabeledPrice>
     ) -> ErasedRequest<'a, CreateInvoiceLink, Self::Err> {
         Requester::create_invoice_link(self, title, description, payload, currency, prices).erase()
     }
@@ -2700,7 +2716,7 @@ where
     fn answer_shipping_query(
         &self,
         shipping_query_id: ShippingQueryId,
-        ok: bool,
+        ok: bool
     ) -> ErasedRequest<'a, AnswerShippingQuery, Self::Err> {
         Requester::answer_shipping_query(self, shipping_query_id, ok).erase()
     }
@@ -2708,7 +2724,7 @@ where
     fn answer_pre_checkout_query(
         &self,
         pre_checkout_query_id: PreCheckoutQueryId,
-        ok: bool,
+        ok: bool
     ) -> ErasedRequest<'a, AnswerPreCheckoutQuery, Self::Err> {
         Requester::answer_pre_checkout_query(self, pre_checkout_query_id, ok).erase()
     }
@@ -2724,7 +2740,7 @@ where
     fn refund_star_payment(
         &self,
         user_id: UserId,
-        telegram_payment_charge_id: TelegramTransactionId,
+        telegram_payment_charge_id: TelegramTransactionId
     ) -> ErasedRequest<'a, RefundStarPayment, Self::Err> {
         Requester::refund_star_payment(self, user_id, telegram_payment_charge_id).erase()
     }
@@ -2733,13 +2749,13 @@ where
         &self,
         user_id: UserId,
         telegram_payment_charge_id: TelegramTransactionId,
-        is_canceled: bool,
+        is_canceled: bool
     ) -> ErasedRequest<'a, EditUserStarSubscription, Self::Err> {
         Requester::edit_user_star_subscription(
             self,
             user_id,
             telegram_payment_charge_id,
-            is_canceled,
+            is_canceled
         )
         .erase()
     }
@@ -2747,7 +2763,7 @@ where
     fn set_passport_data_errors(
         &self,
         user_id: UserId,
-        errors: Vec<PassportElementError>,
+        errors: Vec<PassportElementError>
     ) -> ErasedRequest<'a, SetPassportDataErrors, Self::Err> {
         Requester::set_passport_data_errors(self, user_id, errors).erase()
     }
@@ -2755,7 +2771,7 @@ where
     fn send_game(
         &self,
         chat_id: ChatId,
-        game_short_name: String,
+        game_short_name: String
     ) -> ErasedRequest<'a, SendGame, Self::Err> {
         Requester::send_game(self, chat_id, game_short_name).erase()
     }
@@ -2765,7 +2781,7 @@ where
         user_id: UserId,
         score: u64,
         chat_id: u32,
-        message_id: MessageId,
+        message_id: MessageId
     ) -> ErasedRequest<'a, SetGameScore, Self::Err> {
         Requester::set_game_score(self, user_id, score, chat_id, message_id).erase()
     }
@@ -2774,7 +2790,7 @@ where
         &self,
         user_id: UserId,
         score: u64,
-        inline_message_id: String,
+        inline_message_id: String
     ) -> ErasedRequest<'a, SetGameScoreInline, Self::Err> {
         Requester::set_game_score_inline(self, user_id, score, inline_message_id).erase()
     }
@@ -2782,7 +2798,7 @@ where
     fn get_game_high_scores(
         &self,
         user_id: UserId,
-        target: TargetMessage,
+        target: TargetMessage
     ) -> ErasedRequest<'a, GetGameHighScores, Self::Err> {
         Requester::get_game_high_scores(self, user_id, target).erase()
     }

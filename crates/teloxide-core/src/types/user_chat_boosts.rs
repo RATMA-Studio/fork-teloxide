@@ -8,7 +8,7 @@ use crate::types::ChatBoost;
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct UserChatBoosts {
     /// The list of boosts added to the chat by the user.
-    pub boosts: Vec<ChatBoost>,
+    pub boosts: Vec<ChatBoost>
 }
 
 #[cfg(test)]

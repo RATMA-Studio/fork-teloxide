@@ -11,5 +11,5 @@ pub struct ChatLocation {
     /// location.
     pub location: Location,
     /// Location address; 1-64 characters, as defined by the chat owner.
-    pub address: String,
+    pub address:  String
 }

@@ -20,7 +20,7 @@ pub struct GiveawayCompleted {
     /// `true`, if the giveaway is a Telegram Star giveaway. Otherwise,
     /// currently, the giveaway is a Telegram Premium giveaway.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
-    pub is_star_giveaway: bool,
+    pub is_star_giveaway: bool
 }
 
 #[cfg(test)]

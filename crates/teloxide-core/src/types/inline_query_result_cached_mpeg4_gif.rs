@@ -48,13 +48,13 @@ pub struct InlineQueryResultCachedMpeg4Gif {
     pub reply_markup: Option<InlineKeyboardMarkup>,
 
     /// Content of the message to be sent instead of the video animation.
-    pub input_message_content: Option<InputMessageContent>,
+    pub input_message_content: Option<InputMessageContent>
 }
 
 impl InlineQueryResultCachedMpeg4Gif {
     pub fn new<S1>(id: S1, mpeg4_file_id: FileId) -> Self
     where
-        S1: Into<String>,
+        S1: Into<String>
     {
         Self {
             id: id.into(),
@@ -65,13 +65,13 @@ impl InlineQueryResultCachedMpeg4Gif {
             reply_markup: None,
             caption_entities: None,
             show_caption_above_media: false,
-            input_message_content: None,
+            input_message_content: None
         }
     }
 
     pub fn id<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.id = val.into();
         self
@@ -79,7 +79,7 @@ impl InlineQueryResultCachedMpeg4Gif {
 
     pub fn title<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.title = Some(val.into());
         self
@@ -87,7 +87,7 @@ impl InlineQueryResultCachedMpeg4Gif {
 
     pub fn caption<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.caption = Some(val.into());
         self
@@ -101,7 +101,7 @@ impl InlineQueryResultCachedMpeg4Gif {
 
     pub fn caption_entities<C>(mut self, val: C) -> Self
     where
-        C: IntoIterator<Item = MessageEntity>,
+        C: IntoIterator<Item = MessageEntity>
     {
         self.caption_entities = Some(val.into_iter().collect());
         self

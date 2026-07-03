@@ -46,7 +46,7 @@ pub struct Giveaway {
 
     /// The number of months the Telegram Premium subscription won from the
     /// giveaway will be active for
-    pub premium_subscription_month_count: Option<u8>,
+    pub premium_subscription_month_count: Option<u8>
 }
 
 #[cfg(test)]

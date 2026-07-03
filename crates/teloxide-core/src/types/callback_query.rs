@@ -5,16 +5,7 @@ use crate::types::{MaybeInaccessibleMessage, Message, User};
 
 /// A unique identifier for this query.
 #[derive(
-    Default,
-    Clone,
-    Debug,
-    derive_more::Display,
-    PartialEq,
-    Eq,
-    Hash,
-    Serialize,
-    Deserialize,
-    From
+    Default, Clone, Debug, derive_more::Display, PartialEq, Eq, Hash, Serialize, Deserialize, From,
 )]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(transparent)]
@@ -67,7 +58,7 @@ pub struct CallbackQuery {
 
     /// A short name of a Game to be returned, serves as the unique identifier
     /// for the game.
-    pub game_short_name: Option<String>,
+    pub game_short_name: Option<String>
 }
 
 impl CallbackQuery {
@@ -77,10 +68,13 @@ impl CallbackQuery {
     /// This might be useful to track information about users.
     /// Note that this function can return duplicate users.
     pub fn mentioned_users(&self) -> impl Iterator<Item = &User> {
-        use crate::util::flatten;
         use std::iter::once;
 
-        once(&self.from).chain(flatten(self.regular_message().map(Message::mentioned_users)))
+        use crate::util::flatten;
+
+        once(&self.from).chain(flatten(
+            self.regular_message().map(Message::mentioned_users)
+        ))
     }
 
     #[must_use]
@@ -94,9 +88,8 @@ impl CallbackQuery {
 
 #[cfg(test)]
 mod tests {
-    use crate::types::UserId;
-
     use super::*;
+    use crate::types::UserId;
 
     #[test]
     fn deserialize() {
@@ -113,8 +106,8 @@ mod tests {
             "game_short_name":"game_name"
         }"#;
         let expected = CallbackQuery {
-            id: CallbackQueryId("id".to_owned()),
-            from: User {
+            id:                CallbackQueryId("id".to_owned()),
+            from:              User {
                 id: UserId(12345),
                 is_bot: false,
                 first_name: "firstName".to_string(),
@@ -126,13 +119,13 @@ mod tests {
                 can_manage_bots: false,
                 has_topics_enabled: false,
                 allows_users_to_create_topics: false,
-                supports_guest_queries: false,
+                supports_guest_queries: false
             },
-            chat_instance: "123456".to_string(),
-            message: None,
+            chat_instance:     "123456".to_string(),
+            message:           None,
             inline_message_id: Some("i_m_id".to_string()),
-            data: Some("some_data".to_string()),
-            game_short_name: Some("game_name".to_string()),
+            data:              Some("some_data".to_string()),
+            game_short_name:   Some("game_name".to_string())
         };
         let actual = serde_json::from_str::<CallbackQuery>(json).unwrap();
         assert_eq!(actual, expected);

@@ -28,7 +28,7 @@ pub struct EncryptedCredentials {
 
     /// A base64-encoded secret, encrypted with the bot's public RSA key,
     /// required for data decryption.
-    pub secret: String,
+    pub secret: String
 }
 
 #[cfg(test)]
@@ -47,9 +47,9 @@ mod tests {
         .replace('\n', "")
         .replace(' ', "");
         let encrypted_credentials = EncryptedCredentials {
-            data: "someData".to_string(),
-            hash: "1122".to_string(),
-            secret: "secret".to_string(),
+            data:   "someData".to_string(),
+            hash:   "1122".to_string(),
+            secret: "secret".to_string()
         };
         // when
         let actual_json = serde_json::to_string(&encrypted_credentials).unwrap();

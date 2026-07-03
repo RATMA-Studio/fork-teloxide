@@ -20,21 +20,25 @@ pub struct InlineQueryResultGame {
     /// [Inline keyboard] attached to the message.
     ///
     /// [Inline keyboard]: https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating
-    pub reply_markup: Option<InlineKeyboardMarkup>,
+    pub reply_markup: Option<InlineKeyboardMarkup>
 }
 
 impl InlineQueryResultGame {
     pub fn new<S1, S2>(id: S1, game_short_name: S2) -> Self
     where
         S1: Into<String>,
-        S2: Into<String>,
+        S2: Into<String>
     {
-        Self { id: id.into(), game_short_name: game_short_name.into(), reply_markup: None }
+        Self {
+            id:              id.into(),
+            game_short_name: game_short_name.into(),
+            reply_markup:    None
+        }
     }
 
     pub fn id<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.id = val.into();
         self
@@ -42,7 +46,7 @@ impl InlineQueryResultGame {
 
     pub fn game_short_name<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.game_short_name = val.into();
         self

@@ -27,5 +27,5 @@ pub struct BusinessConnection {
     pub rights: Option<BusinessBotRights>,
 
     /// `true`, if the connection is alive
-    pub is_enabled: bool,
+    pub is_enabled: bool
 }

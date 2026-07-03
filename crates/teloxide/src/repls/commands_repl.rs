@@ -9,7 +9,7 @@ use crate::{
     requests::{Requester, ResponseResult},
     types::Update,
     update_listeners::{self, UpdateListener},
-    utils::command::BotCommands,
+    utils::command::BotCommands
 };
 
 /// A [REPL] for commands.
@@ -97,7 +97,7 @@ pub trait CommandReplExt {
 #[cfg(feature = "ctrlc_handler")]
 impl<Cmd> CommandReplExt for Cmd
 where
-    Cmd: BotCommands + Send + Sync + 'static,
+    Cmd: BotCommands + Send + Sync + 'static
 {
     fn repl<'a, R, H, Args>(bot: R, handler: H) -> BoxFuture<'a, ()>
     where
@@ -106,7 +106,7 @@ where
         <R as Requester>::GetWebhookInfo: Send,
         <R as Requester>::GetMe: Send,
         <R as Requester>::DeleteWebhook: Send,
-        H: Injectable<ResponseResult<()>, Args> + Send + Sync + 'static,
+        H: Injectable<ResponseResult<()>, Args> + Send + Sync + 'static
     {
         let cloned_bot = bot.clone();
 
@@ -114,7 +114,7 @@ where
             Self::repl_with_listener(
                 bot,
                 handler,
-                update_listeners::polling_default(cloned_bot).await,
+                update_listeners::polling_default(cloned_bot).await
             )
             .await
         })
@@ -126,7 +126,7 @@ where
         L: UpdateListener + Send + 'a,
         L::Err: Debug + Send + 'a,
         R: Requester + Clone + Send + Sync + 'static,
-        <R as Requester>::GetMe: Send,
+        <R as Requester>::GetMe: Send
     {
         use crate::dispatching::Dispatcher;
 
@@ -137,14 +137,16 @@ where
         Box::pin(async move {
             Dispatcher::builder(
                 bot,
-                Update::filter_message().filter_command::<Cmd>().endpoint(handler),
+                Update::filter_message()
+                    .filter_command::<Cmd>()
+                    .endpoint(handler)
             )
             .default_handler(ignore_update)
             .enable_ctrlc_handler()
             .build()
             .dispatch_with_listener(
                 listener,
-                LoggingErrorHandler::with_custom_text("An error from the update listener"),
+                LoggingErrorHandler::with_custom_text("An error from the update listener")
             )
             .await
         })

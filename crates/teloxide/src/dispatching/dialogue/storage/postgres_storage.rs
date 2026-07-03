@@ -2,7 +2,7 @@ use std::{
     convert::Infallible,
     fmt::{Debug, Display},
     str,
-    sync::Arc,
+    sync::Arc
 };
 
 use futures::future::BoxFuture;
@@ -17,7 +17,7 @@ use super::{Storage, serializer::Serializer};
 #[derive(Debug, Error)]
 pub enum PostgresStorageError<SE>
 where
-    SE: Debug + Display,
+    SE: Debug + Display
 {
     #[error("dialogue serialization error: {0}")]
     SerdeError(SE),
@@ -27,13 +27,13 @@ where
 
     // TODO maybe add chat_id for the sake of completeness?
     #[error("row not found")]
-    DialogueNotFound,
+    DialogueNotFound
 }
 
 /// A persistent dialogue storage based on [PostgreSQL](https://www.postgresql.org/)
 pub struct PostgresStorage<S> {
-    pool: PgPool,
-    serializer: S,
+    pool:       PgPool,
+    serializer: S
 }
 
 impl<S> PostgresStorage<S> {
@@ -55,24 +55,31 @@ impl<S> PostgresStorage<S> {
     pub async fn open(
         database_url: &str,
         max_connections: u32,
-        serializer: S,
+        serializer: S
     ) -> Result<Arc<Self>, PostgresStorageError<Infallible>> {
-        let pool =
-            PgPoolOptions::new().max_connections(max_connections).connect(database_url).await?;
-        sqlx::query(include_str!("postgres_storage/queries/create_teloxide_dialogues.sql"))
-            .execute(&pool)
+        let pool = PgPoolOptions::new()
+            .max_connections(max_connections)
+            .connect(database_url)
             .await?;
+        sqlx::query(include_str!(
+            "postgres_storage/queries/create_teloxide_dialogues.sql"
+        ))
+        .execute(&pool)
+        .await?;
 
-        Ok(Arc::new(Self { pool, serializer }))
+        Ok(Arc::new(Self {
+            pool,
+            serializer
+        }))
     }
 
     async fn get_dialogue(
         self: Arc<Self>,
-        ChatId(chat_id): ChatId,
+        ChatId(chat_id): ChatId
     ) -> Result<Option<Vec<u8>>, sqlx::Error> {
         #[derive(sqlx::FromRow)]
         struct DialogueDbRow {
-            dialogue: Vec<u8>,
+            dialogue: Vec<u8>
         }
 
         let bytes = sqlx::query_as::<_, DialogueDbRow>(include_str!(
@@ -94,16 +101,16 @@ impl<S, D> Storage<D> for PostgresStorage<S>
 where
     S: Send + Sync + Serializer<D> + 'static,
     D: Send + Serialize + DeserializeOwned + 'static,
-    <S as Serializer<D>>::Error: Debug + Display,
+    <S as Serializer<D>>::Error: Debug + Display
 {
     type Error = PostgresStorageError<<S as Serializer<D>>::Error>;
 
     fn remove_dialogue(
         self: Arc<Self>,
-        ChatId(chat_id): ChatId,
+        ChatId(chat_id): ChatId
     ) -> BoxFuture<'static, Result<(), Self::Error>>
     where
-        D: Send + 'static,
+        D: Send + 'static
     {
         Box::pin(async move {
             let deleted_rows_count =
@@ -124,14 +131,16 @@ where
     fn update_dialogue(
         self: Arc<Self>,
         ChatId(chat_id): ChatId,
-        dialogue: D,
+        dialogue: D
     ) -> BoxFuture<'static, Result<(), Self::Error>>
     where
-        D: Send + 'static,
+        D: Send + 'static
     {
         Box::pin(async move {
-            let d =
-                self.serializer.serialize(&dialogue).map_err(PostgresStorageError::SerdeError)?;
+            let d = self
+                .serializer
+                .serialize(&dialogue)
+                .map_err(PostgresStorageError::SerdeError)?;
             sqlx::query(include_str!("postgres_storage/queries/update_dialogue.sql"))
                 .bind(chat_id)
                 .bind(d)
@@ -143,13 +152,17 @@ where
 
     fn get_dialogue(
         self: Arc<Self>,
-        chat_id: ChatId,
+        chat_id: ChatId
     ) -> BoxFuture<'static, Result<Option<D>, Self::Error>> {
         Box::pin(async move {
             self.clone()
                 .get_dialogue(chat_id)
                 .await?
-                .map(|d| self.serializer.deserialize(&d).map_err(PostgresStorageError::SerdeError))
+                .map(|d| {
+                    self.serializer
+                        .deserialize(&d)
+                        .map_err(PostgresStorageError::SerdeError)
+                })
                 .transpose()
         })
     }

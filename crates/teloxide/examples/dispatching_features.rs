@@ -2,10 +2,9 @@
 // `dispatching` module.
 
 use rand::RngExt;
-
 use teloxide::{
     dispatching::HandlerExt, prelude::*, sugar::request::RequestReplyExt, types::Dice,
-    utils::command::BotCommands,
+    utils::command::BotCommands
 };
 
 #[tokio::main]
@@ -16,8 +15,8 @@ async fn main() {
     let bot = Bot::from_env();
 
     let parameters = ConfigParameters {
-        bot_maintainer: UserId(0), // Paste your ID to run this bot.
-        maintainer_username: None,
+        bot_maintainer:      UserId(0), // Paste your ID to run this bot.
+        maintainer_username: None
     };
 
     let handler = Update::filter_message()
@@ -28,25 +27,32 @@ async fn main() {
                 // Filter commands: the next handlers will receive a parsed `SimpleCommand`.
                 .filter_command::<SimpleCommand>()
                 // If a command parsing fails, this handler will not be executed.
-                .endpoint(simple_commands_handler),
+                .endpoint(simple_commands_handler)
         )
         .branch(
             // Filter a maintainer by a user ID.
             dptree::filter(|cfg: ConfigParameters, msg: Message| {
-                msg.from.map(|user| user.id == cfg.bot_maintainer).unwrap_or_default()
+                msg.from
+                    .map(|user| user.id == cfg.bot_maintainer)
+                    .unwrap_or_default()
             })
             .filter_command::<MaintainerCommands>()
-            .endpoint(|msg: Message, bot: Bot, cmd: MaintainerCommands| async move {
-                match cmd {
-                    MaintainerCommands::Rand { from, to } => {
-                        let value: u64 = rand::rng().random_range(from..=to);
+            .endpoint(
+                |msg: Message, bot: Bot, cmd: MaintainerCommands| async move {
+                    match cmd {
+                        MaintainerCommands::Rand {
+                            from,
+                            to
+                        } => {
+                            let value: u64 = rand::rng().random_range(from..=to);
 
-                        bot.send_message(msg.chat.id, value.to_string()).await?;
+                            bot.send_message(msg.chat.id, value.to_string()).await?;
 
-                        Ok(())
+                            Ok(())
+                        }
                     }
                 }
-            }),
+            )
         )
         .branch(
             // Filtering allow you to filter updates by some condition.
@@ -56,36 +62,39 @@ async fn main() {
                     // Use if you want to make sure that users refer specifically to your bot.
                     // Same as filter_command, the next handlers will receive a parsed
                     // `GroupCommand`.
-                    dptree::entry().filter_mention_command::<GroupCommand>().endpoint(
-                        |bot: Bot, msg: Message, cmd: GroupCommand| async move {
+                    dptree::entry()
+                        .filter_mention_command::<GroupCommand>()
+                        .endpoint(|bot: Bot, msg: Message, cmd: GroupCommand| async move {
                             match cmd {
-                                GroupCommand::Repeat { text } => {
+                                GroupCommand::Repeat {
+                                    text
+                                } => {
                                     bot.send_message(msg.chat.id, format!("You said: {text}"))
                                         .await?;
                                     Ok(())
                                 }
                             }
-                        },
-                    ),
+                        })
                 )
                 .branch(
                     // An endpoint is the last update handler.
                     dptree::endpoint(|msg: Message, bot: Bot| async move {
                         log::info!("Received a message from a group chat.");
-                        bot.send_message(msg.chat.id, "This is a group chat.").await?;
+                        bot.send_message(msg.chat.id, "This is a group chat.")
+                            .await?;
                         respond(())
-                    }),
-                ),
+                    })
+                )
         )
         .branch(
-            // There are some extension filtering functions on `Message`. The following filter will
-            // filter only messages with dices.
+            // There are some extension filtering functions on `Message`. The following filter
+            // will filter only messages with dices.
             Message::filter_dice().endpoint(|bot: Bot, msg: Message, dice: Dice| async move {
                 bot.send_message(msg.chat.id, format!("Dice value: {}", dice.value))
                     .reply_to(msg)
                     .await?;
                 Ok(())
-            }),
+            })
         );
 
     Dispatcher::builder(bot, handler)
@@ -99,7 +108,7 @@ async fn main() {
         })
         // If the dispatcher fails for some reason, execute this handler.
         .error_handler(LoggingErrorHandler::with_custom_text(
-            "An error has occurred in the dispatcher",
+            "An error has occurred in the dispatcher"
         ))
         .enable_ctrlc_handler()
         .build()
@@ -109,8 +118,8 @@ async fn main() {
 
 #[derive(Clone)]
 struct ConfigParameters {
-    bot_maintainer: UserId,
-    maintainer_username: Option<String>,
+    bot_maintainer:      UserId,
+    maintainer_username: Option<String>
 }
 
 /// Simple commands
@@ -122,7 +131,7 @@ enum SimpleCommand {
     /// Shows maintainer info.
     Maintainer,
     /// Shows your ID.
-    MyId,
+    MyId
 }
 
 /// Maintainer commands
@@ -131,7 +140,7 @@ enum SimpleCommand {
 enum MaintainerCommands {
     /// Generate a number within range
     #[command(parse_with = "split")]
-    Rand { from: u64, to: u64 },
+    Rand { from: u64, to: u64 }
 }
 
 /// Group commands
@@ -139,7 +148,7 @@ enum MaintainerCommands {
 #[command(rename_rule = "lowercase")]
 enum GroupCommand {
     /// Repeats a message
-    Repeat { text: String },
+    Repeat { text: String }
 }
 
 async fn simple_commands_handler(
@@ -147,7 +156,7 @@ async fn simple_commands_handler(
     bot: Bot,
     me: teloxide::types::Me,
     msg: Message,
-    cmd: SimpleCommand,
+    cmd: SimpleCommand
 ) -> Result<(), teloxide::RequestError> {
     let text = match cmd {
         SimpleCommand::Help => {
@@ -158,7 +167,9 @@ async fn simple_commands_handler(
                     MaintainerCommands::descriptions()
                 )
             } else if msg.chat.is_group() || msg.chat.is_supergroup() {
-                SimpleCommand::descriptions().username_from_me(&me).to_string()
+                SimpleCommand::descriptions()
+                    .username_from_me(&me)
+                    .to_string()
             } else {
                 SimpleCommand::descriptions().to_string()
             }

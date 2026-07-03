@@ -1,13 +1,14 @@
 use std::error::Error;
+
 use teloxide::{
     payloads::SendMessageSetters,
     prelude::*,
     sugar::bot::BotMessagesExt,
     types::{
         InlineKeyboardButton, InlineKeyboardMarkup, InlineQueryResultArticle, InputMessageContent,
-        InputMessageContentText, Me,
+        InputMessageContentText, Me
     },
-    utils::command::BotCommands,
+    utils::command::BotCommands
 };
 
 /// These commands are supported:
@@ -17,7 +18,7 @@ enum Command {
     /// Display this text
     Help,
     /// Start
-    Start,
+    Start
 }
 
 #[tokio::main]
@@ -32,7 +33,11 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .branch(Update::filter_callback_query().endpoint(callback_handler))
         .branch(Update::filter_inline_query().endpoint(inline_query_handler));
 
-    Dispatcher::builder(bot, handler).enable_ctrlc_handler().build().dispatch().await;
+    Dispatcher::builder(bot, handler)
+        .enable_ctrlc_handler()
+        .build()
+        .dispatch()
+        .await;
     Ok(())
 }
 
@@ -42,7 +47,7 @@ fn make_keyboard() -> InlineKeyboardMarkup {
 
     let debian_versions = [
         "Buzz", "Rex", "Bo", "Hamm", "Slink", "Potato", "Woody", "Sarge", "Etch", "Lenny",
-        "Squeeze", "Wheezy", "Jessie", "Stretch", "Buster", "Bullseye",
+        "Squeeze", "Wheezy", "Jessie", "Stretch", "Buster", "Bullseye"
     ];
 
     for versions in debian_versions.chunks(3) {
@@ -63,18 +68,21 @@ fn make_keyboard() -> InlineKeyboardMarkup {
 async fn message_handler(
     bot: Bot,
     msg: Message,
-    me: Me,
+    me: Me
 ) -> Result<(), Box<dyn Error + Send + Sync>> {
     if let Some(text) = msg.text() {
         match BotCommands::parse(text, me.username()) {
             Ok(Command::Help) => {
                 // Just send the description of all commands.
-                bot.send_message(msg.chat.id, Command::descriptions().to_string()).await?;
+                bot.send_message(msg.chat.id, Command::descriptions().to_string())
+                    .await?;
             }
             Ok(Command::Start) => {
                 // Create a list of buttons and send them.
                 let keyboard = make_keyboard();
-                bot.send_message(msg.chat.id, "Debian versions:").reply_markup(keyboard).await?;
+                bot.send_message(msg.chat.id, "Debian versions:")
+                    .reply_markup(keyboard)
+                    .await?;
             }
 
             Err(_) => {
@@ -88,16 +96,17 @@ async fn message_handler(
 
 async fn inline_query_handler(
     bot: Bot,
-    q: InlineQuery,
+    q: InlineQuery
 ) -> Result<(), Box<dyn Error + Send + Sync>> {
     let choose_debian_version = InlineQueryResultArticle::new(
         "0",
         "Chose debian version",
-        InputMessageContent::Text(InputMessageContentText::new("Debian versions:")),
+        InputMessageContent::Text(InputMessageContentText::new("Debian versions:"))
     )
     .reply_markup(make_keyboard());
 
-    bot.answer_inline_query(q.id, vec![choose_debian_version.into()]).await?;
+    bot.answer_inline_query(q.id, vec![choose_debian_version.into()])
+        .await?;
 
     Ok(())
 }

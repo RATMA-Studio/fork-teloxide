@@ -14,8 +14,8 @@
 //!     Start,
 //!     ReceiveFullName,
 //!     ReceiveProductChoice {
-//!         full_name: String,
-//!     },
+//!         full_name: String
+//!     }
 //! }
 //! ```
 //!
@@ -26,14 +26,17 @@
 //! # #[cfg(feature = "macros")] {
 //! # use teloxide::utils::command::BotCommands;
 //! #[derive(BotCommands, Clone)]
-//! #[command(rename_rule = "lowercase", description = "These commands are supported:")]
+//! #[command(
+//!     rename_rule = "lowercase",
+//!     description = "These commands are supported:"
+//! )]
 //! enum Command {
 //!     #[command(description = "display this text.")]
 //!     Help,
 //!     #[command(description = "start the purchase procedure.")]
 //!     Start,
 //!     #[command(description = "cancel the purchase procedure.")]
-//!     Cancel,
+//!     Cancel
 //! }
 //! # }
 //! ```
@@ -135,7 +138,7 @@
 //!     bot: Bot,
 //!     dialogue: MyDialogue,
 //!     full_name: String, // Available from `State::ReceiveProductChoice`.
-//!     q: CallbackQuery,
+//!     q: CallbackQuery
 //! ) -> HandlerResult {
 //!     todo!()
 //! }
@@ -225,7 +228,6 @@ mod handler_ext;
 #[cfg(feature = "tracing")]
 mod tracing;
 
-pub use crate::utils::shutdown_token::{IdleShutdownError, ShutdownToken};
 pub use dispatcher::{Dispatcher, DispatcherBuilder, UpdateHandler};
 pub use distribution::DefaultKey;
 pub use filter_ext::{MessageFilterExt, UpdateFilterExt};
@@ -234,3 +236,4 @@ pub use handler_ext::{HandlerExt, filter_command, filter_mention_command};
 
 #[cfg(feature = "tracing")]
 pub use self::tracing::UpdateHandlerTracingExt;
+pub use crate::utils::shutdown_token::{IdleShutdownError, ShutdownToken};

@@ -10,7 +10,7 @@ use crate::types::InputFile;
 #[non_exhaustive]
 pub enum InputProfilePhoto {
     Static(InputProfilePhotoStatic),
-    Animated(InputProfilePhotoAnimated),
+    Animated(InputProfilePhotoAnimated)
 }
 
 impl InputProfilePhoto {
@@ -19,7 +19,7 @@ impl InputProfilePhoto {
     pub(crate) fn files(&self) -> impl Iterator<Item = &InputFile> {
         let f = match self {
             InputProfilePhoto::Static(s) => &s.photo,
-            InputProfilePhoto::Animated(a) => &a.animation,
+            InputProfilePhoto::Animated(a) => &a.animation
         };
         std::iter::once(f)
     }
@@ -29,7 +29,7 @@ impl InputProfilePhoto {
     pub(crate) fn files_mut(&mut self) -> impl Iterator<Item = &mut InputFile> {
         let f = match self {
             InputProfilePhoto::Static(s) => &mut s.photo,
-            InputProfilePhoto::Animated(a) => &mut a.animation,
+            InputProfilePhoto::Animated(a) => &mut a.animation
         };
         std::iter::once(f)
     }
@@ -45,7 +45,7 @@ pub struct InputProfilePhotoStatic {
     /// <file_attach_name>. [More information on Sending Files »]
     ///
     /// [More information on Sending Files »]: https://core.telegram.org/bots/api#sending-files
-    pub photo: InputFile,
+    pub photo: InputFile
 }
 
 /// An animated profile photo in the MPEG4 format.
@@ -63,5 +63,5 @@ pub struct InputProfilePhotoAnimated {
 
     /// Timestamp in seconds of the frame that will be used as the static
     /// profile photo. Defaults to 0.0
-    pub main_frame_timestamp: Option<f64>,
+    pub main_frame_timestamp: Option<f64>
 }

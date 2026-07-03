@@ -10,7 +10,7 @@ pub struct Story {
     pub id: StoryId,
 
     /// Chat that posted the story.
-    pub chat: Chat,
+    pub chat: Chat
 }
 
 impl Story {
@@ -22,9 +22,9 @@ impl Story {
             ChatKind::Public(c) => match &c.kind {
                 super::PublicChatKind::Channel(c) => c.username.as_ref(),
                 super::PublicChatKind::Group => None,
-                super::PublicChatKind::Supergroup(g) => g.username.as_ref(),
+                super::PublicChatKind::Supergroup(g) => g.username.as_ref()
             },
-            ChatKind::Private(c) => c.username.as_ref(),
+            ChatKind::Private(c) => c.username.as_ref()
         };
         username.map(|username| {
             reqwest::Url::parse(&format!("tg://resolve?domain={username}&story={}", self.id))
@@ -36,26 +36,29 @@ impl Story {
 #[cfg(test)]
 mod tests {
     use crate::types::{
-        Chat, ChatId, ChatKind, ChatPublic, PublicChatKind, PublicChatSupergroup, Story, StoryId,
+        Chat, ChatId, ChatKind, ChatPublic, PublicChatKind, PublicChatSupergroup, Story, StoryId
     };
 
     #[test]
     fn url_works() {
         let story = Story {
             chat: Chat {
-                id: ChatId(-1001389841361),
+                id:   ChatId(-1001389841361),
                 kind: ChatKind::Public(ChatPublic {
                     title: Some("GNOME".to_owned()),
-                    kind: PublicChatKind::Supergroup(PublicChatSupergroup {
-                        username: Some("gnome_ru".to_owned()),
-                        is_forum: false,
-                        is_direct_messages: false,
-                    }),
-                }),
+                    kind:  PublicChatKind::Supergroup(PublicChatSupergroup {
+                        username:           Some("gnome_ru".to_owned()),
+                        is_forum:           false,
+                        is_direct_messages: false
+                    })
+                })
             },
-            id: StoryId(420),
+            id:   StoryId(420)
         };
 
-        assert_eq!(story.url().unwrap(), "tg://resolve?domain=gnome_ru&story=420".parse().unwrap());
+        assert_eq!(
+            story.url().unwrap(),
+            "tg://resolve?domain=gnome_ru&story=420".parse().unwrap()
+        );
     }
 }

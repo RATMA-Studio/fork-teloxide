@@ -10,5 +10,5 @@ use serde::{Deserialize, Serialize};
 pub struct SentWebAppMessage {
     /// Identifier of the sent inline message. Available only if there is an
     /// inline keyboard attached to the message.
-    pub inline_message_id: Option<String>,
+    pub inline_message_id: Option<String>
 }

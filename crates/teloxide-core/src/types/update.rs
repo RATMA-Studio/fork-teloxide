@@ -6,7 +6,7 @@ use crate::types::{
     BusinessConnection, BusinessMessagesDeleted, CallbackQuery, Chat, ChatBoostRemoved,
     ChatBoostUpdated, ChatJoinRequest, ChatMemberUpdated, ChosenInlineResult, InlineQuery,
     ManagedBotUpdated, Message, MessageReactionCountUpdated, MessageReactionUpdated,
-    PaidMediaPurchased, Poll, PollAnswer, PreCheckoutQuery, ShippingQuery, User,
+    PaidMediaPurchased, Poll, PollAnswer, PreCheckoutQuery, ShippingQuery, User
 };
 
 /// This [object] represents an incoming update.
@@ -28,16 +28,13 @@ pub struct Update {
     pub id: UpdateId,
 
     #[serde(flatten)]
-    pub kind: UpdateKind,
+    pub kind: UpdateKind
 }
 
 /// An identifier of a telegram update.
 ///
 /// See [`Update::id`] for more information.
-#[derive(Clone, Copy)]
-#[derive(Debug)]
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 #[serde(transparent)]
 pub struct UpdateId(pub u32);
 
@@ -170,7 +167,7 @@ pub enum UpdateKind {
     ///
     /// **Note that deserialize implementation always returns an empty value**,
     /// teloxide fills in the data when doing deserialization.
-    Error(Value),
+    Error(Value)
 }
 
 impl Update {
@@ -226,8 +223,9 @@ impl Update {
     /// replies, pinned messages, message entities, "via bot" fields and more.
     /// Also note that this function can return duplicate users.
     pub fn mentioned_users(&self) -> impl Iterator<Item = &User> {
-        use either::Either::{Left as L, Right as R};
         use std::iter::{empty, once};
+
+        use either::Either::{Left as L, Right as R};
 
         //          [root]
         //         /      \
@@ -308,7 +306,7 @@ impl Update {
             | UpdateKind::MessageReactionCount(_)
             | UpdateKind::BusinessConnection(_)
             | UpdateKind::DeletedBusinessMessages(_)
-            | UpdateKind::Error(_) => i5(empty()),
+            | UpdateKind::Error(_) => i5(empty())
         }
     }
 
@@ -344,7 +342,7 @@ impl Update {
             | Poll(_)
             | PollAnswer(_)
             | ManagedBot(_)
-            | Error(_) => return None,
+            | Error(_) => return None
         };
 
         Some(chat)
@@ -366,7 +364,7 @@ impl UpdateId {
 impl<'de> Deserialize<'de> for UpdateKind {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
-        D: serde::Deserializer<'de>,
+        D: serde::Deserializer<'de>
     {
         struct Visitor;
 
@@ -379,7 +377,7 @@ impl<'de> Deserialize<'de> for UpdateKind {
 
             fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error>
             where
-                A: MapAccess<'de>,
+                A: MapAccess<'de>
             {
                 let mut tmp = None;
 
@@ -397,25 +395,30 @@ impl<'de> Deserialize<'de> for UpdateKind {
                     .flatten()
                     .and_then(|key| match key {
                         "message" => map.next_value::<Message>().ok().map(UpdateKind::Message),
-                        "edited_message" => {
-                            map.next_value::<Message>().ok().map(UpdateKind::EditedMessage)
-                        }
-                        "channel_post" => {
-                            map.next_value::<Message>().ok().map(UpdateKind::ChannelPost)
-                        }
-                        "edited_channel_post" => {
-                            map.next_value::<Message>().ok().map(UpdateKind::EditedChannelPost)
-                        }
+                        "edited_message" => map
+                            .next_value::<Message>()
+                            .ok()
+                            .map(UpdateKind::EditedMessage),
+                        "channel_post" => map
+                            .next_value::<Message>()
+                            .ok()
+                            .map(UpdateKind::ChannelPost),
+                        "edited_channel_post" => map
+                            .next_value::<Message>()
+                            .ok()
+                            .map(UpdateKind::EditedChannelPost),
                         "business_connection" => map
                             .next_value::<BusinessConnection>()
                             .ok()
                             .map(UpdateKind::BusinessConnection),
-                        "business_message" => {
-                            map.next_value::<Message>().ok().map(UpdateKind::BusinessMessage)
-                        }
-                        "edited_business_message" => {
-                            map.next_value::<Message>().ok().map(UpdateKind::EditedBusinessMessage)
-                        }
+                        "business_message" => map
+                            .next_value::<Message>()
+                            .ok()
+                            .map(UpdateKind::BusinessMessage),
+                        "edited_business_message" => map
+                            .next_value::<Message>()
+                            .ok()
+                            .map(UpdateKind::EditedBusinessMessage),
                         "deleted_business_messages" => map
                             .next_value::<BusinessMessagesDeleted>()
                             .ok()
@@ -428,19 +431,22 @@ impl<'de> Deserialize<'de> for UpdateKind {
                             .next_value::<MessageReactionCountUpdated>()
                             .ok()
                             .map(UpdateKind::MessageReactionCount),
-                        "inline_query" => {
-                            map.next_value::<InlineQuery>().ok().map(UpdateKind::InlineQuery)
-                        }
+                        "inline_query" => map
+                            .next_value::<InlineQuery>()
+                            .ok()
+                            .map(UpdateKind::InlineQuery),
                         "chosen_inline_result" => map
                             .next_value::<ChosenInlineResult>()
                             .ok()
                             .map(UpdateKind::ChosenInlineResult),
-                        "callback_query" => {
-                            map.next_value::<CallbackQuery>().ok().map(UpdateKind::CallbackQuery)
-                        }
-                        "shipping_query" => {
-                            map.next_value::<ShippingQuery>().ok().map(UpdateKind::ShippingQuery)
-                        }
+                        "callback_query" => map
+                            .next_value::<CallbackQuery>()
+                            .ok()
+                            .map(UpdateKind::CallbackQuery),
+                        "shipping_query" => map
+                            .next_value::<ShippingQuery>()
+                            .ok()
+                            .map(UpdateKind::ShippingQuery),
                         "pre_checkout_query" => map
                             .next_value::<PreCheckoutQuery>()
                             .ok()
@@ -450,33 +456,39 @@ impl<'de> Deserialize<'de> for UpdateKind {
                             .ok()
                             .map(UpdateKind::PurchasedPaidMedia),
                         "poll" => map.next_value::<Poll>().ok().map(UpdateKind::Poll),
-                        "poll_answer" => {
-                            map.next_value::<PollAnswer>().ok().map(UpdateKind::PollAnswer)
-                        }
-                        "my_chat_member" => {
-                            map.next_value::<ChatMemberUpdated>().ok().map(UpdateKind::MyChatMember)
-                        }
-                        "chat_member" => {
-                            map.next_value::<ChatMemberUpdated>().ok().map(UpdateKind::ChatMember)
-                        }
+                        "poll_answer" => map
+                            .next_value::<PollAnswer>()
+                            .ok()
+                            .map(UpdateKind::PollAnswer),
+                        "my_chat_member" => map
+                            .next_value::<ChatMemberUpdated>()
+                            .ok()
+                            .map(UpdateKind::MyChatMember),
+                        "chat_member" => map
+                            .next_value::<ChatMemberUpdated>()
+                            .ok()
+                            .map(UpdateKind::ChatMember),
                         "chat_join_request" => map
                             .next_value::<ChatJoinRequest>()
                             .ok()
                             .map(UpdateKind::ChatJoinRequest),
-                        "chat_boost" => {
-                            map.next_value::<ChatBoostUpdated>().ok().map(UpdateKind::ChatBoost)
-                        }
+                        "chat_boost" => map
+                            .next_value::<ChatBoostUpdated>()
+                            .ok()
+                            .map(UpdateKind::ChatBoost),
                         "removed_chat_boost" => map
                             .next_value::<ChatBoostRemoved>()
                             .ok()
                             .map(UpdateKind::RemovedChatBoost),
-                        "managed_bot" => {
-                            map.next_value::<ManagedBotUpdated>().ok().map(UpdateKind::ManagedBot)
-                        }
-                        "guest_message" => {
-                            map.next_value::<Message>().ok().map(UpdateKind::GuestMessage)
-                        }
-                        _ => Some(empty_error()),
+                        "managed_bot" => map
+                            .next_value::<ManagedBotUpdated>()
+                            .ok()
+                            .map(UpdateKind::ManagedBot),
+                        "guest_message" => map
+                            .next_value::<Message>()
+                            .ok()
+                            .map(UpdateKind::GuestMessage),
+                        _ => Some(empty_error())
                     })
                     .unwrap_or_else(empty_error);
 
@@ -484,14 +496,16 @@ impl<'de> Deserialize<'de> for UpdateKind {
             }
         }
 
-        stacker::maybe_grow(256 * 1024, 1024 * 1024, || deserializer.deserialize_any(Visitor))
+        stacker::maybe_grow(256 * 1024, 1024 * 1024, || {
+            deserializer.deserialize_any(Visitor)
+        })
     }
 }
 
 impl Serialize for UpdateKind {
     fn serialize<S>(&self, s: S) -> Result<S::Ok, S::Error>
     where
-        S: Serializer,
+        S: Serializer
     {
         let name = "UpdateKind";
         match self {
@@ -554,7 +568,7 @@ impl Serialize for UpdateKind {
             UpdateKind::GuestMessage(v) => {
                 s.serialize_newtype_variant(name, 24, "guest_message", v)
             }
-            UpdateKind::Error(v) => v.serialize(s),
+            UpdateKind::Error(v) => v.serialize(s)
         }
     }
 }
@@ -565,17 +579,17 @@ fn empty_error() -> UpdateKind {
 
 #[cfg(test)]
 mod test {
+    use chrono::DateTime;
+    use pretty_assertions::assert_eq;
+
     use crate::types::{
         BoostId, Chat, ChatBoost, ChatBoostRemoved, ChatBoostSource, ChatBoostSourcePremium,
         ChatBoostUpdated, ChatId, ChatKind, ChatPrivate, ChatPublic, LinkPreviewOptions,
         MaybeAnonymousUser, MediaKind, MediaText, Message, MessageCommon, MessageId, MessageKind,
         MessageReactionCountUpdated, MessageReactionUpdated, PublicChatChannel, PublicChatKind,
         PublicChatSupergroup, ReactionCount, ReactionType, Update, UpdateId, UpdateKind, User,
-        UserId,
+        UserId
     };
-
-    use chrono::DateTime;
-    use pretty_assertions::assert_eq;
 
     // TODO: more tests for deserialization
     #[test]
@@ -607,7 +621,7 @@ mod test {
         }"#;
 
         let expected = Update {
-            id: UpdateId(892_252_934),
+            id:   UpdateId(892_252_934),
             kind: UpdateKind::Message(Message {
                 via_bot: None,
                 id: MessageId(6557),
@@ -624,7 +638,7 @@ mod test {
                     can_manage_bots: false,
                     has_topics_enabled: false,
                     allows_users_to_create_topics: false,
-                    supports_guest_queries: false,
+                    supports_guest_queries: false
                 }),
                 sender_chat: None,
                 is_topic_message: false,
@@ -632,12 +646,12 @@ mod test {
                 suggested_post_info: None,
                 date,
                 chat: Chat {
-                    id: ChatId(218_485_655),
+                    id:   ChatId(218_485_655),
                     kind: ChatKind::Private(ChatPrivate {
-                        username: Some(String::from("WaffleLapkin")),
+                        username:   Some(String::from("WaffleLapkin")),
                         first_name: Some(String::from("Waffle")),
-                        last_name: None,
-                    }),
+                        last_name:  None
+                    })
                 },
                 sender_business_bot: None,
                 sender_tag: None,
@@ -656,15 +670,15 @@ mod test {
                     sender_boost_count: None,
                     edit_date: None,
                     media_kind: MediaKind::Text(MediaText {
-                        text: String::from("hello there"),
-                        entities: vec![],
+                        text:                 String::from("hello there"),
+                        entities:             vec![],
                         link_preview_options: Some(LinkPreviewOptions {
-                            is_disabled: true,
-                            url: None,
+                            is_disabled:        true,
+                            url:                None,
                             prefer_small_media: false,
                             prefer_large_media: false,
-                            show_above_text: false,
-                        }),
+                            show_above_text:    false
+                        })
                     }),
                     reply_markup: None,
                     author_signature: None,
@@ -673,9 +687,9 @@ mod test {
                     is_automatic_forward: false,
                     has_protected_content: false,
                     is_from_offline: false,
-                    business_connection_id: None,
-                }),
-            }),
+                    business_connection_id: None
+                })
+            })
         };
 
         let actual = serde_json::from_str::<Update>(json).unwrap();
@@ -713,10 +727,12 @@ mod test {
             "update_id": 439432599
         }"#;
 
-        let Update { kind, .. } = serde_json::from_str::<Update>(update).unwrap();
+        let Update {
+            kind, ..
+        } = serde_json::from_str::<Update>(update).unwrap();
         match kind {
             UpdateKind::Message(_) => {}
-            _ => panic!("Expected `Message`"),
+            _ => panic!("Expected `Message`")
         }
 
         let update = r#"{
@@ -774,10 +790,12 @@ mod test {
             "update_id": 439432600
         }"#;
 
-        let Update { kind, .. } = serde_json::from_str::<Update>(update).unwrap();
+        let Update {
+            kind, ..
+        } = serde_json::from_str::<Update>(update).unwrap();
         match kind {
             UpdateKind::Message(_) => {}
-            _ => panic!("Expected `Message`"),
+            _ => panic!("Expected `Message`")
         }
     }
 
@@ -807,10 +825,12 @@ mod test {
   }
 "#;
 
-        let Update { kind, .. } = serde_json::from_str::<Update>(text).unwrap();
+        let Update {
+            kind, ..
+        } = serde_json::from_str::<Update>(text).unwrap();
         match kind {
             UpdateKind::Message(_) => {}
-            _ => panic!("Expected `Message`"),
+            _ => panic!("Expected `Message`")
         }
     }
 
@@ -853,10 +873,12 @@ mod test {
     "update_id": 845402291
 }"#;
 
-        let Update { kind, .. } = serde_json::from_str(json).unwrap();
+        let Update {
+            kind, ..
+        } = serde_json::from_str(json).unwrap();
         match kind {
             UpdateKind::Message(_) => {}
-            _ => panic!("Expected `Message`"),
+            _ => panic!("Expected `Message`")
         }
     }
 
@@ -889,10 +911,12 @@ mod test {
 }
         "#;
 
-        let Update { kind, .. } = serde_json::from_str(json).unwrap();
+        let Update {
+            kind, ..
+        } = serde_json::from_str(json).unwrap();
         match kind {
             UpdateKind::Message(_) => {}
-            _ => panic!("Expected `Message`"),
+            _ => panic!("Expected `Message`")
         }
     }
 
@@ -903,12 +927,14 @@ mod test {
             "update_id": 1
         }"#;
 
-        let Update { kind, .. } = serde_json::from_str(json).unwrap();
+        let Update {
+            kind, ..
+        } = serde_json::from_str(json).unwrap();
 
         match kind {
             // Deserialization failed successfully
             UpdateKind::Error(_) => {}
-            _ => panic!("Expected error"),
+            _ => panic!("Expected error")
         }
     }
 
@@ -925,11 +951,13 @@ mod test {
             }
         }"#;
 
-        let Update { kind, .. } = serde_json::from_str(json).unwrap();
+        let Update {
+            kind, ..
+        } = serde_json::from_str(json).unwrap();
 
         match kind {
             UpdateKind::MyChatMember(_) => {}
-            _ => panic!("Expected `MyChatMember`"),
+            _ => panic!("Expected `MyChatMember`")
         }
     }
 
@@ -966,21 +994,21 @@ mod test {
         "#;
 
         let expected = Update {
-            id: UpdateId(71651249),
+            id:   UpdateId(71651249),
             kind: UpdateKind::MessageReaction(MessageReactionUpdated {
-                chat: Chat {
-                    id: ChatId(-1002184233434),
+                chat:         Chat {
+                    id:   ChatId(-1002184233434),
                     kind: ChatKind::Public(ChatPublic {
                         title: Some("Test".to_owned()),
-                        kind: PublicChatKind::Supergroup(PublicChatSupergroup {
-                            username: None,
-                            is_forum: false,
-                            is_direct_messages: false,
-                        }),
-                    }),
+                        kind:  PublicChatKind::Supergroup(PublicChatSupergroup {
+                            username:           None,
+                            is_forum:           false,
+                            is_direct_messages: false
+                        })
+                    })
                 },
-                message_id: MessageId(35),
-                actor: MaybeAnonymousUser::User(User {
+                message_id:   MessageId(35),
+                actor:        MaybeAnonymousUser::User(User {
                     id: UserId(1459074222),
                     is_bot: false,
                     first_name: "shadowchain".to_owned(),
@@ -992,12 +1020,14 @@ mod test {
                     can_manage_bots: false,
                     has_topics_enabled: false,
                     allows_users_to_create_topics: false,
-                    supports_guest_queries: false,
+                    supports_guest_queries: false
                 }),
-                date: DateTime::from_timestamp(1721306082, 0).unwrap(),
+                date:         DateTime::from_timestamp(1721306082, 0).unwrap(),
                 old_reaction: vec![],
-                new_reaction: vec![ReactionType::Emoji { emoji: "🌭".to_owned() }],
-            }),
+                new_reaction: vec![ReactionType::Emoji {
+                    emoji: "🌭".to_owned()
+                }]
+            })
         };
 
         let actual = serde_json::from_str::<Update>(json).unwrap();
@@ -1030,26 +1060,28 @@ mod test {
         }
         "#;
         let chat = Chat {
-            id: ChatId(-1002199793788),
+            id:   ChatId(-1002199793788),
             kind: ChatKind::Public(ChatPublic {
                 title: Some("тест".to_owned()),
-                kind: PublicChatKind::Supergroup(PublicChatSupergroup {
-                    username: None,
-                    is_forum: false,
-                    is_direct_messages: false,
-                }),
-            }),
+                kind:  PublicChatKind::Supergroup(PublicChatSupergroup {
+                    username:           None,
+                    is_forum:           false,
+                    is_direct_messages: false
+                })
+            })
         };
         let expected = Update {
-            id: UpdateId(767844136),
+            id:   UpdateId(767844136),
             kind: UpdateKind::MessageReaction(MessageReactionUpdated {
-                chat: chat.clone(),
-                message_id: MessageId(2),
-                actor: MaybeAnonymousUser::Chat(chat),
-                date: DateTime::from_timestamp(1723798597, 0).unwrap(),
-                old_reaction: vec![ReactionType::Emoji { emoji: "❤".to_owned() }],
-                new_reaction: vec![],
-            }),
+                chat:         chat.clone(),
+                message_id:   MessageId(2),
+                actor:        MaybeAnonymousUser::Chat(chat),
+                date:         DateTime::from_timestamp(1723798597, 0).unwrap(),
+                old_reaction: vec![ReactionType::Emoji {
+                    emoji: "❤".to_owned()
+                }],
+                new_reaction: vec![]
+            })
         };
 
         let actual = serde_json::from_str::<Update>(json).unwrap();
@@ -1090,28 +1122,34 @@ mod test {
         "#;
 
         let expected = Update {
-            id: UpdateId(71651251),
+            id:   UpdateId(71651251),
             kind: UpdateKind::MessageReactionCount(MessageReactionCountUpdated {
-                chat: Chat {
-                    id: ChatId(-1002236736395),
+                chat:       Chat {
+                    id:   ChatId(-1002236736395),
                     kind: ChatKind::Public(ChatPublic {
                         title: Some("Test".to_owned()),
-                        kind: PublicChatKind::Channel(PublicChatChannel { username: None }),
-                    }),
+                        kind:  PublicChatKind::Channel(PublicChatChannel {
+                            username: None
+                        })
+                    })
                 },
                 message_id: MessageId(36),
-                date: DateTime::from_timestamp(1721306391, 0).unwrap(),
-                reactions: vec![
+                date:       DateTime::from_timestamp(1721306391, 0).unwrap(),
+                reactions:  vec![
                     ReactionCount {
-                        r#type: ReactionType::Emoji { emoji: "🗿".to_owned() },
-                        total_count: 2,
+                        r#type:      ReactionType::Emoji {
+                            emoji: "🗿".to_owned()
+                        },
+                        total_count: 2
                     },
                     ReactionCount {
-                        r#type: ReactionType::Emoji { emoji: "🌭".to_owned() },
-                        total_count: 1,
+                        r#type:      ReactionType::Emoji {
+                            emoji: "🌭".to_owned()
+                        },
+                        total_count: 1
                     },
-                ],
-            }),
+                ]
+            })
         };
 
         let actual = serde_json::from_str::<Update>(json).unwrap();
@@ -1150,20 +1188,22 @@ mod test {
         "#;
 
         let expected = Update {
-            id: UpdateId(71651297),
+            id:   UpdateId(71651297),
             kind: UpdateKind::ChatBoost(ChatBoostUpdated {
-                chat: Chat {
-                    id: ChatId(-1002236736395),
+                chat:  Chat {
+                    id:   ChatId(-1002236736395),
                     kind: ChatKind::Public(ChatPublic {
                         title: Some("Test".to_owned()),
-                        kind: PublicChatKind::Channel(PublicChatChannel { username: None }),
-                    }),
+                        kind:  PublicChatKind::Channel(PublicChatChannel {
+                            username: None
+                        })
+                    })
                 },
                 boost: ChatBoost {
-                    boost_id: BoostId("4506e1b7e866e33fcbde78fe1746ec3a".to_owned()),
-                    add_date: DateTime::from_timestamp(1721399621, 0).unwrap(),
+                    boost_id:        BoostId("4506e1b7e866e33fcbde78fe1746ec3a".to_owned()),
+                    add_date:        DateTime::from_timestamp(1721399621, 0).unwrap(),
                     expiration_date: DateTime::from_timestamp(1745088963, 0).unwrap(),
-                    source: ChatBoostSource::Premium(ChatBoostSourcePremium {
+                    source:          ChatBoostSource::Premium(ChatBoostSourcePremium {
                         user: User {
                             id: UserId(1459074222),
                             is_bot: false,
@@ -1176,11 +1216,11 @@ mod test {
                             can_manage_bots: false,
                             has_topics_enabled: false,
                             allows_users_to_create_topics: false,
-                            supports_guest_queries: false,
-                        },
-                    }),
-                },
-            }),
+                            supports_guest_queries: false
+                        }
+                    })
+                }
+            })
         };
 
         let actual = serde_json::from_str::<Update>(json).unwrap();
@@ -1216,18 +1256,20 @@ mod test {
         "#;
 
         let expected = Update {
-            id: UpdateId(71651297),
+            id:   UpdateId(71651297),
             kind: UpdateKind::RemovedChatBoost(ChatBoostRemoved {
-                chat: Chat {
-                    id: ChatId(-1002236736395),
+                chat:        Chat {
+                    id:   ChatId(-1002236736395),
                     kind: ChatKind::Public(ChatPublic {
                         title: Some("Test".to_owned()),
-                        kind: PublicChatKind::Channel(PublicChatChannel { username: None }),
-                    }),
+                        kind:  PublicChatKind::Channel(PublicChatChannel {
+                            username: None
+                        })
+                    })
                 },
-                boost_id: BoostId("4506e1b7e866e33fcbde78fe1746ec3a".to_owned()),
+                boost_id:    BoostId("4506e1b7e866e33fcbde78fe1746ec3a".to_owned()),
                 remove_date: DateTime::from_timestamp(1721999621, 0).unwrap(),
-                source: ChatBoostSource::Premium(ChatBoostSourcePremium {
+                source:      ChatBoostSource::Premium(ChatBoostSourcePremium {
                     user: User {
                         id: UserId(1459074222),
                         is_bot: false,
@@ -1240,10 +1282,10 @@ mod test {
                         can_manage_bots: false,
                         has_topics_enabled: false,
                         allows_users_to_create_topics: false,
-                        supports_guest_queries: false,
-                    },
-                }),
-            }),
+                        supports_guest_queries: false
+                    }
+                })
+            })
         };
 
         let actual = serde_json::from_str::<Update>(json).unwrap();
@@ -1268,13 +1310,15 @@ mod test {
 }
         "#;
 
-        let Update { kind, .. } = serde_json::from_str(json).unwrap();
+        let Update {
+            kind, ..
+        } = serde_json::from_str(json).unwrap();
         match kind {
             UpdateKind::PurchasedPaidMedia(media) => {
                 assert_eq!(media.paid_media_payload, "test_payload");
                 assert_eq!(media.from.first_name, "Hirrolot");
             }
-            _ => panic!("Expected `PurchasedPaidMedia`"),
+            _ => panic!("Expected `PurchasedPaidMedia`")
         }
     }
 }

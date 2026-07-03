@@ -33,14 +33,13 @@ pub struct Animation {
     /// A MIME type of the file as defined by a sender.
     #[serde(with = "crate::types::non_telegram_types::mime::opt_deser")]
     #[cfg_attr(test, schemars(with = "Option<String>"))]
-    pub mime_type: Option<Mime>,
+    pub mime_type: Option<Mime>
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::types::{FileId, FileUniqueId};
-
     use super::*;
+    use crate::types::{FileId, FileUniqueId};
 
     #[test]
     fn deserialize() {
@@ -61,25 +60,25 @@ mod tests {
         "mime_type":"video/gif",
         "file_size":6500}"#;
         let expected = Animation {
-            file: FileMeta {
-                id: FileId("id".to_owned()),
+            file:      FileMeta {
+                id:        FileId("id".to_owned()),
                 unique_id: FileUniqueId("".to_string()),
-                size: 6500,
+                size:      6500
             },
-            width: 320,
-            height: 320,
-            duration: Seconds::from_seconds(59),
+            width:     320,
+            height:    320,
+            duration:  Seconds::from_seconds(59),
             thumbnail: Some(PhotoSize {
-                file: FileMeta {
-                    id: FileId("id".to_owned()),
+                file:   FileMeta {
+                    id:        FileId("id".to_owned()),
                     unique_id: FileUniqueId("".to_owned()),
-                    size: 3452,
+                    size:      3452
                 },
-                width: 320,
-                height: 320,
+                width:  320,
+                height: 320
             }),
             file_name: Some("some".to_string()),
-            mime_type: Some("video/gif".parse().unwrap()),
+            mime_type: Some("video/gif".parse().unwrap())
         };
         let actual = serde_json::from_str::<Animation>(json).unwrap();
         assert_eq!(actual, expected)

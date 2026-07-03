@@ -16,5 +16,5 @@ pub struct GameHighScore {
     pub user: User,
 
     /// Score.
-    pub score: u32,
+    pub score: u32
 }

@@ -11,7 +11,9 @@ async fn main() {
     let bot = Bot::from_env();
 
     let addr = ([127, 0, 0, 1], 8443).into();
-    let url = "Your HTTPS ngrok URL here. Get it by `ngrok http 8443`".parse().unwrap();
+    let url = "Your HTTPS ngrok URL here. Get it by `ngrok http 8443`"
+        .parse()
+        .unwrap();
     let listener = webhooks::axum(bot.clone(), webhooks::Options::new(addr, url))
         .await
         .expect("Couldn't setup webhook");
@@ -22,7 +24,7 @@ async fn main() {
             bot.send_message(msg.chat.id, "pong").await?;
             Ok(())
         },
-        listener,
+        listener
     )
     .await;
 }

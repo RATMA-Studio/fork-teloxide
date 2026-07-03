@@ -1,7 +1,9 @@
 //! Credit to https://github.com/ark0f/tg-bot-api and https://github.com/ENCRYPTEDFOREVER/tg-bot-api/tree/bot_api_9_0
-use crate::codegen::project_root;
-use serde::Deserialize;
 use std::fs;
+
+use serde::Deserialize;
+
+use crate::codegen::project_root;
 
 pub fn get_api_schema() -> ApiSchema {
     let path = project_root().join("custom_v2.json");
@@ -14,10 +16,10 @@ pub fn get_api_schema() -> ApiSchema {
 #[derive(Deserialize, Debug, Clone)]
 #[allow(dead_code)]
 pub struct ApiSchema {
-    pub version: Version,
+    pub version:        Version,
     pub recent_changes: Date,
-    pub methods: Vec<ApiMethod>,
-    pub objects: Vec<Object>,
+    pub methods:        Vec<ApiMethod>,
+    pub objects:        Vec<Object>
 }
 
 #[derive(Deserialize, Debug, Clone)]
@@ -25,15 +27,15 @@ pub struct ApiSchema {
 pub struct Version {
     pub major: u64,
     pub minor: u64,
-    pub patch: u64,
+    pub patch: u64
 }
 
 #[derive(Deserialize, Debug, Clone)]
 #[allow(dead_code)]
 pub struct Date {
-    pub year: i32,
+    pub year:  i32,
     pub month: u32,
-    pub day: u32,
+    pub day:   u32
 }
 
 #[derive(Debug, Deserialize, Clone, PartialEq)]
@@ -43,37 +45,37 @@ pub struct Date {
 pub enum Kind {
     Integer {
         #[serde(skip_serializing_if = "Option::is_none")]
-        default: Option<i64>,
+        default:     Option<i64>,
         #[serde(skip_serializing_if = "Option::is_none")]
-        min: Option<i64>,
+        min:         Option<i64>,
         #[serde(skip_serializing_if = "Option::is_none")]
-        max: Option<i64>,
-        enumeration: Vec<i64>,
+        max:         Option<i64>,
+        enumeration: Vec<i64>
     },
     String {
         #[serde(skip_serializing_if = "Option::is_none")]
-        default: Option<String>,
+        default:     Option<String>,
         #[serde(skip_serializing_if = "Option::is_none")]
-        min_len: Option<u64>,
+        min_len:     Option<u64>,
         #[serde(skip_serializing_if = "Option::is_none")]
-        max_len: Option<u64>,
-        enumeration: Vec<String>,
+        max_len:     Option<u64>,
+        enumeration: Vec<String>
     },
     Bool {
         #[serde(skip_serializing_if = "Option::is_none")]
-        default: Option<bool>,
+        default: Option<bool>
     },
     Float,
     AnyOf {
-        any_of: Vec<KindWrapper>,
+        any_of: Vec<KindWrapper>
     },
     Reference {
-        reference: String,
+        reference: String
     },
     Array {
-        array: Box<KindWrapper>,
+        array: Box<KindWrapper>
     },
-    Null,
+    Null
 }
 
 #[derive(Debug, Deserialize, Clone, PartialEq)]
@@ -83,32 +85,32 @@ pub struct KindWrapper(pub Kind);
 #[derive(Debug, Deserialize, Clone)]
 #[allow(dead_code)]
 pub struct ApiMethod {
-    pub name: String,
-    pub description: String,
-    pub arguments: Vec<Argument>,
-    pub maybe_multipart: bool,
-    pub return_type: KindWrapper,
-    pub documentation_link: String,
+    pub name:               String,
+    pub description:        String,
+    pub arguments:          Vec<Argument>,
+    pub maybe_multipart:    bool,
+    pub return_type:        KindWrapper,
+    pub documentation_link: String
 }
 
 #[derive(Debug, Deserialize, Clone)]
 #[allow(dead_code)]
 pub struct Argument {
-    pub name: String,
+    pub name:        String,
     pub description: String,
-    pub required: bool,
+    pub required:    bool,
     #[serde(rename = "type_info")]
-    pub kind: KindWrapper,
+    pub kind:        KindWrapper
 }
 
 #[derive(Debug, Deserialize, Clone)]
 #[allow(dead_code)]
 pub struct Object {
-    pub name: String,
-    pub description: String,
+    pub name:               String,
+    pub description:        String,
     #[serde(flatten)]
-    pub data: ObjectData,
-    pub documentation_link: String,
+    pub data:               ObjectData,
+    pub documentation_link: String
 }
 
 #[derive(Debug, Deserialize, Clone)]
@@ -118,15 +120,15 @@ pub struct Object {
 pub enum ObjectData {
     Properties { properties: Vec<Property> },
     AnyOf { any_of: Vec<KindWrapper> },
-    Unknown,
+    Unknown
 }
 
 #[derive(Debug, Deserialize, Clone)]
 #[allow(dead_code)]
 pub struct Property {
-    pub name: String,
+    pub name:        String,
     pub description: String,
-    pub required: bool,
+    pub required:    bool,
     #[serde(rename = "type_info")]
-    pub kind: KindWrapper,
+    pub kind:        KindWrapper
 }

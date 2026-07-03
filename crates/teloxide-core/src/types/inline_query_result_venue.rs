@@ -59,7 +59,7 @@ pub struct InlineQueryResultVenue {
     pub thumbnail_width: Option<u32>,
 
     /// Thumbnail height.
-    pub thumbnail_height: Option<u32>,
+    pub thumbnail_height: Option<u32>
 }
 
 impl InlineQueryResultVenue {
@@ -67,7 +67,7 @@ impl InlineQueryResultVenue {
     where
         S1: Into<String>,
         S2: Into<String>,
-        S3: Into<String>,
+        S3: Into<String>
     {
         Self {
             id: id.into(),
@@ -83,13 +83,13 @@ impl InlineQueryResultVenue {
             input_message_content: None,
             thumbnail_url: None,
             thumbnail_width: None,
-            thumbnail_height: None,
+            thumbnail_height: None
         }
     }
 
     pub fn id<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.id = val.into();
         self
@@ -109,7 +109,7 @@ impl InlineQueryResultVenue {
 
     pub fn title<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.title = val.into();
         self
@@ -117,7 +117,7 @@ impl InlineQueryResultVenue {
 
     pub fn address<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.address = val.into();
         self
@@ -125,7 +125,7 @@ impl InlineQueryResultVenue {
 
     pub fn foursquare_id<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.foursquare_id = Some(val.into());
         self
@@ -133,7 +133,7 @@ impl InlineQueryResultVenue {
 
     pub fn foursquare_type<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.foursquare_type = Some(val.into());
         self
@@ -141,7 +141,7 @@ impl InlineQueryResultVenue {
 
     pub fn google_place_id<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.google_place_id = Some(val.into());
         self
@@ -149,7 +149,7 @@ impl InlineQueryResultVenue {
 
     pub fn google_place_type<S>(mut self, val: S) -> Self
     where
-        S: Into<String>,
+        S: Into<String>
     {
         self.google_place_type = Some(val.into());
         self

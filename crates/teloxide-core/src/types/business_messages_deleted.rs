@@ -18,7 +18,7 @@ pub struct BusinessMessagesDeleted {
     /// account.
     #[serde(with = "crate::types::vec_msg_id_as_vec_int")]
     #[cfg_attr(test, schemars(with = "Vec<i32>"))]
-    pub message_ids: Vec<MessageId>,
+    pub message_ids: Vec<MessageId>
 }
 
 #[cfg(test)]
@@ -40,6 +40,9 @@ mod tests {
 
         let result: BusinessMessagesDeleted = serde_json::from_str(json).unwrap();
 
-        assert_eq!(result.message_ids, vec![MessageId(1), MessageId(2), MessageId(3)]);
+        assert_eq!(
+            result.message_ids,
+            vec![MessageId(1), MessageId(2), MessageId(3)]
+        );
     }
 }

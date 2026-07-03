@@ -9,5 +9,5 @@ use crate::types::Seconds;
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MessageAutoDeleteTimerChanged {
     /// New auto-delete time for messages in the chat
-    pub message_auto_delete_time: Seconds,
+    pub message_auto_delete_time: Seconds
 }

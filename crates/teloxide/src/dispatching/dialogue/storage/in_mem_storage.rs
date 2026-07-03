@@ -1,16 +1,18 @@
-use super::Storage;
-use futures::future::BoxFuture;
 use std::{collections::HashMap, sync::Arc};
+
+use futures::future::BoxFuture;
 use teloxide_core::types::ChatId;
 use thiserror::Error;
 use tokio::sync::Mutex;
+
+use super::Storage;
 
 /// An error returned from [`InMemStorage`].
 #[derive(Debug, Error)]
 pub enum InMemStorageError {
     /// Returned from [`InMemStorage::remove_dialogue`].
     #[error("row not found")]
-    DialogueNotFound,
+    DialogueNotFound
 }
 
 /// A dialogue storage based on [`std::collections::HashMap`].
@@ -21,29 +23,31 @@ pub enum InMemStorageError {
 /// [`super::SqliteStorage`] or implement your own.
 #[derive(Debug)]
 pub struct InMemStorage<D> {
-    map: Mutex<HashMap<ChatId, D>>,
+    map: Mutex<HashMap<ChatId, D>>
 }
 
 impl<S> InMemStorage<S> {
     #[must_use]
     pub fn new() -> Arc<Self> {
-        Arc::new(Self { map: Mutex::new(HashMap::new()) })
+        Arc::new(Self {
+            map: Mutex::new(HashMap::new())
+        })
     }
 }
 
 impl<D> Storage<D> for InMemStorage<D>
 where
     D: Clone,
-    D: Send + 'static,
+    D: Send + 'static
 {
     type Error = InMemStorageError;
 
     fn remove_dialogue(
         self: Arc<Self>,
-        chat_id: ChatId,
+        chat_id: ChatId
     ) -> BoxFuture<'static, Result<(), Self::Error>>
     where
-        D: Send + 'static,
+        D: Send + 'static
     {
         Box::pin(async move {
             self.map
@@ -57,10 +61,10 @@ where
     fn update_dialogue(
         self: Arc<Self>,
         chat_id: ChatId,
-        dialogue: D,
+        dialogue: D
     ) -> BoxFuture<'static, Result<(), Self::Error>>
     where
-        D: Send + 'static,
+        D: Send + 'static
     {
         Box::pin(async move {
             self.map.lock().await.insert(chat_id, dialogue);
@@ -70,7 +74,7 @@ where
 
     fn get_dialogue(
         self: Arc<Self>,
-        chat_id: ChatId,
+        chat_id: ChatId
     ) -> BoxFuture<'static, Result<Option<D>, Self::Error>> {
         Box::pin(async move { Ok(self.map.lock().await.get(&chat_id).map(ToOwned::to_owned)) })
     }

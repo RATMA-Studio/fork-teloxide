@@ -2,7 +2,6 @@ use std::future::{Future, IntoFuture};
 
 // use either::Either;
 // use futures::future;
-
 use crate::requests::{HasPayload, Output};
 
 /// A ready-to-send Telegram request.
@@ -23,7 +22,7 @@ use crate::requests::{HasPayload, Output};
 pub trait Request
 where
     Self: HasPayload,
-    Self: IntoFuture<Output = Result<Output<Self>, Self::Err>, IntoFuture = Self::Send>,
+    Self: IntoFuture<Output = Result<Output<Self>, Self::Err>, IntoFuture = Self::Send>
 {
     /// The type of an error that may happen while sending a request to
     /// Telegram.
@@ -48,7 +47,7 @@ where
     ///     Bot,
     ///     payloads::GetMe,
     ///     requests::{JsonRequest, Request},
-    ///     types::Me,
+    ///     types::Me
     /// };
     ///
     /// let bot = Bot::new("TOKEN");
@@ -98,7 +97,7 @@ where
     #[cfg(feature = "erased")]
     fn erase<'a>(self) -> crate::adaptors::erased::ErasedRequest<'a, Self::Payload, Self::Err>
     where
-        Self: Sized + 'a,
+        Self: Sized + 'a
     {
         crate::adaptors::erased::ErasedRequest::erase(self)
     }

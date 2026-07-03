@@ -14,7 +14,7 @@ fn parse_command_with_args() {
     #[command(rename_rule = "lowercase")]
     enum DefaultCommands {
         Start(String),
-        Help,
+        Help
     }
 
     let data = "/start arg1 arg2";
@@ -30,7 +30,7 @@ fn parse_command_with_non_string_arg() {
     #[command(rename_rule = "lowercase")]
     enum DefaultCommands {
         Start(i32),
-        Help,
+        Help
     }
 
     let data = "/start -50";
@@ -47,7 +47,7 @@ fn attribute_prefix() {
     enum DefaultCommands {
         #[command(prefix = "!")]
         Start(String),
-        Help,
+        Help
     }
 
     let data = "!start arg1 arg2";
@@ -64,11 +64,17 @@ fn many_attributes() {
     enum DefaultCommands {
         #[command(prefix = "!", description = "desc")]
         Start,
-        Help,
+        Help
     }
 
-    assert_eq!(DefaultCommands::Start, DefaultCommands::parse("!start", "").unwrap());
-    assert_eq!(DefaultCommands::descriptions().to_string(), "!start — desc\n/help");
+    assert_eq!(
+        DefaultCommands::Start,
+        DefaultCommands::parse("!start", "").unwrap()
+    );
+    assert_eq!(
+        DefaultCommands::descriptions().to_string(),
+        "!start — desc\n/help"
+    );
 }
 
 #[test]
@@ -79,12 +85,21 @@ fn global_attributes() {
     enum DefaultCommands {
         #[command(prefix = "/")]
         Start,
-        Help,
+        Help
     }
 
-    assert_eq!(DefaultCommands::Start, DefaultCommands::parse("/start", "MyNameBot").unwrap());
-    assert_eq!(DefaultCommands::Help, DefaultCommands::parse("!help", "MyNameBot").unwrap());
-    assert_eq!(DefaultCommands::descriptions().to_string(), "Bot commands\n\n/start\n!help");
+    assert_eq!(
+        DefaultCommands::Start,
+        DefaultCommands::parse("/start", "MyNameBot").unwrap()
+    );
+    assert_eq!(
+        DefaultCommands::Help,
+        DefaultCommands::parse("!help", "MyNameBot").unwrap()
+    );
+    assert_eq!(
+        DefaultCommands::descriptions().to_string(),
+        "Bot commands\n\n/start\n!help"
+    );
 }
 
 #[test]
@@ -95,7 +110,7 @@ fn parse_command_with_bot_name() {
     enum DefaultCommands {
         #[command(prefix = "/")]
         Start,
-        Help,
+        Help
     }
 
     assert_eq!(
@@ -112,7 +127,7 @@ fn parse_with_split() {
     #[command(parse_with = "split")]
     enum DefaultCommands {
         Start(u8, String),
-        Help,
+        Help
     }
 
     assert_eq!(
@@ -129,7 +144,7 @@ fn parse_with_split2() {
     #[command(parse_with = "split", separator = "|")]
     enum DefaultCommands {
         Start(u8, String),
-        Help,
+        Help
     }
 
     assert_eq!(
@@ -146,10 +161,13 @@ fn parse_with_split3() {
     #[command(parse_with = "split")]
     enum DefaultCommands {
         Start(u8),
-        Help,
+        Help
     }
 
-    assert_eq!(DefaultCommands::Start(10), DefaultCommands::parse("/start 10", "").unwrap(),);
+    assert_eq!(
+        DefaultCommands::Start(10),
+        DefaultCommands::parse("/start 10", "").unwrap(),
+    );
 }
 
 #[test]
@@ -160,10 +178,13 @@ fn parse_with_split4() {
     #[command(parse_with = "split")]
     enum DefaultCommands {
         Start(),
-        Help,
+        Help
     }
 
-    assert_eq!(DefaultCommands::Start(), DefaultCommands::parse("/start", "").unwrap(),);
+    assert_eq!(
+        DefaultCommands::Start(),
+        DefaultCommands::parse("/start", "").unwrap(),
+    );
 }
 
 #[test]
@@ -174,7 +195,7 @@ fn parse_with_command_separator1() {
     #[command(parse_with = "split", separator = "|", command_separator = "_")]
     enum DefaultCommands {
         Start(u8, String),
-        Help,
+        Help
     }
 
     assert_eq!(
@@ -191,7 +212,7 @@ fn parse_with_command_separator2() {
     #[command(parse_with = "split", separator = "_", command_separator = "_")]
     enum DefaultCommands {
         Start(u8, String),
-        Help,
+        Help
     }
 
     assert_eq!(
@@ -207,10 +228,13 @@ fn parse_with_command_separator3() {
     #[command(rename_rule = "lowercase")]
     #[command(parse_with = "split", command_separator = ":")]
     enum DefaultCommands {
-        Help,
+        Help
     }
 
-    assert_eq!(DefaultCommands::Help, DefaultCommands::parse("/help", "").unwrap());
+    assert_eq!(
+        DefaultCommands::Help,
+        DefaultCommands::parse("/help", "").unwrap()
+    );
 }
 
 #[test]
@@ -221,10 +245,13 @@ fn parse_with_command_separator4() {
     #[command(parse_with = "split", command_separator = ":")]
     enum DefaultCommands {
         Start(u8),
-        Help,
+        Help
     }
 
-    assert_eq!(DefaultCommands::Start(10), DefaultCommands::parse("/start:10", "").unwrap());
+    assert_eq!(
+        DefaultCommands::Start(10),
+        DefaultCommands::parse("/start:10", "").unwrap()
+    );
 }
 
 #[test]
@@ -237,11 +264,13 @@ fn parse_custom_parser() {
             let vec = s.split_whitespace().collect::<Vec<_>>();
             let (left, right) = match vec.as_slice() {
                 [l, r] => (l, r),
-                _ => return Err(ParseError::IncorrectFormat("might be 2 arguments!".into())),
+                _ => return Err(ParseError::IncorrectFormat("might be 2 arguments!".into()))
             };
-            left.parse::<u8>().map(|res| (res, (*right).to_string())).map_err(|_| {
-                ParseError::Custom("First argument must be a integer!".to_owned().into())
-            })
+            left.parse::<u8>()
+                .map(|res| (res, (*right).to_string()))
+                .map_err(|_| {
+                    ParseError::Custom("First argument must be a integer!".to_owned().into())
+                })
         }
     }
 
@@ -257,7 +286,7 @@ fn parse_custom_parser() {
         #[command(parse_with = parser::custom_parse_function)]
         TestPath(u8, String),
 
-        Help,
+        Help
     }
 
     assert_eq!(
@@ -278,11 +307,14 @@ fn parse_named_fields() {
     #[command(parse_with = "split")]
     enum DefaultCommands {
         Start { num: u8, data: String },
-        Help,
+        Help
     }
 
     assert_eq!(
-        DefaultCommands::Start { num: 10, data: "hello".to_string() },
+        DefaultCommands::Start {
+            num:  10,
+            data: "hello".to_string()
+        },
         DefaultCommands::parse("/start 10 hello", "").unwrap()
     );
 }
@@ -299,10 +331,13 @@ fn descriptions_off() {
         #[command(description = "off")]
         Username,
         /// off
-        Help,
+        Help
     }
 
-    assert_eq!(DefaultCommands::descriptions().to_string(), "/help — off".to_owned());
+    assert_eq!(
+        DefaultCommands::descriptions().to_string(),
+        "/help — off".to_owned()
+    );
 }
 
 #[test]
@@ -317,7 +352,7 @@ fn description_with_doc_attr() {
         Help,
         /// Foo command
         /// with new line
-        Foo,
+        Foo
     }
 
     assert_eq!(
@@ -341,7 +376,7 @@ fn description_with_doc_attr_and_command() {
         /// Foo command
         /// with new line
         #[command(description = "Foo command\nwith new line")]
-        Foo,
+        Foo
     }
 
     assert_eq!(
@@ -373,18 +408,45 @@ fn rename_rules() {
         #[command(rename_rule = "SCREAMING-KEBAB-CASE")]
         HhhHhh,
         #[command(rename = "Bar")]
-        Foo,
+        Foo
     }
 
-    assert_eq!(DefaultCommands::AaaAaa, DefaultCommands::parse("/aaaaaa", "").unwrap());
-    assert_eq!(DefaultCommands::BbbBbb, DefaultCommands::parse("/BBBBBB", "").unwrap());
-    assert_eq!(DefaultCommands::CccCcc, DefaultCommands::parse("/CccCcc", "").unwrap());
-    assert_eq!(DefaultCommands::DddDdd, DefaultCommands::parse("/dddDdd", "").unwrap());
-    assert_eq!(DefaultCommands::EeeEee, DefaultCommands::parse("/eee_eee", "").unwrap());
-    assert_eq!(DefaultCommands::FffFff, DefaultCommands::parse("/FFF_FFF", "").unwrap());
-    assert_eq!(DefaultCommands::GggGgg, DefaultCommands::parse("/ggg-ggg", "").unwrap());
-    assert_eq!(DefaultCommands::HhhHhh, DefaultCommands::parse("/HHH-HHH", "").unwrap());
-    assert_eq!(DefaultCommands::Foo, DefaultCommands::parse("/Bar", "").unwrap());
+    assert_eq!(
+        DefaultCommands::AaaAaa,
+        DefaultCommands::parse("/aaaaaa", "").unwrap()
+    );
+    assert_eq!(
+        DefaultCommands::BbbBbb,
+        DefaultCommands::parse("/BBBBBB", "").unwrap()
+    );
+    assert_eq!(
+        DefaultCommands::CccCcc,
+        DefaultCommands::parse("/CccCcc", "").unwrap()
+    );
+    assert_eq!(
+        DefaultCommands::DddDdd,
+        DefaultCommands::parse("/dddDdd", "").unwrap()
+    );
+    assert_eq!(
+        DefaultCommands::EeeEee,
+        DefaultCommands::parse("/eee_eee", "").unwrap()
+    );
+    assert_eq!(
+        DefaultCommands::FffFff,
+        DefaultCommands::parse("/FFF_FFF", "").unwrap()
+    );
+    assert_eq!(
+        DefaultCommands::GggGgg,
+        DefaultCommands::parse("/ggg-ggg", "").unwrap()
+    );
+    assert_eq!(
+        DefaultCommands::HhhHhh,
+        DefaultCommands::parse("/HHH-HHH", "").unwrap()
+    );
+    assert_eq!(
+        DefaultCommands::Foo,
+        DefaultCommands::parse("/Bar", "").unwrap()
+    );
 
     assert_eq!(
         "/aaaaaa\n/BBBBBB\n/CccCcc\n/dddDdd\n/eee_eee\n/FFF_FFF\n/ggg-ggg\n/HHH-HHH\n/Bar",
@@ -403,13 +465,25 @@ fn alias() {
         #[command(alias = "h")]
         Help,
         #[command(alias = "привет_мир")]
-        HelloWorld(String),
+        HelloWorld(String)
     }
 
-    assert_eq!(DefaultCommands::Start, DefaultCommands::parse("/start", "").unwrap());
-    assert_eq!(DefaultCommands::Start, DefaultCommands::parse("/s", "").unwrap());
-    assert_eq!(DefaultCommands::Help, DefaultCommands::parse("/help", "").unwrap());
-    assert_eq!(DefaultCommands::Help, DefaultCommands::parse("/h", "").unwrap());
+    assert_eq!(
+        DefaultCommands::Start,
+        DefaultCommands::parse("/start", "").unwrap()
+    );
+    assert_eq!(
+        DefaultCommands::Start,
+        DefaultCommands::parse("/s", "").unwrap()
+    );
+    assert_eq!(
+        DefaultCommands::Help,
+        DefaultCommands::parse("/help", "").unwrap()
+    );
+    assert_eq!(
+        DefaultCommands::Help,
+        DefaultCommands::parse("/h", "").unwrap()
+    );
     assert_eq!(
         DefaultCommands::HelloWorld("username".to_owned()),
         DefaultCommands::parse("/hello_world username", "").unwrap()
@@ -432,7 +506,7 @@ fn alias_help_message() {
         #[command(alias = "h")]
         Help,
         #[command(alias = "привет_мир")]
-        HelloWorld(String),
+        HelloWorld(String)
     }
 
     assert_eq!(
@@ -451,13 +525,25 @@ fn aliases() {
         #[command(aliases = ["h", "помощь"])]
         Help,
         #[command(aliases = ["привет_мир"])]
-        HelloWorld(String),
+        HelloWorld(String)
     }
 
-    assert_eq!(DefaultCommands::Start, DefaultCommands::parse("/start", "").unwrap());
-    assert_eq!(DefaultCommands::Help, DefaultCommands::parse("/help", "").unwrap());
-    assert_eq!(DefaultCommands::Help, DefaultCommands::parse("/h", "").unwrap());
-    assert_eq!(DefaultCommands::Help, DefaultCommands::parse("/помощь", "").unwrap());
+    assert_eq!(
+        DefaultCommands::Start,
+        DefaultCommands::parse("/start", "").unwrap()
+    );
+    assert_eq!(
+        DefaultCommands::Help,
+        DefaultCommands::parse("/help", "").unwrap()
+    );
+    assert_eq!(
+        DefaultCommands::Help,
+        DefaultCommands::parse("/h", "").unwrap()
+    );
+    assert_eq!(
+        DefaultCommands::Help,
+        DefaultCommands::parse("/помощь", "").unwrap()
+    );
     assert_eq!(
         DefaultCommands::HelloWorld("username".to_owned()),
         DefaultCommands::parse("/hello_world username", "").unwrap()
@@ -480,7 +566,7 @@ fn aliases_help_message() {
         #[command(aliases = ["h", "помощь"])]
         Help,
         #[command(aliases = ["привет_мир"])]
-        HelloWorld(String),
+        HelloWorld(String)
     }
 
     assert_eq!(
@@ -499,11 +585,17 @@ fn hide_aliases_for_unaliases_command() {
         Start,
         /// Show help message.
         #[command(hide_aliases)]
-        Help,
+        Help
     }
 
-    assert_eq!(DefaultCommands::Start, DefaultCommands::parse("/start", "").unwrap());
-    assert_eq!(DefaultCommands::Help, DefaultCommands::parse("/help", "").unwrap());
+    assert_eq!(
+        DefaultCommands::Start,
+        DefaultCommands::parse("/start", "").unwrap()
+    );
+    assert_eq!(
+        DefaultCommands::Help,
+        DefaultCommands::parse("/help", "").unwrap()
+    );
 
     assert_eq!(
         "/start — Start command.\n/help — Show help message.",
@@ -522,14 +614,26 @@ fn hide_aliases_with_alias() {
         Start,
         /// Help.
         #[command(alias = "h", hide_aliases)]
-        Help,
+        Help
     }
 
-    assert_eq!(DefaultCommands::Start, DefaultCommands::parse("/start", "").unwrap());
-    assert_eq!(DefaultCommands::Help, DefaultCommands::parse("/help", "").unwrap());
-    assert_eq!(DefaultCommands::Help, DefaultCommands::parse("/h", "").unwrap());
+    assert_eq!(
+        DefaultCommands::Start,
+        DefaultCommands::parse("/start", "").unwrap()
+    );
+    assert_eq!(
+        DefaultCommands::Help,
+        DefaultCommands::parse("/help", "").unwrap()
+    );
+    assert_eq!(
+        DefaultCommands::Help,
+        DefaultCommands::parse("/h", "").unwrap()
+    );
 
-    assert_eq!("/start, /s — Start.\n/help — Help.", DefaultCommands::descriptions().to_string());
+    assert_eq!(
+        "/start, /s — Start.\n/help — Help.",
+        DefaultCommands::descriptions().to_string()
+    );
 }
 
 #[test]
@@ -543,15 +647,30 @@ fn hide_command_with_aliases() {
         Start,
         /// Help.
         #[command(alias = "h")]
-        Help,
+        Help
     }
 
-    assert_eq!(DefaultCommands::Start, DefaultCommands::parse("/start", "").unwrap());
-    assert_eq!(DefaultCommands::Start, DefaultCommands::parse("/s", "").unwrap());
-    assert_eq!(DefaultCommands::Help, DefaultCommands::parse("/help", "").unwrap());
-    assert_eq!(DefaultCommands::Help, DefaultCommands::parse("/h", "").unwrap());
+    assert_eq!(
+        DefaultCommands::Start,
+        DefaultCommands::parse("/start", "").unwrap()
+    );
+    assert_eq!(
+        DefaultCommands::Start,
+        DefaultCommands::parse("/s", "").unwrap()
+    );
+    assert_eq!(
+        DefaultCommands::Help,
+        DefaultCommands::parse("/help", "").unwrap()
+    );
+    assert_eq!(
+        DefaultCommands::Help,
+        DefaultCommands::parse("/h", "").unwrap()
+    );
 
-    assert_eq!("/help, /h — Help.", DefaultCommands::descriptions().to_string());
+    assert_eq!(
+        "/help, /h — Help.",
+        DefaultCommands::descriptions().to_string()
+    );
 }
 
 #[test]
@@ -563,17 +682,38 @@ fn hide_aliases_with_aliases() {
         #[command(aliases = ["s", "старт"])]
         Start,
         #[command(aliases = ["h", "помощь"], hide_aliases)]
-        Help,
+        Help
     }
 
-    assert_eq!(DefaultCommands::Start, DefaultCommands::parse("/start", "").unwrap());
-    assert_eq!(DefaultCommands::Start, DefaultCommands::parse("/s", "").unwrap());
-    assert_eq!(DefaultCommands::Start, DefaultCommands::parse("/старт", "").unwrap());
-    assert_eq!(DefaultCommands::Help, DefaultCommands::parse("/help", "").unwrap());
-    assert_eq!(DefaultCommands::Help, DefaultCommands::parse("/h", "").unwrap());
-    assert_eq!(DefaultCommands::Help, DefaultCommands::parse("/помощь", "").unwrap());
+    assert_eq!(
+        DefaultCommands::Start,
+        DefaultCommands::parse("/start", "").unwrap()
+    );
+    assert_eq!(
+        DefaultCommands::Start,
+        DefaultCommands::parse("/s", "").unwrap()
+    );
+    assert_eq!(
+        DefaultCommands::Start,
+        DefaultCommands::parse("/старт", "").unwrap()
+    );
+    assert_eq!(
+        DefaultCommands::Help,
+        DefaultCommands::parse("/help", "").unwrap()
+    );
+    assert_eq!(
+        DefaultCommands::Help,
+        DefaultCommands::parse("/h", "").unwrap()
+    );
+    assert_eq!(
+        DefaultCommands::Help,
+        DefaultCommands::parse("/помощь", "").unwrap()
+    );
 
-    assert_eq!("/start, /s, /старт\n/help", DefaultCommands::descriptions().to_string());
+    assert_eq!(
+        "/start, /s, /старт\n/help",
+        DefaultCommands::descriptions().to_string()
+    );
 }
 
 #[test]

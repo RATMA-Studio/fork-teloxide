@@ -10,5 +10,5 @@ use crate::types::User;
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct ChatOwnerChanged {
     /// The new owner of the chat.
-    pub new_owner: User,
+    pub new_owner: User
 }

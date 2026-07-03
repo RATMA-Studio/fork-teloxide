@@ -3,20 +3,18 @@ use serde::{Deserialize, Serialize};
 use crate::types::{Argb, CountryCode, ReactionType};
 
 /// Describes a clickable area on a story media.
-#[derive(Clone, Debug, PartialEq)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct StoryArea {
     /// Position of the area
     pub position: StoryAreaPosition,
 
     /// Type of the area
-    pub r#type: StoryAreaType,
+    pub r#type: StoryAreaType
 }
 
 /// Describes the position of a clickable area within a story.
-#[derive(Clone, Debug, PartialEq)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct StoryAreaPosition {
     /// The abscissa of the area's center, as a percentage of the media width
@@ -36,13 +34,12 @@ pub struct StoryAreaPosition {
 
     /// The radius of the rectangle corner rounding, as a percentage of the
     /// media width
-    pub corner_radius_percentage: f64,
+    pub corner_radius_percentage: f64
 }
 
 /// Describes the physical address of a location.
 #[serde_with::skip_serializing_none]
-#[derive(Clone, Debug, PartialEq)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct LocationAddress {
     /// The two-letter ISO 3166-1 alpha-2 country code of the country where the
@@ -56,12 +53,11 @@ pub struct LocationAddress {
     pub city: Option<String>,
 
     /// Street address of the location
-    pub street: Option<String>,
+    pub street: Option<String>
 }
 
 /// Describes the type of a clickable area on a story.
-#[derive(Clone, Debug, PartialEq)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type")]
@@ -71,14 +67,13 @@ pub enum StoryAreaType {
     SuggestedReaction(StoryAreaTypeSuggestedReaction),
     Link(StoryAreaTypeLink),
     Weather(StoryAreaTypeWeather),
-    UniqueGift(StoryAreaTypeUniqueGift),
+    UniqueGift(StoryAreaTypeUniqueGift)
 }
 
 /// Describes a story area pointing to a location. Currently, a story can have
 /// up to 10 location areas.
 #[serde_with::skip_serializing_none]
-#[derive(Clone, Debug, PartialEq)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct StoryAreaTypeLocation {
     /// Location latitude in degrees
@@ -88,14 +83,13 @@ pub struct StoryAreaTypeLocation {
     pub longitude: f64,
 
     /// Address of the location
-    pub address: Option<LocationAddress>,
+    pub address: Option<LocationAddress>
 }
 
 /// Describes a story area pointing to a suggested reaction. Currently, a story
 /// can have up to 5 suggested reaction areas.
 #[serde_with::skip_serializing_none]
-#[derive(Clone, Debug, PartialEq)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct StoryAreaTypeSuggestedReaction {
     /// Type of the reaction
@@ -105,23 +99,21 @@ pub struct StoryAreaTypeSuggestedReaction {
     pub is_dark: Option<bool>,
 
     /// Pass _true_ if reaction area corner is flipped
-    pub is_flipped: Option<bool>,
+    pub is_flipped: Option<bool>
 }
 
 /// Describes a story area pointing to an HTTP or tg:// link. Currently, a story
 /// can have up to 3 link areas.
-#[derive(Clone, Debug, PartialEq)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct StoryAreaTypeLink {
     /// HTTP or tg:// URL to be opened when the area is clicked
-    pub url: reqwest::Url,
+    pub url: reqwest::Url
 }
 
 /// Describes a story area containing weather information. Currently, a story
 /// can have up to 3 weather areas.
-#[derive(Clone, Debug, PartialEq)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct StoryAreaTypeWeather {
     /// Temperature, in degree Celsius
@@ -131,15 +123,14 @@ pub struct StoryAreaTypeWeather {
     pub emoji: String,
 
     /// A color of the area background in the ARGB format
-    pub background_color: Argb,
+    pub background_color: Argb
 }
 
 /// Describes a story area pointing to a unique gift. Currently, a story can
 /// have at most 1 unique gift area.
-#[derive(Clone, Debug, PartialEq)]
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct StoryAreaTypeUniqueGift {
     /// Unique name of the gift
-    pub name: String,
+    pub name: String
 }

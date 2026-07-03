@@ -1,7 +1,7 @@
 use std::{
     collections::{HashMap, VecDeque, hash_map::Entry},
     pin::pin,
-    time::{Duration, Instant},
+    time::{Duration, Instant}
 };
 
 use either::Either;
@@ -12,7 +12,7 @@ use vecrem::VecExt;
 use crate::{
     adaptors::throttle::{ChatIdHash, Limits, Settings, request_lock::RequestLock},
     errors::AsResponseParameters,
-    requests::Requester,
+    requests::Requester
 };
 
 const MINUTE: Duration = Duration::from_secs(60);
@@ -29,8 +29,13 @@ const QUEUE_FULL_DELAY: Duration = Duration::from_secs(4);
 
 #[derive(Debug)]
 pub(super) enum InfoMessage {
-    GetLimits { response: Sender<Limits> },
-    SetLimits { new: Limits, response: Sender<()> },
+    GetLimits {
+        response: Sender<Limits>
+    },
+    SetLimits {
+        new:      Limits,
+        response: Sender<()>
+    }
 }
 
 type RequestsSent = u32;
@@ -41,13 +46,13 @@ type RequestsSent = u32;
 #[derive(Default)]
 struct RequestsSentToChats {
     per_min: HashMap<ChatIdHash, RequestsSent>,
-    per_sec: HashMap<ChatIdHash, RequestsSent>,
+    per_sec: HashMap<ChatIdHash, RequestsSent>
 }
 
 pub(super) struct FreezeUntil {
     pub(super) until: Instant,
     pub(super) after: Duration,
-    pub(super) chat: ChatIdHash,
+    pub(super) chat:  ChatIdHash
 }
 
 // Throttling is quite complicated. This comment describes the algorithm of the
@@ -93,13 +98,18 @@ pub(super) struct FreezeUntil {
 // the request that it can be now executed, increase counts, add record to the
 // history.
 pub(super) async fn worker<B>(
-    Settings { mut limits, mut on_queue_full, retry, check_slow_mode }: Settings,
+    Settings {
+        mut limits,
+        mut on_queue_full,
+        retry,
+        check_slow_mode
+    }: Settings,
     mut rx: mpsc::Receiver<(ChatIdHash, RequestLock)>,
     mut info_rx: mpsc::Receiver<InfoMessage>,
-    bot: B,
+    bot: B
 ) where
     B: Requester,
-    B::Err: AsResponseParameters,
+    B::Err: AsResponseParameters
 {
     // FIXME(waffle): Make an research about data structures for this queue.
     //                Currently this is O(n) removing (n = number of elements
@@ -115,8 +125,9 @@ pub(super) async fn worker<B>(
 
     let mut rx_is_closed = false;
 
-    let mut last_queue_full =
-        Instant::now().checked_sub(QUEUE_FULL_DELAY).unwrap_or_else(Instant::now);
+    let mut last_queue_full = Instant::now()
+        .checked_sub(QUEUE_FULL_DELAY)
+        .unwrap_or_else(Instant::now);
 
     let (freeze_tx, mut freeze_rx) = mpsc::channel::<FreezeUntil>(1);
 
@@ -134,7 +145,7 @@ pub(super) async fn worker<B>(
         loop {
             let res = future::select(
                 pin!(freeze_rx.recv()),
-                pin!(read_from_rx(&mut rx, &mut queue, &mut rx_is_closed)),
+                pin!(read_from_rx(&mut rx, &mut queue, &mut rx_is_closed))
             )
             .map(either)
             .await
@@ -144,7 +155,7 @@ pub(super) async fn worker<B>(
                 Either::Left(freeze_until) => {
                     freeze(&mut freeze_rx, slow_mode.as_mut(), &bot, freeze_until).await;
                 }
-                Either::Right(()) => break,
+                Either::Right(()) => break
             }
         }
         //debug_assert_eq!(queue.capacity(), limits.messages_per_sec_overall as usize);
@@ -213,7 +224,11 @@ pub(super) async fn worker<B>(
 
         // as truncates which is ok since in case of truncation it would always be >=
         // limits.overall_s
-        let used = history.iter().rev().take_while(|(_, time)| time > &sec_back).count() as u32;
+        let used = history
+            .iter()
+            .rev()
+            .take_while(|(_, time)| time > &sec_back)
+            .count() as u32;
         let mut allowed = limits.messages_per_sec_overall.saturating_sub(used);
 
         if allowed == 0 {
@@ -222,7 +237,11 @@ pub(super) async fn worker<B>(
             continue;
         }
 
-        for (chat, _) in history.iter().rev().take_while(|(_, time)| time > &sec_back) {
+        for (chat, _) in history
+            .iter()
+            .rev()
+            .take_while(|(_, time)| time > &sec_back)
+        {
             *requests_sent.per_sec.entry(*chat).or_insert(0) += 1;
         }
 
@@ -239,8 +258,10 @@ pub(super) async fn worker<B>(
                 continue;
             }
 
-            let requests_sent_per_sec_count = requests_sent.per_sec.get(chat).copied().unwrap_or(0);
-            let requests_sent_per_min_count = requests_sent.per_min.get(chat).copied().unwrap_or(0);
+            let requests_sent_per_sec_count =
+                requests_sent.per_sec.get(chat).copied().unwrap_or(0);
+            let requests_sent_per_min_count =
+                requests_sent.per_min.get(chat).copied().unwrap_or(0);
 
             let messages_per_min_limit = if chat.is_channel_or_supergroup() {
                 limits.messages_per_min_channel_or_supergroup
@@ -288,8 +309,13 @@ fn answer_info(rx: &mut mpsc::Receiver<InfoMessage>, limits: &mut Limits) {
         // Errors are ignored with .ok(). Error means that the response channel
         // is closed and the response isn't needed.
         match req {
-            InfoMessage::GetLimits { response } => response.send(*limits).ok(),
-            InfoMessage::SetLimits { new, response } => {
+            InfoMessage::GetLimits {
+                response
+            } => response.send(*limits).ok(),
+            InfoMessage::SetLimits {
+                new,
+                response
+            } => {
                 *limits = new;
                 response.send(()).ok()
             }
@@ -303,10 +329,14 @@ async fn freeze(
     rx: &mut mpsc::Receiver<FreezeUntil>,
     mut slow_mode: Option<&mut HashMap<ChatIdHash, (Duration, Instant)>>,
     bot: &impl Requester,
-    mut imm: Option<FreezeUntil>,
+    mut imm: Option<FreezeUntil>
 ) {
     while let Some(freeze_until) = imm.take().or_else(|| rx.try_recv().ok()) {
-        let FreezeUntil { until, after, chat } = freeze_until;
+        let FreezeUntil {
+            until,
+            after,
+            chat
+        } = freeze_until;
 
         // Clippy thinks that this `.as_deref_mut()` doesn't change the type (&mut
         // HashMap -> &mut HashMap), but it's actually a reborrow (the lifetimes
@@ -361,7 +391,7 @@ async fn read_from_rx<T>(rx: &mut mpsc::Receiver<T>, queue: &mut Vec<T>, rx_is_c
 
         match rx.recv().await {
             Some(req) => queue.push(req),
-            None => *rx_is_closed = true,
+            None => *rx_is_closed = true
         }
     }
 
@@ -374,7 +404,7 @@ async fn read_from_rx<T>(rx: &mut mpsc::Receiver<T>, queue: &mut Vec<T>, rx_is_c
                 break;
             }
             // There are no items in queue.
-            Err(TryRecvError::Empty) => break,
+            Err(TryRecvError::Empty) => break
         }
     }
 }
@@ -382,7 +412,7 @@ async fn read_from_rx<T>(rx: &mut mpsc::Receiver<T>, queue: &mut Vec<T>, rx_is_c
 fn either<L, R>(x: future::Either<L, R>) -> Either<L, R> {
     match x {
         future::Either::Left(l) => Either::Left(l),
-        future::Either::Right(r) => Either::Right(r),
+        future::Either::Right(r) => Either::Right(r)
     }
 }
 
