@@ -1,9 +1,11 @@
 // Used in the `SendPoll` impl below.
-use crate::types::{InputPollMedia, InputPollOptionMedia};
 use crate::{
     payloads,
     requests::Payload,
-    types::{InputFile, InputFileLike, InputMedia, InputPaidMedia, InputSticker}
+    types::{
+        InputFile, InputFileLike, InputMedia, InputPaidMedia, InputPollMedia,
+        InputPollOptionMedia, InputSticker
+    }
 };
 
 /// Payloads that need to be sent as `multipart/form-data` because they contain

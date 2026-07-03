@@ -164,8 +164,7 @@ static DOC_PATCHES: &[(Target, Patch)] = &[
             name:  "`Bot::download_file(file_path, dst)`",
             value: "crate::net::Download::download_file"
         }
-    )
-    // FIXME RETUNRS
+    ) // FIXME RETUNRS
 ];
 
 #[derive(Debug, Clone, Copy)]

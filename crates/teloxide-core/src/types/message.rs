@@ -653,8 +653,8 @@ pub struct MediaAnimation {
 
     /// `true`, if the message media is covered by a spoiler animation.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
-    pub has_media_spoiler: bool
-    // Note: for backward compatibility telegram also sends `document` field, but we ignore it
+    pub has_media_spoiler: bool /* Note: for backward compatibility telegram also sends
+                                 * `document` field, but we ignore it */
 }
 
 /// The unique identifier of a media message group the message belongs to.
@@ -904,8 +904,8 @@ pub struct MediaVoice {
 #[cfg_attr(test, derive(schemars::JsonSchema))]
 pub struct MediaVenue {
     /// Message is a venue, information about the venue.
-    pub venue: Venue
-    // Note: for backward compatibility telegram also sends `location` field, but we ignore it
+    pub venue: Venue /* Note: for backward compatibility telegram also sends `location` field,
+                      * but we ignore it */
 }
 
 #[serde_with::skip_serializing_none]
